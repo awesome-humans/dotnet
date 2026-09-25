@@ -1,8 +1,8 @@
 ---
 targets: [net10.0]
 last-reviewed: 2026-10-09
-last-used: 2026-09-26
-sources: [meziantou, ms-learn, dotnet-blog, house]
+last-used: 2026-10-13
+sources: [meziantou, ms-learn, dotnet-blog, andrew-lock, house]
 ---
 
 # CI & automation
@@ -14,6 +14,20 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 - **Pin GitHub Actions to commit SHAs, not mutable tags.** A tag can move without warning, and a SHA can't. Enforce pinning in every repository, and script it when you have many. ([Meziantou: SHA pinning](https://www.meziantou.net/enable-sha-pinning-for-github-actions-across-personal-repositories.htm))
 - **Never interpolate user input into a workflow script.** Pass it in an environment variable, and parse it in the script. Script injection is the most common GitHub Actions vulnerability. ([Meziantou: Safely passing extra arguments](https://www.meziantou.net/safely-passing-extra-arguments-in-github-actions-workflows-using-powershell.htm))
 - **Pin the SDK and every package in CI.** `global.json` sets the SDK, and lock files or Central Package Management set the packages. A CI run must never pick up a version the repository didn't choose. ([Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json), [Meziantou: Faster and Safer NuGet restore using Source Mapping and Lock files](https://www.meziantou.net/faster-and-safer-nuget-restore-using-source-mapping-and-lock-files.htm))
+- **If you restore from more than one feed, use package source mapping.** Without it, "If you have a package published on an internal feed... with the same name as a public package, the public package can be used instead". ([Meziantou: NuGet Packages: security risks and best practices](https://www.meziantou.net/nuget-packages-security-risks-and-best-practices.htm))
+  - Map every package to a source in one `nuget.config` at the repository root.
+  - Start its sources with `<clear/>`, so no inherited source survives.
+  - Leave no package pattern unmapped.
+
+  Mapping filters restore and nothing else: `dotnet package add` still reaches any configured source. ([Microsoft Learn: Package Source Mapping](https://learn.microsoft.com/nuget/consume-packages/package-source-mapping)) A repository that restores only from nuget.org gains little, because nuget.org never replaces a published version.
+
+- **Treat vulnerability warnings as build errors everywhere.** NuGet Audit runs during restore, and "`NuGetAuditMode` defaults to `all` when a project targets `net10.0` or higher", so it checks the whole graph. ([Microsoft Learn: Auditing package dependencies for security vulnerabilities](https://learn.microsoft.com/nuget/concepts/auditing-packages)) The warnings rule below turns NU1901 to NU1904 into errors. Restore then fails on the day an advisory lands, even if nobody changed the graph. That's intended: triaging the advisory is the first step in servicing the branch.
+  - To suppress one advisory, add `NuGetAuditSuppress` with its URL, and a comment that gives the reason, as the warnings rule requires for `#pragma` and `<NoWarn>`. ([Microsoft Learn: Excluding advisories](https://learn.microsoft.com/nuget/concepts/auditing-packages#excluding-advisories))
+  - Never use the documented shortcut, `<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>`. It turns the rule off for the warnings where a silent downgrade costs most. ([Microsoft Learn: NuGet Warnings NU1901, NU1902, NU1903, NU1904](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1901-nu1904))
+  - Never turn the audit off in the pipeline alone, which the documentation also offers.
+
+  .NET 10 prunes platform-provided packages from the graph before the audit, so the report is shorter: "Projects with these defaults have 70% fewer transitive vulnerability reports compared to projects using the previous defaults". ([Kolev: NuGet Package Pruning: Cleaner Dependencies and Actionable Vulnerability Reports](https://devblogs.microsoft.com/dotnet/nuget-package-pruning-in-dotnet-10/))
+
 - **Restrict what a package can run, not only which version restores.** A `PackageReference` can bring MSBuild props and targets, analyzers, and source generators. All of them run during restore, design-time build, and compile. A version pin decides which code you get, not whether it runs. List only the asset types a package needs:
   - Use `IncludeAssets="compile;runtime"` for a library you only call.
   - Use `PrivateAssets="all"` on build-only tooling, so it never flows to your consumers.
@@ -75,9 +89,12 @@ This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifac
 
 **Spend your signing effort on provenance and credentials, not on author signing.** For NuGet packages:
 
-- Ship deterministic builds, with Source Link, symbols, and package validation enabled.
-- Publish with a short-lived, least-privilege credential, such as trusted publishing or a scoped API key stored as a repository secret. Don't use a long-lived, organisation-wide key. ([Meziantou: Publishing a NuGet package using GitHub Actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm))
+- Ship deterministic builds, with Source Link, symbols, and package validation enabled. ([Meziantou: Publishing a NuGet package using GitHub Actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm))
+- Publish with trusted publishing, which leaves no credential in the repository. The workflow trades "a short-lived GitHub OIDC token to request a temporary, single-use NuGet API key", and "These keys expire quickly (≈1 hour)". That removes a secret whose "lifecycle... is notoriously difficult" to manage. ([Tvorun and Iyer: New Trusted Publishing enhances security on NuGet.org](https://devblogs.microsoft.com/dotnet/enhanced-security-is-here-with-the-new-trust-publishing-on-nuget-org/), [Lock: Publishing NuGet packages from GitHub actions the easy way with Trusted Publishing](https://andrewlock.net/easily-publishing-nuget-packages-from-github-actions-with-trusted-publishing/), [Microsoft Learn: Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing))
+- If your CI host can't present an OIDC token, use a scoped API key stored as a repository secret, and name an owner to rotate it. nuget.org caps a new key at 30 days. ([.NET Team: Strengthening NuGet Supply Chain Security: Reducing API Key Lifetime](https://devblogs.microsoft.com/dotnet/strengthening-nuget-supply-chain-security-reducing-api-key-lifetime/))
 - Author-sign only if your organisation already runs certificate infrastructure. nuget.org repository-signs every package it serves, and most consumers never verify an author signature. ([Microsoft Learn: Sign a NuGet package](https://learn.microsoft.com/nuget/create-packages/sign-a-package))
+
+**Review by 2026-11-01.** Every nuget.org API key created before 2026-08-17 expires on 2026-11-01. After that date, every key is on the 30-day cap, and you can drop this note.
 
 To protect consumers, pin: locked restore, a pinned SDK, and SHA-pinned actions.
 

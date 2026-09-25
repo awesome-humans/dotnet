@@ -1,8 +1,8 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-14
-last-used: 2026-09-25
-sources: [code-with-mukesh, milan-jovanovic, shay-rojansky]
+last-reviewed: 2026-09-25
+last-used: 2026-10-13
+sources: [code-with-mukesh, milan-jovanovic, ms-learn, shay-rojansky]
 ---
 
 # Data access
@@ -39,6 +39,15 @@ Use EF Core as the default ORM. Write set-based work as set-based SQL, and keep 
   - Add `FORCE ROW LEVEL SECURITY`, so the policy covers the owner too.
   - Write the predicate so that an unset tenant matches no rows. ([Jovanović: PostgreSQL row-level security with EF Core and Npgsql](https://www.milanjovanovic.tech/blog/postgres-row-level-security-with-ef-core))
 - **Set the tenant when the connection opens, not when the request starts.** EF Core opens and closes a connection for each command, and Npgsql resets pooled session state. A `SET` at the start of a request runs on a connection the next query doesn't use. Disabling the reset is worse: the next request then gets the previous tenant. Override `ConnectionOpened` in a `DbConnectionInterceptor`, which runs on whichever physical connection the pool hands out. ([Jovanović: PostgreSQL row-level security with EF Core and Npgsql](https://www.milanjovanovic.tech/blog/postgres-row-level-security-with-ef-core))
+- **Write raw SQL with the interpolated methods, and never pass input to a `*Raw` method.** "The FromSql and FromSqlInterpolated methods are safe against SQL injection, and always integrate parameter data as a separate SQL parameter. However, the FromSqlRaw method can be vulnerable to SQL injection attacks, if improperly used". The same split applies to `ExecuteSql` and `ExecuteSqlRaw`, and to `SqlQuery` and `SqlQueryRaw`. ([Microsoft Learn: SQL Queries](https://learn.microsoft.com/ef/core/querying/sql-queries)) Use a `*Raw` method only for SQL your own code builds, such as a table name from a fixed list, and never for a value from a request.
+
+  ```csharp
+  // Interpolated: the value becomes a parameter, not part of the statement.
+  var orders = await db.Orders
+      .FromSql($"SELECT * FROM Orders WHERE Status = {status}")
+      .ToListAsync(cancellationToken);
+  ```
+
 - **Insert with `AddRange` and one `SaveChanges` call, and switch to bulk copy only above about 10,000 rows.** The batched call keeps interceptors and audit trails working, and it's fast enough for ordinary writes. Never add and save entities one at a time in a loop: it's about ten times slower. ([Mukesh: Fastest way to bulk insert thousands of rows in EF Core](https://codewithmukesh.com/blog/ef-core-bulk-insert/))
 
 ## Source redundancy
