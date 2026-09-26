@@ -2,13 +2,13 @@
 
 Opinionated best practices for modern .NET.
 
-Distils the published guidance of awesome humans: people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Aims to answer the question _"what does good look like in .NET right now?"_ and to keep answering it as .NET improves.
+Distils the published guidance of awesome humans: people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). It answers the question _"what does good look like in .NET right now?"_ and keeps answering it as .NET improves.
 
 How to use this project:
 
 - **Point an agent at it.** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code." The opinions cover conventions, project layout, language usage, and library choices.
 - **Scaffold from it.** Copy files out of [`templates/`](templates), or run [`verify-project`](skills/verify-project/SKILL.md) against a codebase you already have.
-- **Read it.** At [awesome-humans.net](https://awesome-humans.net/dotnet/), or here on GitHub. Every opinion starts with the recommendation, then the rationale, then the sources, with code examples where it makes sense.
+- **Read it.** At [awesome-humans.net](https://awesome-humans.net/dotnet/), or here on GitHub. Every opinion starts with the recommendation, then the rationale, then the sources, with code examples where they help.
 
 ## Scope
 
@@ -29,7 +29,7 @@ The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
 - **Libraries:** what to use and what to avoid, spread across the files above
 
-A new opinion file must appear both here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order, or CI fails the pull request.
+A new opinion file must appear both here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order. CI fails the pull request when either index is incomplete or out of order.
 
 ## Freshness policy
 
@@ -39,9 +39,9 @@ Every resource records when it was last reviewed, so staleness is visible, and `
 
 ## Awesome humans
 
-Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: two years of sustained writing at minimum, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage, because an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is based on track record: two years of sustained writing at minimum, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage, because an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
-How a source gets in, and what its standing lets it do (orientation only: the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
+How a source gets in, and what its standing permits it to do (orientation only: the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
 ![Source standing: vet-source sorts a candidate into citable, watch list or declined, and a citable source is unmarked, Corroborate or Discovery-only](assets/diagrams/source-standing.svg)
 
@@ -99,14 +99,14 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 
 The repository maintains itself through agent skills following the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each is a directory under [`skills/`](skills) with a `SKILL.md`.
 
-They are built for a cost-aware split: cheaper worker agents fan out across the web searches and source sweeps, and the strongest available model acts as editor, the only one that writes to the opinions and templates.
+They are built for a cost-aware split: cheaper worker agents fan out across web searches and source sweeps, and the strongest available model acts as editor, the only one that writes to the opinions and templates.
 
 Every skill but the two report-only ones works on its own branch and lands through a pull request that passes CI and the owner's review (orientation only; each `SKILL.md` is canonical):
 
 ![Maintenance pipeline: each skill from what starts it, through CI and the owner's review, to the roster, research/, or the opinions and templates; audit-freshness and verify-project only report](assets/diagrams/maintenance-pipeline.svg)
 
 | Skill                                                                | Purpose                                                                                       |
-| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them       |
 | [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions    |
 | [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline            |
@@ -118,7 +118,7 @@ Every skill but the two report-only ones works on its own branch and lands throu
 
 ### Research lifecycle
 
-Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request: a topic on disk is unresolved by definition, and deletion is the only promotion marker (orientation only; the two `SKILL.md` files are canonical):
+Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request. A topic on disk is unresolved by definition, and deletion is the promotion marker (orientation only; the two `SKILL.md` files are canonical):
 
 ![Research lifecycle: research-topic saves research/{topic}.md, and resolve-research promotes, discards or partly promotes it](assets/diagrams/research-lifecycle.svg)
 
@@ -146,9 +146,9 @@ Run them from the repository root, exactly as CI does:
 dotnet run scripts/validate-metadata.cs
 ```
 
-[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the header-carrying `templates/` files and parses their first-line comment header. None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
+[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the header-carrying `templates/` files and parses their first-line comment header. None of the three helpers runs alone: each declares no top-level statements and compiles into whichever script `#:include`s it.
 
-The SDK comes from [`global.json`](global.json), whose floor is the feature band that understands `#:include`. It is not tied to [`templates/global.json`](templates/global.json): each pin follows what its own consumers need, and `rollForward: latestFeature` picks up newer bands without an edit. One check is still Python — the Agent Skills spec validator, published only to PyPI.
+The SDK comes from [`global.json`](global.json). Its floor is the feature band that understands `#:include`. It is not tied to [`templates/global.json`](templates/global.json): each pin follows what its consumers need, and `rollForward: latestFeature` picks up newer bands without an edit. One check is still Python: the Agent Skills spec validator, published only to PyPI.
 
 ## License
 
