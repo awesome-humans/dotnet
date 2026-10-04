@@ -130,10 +130,14 @@ Citable on the code-backed engineering posts and on the dotnet-skills he wrote h
   It was watch-listed as a source of its own on 2026-09-25 and folded in the same day: the track record follows the human, so the repository's 2025-11-12 start doesn't hold it back.
 - **Longevity:** Writing since [2010-05-14](https://aaronstannard.com/blog/page19/) on aaronstannard.com, and on the Petabridge blog since 2015; together the two show posts in every year from 2010 to 2026, and both are live, on 2026-08-21 and 2026-09-23.
   The personal blog alone thins to a handful of posts a year from 2016 to 2019, with its longest gap 347 days (2018-10-16 to 2019-09-28), and the Petabridge blog carries the volume across those years.
-- **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression unit tests couldn't catch, ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example, and ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
-  His 2026 "Software 2.0" series is the most concrete .NET-specific writing found on verifying agent-written code, and it reports failures as well as wins: ["Planning and Verifying a Greenfield Project"](https://aaronstannard.com/software-2.0-case-study-textforge/) records the agent writing tests that only "checked the 'has test coverage' box".
+- **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression that unit tests couldn't catch.
+  ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example.
+  ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
+  His 2026 "Software 2.0" series is the most concrete .NET-specific writing found on verifying agent-written code.
+  It reports failures as well as wins: ["Planning and Verifying a Greenfield Project"](https://aaronstannard.com/software-2.0-case-study-textforge/) records the agent writing tests that only "checked the 'has test coverage' box".
   dotnet-skills publishes [evaluations](https://github.com/Aaronontheweb/dotnet-skills-evals), real but small: 15 Akka.NET tasks judged by the model that wrote the code.
-- **Accuracy:** Sound, with in-post corrections on record: [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono, and ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` retracting a misreading of David Fowler.
+- **Accuracy:** Sound, with in-post corrections on record: [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono.
+  ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` retracting a misreading of David Fowler.
   dotnet-skills is weaker, because nothing compiles its samples: its own `AGENTS.md` says "There is no build system, tests, or compiled output."
   Checked on 2026-09-25 against SDK 10.0.400, the `testcontainers` samples fail with CS0246 against Testcontainers 4.15.0, the version their own `Version="*"` references restore, and a `csharp-coding-standards` value object fails with CS0111.
   The same skill's records hold collections, which breaks value equality, and a validating record can be bypassed with `with`.
@@ -141,7 +145,8 @@ Citable on the code-backed engineering posts and on the dotnet-skills he wrote h
   Its release notes do record corrections, including "fabricated APIs, compile errors" in the OpenTelemetry skill and guidance that wrongly called adding optional parameters binary-compatible.
 - **Authorship:** He made 68 of 82 dotnet-skills commits, but the skills that held up best under checking (`aot-trimming`, `csharp-nullable-reference-types`, `opentelementry-dotnet-instrumentation`) came largely from Daniel Marbach, Mauro Servienti and Tomasz Masternak of Particular Software.
   Their work isn't his writing and isn't citable under this id; where one of them has a written track record, vet that person instead.
-- **Conflict of interest:** He is CEO of Petabridge, which sells Akka.NET support plans, consulting and training and the Phobos monitoring product through Sdkbin, a marketplace he built, so never cite him alone on adopting Akka.NET, the actor model or Phobos.
+- **Conflict of interest:** He's CEO of Petabridge, which sells Akka.NET support plans, consulting, and training, and sells the Phobos monitoring product through Sdkbin, a marketplace he built.
+  So never cite him alone on adopting Akka.NET, the actor model, or Phobos.
   Six dotnet-skills skills and a subagent cover Akka.NET, so the same limit applies to them.
   His free AI tooling (dotnet-skills, dotnet-slopwatch, Netclaw) is promoted in the posts that describe his workflow, a milder conflict worth flagging where an opinion names one of them.
   He removed FluentAssertions from Akka.NET on licensing grounds on [2026-06-10](https://petabridge.com/blog/why-akkadotnet-remove-fluentassertions/), a decision that cost convenience, which is evidence of distance from convenient adoption rather than against it.
@@ -159,7 +164,8 @@ Marked because depth is mixed rather than absent, and conflicted on the architec
 
 - **Scope:** The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases don't.
 - **Longevity:** Writing since [2003-02-04](https://ardalis.com/first-post/), carried across four earlier blogs onto the current domain, and live rather than dormant: latest post 2026-08-19, cadence settled to roughly monthly as effort moves to video and courses.
-- **Depth:** ["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle, whereas ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
+- **Depth:** ["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle.
+  By contrast, ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
   DevIQ is reference-grade on definitions and taxonomy, strongest on [design patterns](https://deviq.com/design-patterns/), but its entries argue in prose and diagrams rather than code or measurements, so cite a measured source alongside it for any claim an opinion rests on.
 - **Accuracy:** Sound: no claim was found reversed or left standing wrong.
   In ["Avoid Using C# Events"](https://ardalis.com/avoid-using-csharp-events-in-aspnetcore-apps/) the logged memory figures are non-monotonic with no control loop, so cite the argument and not the measurements.
@@ -354,7 +360,9 @@ The 2008–2024 archive remains usable for discovery.
   Same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
 - **Cite:** For mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption.
   Quote the page's own review date from the `ms.date` metadata field, never `updated_at`, which is a docset build timestamp shared across every page in a bulk republish and can run years ahead of the text.
-  The field matters because these pages age unevenly: the microservices e-book is 2018 and 2021 content that hasn't been reviewed since, carrying `updated_at` values of 2023 and 2024 that are republishes rather than reviews, while the Azure Architecture Center pattern pages are revised on a rolling basis and carry recent `ms.date` values.
+  The field matters because these pages age unevenly.
+  The microservices e-book is 2018 and 2021 content that hasn't been reviewed since, and its `updated_at` values of 2023 and 2024 are republishes, not reviews.
+  The Azure Architecture Center pattern pages, by contrast, are revised on a rolling basis and carry recent `ms.date` values.
 
 ### `nicholas-blumhardt`: Citable
 
