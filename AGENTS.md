@@ -8,7 +8,7 @@ This repository defines opinionated best practices for modern .NET development. 
 - **Copy-paste-ready template files** under `templates/` that encode those opinions.
 - **A living reference.** Every resource records when it was last reviewed. Outside `research/`, it also records when it was last used. Skills under `skills/` keep it current.
 
-The repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills specification](https://agentskills.io/specification), and nothing here assumes a specific agent product.
+The repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills specification](https://agentskills.io/specification), and nothing here assumes a specific agent.
 
 ## Skills
 
