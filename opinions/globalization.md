@@ -125,7 +125,7 @@ Strongly typed resource classes from the designer are checked at compile time, b
 
 ### Containers: chiseled and Alpine images drop this data
 
-**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `noble-chiseled` or `alpine` images for size. The size-optimized images (Alpine, Ubuntu chiseled, and Azure Linux distroless) are exactly the ones that "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `10.0-alpine-extra` or `10.0-noble-chiseled-extra`, that adds ICU, tzdata, and `stdc++` back. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images))
+**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `noble-chiseled` or `alpine` images for size. The size-optimised images (Alpine, Ubuntu chiseled, and Azure Linux distroless) are exactly the ones that "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `10.0-alpine-extra` or `10.0-noble-chiseled-extra`, that adds ICU, tzdata, and `stdc++` back. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images))
 
 The two missing pieces fail differently, and a missing ICU fails in different ways depending on what the app does:
 

@@ -25,7 +25,7 @@ Two rules qualify these criteria:
 
 Candidates that don't qualify yet are tracked on the [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant), and the `vet-source` skill re-evaluates them. The log at the end of this file records every admission and demotion.
 
-### How the roster is organized
+### How the roster is organised
 
 - **IDs:** Each source has a stable `id`, which the `sources:` frontmatter in `opinions/` uses.
 - **Order:** Rows in every roster table, and the sections under [Source notes](#source-notes), are sorted alphabetically by `id`. Insert a new source in order instead of appending it.

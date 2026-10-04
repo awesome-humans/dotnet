@@ -76,7 +76,7 @@ The `checkout` and `setup-dotnet` pins are the ones this repository runs, and th
 **Spend your signing effort on provenance and credential hygiene, not on author-signing.** For NuGet packages:
 
 - Ship deterministic builds, with Source Link, symbols, and package validation enabled.
-- Publish with a short-lived, least-privilege credential, such as trusted publishing or a scoped API key stored as a repository secret. Don't use a long-lived, organization-wide key. ([Meziantou: Publishing a NuGet package using GitHub Actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm))
+- Publish with a short-lived, least-privilege credential, such as trusted publishing or a scoped API key stored as a repository secret. Don't use a long-lived, organisation-wide key. ([Meziantou: Publishing a NuGet package using GitHub Actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm))
 - Author-sign packages only if your organisation already runs certificate infrastructure. nuget.org repository-signs every package it serves, so for most publishers author signing adds cost, and no consumer verifies it. ([Microsoft Learn: Sign a NuGet package](https://learn.microsoft.com/nuget/create-packages/sign-a-package))
 
 On the consuming side, pinning is the protection that pays off: locked restore, a pinned SDK, and SHA-pinned actions.
