@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: Research a .NET topic conversationally using this repository's opinions and vetted sources, e.g. "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim carries its source and tier, respects the freshness policy's preview labeling, and closes by noticing what the research reveals about the repository (missing opinion, stale aside, GA'd feature). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
+description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim carries its source and tier, respects the freshness policy's preview labeling, and closes by noticing what the research reveals about the repository (missing opinion, stale aside, GA'd feature). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
@@ -10,47 +10,62 @@ metadata:
 
 # Research a topic
 
-Answer "what should I know / do about X?" using the trust boundary this repository maintains: its own opinions first, then the vetted roster. The only files this skill writes are its own research topic and the `last-used` dates of the opinions it consulted, both on a research branch. Changes to `opinions/` and `templates/` happen only via the existing skills it may recommend at the end.
+Answer "What should I know or do about X?" within this repository's trust boundary: its own opinions first, then the vetted roster. This skill writes only two things, both on a research branch: its research topic, and the `last-used` dates of the opinions it consulted. Changes to `opinions/` and `templates/` happen only through the skills it can recommend at the end.
 
 ## Orchestration
 
-Per [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy), fan the per-source reading out to worker agents; the editor alone weighs conflicting sources, assembles the research topic, and answers follow-ups.
+As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, fan the per-source reading out to worker agents. Only the editor weighs conflicting sources, assembles the research topic, and answers follow-up questions.
 
 ## Steps
 
-1. **Clarify intent in at most one question**, and only when the request forks: _learning_ it (explain + idioms), _deciding_ on it (trade-offs + maturity), or _migrating_ to it (diffs from the old way + breaking changes). A clear request gets researched immediately.
-2. **Start a worktree** on branch `research/<topic-slug>` (e.g. `research/union-types`), per the worktree and branch-name rules in [AGENTS.md](../../AGENTS.md). One per topic, created before the first write, so the research topic and the `last-used` bumps land together. The slug is the topic kebab-cased as the repository already names it (`union-types`, not `union-type`), so branch, research topic and opinions share one search term.
-3. **Start at home.** Read the matching `opinions/` file(s): the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted.
-4. **Sweep the roster in precedence order:**
-   - **Citable sources** weighted by focus match (check the roster's Focus column). These are quotable.
-   - **Watch-list sources** for discovery and cross-checking. Label them.
-   - **Non-roster material is welcome in research:** recent topics are often covered first by newer, not-yet-vetted voices, and research is where they prove useful. Flag every such citation as **unvetted**, keep unvetted claims visually distinct from roster-sourced ones, and record promising sources as `vet-source` candidates in the closing section. A named package's own documentation, release notes and issues are references rather than unvetted sources, so they need no flag ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)). Research is permissive; **promotion is the strict gate** (see Lifecycle).
+1. **Clarify the intent with at most one question,** and only when the request could go more than one way:
+   - _Learning_ it: an explanation and idioms.
+   - _Deciding_ on it: trade-offs and maturity.
+   - _Migrating_ to it: differences from the old way, and breaking changes.
+
+   Research a clear request immediately.
+
+2. **Start a worktree** on the branch `research/<topic-slug>`, such as `research/union-types`, following the worktree and branch name rules in [AGENTS.md](../../AGENTS.md). Create one per topic, before the first write, so the research topic and the `last-used` updates land together. Make the slug the topic in kebab case, as the repository already names it (`union-types`, not `union-type`), so the branch, research topic, and opinions share one search term.
+3. **Start with the repository.** Read the matching `opinions/` files. The repository might already hold the answer, or a "Coming next" note. Present **House:** content as "local convention, not community consensus". Update the `last-used` metadata on every opinion you consult.
+4. **Sweep the roster in order of precedence:**
+   1. **Citable sources,** weighted by how well their Focus column matches. You can quote these.
+   2. **Watch-list sources,** for discovery and cross-checking. Label them as watch-list.
+   3. **Material from outside the roster.** It's welcome in research, because newer sources that aren't vetted yet often cover recent topics first.
+      - Flag every such citation as **unvetted**, and keep unvetted claims visually separate from roster-sourced ones.
+      - Record promising sources as `vet-source` candidates in the closing section.
+      - A named package's own documentation, release notes, and issues are references, not unvetted sources, so they need no flag ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
+
+   Research is permissive. **Promotion is the strict gate,** as described in [Persistence and lifecycle](#persistence-and-lifecycle).
+
 5. **Assemble the research topic:**
-   - Answer-first: the recommendation or state-of-play in the opening sentences, depth after.
-   - Every claim cites its source id, and says where it stands when that narrows it (`**Corroborate.**`, or a limit its notes record); dates on anything time-sensitive.
-   - **Preview features are labelled per the freshness policy:** "in preview as of `<date>`, not yet an opinion", and clearly separated from GA guidance.
-   - Where sources disagree, say so and weigh them; don't average them into mush.
-6. **Converse.** Follow-up questions reuse the gathered material. Re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
-7. **Close the loop.** End it by noticing what the research revealed about the repository, and recommend (never run unprompted) the matching skill:
-   - Topic has no opinion file / no coverage → recommend `resolve-research`, which decides between folding into an existing file and opening a new one.
-   - Existing aside or opinion is stale (feature GA'd, guidance superseded) → recommend `refresh-dotnet-versions` or `harvest-sources`.
-   - A strong non-roster source carried the research → recommend `vet-source`.
-   - Repository already answers it fully → say so; that is the system working, and it can be discarded via `resolve-research`.
-   - A previously saved research topic on this subject exists in `research/` → build on it, refresh its dates, and surface its promote-or-discard status.
+   - Put the answer first: the recommendation or current state in the opening sentences, and the detail after.
+   - Cite a source ID for every claim. Say where the source stands when that limits the claim, such as `**Corroborate.**` or a limit in its notes. Date anything time-sensitive.
+   - **Label preview features as the freshness policy requires:** "in preview as of `<date>`, not yet an opinion". Keep them clearly separate from GA guidance.
+   - Where sources disagree, say so, and weigh them. Don't average them into a vague middle.
+6. **Answer follow-up questions** from the material you've gathered. Sweep again only when a question goes beyond what you researched, in the same order of precedence.
+7. **Close the loop.** End by noting what the research revealed about the repository, and recommend the matching skill. Never run it unprompted.
+
+   | Finding                                                                      | Recommendation                                                                          |
+   | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+   | The topic has no opinion file or coverage                                    | `resolve-research`, which decides whether to add to an existing file or start a new one |
+   | A note or opinion is stale, because a feature reached GA or guidance changed | `refresh-dotnet-versions` or `harvest-sources`                                          |
+   | A strong source from outside the roster carried the research                 | `vet-source`                                                                            |
+   | The repository already answers the question fully                            | Say so. The system is working, and `resolve-research` can discard the topic             |
+   | A saved research topic on this subject exists in `research/`                 | Build on it, refresh its dates, and report its promote-or-discard status                |
 
 ## Persistence and lifecycle
 
-**Save the research topic by default** to `research/<topic-slug>.md` with the frontmatter a topic carries ([AGENTS.md: Metadata](../../AGENTS.md#metadata)). Skip saving only if the user says the question was throwaway.
+**Save the research topic by default** to `research/<topic-slug>.md`, with the metadata a topic carries ([AGENTS.md: Metadata](../../AGENTS.md#metadata)). Skip saving only if the user says the question was a one-off.
 
-Commit the topic and its `last-used` bumps on the `research/<topic-slug>` branch and open a PR to the default branch. Merging puts the research on record; only then does `resolve-research` pick it up, on its own branch and PR. Never fold the promote-or-discard decision into the still-open research PR. If the user declined saving, delete the branch and answer in conversation only.
+Commit the topic and its `last-used` updates on the `research/<topic-slug>` branch, and open a pull request to the default branch. Merging puts the research on record. Only then does `resolve-research` pick it up, on its own branch and pull request. Never add the promote-or-discard decision to the open research pull request. If the user doesn't want it saved, delete the branch and answer in the conversation only.
 
-**Commit and title the PR `research: <topic>`** (e.g. `research: union types`), not `docs: research <topic>`. A distinct type keeps staged research apart from settled opinion edits in `git log`, and lists every topic the repository has taken on. Resolution commits are typed by `resolve-research`.
+**Use `research: <topic>` for the commit and pull request title,** such as `research: union types`, not `docs: research <topic>`. A separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic the repository has researched. `resolve-research` sets the type of the resolution commits.
 
-Every saved topic must eventually resolve, by promotion or discard. `resolve-research` owns both, and both end with the file deleted, so a topic on disk is unresolved by definition. `audit-freshness` reports one past its tolerance as promote-or-discard triage.
+Every saved topic must eventually be resolved, by promotion or discard. `resolve-research` handles both, and both end with the file deleted, so a topic on disk is unresolved by definition. `audit-freshness` reports a topic past its tolerance for promote-or-discard triage.
 
 ## Edge cases
 
-- **Preview-only topics** (the "union types" case): research them fully, since that is a legitimate ask, but lead with maturity status and mark any "when it GAs" guidance as hypothetical.
-- **Topic outside .NET entirely**: say the roster has no authority there and stop, rather than improvising from general knowledge dressed up as vetted research.
-- **Offline**: answer from `opinions/` alone and say the roster sweep was skipped. An opinions-only answer is still a sourced answer, but its ceiling is the repository's `last-reviewed` dates.
-- **Conflicting House and community positions**: present both, in that order, and note the house rationale: the reader may be working outside this repository's conventions.
+- **Preview-only topics,** such as union types: Research them fully, because it's a legitimate request. Lead with the maturity status, and mark any guidance for "when it reaches GA" as hypothetical.
+- **A topic outside .NET:** Say that the roster has no authority there, and stop. Don't present general knowledge as vetted research.
+- **Offline:** Answer from `opinions/` alone, and say that you skipped the roster sweep. An answer from the opinions is still sourced, but it's only as current as their `last-reviewed` dates.
+- **House and community positions conflict:** Present both, house first, and give the house reasoning. The reader might be working outside this repository's conventions.
