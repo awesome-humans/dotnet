@@ -35,6 +35,9 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    | An aggregator, such as a link roundup or newsletter  | **Admit,** marked **discovery-only**. It never appears in an opinion's `sources:` |
    | Thin on depth, but sound on the other three criteria | **Admit,** marked **`**Corroborate.**`**                                          |
    | Anything else                                        | **Decline,** with a one-line reason in the pull request only, not the roster      |
+
+   The two qualifying rules work like this:
+
    - **An independence concern is a usage limit, never a lower rank.** A concern is live when vendor developer relations or product-team employment produces adoption-focused content with little critical distance. Admit the source, and write in its notes what a citation can rest on, usually how something works, not whether to adopt it. Working for a vendor doesn't need a limit by itself: depth with critical distance stands on its own. A concern that no limit could contain means a decline or the watch list, not an admission with a weaker limit.
    - **Dormancy blocks admission.** The exception is a person whose **writing** clearly continues elsewhere, such as official documentation, another publication, or a book. Then the track record follows the person, and the notes record the dormant channel.
      - Repository activity isn't evidence. Opinions don't cite commits, releases, or issue threads, so a busy GitHub profile beside a silent blog is still a dormant source.
