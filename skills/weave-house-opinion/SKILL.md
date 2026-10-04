@@ -10,27 +10,27 @@ metadata:
 
 # Weave a house opinion
 
-House opinions are the owner's preferences: first-class, but never disguised as community best practice. This skill folds them into the living reference while keeping the two visibly separate.
+House opinions are the owner's preferences. They carry full weight, but they never pass as community best practice. This skill adds them to the living reference, and keeps the two visibly separate.
 
 ## Steps
 
-1. **Take the entry** from the HOUSE-OPINIONS.md inbox (or from the owner's request directly, in which case add it to the inbox first so the audit trail starts there).
-2. **Find its home**: the matching `opinions/` file and, where the opinion changes scaffolding (an `.editorconfig` rule, a build property), the matching `templates/` file. A house opinion with no natural home yet gets a new opinion file, same rules as any other, including indexing it in `README.md` (a linked Scope bullet and a Repository layout entry), which CI enforces.
-3. **Weave it in, marked**:
-   - In `opinions/`: write it in the house style (opinion first, rationale after) prefixed with **House:** in bold, and add `house` to the file's `sources:` frontmatter.
-   - In `templates/`: apply the change and add `house` to the header's `sources:` list (the pipe-delimited comment header audit-freshness reads), with an inline comment on the changed setting where the format allows.
-4. **Handle conflicts explicitly** per the canonical precedence rule in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works): house wins, the sourced position stays as the one-line cited note. Never silently delete the sourced view.
-5. **Move the inbox entry to the Woven table** in HOUSE-OPINIONS.md with the date and destination link.
-6. **Update frontmatter** (`last-reviewed`) on every file touched, then open a PR to the default branch (work on a `house/<slug>` branch, per the branch names in [AGENTS.md](../../AGENTS.md)). Title it so the house origin is obvious, e.g. `docs: weave house opinion on <title>`.
+1. **Take the entry** from the HOUSE-OPINIONS.md inbox. If the owner asks directly instead, add the entry to the inbox first, so the audit trail starts there.
+2. **Find where it belongs:** the matching `opinions/` file, and, if the opinion changes scaffolding such as an `.editorconfig` rule or a build property, the matching `templates/` file. If a house opinion has no natural home yet, create a new opinion file under the usual rules. That includes adding it to `README.md`, as a linked Scope bullet and a Repository layout entry, which CI enforces.
+3. **Weave it in, marked:**
+   - **In `opinions/`:** Write it in the house style, with the opinion first and the rationale after, and start it with **House:** in bold. Add `house` to the file's `sources:` metadata.
+   - **In `templates/`:** Make the change, and add `house` to the `sources:` list in the comment header that `audit-freshness` reads. Where the format allows, add an inline comment on the changed setting.
+4. **Handle conflicts explicitly,** following the canonical precedence rule in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works). The house opinion wins, and the sourced position stays as the cited one-line note. Never silently delete the sourced view.
+5. **Move the inbox entry to the Woven table** in HOUSE-OPINIONS.md, with the date and a link to where it went.
+6. **Update `last-reviewed`** on every file you change. Work on a `house/<slug>` branch, as described in the branch name rules in [AGENTS.md](../../AGENTS.md), and open a pull request to the default branch. Give it a title that makes the house origin obvious, such as `docs: weave house opinion on <title>`.
 
 ## Rules
 
-- **Never launder a house opinion into a sourced one.** If a vetted source later publishes the same guidance, the harvest may add the source citation alongside the house marking, and the marking stays.
-- **House opinions are exempt from source tracing but not from quality**: code examples must still compile against the declared `targets`, and the opinion must still be one recommendation, not a menu.
-- **Only the repository owner's opinions weave directly.** Contributor-proposed opinions arrive by PR (see `.github/PULL_REQUEST_TEMPLATE.md`) and only weave after the owner accepts them, at which point they become house opinions credited in the PR history.
-- Harvest and refresh skills must not remove or dilute house-marked content; they update the sourced context around it.
+- **Never launder a house opinion into a sourced one.** If a vetted source later publishes the same guidance, a harvest can add the citation next to the house marking, and the marking stays.
+- **House opinions don't need source tracing, but they do need quality.** Code examples must still compile against the declared `targets`, and the opinion must still be one recommendation, not a menu.
+- **Only the repository owner's opinions are woven in directly.** Contributors propose opinions in a pull request, as described in `.github/PULL_REQUEST_TEMPLATE.md`. Their opinions are woven in only after the owner accepts them. They then become house opinions, credited in the pull request history.
+- **Harvest and refresh skills must not remove or weaken house content.** They update the sourced context around it.
 
 ## Edge cases
 
-- **The owner changes their mind**: weave the reversal the same way and move the old Woven row's entry note to reflect supersession. The audit trail is append-only in spirit; do not rewrite history.
-- **A house opinion becomes obsolete** (e.g. the framework now does it automatically): mark it superseded in place with the release that obsoleted it, citing the source.
+- **The owner changes their mind:** Weave in the reversal the same way, and update the old Woven row's note to show that it's superseded. Treat the audit trail as append-only, and don't rewrite history.
+- **A house opinion becomes obsolete,** for example because the framework now does it automatically: Mark it as superseded where it appears, name the release that made it obsolete, and cite the source.
