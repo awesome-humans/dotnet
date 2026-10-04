@@ -1,25 +1,25 @@
-<!-- Thanks for contributing! For opinion/template changes, fill in the section below.
-     For mechanical fixes (typos, broken links, CI), delete it and describe the fix. -->
+<!-- Thanks for contributing! For opinion or template changes, fill in the sections below.
+     For mechanical fixes, such as typos, broken links, or CI, delete them and describe the fix. -->
 
 ## Proposed opinion
 
-**Opinion (one sentence, one recommendation, not a menu):**
+**Opinion (one sentence with one recommendation, not a menu):**
 
-**Why (rationale, trade-offs, what it replaces):**
+**Why (the reasoning, the trade-offs, and what it replaces):**
 
-**Where it belongs (`opinions/` / `templates/` file):**
+**Where it belongs (an `opinions/` or `templates/` file):**
 
 ## Provenance: pick one
 
-- [ ] **Sourced:** traces to a vetted source in [AWESOME-HUMANS.md](../AWESOME-HUMANS.md). Source id(s) and links:
-- [ ] **Candidate source:** traces to a source not yet on the roster (it will need to pass [`vet-source`](../skills/vet-source/SKILL.md) before the opinion can merge). Source and evidence of track record:
-- [ ] **Experience-based:** from my own practice, no published source. If the owner accepts, they **adopt** it as a house opinion ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md)): the owner takes responsibility for it, and this PR and its author are credited in the Woven table's Provenance column.
+- [ ] **Sourced:** It traces to a vetted source in [AWESOME-HUMANS.md](../AWESOME-HUMANS.md). Source IDs and links:
+- [ ] **Candidate source:** It traces to a source that isn't on the roster yet. The source must pass [`vet-source`](../skills/vet-source/SKILL.md) before the opinion can merge. Source and evidence of its track record:
+- [ ] **Experience-based:** It comes from my own practice, with no published source. If the owner accepts it, they **adopt** it as a house opinion ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md)). The owner takes responsibility for it, and the Provenance column of the Woven table credits this pull request and its author.
 
 ## Checklist
 
-- [ ] Opinion-first style: recommendation in the first sentence, rationale after, sources last (see [AGENTS.md](../AGENTS.md))
-- [ ] Code examples compile against the declared `targets:` (state the SDK you built with)
-- [ ] Frontmatter complete on every `opinions/`, `research/`, or `templates/` file touched: the CI-validated fields `targets`, `last-reviewed`, `sources`, plus `last-used` outside `research/`. [AGENTS.md](../AGENTS.md) lists the exemptions: the two JSON templates, and `skills/`, whose frontmatter the Agent Skills spec defines
-- [ ] New, renamed, or removed `opinions/` file indexed in [README.md](../README.md): a linked **Scope** bullet and a **Repository layout** entry, each in order, with no stale ones left behind (CI-validated)
-- [ ] `npm run check` passes: Markdown and JSON/YAML formatting plus markdownlint, at the versions pinned in `package.json`
-- [ ] No preview-version features stated as opinions (previews go in "Coming next" asides)
+- [ ] The opinion comes first: the recommendation in the first sentence, then the rationale, then the sources. For details, see [AGENTS.md](../AGENTS.md).
+- [ ] Code examples compile against the declared `targets:`. State the SDK you built with.
+- [ ] Every `opinions/`, `research/`, or `templates/` file you changed has complete metadata: `targets`, `last-reviewed`, and `sources`, plus `last-used` outside `research/`. CI validates these. [AGENTS.md](../AGENTS.md) lists the exemptions: the two JSON templates, and `skills/`, whose frontmatter the Agent Skills specification defines.
+- [ ] Every new, renamed, or removed `opinions/` file is indexed in [README.md](../README.md), with a linked **Scope** bullet and a **Repository layout** entry, each in order, and no stale entries. CI validates this.
+- [ ] `npm run check` passes. It checks Markdown, JSON, and YAML formatting, and runs markdownlint, at the versions pinned in `package.json`.
+- [ ] No preview features are stated as opinions. Previews go in "Coming next" notes.
