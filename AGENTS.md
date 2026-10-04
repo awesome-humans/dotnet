@@ -146,7 +146,7 @@ The voice follows the [Microsoft Writing Style Guide](https://learn.microsoft.co
 - **Cut what doesn't add a fact.** Delete a sentence that restates the one before it. Delete one that comments on the text instead of the subject, such as "which is worth noticing" or "the part that matters".
 - **Keep sentences short.** Aim for about 20 words. Split any sentence over 35 words at the clause that does separate work.
 - **Keep paragraphs short.** Three or four sentences is plenty. Break up a longer one, or turn it into a list.
-- **Make it scannable.** Use a numbered list for steps that happen in order, a bulleted list for items that don't, and a table when the same attributes repeat across items. Use sentence-style capitalization for headings, and keep headings short and specific.
+- **Make it scannable.** Use a numbered list for steps that happen in order, a bulleted list for items that don't, and a table when the same attributes repeat across items. Use sentence-style capitalisation for headings, and keep headings short and specific.
 - **Use the serial comma.** Write "opinions, templates, and skills".
 
 ### Rhythm
