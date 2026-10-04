@@ -43,8 +43,12 @@ Servicing regressions happen too: .NET 10.0.4 shipped a debugger crash on macOS 
 ## The cost of narrowing is a support cliff, not lost patches
 
 Feature bands don't all get the same support window.
-The `1xx` band is serviced for the life of the major version, the final band of a major version is serviced for the life of the matching runtime, and the bands in between are supported only until roughly the next band ships.
-As of 2026-09-14 ([Microsoft Learn: .NET SDK, MSBuild, and Visual Studio versioning](https://learn.microsoft.com/dotnet/core/porting/versioning-sdk-msbuild-vs)):
+Support differs by band:
+
+- The `1xx` band is serviced for the life of the major version.
+- The final band of a major version is serviced for the life of the matching runtime.
+- The bands in between are supported only until about when the next band ships.
+  As of 2026-09-14 ([Microsoft Learn: .NET SDK, MSBuild, and Visual Studio versioning](https://learn.microsoft.com/dotnet/core/porting/versioning-sdk-msbuild-vs)):
 
 | SDK band   | Ship date | Supported until |
 | ---------- | --------- | --------------- |
@@ -63,7 +67,7 @@ A repository pinned `latestPatch` at `10.0.100` took 10.0.111 and got every fix 
 
 The next servicing release makes the same point from the other side.
 10.0.12 on 2026-09-08 shipped only **two** SDKs, 10.0.401 and 10.0.112.
-The 3xx band, which the table above gives as supported until August, had aged out and got nothing, so a repository pinned `latestPatch` at `10.0.300` went from fully patched to frozen in the space of one month without changing a line.
+The 3xx band, which the table above lists as supported until August, had aged out and got nothing. So a repository pinned with `latestPatch` at `10.0.300` went from fully patched to frozen within one month, without changing a line.
 That's the support cliff as an observed event rather than a projection, and it's the reason the floor's band matters more than the policy on it.
 ([dotnet/core: .NET 10.0.12 release notes](https://github.com/dotnet/core/blob/main/release-notes/10.0/10.0.12/10.0.12.md), **unvetted** as above)
 
