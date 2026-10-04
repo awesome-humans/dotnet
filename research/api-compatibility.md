@@ -58,7 +58,7 @@ This research reproduced it on SDK 10.0.400 with a package `Compat.Demo`, changi
 The third row is the finding that matters for `ci.md`.
 Package validation without a baseline checks a package against itself: consistent surfaces across target frameworks, and no missing assets.
 Only the baseline compares it with what consumers already have.
-Package validation has shipped in the SDK since .NET 6 ([.NET Blog: Package Validation](https://devblogs.microsoft.com/dotnet/package-validation/), 2021-06-22), and it is still opt-in.
+Package validation has shipped in the SDK since .NET 6 ([.NET Blog: Package Validation](https://devblogs.microsoft.com/dotnet/package-validation/), 2021-06-22), and it's still opt-in.
 Meziantou's walkthrough covers the same setup, including `EnableStrictModeForBaselineValidation` ([Meziantou: Detecting breaking changes between two versions of a NuGet package at packaging time](https://www.meziantou.net/detecting-breaking-changes-between-two-versions-of-a-nuget-package-at-packaging.htm), 2023-01-09).
 
 **Recommendation:** in every packable project, set `EnablePackageValidation` and `PackageValidationBaselineVersion`, and roll the baseline forward after each release.
@@ -66,7 +66,7 @@ When a break is intentional, generate the suppression file with `GenerateCompati
 
 ## Make the API surface visible in review
 
-Baseline validation fails the pack. It does not show a reviewer that the surface changed while the pull request is still open, and it says nothing about additions.
+Baseline validation fails the pack. It doesn't show a reviewer that the surface changed while the pull request is still open, and it says nothing about additions.
 Three tools write the surface into the repository, and they differ in where the check runs:
 
 - **`Microsoft.CodeAnalysis.PublicApiAnalyzers`** (5.6.0 as of 2026-09-25, now maintained in `dotnet/roslyn`): `PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt` beside the project. RS0016 fires on any public symbol missing from the files, and RS0017 on an entry that no longer exists. With `#nullable enable` at the top of the files, RS0036 and RS0037 track nullable annotations too.
@@ -77,7 +77,7 @@ Three tools write the surface into the repository, and they differ in where the 
 His objections are specific: "I find it tedious that the analyzer breaks the build _every_ time I add a public type", the Shipped/Unshipped split seems "completely unnecessary" to him, and he dislikes the file format, where PublicApiGenerator's output "looks a lot like 'normal' C#."
 The first objection is the reason to choose the analyzer here.
 The **House:** rule already makes warnings errors on every workstation, and a new public member is a commitment worth one deliberate line in a file.
-The Shipped/Unshipped split also records which additions have not been released yet, and they can still change freely.
+The Shipped/Unshipped split also records which additions haven't been released yet, and they can still change freely.
 The analyzer also has dedicated rules, RS0036 and RS0037, for nullable annotations in the declared surface.
 Meziantou's generator is the choice for someone who shares Lock's taste but wants the check outside the test run.
 All three are detection. None of them replaces baseline validation, which is the only check that compares against what shipped.
@@ -95,8 +95,8 @@ The entries most likely to surprise someone who knows the obvious ones:
 - **Adding `virtual` to a member is disallowed**, as is removing it: callers compiled earlier may call it non-virtually.
 - **Sealing a type is disallowed** if it has accessible constructors.
 - **Adding an interface member is a judgement call.** A default implementation avoids compile failures, but since C# 13 a `ref struct` implementing the interface must implement every instance member explicitly, so a new default member is a source break for it. `ms-learn` suggests considering an abstract base class where the contract is expected to grow ([Microsoft Learn: Breaking changes and .NET libraries](https://learn.microsoft.com/dotnet/standard/library-guidance/breaking-changes)).
-- **Adding an instance field to a struct with no non-public fields** breaks callers that declare it without a constructor call. It is a binary break for callers using `[SkipLocalsInit]`.
-- **Changing a parameter default value is not a binary break**, because the old value is baked into callers, but recompiled callers silently get the new behaviour. Removing a default is a source break.
+- **Adding an instance field to a struct with no non-public fields** breaks callers that declare it without a constructor call. It's a binary break for callers using `[SkipLocalsInit]`.
+- **Changing a parameter default value isn't a binary break**, because the old value is baked into callers, but recompiled callers silently get the new behaviour. Removing a default is a source break.
 - **Changing an overload set is where binary and source compatibility come apart.** Adding an overload that "precludes an existing overload and defines different behavior" is disallowed, even though existing binaries keep calling the old one.
 
 Wire and persistence formats follow the same rule with higher stakes: Stannard calls wire compatibility "the most important type of compatibility if you need it" ([Stannard: Maintaining API, Binary, and Wire Compatibility](https://aaronstannard.com/oss-compatibility-standards/), 2021-05-04).
@@ -127,11 +127,11 @@ Checked on SDK 10.0.400:
 
 - **Seemann:** "I find Semantic Versioning useful as it is." He goes as far as treating deprecation itself as a possible major bump ([Seemann: Phased breaking changes](https://blog.ploeh.dk/2025/03/17/phased-breaking-changes/), 2025-03-17).
 - **Stannard:** "Strict SemVer is hilariously impractical". Breaks to experimental, deprecated or low-impact APIs can ship without a major bump, because "the right thing is always setting the user's expectations correctly" ([Stannard: Practical vs. Strict Semantic Versioning](https://aaronstannard.com/oss-semver/), 2021-05-31).
-- **Skeet** sides with strictness for a structural reason: SemVer "makes the version number a purely technical decision, not a marketing one", and the runtime cannot isolate two majors of one package in a process.
+- **Skeet** sides with strictness for a structural reason: SemVer "makes the version number a purely technical decision, not a marketing one", and the runtime can't isolate two majors of one package in a process.
 
 **Weighing it: strict for everything baseline validation can see, with Stannard's carve-out made explicit.**
 Tooling now makes strictness cheap: a binary break fails the pack, and a suppression file forces the decision into review.
-Stannard's legitimate case, unstable APIs that should not freeze the major version, is exactly what `[Experimental]` exists for. `ms-learn`: "If you want to ship a stable package that contains some preview quality APIs, you should mark those APIs using `[Experimental]`. Make sure to use your own diagnostic ID" ([Microsoft Learn: Preview APIs](https://learn.microsoft.com/dotnet/fundamentals/runtime-libraries/preview-apis)).
+Stannard's legitimate case, unstable APIs that shouldn't freeze the major version, is exactly what `[Experimental]` exists for. `ms-learn`: "If you want to ship a stable package that contains some preview quality APIs, you should mark those APIs using `[Experimental]`. Make sure to use your own diagnostic ID" ([Microsoft Learn: Preview APIs](https://learn.microsoft.com/dotnet/fundamentals/runtime-libraries/preview-apis)).
 Consumers must opt into each diagnostic ID, so a break there was agreed to in advance and the carve-out is visible in the code rather than in the maintainer's judgement.
 
 ## Deprecation: phase it across majors
@@ -139,7 +139,7 @@ Consumers must opt into each diagnostic ID, so a break there was agreed to in ad
 **Mark, then escalate, then delete, one major version apart.**
 Seemann's sequence, worked in C#: `[Obsolete]` as a warning in major N, `error: true` in N+1, deletion in N+2. "Only in version 5.0.0 can you entirely delete it... this whole process may take years. I find that appropriate." ([Seemann: Phased breaking changes](https://blog.ploeh.dk/2025/03/17/phased-breaking-changes/))
 Give each obsoletion its own `DiagnosticId` and a `UrlFormat` pointing at migration notes. Consumers can then suppress one retirement without silencing all of CS0618, and every warning links to what replaces it ([Microsoft Learn: ObsoleteAttribute](https://learn.microsoft.com/dotnet/api/system.obsoleteattribute)).
-For low- and mid-level libraries (serializers, ORMs, frameworks), `ms-learn` suggests keeping obsolete members indefinitely, since removal is a binary break for consumers who cannot control their transitive graph.
+For low- and mid-level libraries (serializers, ORMs, frameworks), `ms-learn` suggests keeping obsolete members indefinitely, since removal is a binary break for consumers who can't control their transitive graph.
 That is Stannard's "measured in years" taken to its end.
 
 When a whole major is a rewrite, Skeet's alternative deserves consideration: publish it as a new package ID, so that both majors can load side by side ([Skeet: Options for .NET's versioning issues](https://codeblog.jonskeet.uk/2019/10/25/options-for-nets-versioning-issues/), 2019-10-25).

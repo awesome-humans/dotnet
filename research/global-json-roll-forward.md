@@ -11,9 +11,9 @@ For .NET 10 that means `10.0.1xx` or `10.0.4xx` and nothing in between, because 
 Narrowing to a band that has aged out trades a hypothetical build break for a real one: no more security patches.
 
 Two things follow, and they are the practical heart of this topic.
-`latestPatch` costs you no security fixes **provided** the floor sits on a band that is still serviced and a current patch is published in that band for the policy to resolve to; the policy on its own carries no such promise.
-And when a band update does break a build, `SdkAnalysisLevel` is the first lever only where the behaviour that broke is one the property documents. It is not a general "make this SDK behave like the older band" switch.
-Outside that set, the lever is whatever compatibility switch governs the specific behaviour, and narrowing `rollForward` is what is left when there is no such switch.
+`latestPatch` costs you no security fixes **provided** the floor sits on a band that's still serviced and a current patch is published in that band for the policy to resolve to; the policy on its own carries no such promise.
+And when a band update does break a build, `SdkAnalysisLevel` is the first lever only where the behaviour that broke is one the property documents. It isn't a general "make this SDK behave like the older band" switch.
+Outside that set, the lever is whatever compatibility switch governs the specific behaviour, and narrowing `rollForward` is what is left when there's no such switch.
 
 ## Why the feature band is where compatibility stops
 
@@ -35,14 +35,14 @@ MSBuild's custom-culture resource handling was introduced in SDK 9.0.200 and the
 One `"version": "9.0.100", "rollForward": "latestFeature"` covered both behaviours, so two machines a quarter apart built the same commit differently.
 ([Microsoft Learn: .NET 9 breaking changes](https://learn.microsoft.com/dotnet/core/compatibility/9.0), [Microsoft Learn: MSBuild custom culture resource handling](https://learn.microsoft.com/dotnet/core/compatibility/sdk/10.0/msbuild-custom-culture))
 
-Patches are not perfectly inert either, so the accurate rule is that they are lower risk rather than no risk.
+Patches aren't perfectly inert either, so the accurate rule is that they are lower risk rather than no risk.
 `NuGetAuditMode` had its default changed to `all` during .NET 9 previews and reverted to `direct` in the **9.0.101 SDK**, a patch-level behavioural change.
 Servicing regressions happen too: .NET 10.0.4 shipped a debugger crash on macOS under VS Code, fixed by an out-of-band 10.0.5 on 2026-03-12.
 ([Microsoft Learn: `dotnet restore` audits transitive packages](https://learn.microsoft.com/dotnet/core/compatibility/sdk/10.0/nugetaudit-transitive-packages), [dotnet/core: .NET 10 known issues](https://github.com/dotnet/core/blob/main/release-notes/10.0/known-issues.md), **unvetted**: first-party release notes on GitHub rather than a roster source)
 
 ## The cost of narrowing is a support cliff, not lost patches
 
-Feature bands do not all get the same support window.
+Feature bands don't all get the same support window.
 The `1xx` band is serviced for the life of the major version, the final band of a major version is serviced for the life of the matching runtime, and the bands in between are supported only until roughly the next band ships.
 As of 2026-09-14 ([Microsoft Learn: .NET SDK, MSBuild, and Visual Studio versioning](https://learn.microsoft.com/dotnet/core/porting/versioning-sdk-msbuild-vs)):
 
@@ -54,7 +54,7 @@ As of 2026-09-14 ([Microsoft Learn: .NET SDK, MSBuild, and Visual Studio version
 | `10.0.4xx` | Aug 2026  | Nov 2028        |
 
 A `latestPatch` floor of `10.0.200` is therefore not a conservative choice.
-It is a pin to an SDK that stopped receiving security fixes in May 2026.
+It's a pin to an SDK that stopped receiving security fixes in May 2026.
 
 Where the floor is on a serviced band, the security objection disappears entirely.
 The 10.0.11 servicing release on 2026-08-11 shipped **three** SDKs at once: 10.0.400, 10.0.303 and 10.0.111, carrying the same ten CVE fixes.
@@ -64,7 +64,7 @@ A repository pinned `latestPatch` at `10.0.100` took 10.0.111 and got every fix 
 The next servicing release makes the same point from the other side.
 10.0.12 on 2026-09-08 shipped only **two** SDKs, 10.0.401 and 10.0.112.
 The 3xx band, which the table above gives as supported until August, had aged out and got nothing, so a repository pinned `latestPatch` at `10.0.300` went from fully patched to frozen in the space of one month without changing a line.
-That is the support cliff as an observed event rather than a projection, and it is the reason the floor's band matters more than the policy on it.
+That's the support cliff as an observed event rather than a projection, and it's the reason the floor's band matters more than the policy on it.
 ([dotnet/core: .NET 10.0.12 release notes](https://github.com/dotnet/core/blob/main/release-notes/10.0/10.0.12/10.0.12.md), **unvetted** as above)
 
 Note what this rules out. `rollForward: disable` pins a single patch, and a servicing update **removes the patch it supersedes** within the same band.
@@ -76,7 +76,7 @@ Visual Studio makes it worse: it keeps one SDK copy and replaces it on upgrade, 
 
 `actions/setup-dotnet` honours the `latest*` policies and installs the SDK the policy resolves to.
 Under `latestFeature`, the version CI builds with changes on the day a new band ships, with no commit and no review.
-That is the mechanism behind "green yesterday, red today", so choose the policy deliberately even if the answer stays `latestFeature`.
+That's the mechanism behind "green yesterday, red today", so choose the policy deliberately even if the answer stays `latestFeature`.
 ([actions/setup-dotnet: README](https://github.com/actions/setup-dotnet#using-the-global-json-file-input), **unvetted**: first-party action documentation)
 
 One reported case, useful as a shape rather than as a settled fact: SDK 10.0.300 was reported to roughly double `.slnx` build times against 10.0.204, and the reporter's mitigation was a narrower `global.json` pin.
@@ -98,9 +98,9 @@ Two limits matter. The property covers only the behaviours in the documented tab
 And a value ages out after three major releases.
 ([Microsoft Learn: MSBuild properties for .NET SDK projects](https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#sdkanalysislevel), [dotnet/designs: SDK Analysis Level Property and Usage](https://github.com/dotnet/designs/blob/main/proposed/sdk-analysis-level.md); the design document is **unvetted**)
 
-Where the incompatibility is in that table, prefer it to a narrower `rollForward` because it is scoped and reviewable.
+Where the incompatibility is in that table, prefer it to a narrower `rollForward` because it's scoped and reviewable.
 It names the behaviour you are declining in the project file, where the next reader will find it, and it leaves the SDK free to roll forward for everything else.
-Where it is not, the same preference for the scoped, reviewable option gives the order: the compatibility switch that governs the specific behaviour if one exists, and only then a narrower `rollForward`. Setting `NuGetAuditMode` explicitly, rather than inheriting a default that moved in a patch, is an example of the first.
+Where it isn't, the same preference for the scoped, reviewable option gives the order: the compatibility switch that governs the specific behaviour if one exists, and only then a narrower `rollForward`. Setting `NuGetAuditMode` explicitly, rather than inheriting a default that moved in a patch, is an example of the first.
 
 ## The one case where `disable` is the documented answer
 
@@ -110,7 +110,7 @@ The `rollForward` table carries the same footnote against `disable`.
 ([Microsoft Learn: Upgrade to a new .NET version](https://learn.microsoft.com/dotnet/core/install/upgrade#package-lock-files), [Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json))
 
 This only applies to a repository that commits `packages.lock.json` and restores in locked mode.
-Central package management alone does not create the coupling, because the SDK's resolver is what changes the graph.
+Central package management alone doesn't create the coupling, because the SDK's resolver is what changes the graph.
 
 Two .NET 10 fields make a narrow pin survivable, and both are worth pairing with one.
 `sdk.paths` lets the repository carry its own SDK and search it before the machine's, which is a stronger reproducibility guarantee than any `rollForward` value.
@@ -156,10 +156,10 @@ Under that floor, `latestFeature` and `latestPatch` resolve identically today, s
 
 Four gaps are worth resolving:
 
-1. **[project-structure.md](../opinions/project-structure.md) states the floor rule but not the exceptions.** It is right that the pin is a floor and that chasing bands is pointless, and it says nothing about band support windows, `SdkAnalysisLevel`, or the lock-file case. A short block would close it.
-2. **[ci.md](../opinions/ci.md) claims "`global.json` decides the SDK".** Under `latestFeature` it decides a floor, and `setup-dotnet` decides the rest on the day it runs. The line deserves the precision.
+1. **[project-structure.md](../opinions/project-structure.md) states the floor rule but not the exceptions.** It's right that the pin is a floor and that chasing bands is pointless, and it says nothing about band support windows, `SdkAnalysisLevel`, or the lock-file case. A short block would close it.
+2. **[ci.md](../opinions/ci.md) claims "`global.json` sets the SDK".** Under `latestFeature` it decides a floor, and `setup-dotnet` decides the rest on the day it runs. The line deserves the precision.
 3. **[audit-freshness](../skills/audit-freshness/SKILL.md) and [verify-project](../skills/verify-project/SKILL.md) both treat "a `rollForward` narrower than `latestFeature`" as a finding.** If the opinion gains a legitimate narrow case, both need the carve-out, or they will report a lock-file repository's correct `disable` as a defect.
-4. **Aside, outside this topic:** the docs state that `global.json` supports JavaScript and C#-style comments. [AGENTS.md](../AGENTS.md) exempts `templates/global.json` from the metadata header "because JSON has no comment syntax", which is not true of this particular file. Worth a separate look, not an edit here.
+4. **Aside, outside this topic:** the docs state that `global.json` supports JavaScript and C#-style comments. [AGENTS.md](../AGENTS.md) exempts `templates/global.json` from the metadata header "because JSON has no comment syntax", which isn't true of this particular file. Worth a separate look, not an edit here.
 
 **Recommended next step:** `resolve-research`, folding items 1 to 3 into `opinions/project-structure.md` and `opinions/ci.md`.
 No new opinion file is needed.

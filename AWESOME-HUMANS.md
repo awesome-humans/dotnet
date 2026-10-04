@@ -127,10 +127,10 @@ Markings are read from the whole section, heading included, so `**Discovery-only
 Citable on the code-backed engineering posts and on the dotnet-skills he wrote himself, with a conflict on anything Petabridge sells.
 
 - **Scope:** Takes in [dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills), published as 37 skills and 6 subagents with v1.6.0 on 2026-09-16, which counts as authored documentation under the admission rules.
-  It was watch-listed as a source of its own on 2026-09-25 and folded in the same day: the track record follows the human, so the repository's 2025-11-12 start does not hold it back.
+  It was watch-listed as a source of its own on 2026-09-25 and folded in the same day: the track record follows the human, so the repository's 2025-11-12 start doesn't hold it back.
 - **Longevity:** Writing since [2010-05-14](https://aaronstannard.com/blog/page19/) on aaronstannard.com, and on the Petabridge blog since 2015; together the two show posts in every year from 2010 to 2026, and both are live, on 2026-08-21 and 2026-09-23.
   The personal blog alone thins to a handful of posts a year from 2016 to 2019, with its longest gap 347 days (2018-10-16 to 2019-09-28), and the Petabridge blog carries the volume across those years.
-- **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression unit tests could not catch, ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example, and ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
+- **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression unit tests couldn't catch, ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example, and ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
   His 2026 "Software 2.0" series is the most concrete .NET-specific writing found on verifying agent-written code, and it reports failures as well as wins: ["Planning and Verifying a Greenfield Project"](https://aaronstannard.com/software-2.0-case-study-textforge/) records the agent writing tests that only "checked the 'has test coverage' box".
   dotnet-skills publishes [evaluations](https://github.com/Aaronontheweb/dotnet-skills-evals), real but small: 15 Akka.NET tasks judged by the model that wrote the code.
 - **Accuracy:** Sound, with in-post corrections on record: [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono, and ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` retracting a misreading of David Fowler.
@@ -140,14 +140,14 @@ Citable on the code-backed engineering posts and on the dotnet-skills he wrote h
   The package examples pin xUnit v2, FluentAssertions 6 and 7 and `Verify.Xunit`, which pulls in xUnit v2, and six skills ship CI on `dotnet-version: 9.0.x` with 22 mutable action tags and no SHA pins.
   Its release notes do record corrections, including "fabricated APIs, compile errors" in the OpenTelemetry skill and guidance that wrongly called adding optional parameters binary-compatible.
 - **Authorship:** He made 68 of 82 dotnet-skills commits, but the skills that held up best under checking (`aot-trimming`, `csharp-nullable-reference-types`, `opentelementry-dotnet-instrumentation`) came largely from Daniel Marbach, Mauro Servienti and Tomasz Masternak of Particular Software.
-  Their work is not his writing and is not citable under this id; where one of them has a written track record, vet that person instead.
+  Their work isn't his writing and isn't citable under this id; where one of them has a written track record, vet that person instead.
 - **Conflict of interest:** He is CEO of Petabridge, which sells Akka.NET support plans, consulting and training and the Phobos monitoring product through Sdkbin, a marketplace he built, so never cite him alone on adopting Akka.NET, the actor model or Phobos.
   Six dotnet-skills skills and a subagent cover Akka.NET, so the same limit applies to them.
   His free AI tooling (dotnet-skills, dotnet-slopwatch, Netclaw) is promoted in the posts that describe his workflow, a milder conflict worth flagging where an opinion names one of them.
   He removed FluentAssertions from Akka.NET on licensing grounds on [2026-06-10](https://petabridge.com/blog/why-akkadotnet-remove-fluentassertions/), a decision that cost convenience, which is evidence of distance from convenient adoption rather than against it.
 - **Cite:** The engineering posts: a large share of the catalogue is essays on the .NET ecosystem, open-source economics and running a business, which argue from experience rather than evidence.
   Petabridge posts for mechanism, not adoption: it is his company's blog and carries Akka.NET release announcements alongside the technical posts.
-  A dotnet-skills skill only after its history shows it is his, and for the principle it states: never its package versions or CI pins, and never a code sample that has not been compiled against the citing file's `targets`.
+  A dotnet-skills skill only after its history shows it is his, and for the principle it states: never its package versions or CI pins, and never a code sample that hasn't been compiled against the citing file's `targets`.
 
 ### `andrew-lock`: Citable
 
@@ -157,7 +157,7 @@ The de facto reference for ASP.NET Core internals outside Microsoft; author of _
 
 Marked because depth is mixed rather than absent, and conflicted on the architecture and data-access topics he would be cited for.
 
-- **Scope:** The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases do not.
+- **Scope:** The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases don't.
 - **Longevity:** Writing since [2003-02-04](https://ardalis.com/first-post/), carried across four earlier blogs onto the current domain, and live rather than dormant: latest post 2026-08-19, cadence settled to roughly monthly as effort moves to video and courses.
 - **Depth:** ["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle, whereas ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
   DevIQ is reference-grade on definitions and taxonomy, strongest on [design patterns](https://deviq.com/design-patterns/), but its entries argue in prose and diagrams rather than code or measurements, so cite a measured source alongside it for any claim an opinion rests on.
@@ -173,7 +173,7 @@ Marked because depth is mixed rather than absent, and conflicted on the architec
 
 A product-team blog, release-driven and marketing-adjacent, so cite it and the docs for how a thing works, not for whether to adopt it.
 
-- **Scope:** Widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog does not, under the same limit.
+- **Scope:** Widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog doesn't, under the same limit.
 - **Longevity:** About four years, which clears the bar.
 - **Independence:** The concern holds whatever the longevity becomes.
 
@@ -210,7 +210,7 @@ The 2018–2023 catalogue is strong and usable for cross-checking on the watch-l
 
 ### `code-with-mukesh`: Citable, **Corroborate.**
 
-Blog since 2020, marked for depth: SEO- and roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics are not.
+Blog since 2020, marked for depth: SEO- and roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics aren't.
 The 2026 output carries real benchmarks.
 
 ### `csharp-digest`: Citable, **Discovery-only.**
@@ -222,7 +222,7 @@ A discovery channel, not an opinion source itself; archive verified back to 2017
 Independent depth on ASP.NET Core security, OpenID Connect and BFF, built in code rather than described.
 
 - **Longevity:** Writing since [2013-01-31](https://damienbod.com/2013/01/31/welcome-to-my-blog/), technical from the first week, and still publishing on 2026-09-01.
-  Every year sampled between those dates carries several pages of posts at a monthly-or-better cadence; 2014, 2017 and 2022 were not counted directly, and the years either side of each leave no room for a gap.
+  Every year sampled between those dates carries several pages of posts at a monthly-or-better cadence; 2014, 2017 and 2022 weren't counted directly, and the years either side of each leave no room for a gap.
 - **Depth:** [The BFF post](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/) carries the OpenID Connect setup, a YARP transform and a token cache, and explains why the downstream API refuses the user's delegated token.
   [The passkey post](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/) diagnoses an ASP.NET Core defect, links the runtime issue, and gives the re-sign-in workaround against RFC 8176.
 - **Accuracy:** Maintained in the open: posts carry dated History sections recording what each framework version changed.
@@ -251,10 +251,10 @@ Includes Stephen Toub's annual "Performance Improvements in .NET" posts and the 
 Blocked on independence, not longevity, and on five bylines nobody has vetted.
 
 - **Scope:** Dominick Baier's personal blog is a separate channel and is itself dormant, last posting 2024-10-01.
-  It is named rather than linked because the host has stopped completing a TLS handshake, so a citation would fail the link check.
+  It's named rather than linked because the host has stopped completing a TLS handshake, so a citation would fail the link check.
 - **Longevity:** Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so the six-year record would clear the bar several times over.
 - **Authorship:** Multi-author, so independence and quality vary by byline, which is the `telerik-blog` and `syncfusion-blog` blocker rather than the `avalonia-blog` limit.
-  Where one of the five has a track record, vet the human instead; that is done for `khalid`, whose posts here are citable under his own id with the limit recorded there.
+  Where one of the five has a track record, vet the human instead; that's done for `khalid`, whose posts here are citable under his own id with the limit recorded there.
 - **Independence:** All four posts read in full for this pass end at the paid product the company sells, in the category the post is about, and none carried a caveat against it.
   The depth is what makes that a blocker rather than a footnote: a four-thousand-word piece with code and diagrams still arrives at Duende BFF as the recommendation.
 - **Use:** Discovery and cross-checking on the usual terms.
@@ -273,7 +273,7 @@ On the MAUI team, with the same independence caveat as `james-montemagno`.
 Cite the pre-2024 Xamarin/MAUI catalogue only, and expect nothing new from harvests.
 
 - **Longevity:** Blogging since ~2012 (motzcod.es → montemagno.com).
-  Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: the blog is still publishing (latest 2025-12-31), so he is not dormant, but the current output is Copilot and tooling and the last .NET post is 2024-01-19.
+  Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: the blog is still publishing (latest 2025-12-31), so he isn't dormant, but the current output is Copilot and tooling and the last .NET post is 2024-01-19.
 - **Independence:** A live concern: Microsoft DevRel, adoption-focused, with little critical distance, so weigh independence per piece.
 
 ### `jeremy-miller`: Citable, **Corroborate.**
@@ -297,7 +297,7 @@ Created Noda Time; author of _C# in Depth_; Stack Overflow's top contributor.
 - **Longevity:** Low cadence (~4–5 posts a year), and much of the recent output is general data modelling from a personal election-data project.
 - **Independence:** Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07; the analysis criticises language design he doesn't own, so no independence limit.
 - **Cite:** The C#/BCL posts.
-  _C# in Depth_ 4th ed. (2019) pre-dates records and is not current guidance.
+  _C# in Depth_ 4th ed. (2019) pre-dates records and isn't current guidance.
 
 ### `khalid`: Citable
 
@@ -319,7 +319,7 @@ The personal blog is citable in full, and his Duende posts for platform mechanis
 Twenty years of writing, with depth verifiable in compiling code and real measurements.
 
 - **Longevity:** Writing since 2006-01-05 on [MSDN blogs](https://learn.microsoft.com/archive/blogs/ploeh/) and on the current blog since 2009-01-28, with over 800 posts there alone, thinning in the mid-2010s, still going on 2026-08-13.
-- **Independence:** Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he does not own, so no independence limit.
+- **Independence:** Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he doesn't own, so no independence limit.
 - **Conflict of interest:** He sells books and video courses and created AutoFixture, a mild conflict on testing and DI.
 - **Cite:** The C#/.NET posts: a consistent third of the technical output is Haskell or F#, and the 2026 run turns from code to language-agnostic essays on AI and software philosophy after ["TDD as induction"](https://blog.ploeh.dk/2026/02/23/tdd-as-induction/) (2026-02-23).
   _Dependency Injection in .NET_ (2011) is superseded by _Dependency Injection Principles, Practices, and Patterns_ (2019).
@@ -354,7 +354,7 @@ The 2008–2024 archive remains usable for discovery.
   Same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
 - **Cite:** For mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption.
   Quote the page's own review date from the `ms.date` metadata field, never `updated_at`, which is a docset build timestamp shared across every page in a bulk republish and can run years ahead of the text.
-  The field matters because these pages age unevenly: the microservices e-book is 2018 and 2021 content that has not been reviewed since, carrying `updated_at` values of 2023 and 2024 that are republishes rather than reviews, while the Azure Architecture Center pattern pages are revised on a rolling basis and carry recent `ms.date` values.
+  The field matters because these pages age unevenly: the microservices e-book is 2018 and 2021 content that hasn't been reviewed since, carrying `updated_at` values of 2023 and 2024 that are republishes rather than reviews, while the Azure Architecture Center pattern pages are revised on a rolling basis and carry recent `ms.date` values.
 
 ### `nicholas-blumhardt`: Citable
 
@@ -368,7 +368,7 @@ Created Autofac and Serilog; founder of Datalust, which sells Seq.
 ### `nick-polyak`: Watch list
 
 Dormancy: demoted from the citable roster on 2026-08-23.
-Last post 2025-05-04 on Dev.to, the CodeProject archive (2008–2024) is read-only, and the 2025–26 GitHub output is code and version bumps with no documentation among it, so the exception does not reach him.
+Last post 2025-05-04 on Dev.to, the CodeProject archive (2008–2024) is read-only, and the 2025–26 GitHub output is code and version bumps with no documentation among it, so the exception doesn't reach him.
 Back catalogue not citable while watch-listed; re-vet if the writing resumes.
 
 ### `oskar-dudycz`: Citable, **Corroborate.**
@@ -421,7 +421,7 @@ Independence and depth, not longevity: marketing-adjacent, quality varies by aut
 ### `telerik-blog`: Watch list
 
 Independence and depth, not longevity: marketing-adjacent, quality varies by author.
-The lowered longevity bar does not touch this blocker.
+The lowered longevity bar doesn't touch this blocker.
 
 ### `udi-dahan`: Watch list
 
