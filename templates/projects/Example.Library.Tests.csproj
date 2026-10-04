@@ -6,16 +6,16 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-    <!-- Keep solution-level publish deploy-only: without this the test host and a second copy
-         of every referenced library land in artifacts/publish (opinions/ci.md). -->
+    <!-- Keeps solution-level publish output for deployment only. Without it, the test host and a
+         second copy of every referenced library go into artifacts/publish (opinions/ci.md). -->
     <IsPublishable>false</IsPublishable>
     <!-- Required: xunit.v3 test projects build to a self-contained executable under
-         Microsoft.Testing.Platform, and the build errors out without this. -->
+         Microsoft.Testing.Platform, and the build fails without this. -->
     <OutputType>Exe</OutputType>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <!-- CA1707 (no underscores in member names) contradicts the house test-naming
          convention UnitOfWork_Scenario_ExpectedBehaviour (opinions/testing.md). The
-         convention wins in test projects; CA1707 still applies to shipping code. -->
+         convention wins in test projects, and CA1707 still applies to shipping code. -->
     <NoWarn>$(NoWarn);CA1707</NoWarn>
   </PropertyGroup>
 

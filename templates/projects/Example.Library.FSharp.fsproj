@@ -1,5 +1,5 @@
 <!-- dotnet-awesome-humans template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-14 | last-used: 2026-08-14 | sources: ms-learn -->
-<!-- F# is first-class: same inheritance from Directory.Build.props; file order is the F# design constraint. -->
+<!-- F# gets the same inheritance from Directory.Build.props. File order is the F# design constraint. -->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>

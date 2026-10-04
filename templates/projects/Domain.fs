@@ -2,10 +2,10 @@
 // Domain model example: make illegal states unrepresentable (opinions/fsharp.md).
 namespace Example.Library.FSharp
 
-/// Single-case union: a CustomerId cannot be confused with any other int.
+/// Single-case union: a CustomerId can't be confused with any other int.
 type CustomerId = CustomerId of int
 
-/// Private constructor: every EmailAddress in the system already passed create.
+/// Private constructor: every EmailAddress in the system has already passed create.
 type EmailAddress = private EmailAddress of string
 
 module EmailAddress =

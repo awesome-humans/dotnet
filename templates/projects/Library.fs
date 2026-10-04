@@ -10,7 +10,7 @@ let describe payment =
     | DirectDebit iban -> $"direct debit from {iban}"
 
 /// seq { ... } written explicitly: a brace block without it is deprecated in F# 10 (FS3873).
-/// The warning is about the braces, not the comprehension, so this body is fine either way.
+/// The warning is about the braces, not the comprehension, so this body is correct either way.
 let evenSquares upTo =
     seq {
         for i in 1..upTo do

@@ -1,6 +1,6 @@
 <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-09-13 | last-used: 2026-09-24 | sources: ms-learn, dotnet-blog, meziantou -->
-<!-- Central Package Management: every PackageReference in the repo takes its version from here. -->
-<!-- Versions verified against nuget.org (latest stable) on 2026-09-13; refresh via the refresh-dotnet-versions skill. -->
+<!-- Central Package Management: every PackageReference in the repository takes its version from here. -->
+<!-- Versions verified against nuget.org (latest stable) on 2026-09-13. Refresh them with the refresh-dotnet-versions skill. -->
 <Project>
 
   <PropertyGroup>
@@ -20,16 +20,16 @@
     <PackageVersion Include="Meziantou.Analyzer" Version="3.0.257" />
   </ItemGroup>
 
-  <!-- No Microsoft.Testing.Platform entry: xunit.v3 carries its own compatible
-       version, and pinning MTP separately overrides it via transitive pinning and
-       fails at runtime with a TypeLoadException (opinions/testing.md). The risk is higher
-       since xunit.v3 4.0.0, which dropped MTP v1 and defaults to v2. -->
+  <!-- No Microsoft.Testing.Platform entry: xunit.v3 brings its own compatible version.
+       Pinning MTP separately overrides it through transitive pinning, and fails at run time
+       with a TypeLoadException (opinions/testing.md). The risk is higher since xunit.v3
+       4.0.0, which dropped MTP v1 and defaults to v2. -->
   <ItemGroup Label="Testing">
     <PackageVersion Include="bunit" Version="2.11.3" />
     <PackageVersion Include="Meziantou.Framework.SnapshotTesting" Version="3.1.8" />
-    <!-- WebApplicationFactory<T> for integration tests and FakeTimeProvider for
-         deterministic time: opinions/testing.md mandates both, so both need a pin here.
-         Without one, a consumer who copies these templates and follows the opinion hits
+    <!-- WebApplicationFactory<T> for integration tests, and FakeTimeProvider for
+         deterministic time. opinions/testing.md requires both, so both need a pin here.
+         Without one, a consumer who copies these templates and follows the opinion gets
          NU1010 on restore, because CPM leaves a bare PackageReference with no version. -->
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0" />
