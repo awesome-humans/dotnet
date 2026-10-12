@@ -277,13 +277,16 @@ Created Noda Time; author of _C# in Depth_; Stack Overflow's top contributor.
 
 The personal blog is citable in full, and his Duende posts for platform mechanism, never alone on whether to adopt a Duende product.
 
-- **Scope:** Widened 2026-09-12 to his posts on the [Duende blog](https://duendesoftware.com/blog), which carry his byline and run at roughly two a month from 2025-03 through 2026-09-08.
+- **Scope:** Widened 2026-09-12 to his posts on the [Duende blog](https://duendesoftware.com/blog), which carry his byline and run at roughly two a month from 2025-03 through 2026-10-01.
   The publication is watch-listed separately, so this id reaches his byline and nobody else's.
   The documentation stays evidence rather than citable material, per `shay-rojansky`: 387 commits to the docs repository, the most recent 2026-09-03, are page authorship rather than typo fixes, but the published pages name no author for a citation to rest on.
-- **Longevity:** [khalidabuhakmeh.com](https://khalidabuhakmeh.com/) has been quiet since 2025-04-22, and the writing itself never paused.
+- **Longevity:** [khalidabuhakmeh.com](https://khalidabuhakmeh.com/) went quiet from 2025-04-22 and resumed on 2026-10-05 with two posts, while the Duende byline carried the writing through the gap.
+  The two new posts are introductory: one explains `int.TryParse`, `int.Parse` and `Convert.ToInt32`, and one maps Rails to ASP.NET Core.
+  Neither has measurements, and no factual errors were found.
 - **Independence:** Now at Duende Software, his JetBrains authorship having ended in 2024.
   The widening follows the `avalonia-blog` precedent and carries the same limit in a sharper form: each of the three Duende posts read in full for this pass closes on Duende BFF or IdentityServer.
   ["Understanding .NET 11 Automatic CSRF Protection"](https://duendesoftware.com/blog/20260901-understanding-dotnet-11-automatic-csrf-protection) (2026-09-01) is the shape that works: the subject is what the framework middleware does to OpenID Connect flows, and the product recommendation sits at the end where a reader can see it coming.
+  ["Securing Minimal APIs with Scope-Based Authorization in .NET 10"](https://duendesoftware.com/blog/securing-minimal-apis-with-scope-based-authorization-in-dotnet-10) (2026-09-29) is citable for the `AddAuthorizationBuilder` and `RequireClaim("scope", …)` mechanism, but its sample assumes IdentityServer's one-claim-per-scope token shape, so check the issuer's format before quoting it.
 
 ### `mark-seemann`: Citable
 
@@ -474,3 +477,4 @@ Dormancy: last post 2016-02-19, a decade silent, and no continuing written chann
 | 2026-09-25 | Watch-listed `dotnet-skills` | Under a year old, samples verified not to compile against current packages, and multi-author; re-evaluate from 2027-11 |
 | 2026-09-25 | Folded `dotnet-skills` into `aaron-stannard` | Same human, so his track record carries the repository; uncompiled samples and co-authored skills became usage limits in his notes |
 | 2026-10-09 | Harvest (2026-09-15 → 2026-10-09) | Folded into `runtime-performance.md` (ILLink substitutions, a .NET 11 runtime async aside) and `ci.md` (signer allow-list upkeep); flagged `khalid`, `james-montemagno` and `nicholas-blumhardt` |
+| 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline bridged. The notes now record the restart and a token-shape limit on citing his scope-authorization post |
