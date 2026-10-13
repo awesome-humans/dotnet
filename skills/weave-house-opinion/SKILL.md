@@ -27,7 +27,7 @@ House opinions are the owner's preferences. They carry full weight, and they're 
 
 - **Never present a house opinion as sourced.** If a vetted source later publishes the same guidance, a harvest can add the citation beside the house marking, and the marking stays.
 - **House opinions need no source, but they need the same quality.** Code must compile against the declared `targets`, and the opinion must give one recommendation.
-- **Only the owner's opinions are written in directly.** Contributors propose opinions in a pull request, as `.github/PULL_REQUEST_TEMPLATE.md` describes. Once the owner accepts one, it becomes a house opinion, credited in the pull request history.
+- **Only the owner's opinions are written in directly.** Contributors propose opinions in a pull request, as `.github/PULL_REQUEST_TEMPLATE.md` describes. Once the owner accepts one, it becomes a house opinion, and the Woven table's Provenance column credits the contributor and the pull request.
 - **Harvest and refresh skills never remove or weaken house content.** They update the sourced context around it.
 
 ## Edge cases

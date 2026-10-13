@@ -49,8 +49,6 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 - In an opinion or template, a watch-list ID or a `**Discovery-only.**` ID is a finding. So is a file whose citable sources are all marked `**Corroborate.**`. `scripts/validate-sources.cs` already fails the build on all three.
 - `research/` topics can name unvetted sources if the text flags them.
 
-The `**Review by YYYY-MM-DD.**` marking heads transition guidance. For the rule, see [AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions).
-
 ### Templates
 
 - **Templates match the opinions.** If an opinion names a property, package, or setting, and its template leaves it out, that's a finding. People copy `templates/`, so a gap ships the advice without the setting.
@@ -62,7 +60,7 @@ The `**Review by YYYY-MM-DD.**` marking heads transition guidance. For the rule,
 2. **Find the latest released versions** of .NET, C#, and F#, from the same sources as `refresh-dotnet-versions` step 1. Find the latest stable version of every package in `templates/Directory.Packages.props`, with the lookup in `refresh-dotnet-versions` step 4b.
    - Skip SDK band lookups: the `global.json` check reads the pin's shape, not its distance from the newest release.
    - If you're offline, skip the checks you can't run, and say so in the report. Report an unchecked pin as "not verified", never as fresh.
-3. **Evaluate each resource** against the tolerances, including any `**Review by YYYY-MM-DD.**` marking in its body. Missing or malformed metadata is a high-severity finding.
+3. **Evaluate each resource** against the tolerances, including any `**Review by YYYY-MM-DD.**` marking in its body ([AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions)). Missing or malformed metadata is a high-severity finding.
 4. **Check the roster.** Flag sources in `AWESOME-HUMANS.md` with no _published writing_ in over a year for `vet-source` re-evaluation. Repository activity doesn't count, because opinions don't cite it.
 5. **Write the report,** most stale first:
    - For each resource: the path, the findings, the days over tolerance, and the skill that fixes it.
@@ -72,7 +70,7 @@ The `**Review by YYYY-MM-DD.**` marking heads transition guidance. For the rule,
 ## Edge cases
 
 - **A repository with no opinions yet:** Report that there's nothing to check. Don't pass.
-- **House content** (`house` in `sources:`, and `**House:**` markings; see HOUSE-OPINIONS.md): The reserved ID is never an unknown-source finding, and never suggest removing it. A `house` ID without `**House:**` content in the file, or the reverse, IS a finding: the two always appear together.
+- **House content** (`house` in `sources:`, and `**House:**` markings; see HOUSE-OPINIONS.md): The reserved ID is never an unknown-source finding, and never suggest removing it. A `house` ID without `**House:**` content in the file, or the reverse, **is** a finding: the two always appear together.
 - **Files that can't carry a comment header:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
   - `.slnx` is XML and carries a header, so it isn't exempt.
   - `scripts/validate-metadata.cs` enforces this two-file list in CI, so any other headerless JSON under `templates/` fails there.

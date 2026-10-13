@@ -26,23 +26,17 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - **Independence:** Does the content stand on its merit, or on marketing reach? Vendor blogs and personality-driven channels need extra scrutiny.
 3. **Classify the source,** applying the two qualifying rules in [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
 
-   | Evidence                                             | Outcome                                                              |
-   | ---------------------------------------------------- | -------------------------------------------------------------------- |
-   | All four criteria met, over two years or more        | **Admit** to the **Citable** table                                   |
-   | A live independence concern                          | **Admit,** with a usage limit in the notes. See below                |
-   | Publishing stopped over a year ago                   | **Watch list,** unless the writing continues elsewhere. See below    |
-   | Strong on depth and accuracy, but short on longevity | **Watch list,** with the blocker recorded                            |
-   | An aggregator, such as a link roundup or newsletter  | **Admit,** marked **discovery-only**. It never appears in `sources:` |
-   | Thin on depth, but sound on the other three criteria | **Admit,** marked **`**Corroborate.**`**                             |
-   | Anything else                                        | **Decline,** with a one-line reason in the pull request only         |
+   | Evidence                                             | Outcome                                                                 |
+   | ---------------------------------------------------- | ----------------------------------------------------------------------- |
+   | All four criteria met, over two years or more        | **Admit** to the **Citable** table                                      |
+   | A live independence concern                          | **Admit,** with a usage limit in the notes                              |
+   | Publishing stopped over a year ago                   | **Watch list,** unless the writing continues elsewhere                  |
+   | Strong on depth and accuracy, but short on longevity | **Watch list,** with the blocker recorded                               |
+   | An aggregator, such as a link roundup or newsletter  | **Admit,** marked `**Discovery-only.**`. It never appears in `sources:` |
+   | Thin on depth, but sound on the other three criteria | **Admit,** marked `**Corroborate.**`                                    |
+   | Anything else                                        | **Decline,** with a one-line reason in the pull request only            |
 
-   The two qualifying rules:
-
-   - **An independence concern is a usage limit, never a lower rank.** A concern is live when vendor developer relations or product-team work produces adoption-focused content with little critical distance. Admit the source, and write in its notes what a citation can rest on, usually how something works, not whether to adopt it. Working for a vendor isn't a concern by itself: depth with critical distance stands on its own. If no limit could contain the concern, decline or watch-list the source.
-   - **Dormancy blocks admission,** unless the person's **writing** clearly continues elsewhere, such as official documentation, another publication, or a book. Then the track record follows the person, and the notes record the dormant channel.
-     - Repository activity isn't evidence. Opinions don't cite commits, releases, or issue threads, so a busy GitHub profile beside a silent blog is still dormant.
-     - Documentation written in a repository counts. The test is what was published, not where the commits landed.
-   - The table says whether a source is citable. A marking says what a citation can rest on.
+   The table decides whether a source is citable. A marking or a usage limit says what a citation can rest on.
 
 4. **For a re-evaluation,** promote a watch-list source whose blocker has cleared. Demote or annotate an admitted source that has published nothing in over a year, or whose quality has dropped.
    - A source that slips gets either a tighter usage limit in its notes, or the watch list.

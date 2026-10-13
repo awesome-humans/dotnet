@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim carries its source and tier, respects the freshness policy's preview labeling, and closes by noticing what the research reveals about the repository (missing opinion, stale aside, GA'd feature). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
+description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim carries its source and that source's standing, labels preview features as the freshness policy requires, and closes with what the research reveals about the repository (a missing opinion, a stale aside, or a feature that reached GA). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
