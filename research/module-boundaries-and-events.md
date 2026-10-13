@@ -25,7 +25,7 @@ This is the third pass. The first, on 2026-08-24, had one independent source and
 
 That reverses the second pass's verdict on the fourth opinion, which it found no source supported. The position now has partial support from the architect most identified with the pattern it names. The recommended rewrite is unchanged, but it's now positively corroborated, not just unopposed.
 
-This pass also settles commands versus events, which the second pass left open for want of a third source, and adds the first concrete, code-level rule for enforcing a module boundary.
+This pass also settles commands versus events, which the second pass left open because it lacked a third source, and adds the first concrete, code-level rule for enforcing a module boundary.
 
 ## Sources swept
 
@@ -237,7 +237,7 @@ The framing to carry into an opinion: "Events should be treated as such. Yes, AP
 
 `oskar-dudycz` gives the opposite rule, as an anti-pattern: "If we'll always have a single consumer for an event that needs to run the specific logic and expect to get the particular event back, then it should be a command." ([Dudycz: Anti-patterns in event modelling - Passive-Aggressive Events](https://event-driven.io/en/passive_aggressive_events/), 2026-04-13)
 
-They're reconcilable. Comartin argues against a module telling another module what to do. Dudycz argues against disguising a command as an event, with one known consumer and an expected reply, to look decoupled. The shared rule: the message type should match the real coupling, and an event to one known consumer that must answer is a command with extra steps. For how to weigh them, see [Where the sources disagree](#where-the-sources-disagree).
+They're reconcilable. Comartin argues against a module telling another module what to do. Dudycz argues against disguising a command as an event, with one known consumer and an expected reply, to look decoupled. The shared rule: the message type should match the real coupling, and an event to one known consumer that must answer is a command, whatever it's called. For how to weigh them, see [Where the sources disagree](#where-the-sources-disagree).
 
 ### Who owns a message, which settles commands versus events
 
