@@ -452,71 +452,71 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 <!-- prettier-ignore -->
 | Date | Decision | Detail |
 | --- | --- | --- |
-| 2026-08-12 | Initial roster | Seeded Tier 1, Tier 2 and the watch list from research verified against the .NET 10 era |
-| 2026-08-12 | Admitted `scott-wlaschin`, `fsharp-weekly` (Tier 1) | Filled the F# gap; writing since 2012 and 2011 |
-| 2026-08-12 | Admitted `steve-sanderson` (Tier 1) | Blog dormant since 2020-01; admitted on talks and repositories under the dormancy exception (removed 2026-08-23) |
-| 2026-08-12 | Admitted `james-montemagno` (Tier 2) | Blogging since ~2012; capped for independence as Microsoft DevRel |
-| 2026-08-12 | Admitted `gerald-versluis` (Tier 2) | Blogging since 2015-03; capped for independence as a MAUI team member |
+| 2026-08-12 | Initial roster | Seeded Tier 1, Tier 2, and the watch list from research verified against .NET 10 |
+| 2026-08-12 | Admitted `scott-wlaschin` and `fsharp-weekly` (Tier 1) | Filled the F# gap. Writing since 2012 and 2011 |
+| 2026-08-12 | Admitted `steve-sanderson` (Tier 1) | Blog dormant since 2020-01. Admitted on talks and repositories under the dormancy exception (removed 2026-08-23) |
+| 2026-08-12 | Admitted `james-montemagno` (Tier 2) | Blogging since about 2012. Capped for independence as Microsoft developer relations |
+| 2026-08-12 | Admitted `gerald-versluis` (Tier 2) | Blogging since 2015-03. Capped for independence as a MAUI team member |
 | 2026-08-12 | Admitted `awesome-blazor` (Tier 2, discovery-only) | Curated list since 2018, actively maintained |
 | 2026-08-12 | Watch-listed `chris-sainty` | Strong 2018 to 2023 Blazor catalogue, dormant since 2023-08 |
-| 2026-08-12 | Watch-listed `avalonia-blog` | Blog only since ~2022: longevity blocker (admitted 2026-08-14) |
+| 2026-08-12 | Watch-listed `avalonia-blog` | Blog only since about 2022, short on longevity (admitted 2026-08-14) |
 | 2026-08-12 | Admitted `nick-polyak` (Tier 1) | Publishing since 2008 on CodeProject, then Dev.to (demoted 2026-08-23) |
-| 2026-08-12 | Watch-listed `awesome-avalonia` | Created 2020-02, short of the then 8-year discovery bar (admitted 2026-08-14) |
-| 2026-08-12 | First harvest (window 2025-11-01 → 2026-08-12) | Seeded 8 opinion files; flagged `mikesdotnetting`, `khalid` and `scott-wlaschin` for `vet-source` |
-| 2026-08-12 | Demoted `mikesdotnetting` (Tier 1 → watch list) | Dormant since 2023-04 with no continuing channel |
-| 2026-08-12 | Annotated `khalid` (kept Tier 1) | Blog quiet since 2025-04; kept on GitHub activity, a basis withdrawn 2026-08-23 |
-| 2026-08-12 | Corrected `scott-wlaschin` harvest flag | Low cadence, not dormant: the sweep missed his 2025-12 posts |
-| 2026-08-12 | Updated `steve-gordon` note | Publishing again from 2026-01 |
-| 2026-08-12 | Reserved `house` id | The owner's own opinions, exempt from admission and always visibly marked (PR #7) |
-| 2026-08-14 | **Experiment:** lowered the longevity bars | Tier 1 `~decade → 6+ years`, Tier 2 `8+ → 3+ years`; the rows below follow from re-running `vet-source` and `harvest-sources` |
-| 2026-08-14 | Promoted `andrew-lock`, `steve-gordon` (T2 → T1) | Both publishing since ~2016 |
-| 2026-08-14 | Promoted `jetbrains-dotnet` (T2 → T1) | Publishing since the early 2010s; language explainers keep critical distance |
-| 2026-08-14 | Promoted `awesome-blazor` (T2 → T1, discovery-only) | Curated since 2018 |
-| 2026-08-14 | Admitted `milan-jovanovic` (Tier 1) | ~2020 start, weekly through 2026-08; conflict of interest recorded, not capped |
+| 2026-08-12 | Watch-listed `awesome-avalonia` | Created 2020-02, short of the eight-year discovery bar then in force (admitted 2026-08-14) |
+| 2026-08-12 | First harvest (2025-11-01 to 2026-08-12) | Seeded 8 opinion files. Flagged `mikesdotnetting`, `khalid`, and `scott-wlaschin` for `vet-source` |
+| 2026-08-12 | Demoted `mikesdotnetting` (Tier 1 to watch list) | Dormant since 2023-04, with no continuing channel |
+| 2026-08-12 | Annotated `khalid` (kept Tier 1) | Blog quiet since 2025-04. Kept on GitHub activity, a basis withdrawn on 2026-08-23 |
+| 2026-08-12 | Corrected the `scott-wlaschin` harvest flag | Low cadence, not dormant: the sweep missed his 2025-12 posts |
+| 2026-08-12 | Updated the `steve-gordon` note | Publishing again from 2026-01 |
+| 2026-08-12 | Reserved the `house` ID | The owner's own opinions, exempt from admission and always visibly marked (#7) |
+| 2026-08-14 | **Experiment:** lowered the longevity bars | Tier 1 from about a decade to 6 years, and Tier 2 from 8 years to 3. The rows below follow from re-running `vet-source` and `harvest-sources` |
+| 2026-08-14 | Promoted `andrew-lock` and `steve-gordon` (Tier 2 to Tier 1) | Both publishing since about 2016 |
+| 2026-08-14 | Promoted `jetbrains-dotnet` (Tier 2 to Tier 1) | Publishing since the early 2010s. The language explainers keep critical distance |
+| 2026-08-14 | Promoted `awesome-blazor` (Tier 2 to Tier 1, discovery-only) | Curated since 2018 |
+| 2026-08-14 | Admitted `milan-jovanovic` (Tier 1) | Started about 2020, weekly through 2026-08. Conflict of interest recorded, not capped |
 | 2026-08-14 | Admitted `csharp-digest` (Tier 1, discovery-only) | Archive verified back to 2017-12 |
 | 2026-08-14 | Admitted `awesome-avalonia` (Tier 1, discovery-only) | Created 2020-02, which the new bar clears |
 | 2026-08-14 | Admitted `nick-chapsas` (Tier 2) | Capped on depth: trend-driven video, with courses over the same ground (removed 2026-08-23) |
-| 2026-08-14 | Admitted `code-with-mukesh` (Tier 2) | Blog since 2020; capped on depth as SEO-shaped and course-funnelled |
-| 2026-08-14 | Admitted `avalonia-blog` (Tier 2) | ~2022 start clears the 3-year bar; capped for independence as a product-team blog |
-| 2026-08-14 | Watch list retained: 4 of 10 rows | `chris-sainty` and `mikesdotnetting` on dormancy, `telerik-blog` and `syncfusion-blog` on independence and depth |
-| 2026-08-14 | Harvest of newly admitted sources (2025-11-01 → 2026-08-14) | Folded in Avalonia 12 (`ui-frameworks.md`) and opened `architecture.md` and `data-access.md` |
-| 2026-08-17 | **Experiment:** Tier 1 `6+ → 5+`, Tier 2 `3+ → 2 to 5 band` | No roster changes: every blocked row is blocked on something other than longevity |
-| 2026-08-17 | Admitted `nicholas-blumhardt` (Tier 1) | Publishing since 2007-07; personal blog dormant since 2024-10, held on the Datalust engineering series; sells Seq, recorded as a conflict |
-| 2026-08-18 | Harvest (2026-08-13 → 2026-08-18, plus first sweep of `nicholas-blumhardt` and `jon-skeet`) | Folded into `testing.md`, `runtime-performance.md` and `csharp.md`, and opened `logging.md`; flagged `james-montemagno`, `nick-polyak` and `khalid` |
-| 2026-08-18 | Admitted `jon-skeet` (Tier 1) | Publishing since 2005-09; filled the records and immutable-collection gaps |
-| 2026-08-18 | Demoted `morning-brew` (Tier 1 → watch list) | Last issue 2024-08-02; an aggregator has no second channel for the dormancy exception |
-| 2026-08-18 | Re-evaluated `khalid`, `nick-polyak`, `james-montemagno` (no tier changes) | Notes narrowed for all three |
-| 2026-08-20 | Widened `avalonia-blog` scope to the project docs (no tier change) | Gave the Avalonia localization mechanism a citable home; same publisher and cap |
-| 2026-08-21 | Admitted `shay-rojansky` (Tier 2) | Filled the .NET↔PostgreSQL gap; capped for independence; dormant since 2023-05, admitted on the exception |
-| 2026-08-23 | Clarified: the watch list never feeds `sources:` | Back catalogue included, as `validate-sources.cs` enforces; a demotion re-sources or drops its claims in the same PR |
+| 2026-08-14 | Admitted `code-with-mukesh` (Tier 2) | Blog since 2020. Capped on depth as SEO-shaped and course-funnelled |
+| 2026-08-14 | Admitted `avalonia-blog` (Tier 2) | Its 2022 start clears the 3-year bar. Capped for independence as a product-team blog |
+| 2026-08-14 | Kept 4 of 10 watch-list rows | `chris-sainty` and `mikesdotnetting` on dormancy, and `telerik-blog` and `syncfusion-blog` on independence and depth |
+| 2026-08-14 | Harvest of newly admitted sources (2025-11-01 to 2026-08-14) | Added Avalonia 12 to `ui-frameworks.md`, and opened `architecture.md` and `data-access.md` |
+| 2026-08-17 | **Experiment:** Tier 1 from 6 years to 5, and Tier 2 from 3 years to a 2-to-5-year band | No roster changes: every blocked row is blocked on something other than longevity |
+| 2026-08-17 | Admitted `nicholas-blumhardt` (Tier 1) | Publishing since 2007-07. Personal blog dormant since 2024-10, held on the Datalust engineering series. Sells Seq, recorded as a conflict |
+| 2026-08-18 | Harvest (2026-08-13 to 2026-08-18), plus a first sweep of `nicholas-blumhardt` and `jon-skeet` | Updated `testing.md`, `runtime-performance.md`, and `csharp.md`, and opened `logging.md`. Flagged `james-montemagno`, `nick-polyak`, and `khalid` |
+| 2026-08-18 | Admitted `jon-skeet` (Tier 1) | Publishing since 2005-09. Filled the records and immutable-collection gaps |
+| 2026-08-18 | Demoted `morning-brew` (Tier 1 to watch list) | Last issue 2024-08-02. An aggregator has no second channel for the dormancy exception |
+| 2026-08-18 | Re-evaluated `khalid`, `nick-polyak`, and `james-montemagno` (no tier changes) | Narrowed the notes for all three |
+| 2026-08-20 | Widened `avalonia-blog` to the project docs (no tier change) | Gave the Avalonia localization mechanism a citable home. Same publisher, same cap |
+| 2026-08-21 | Admitted `shay-rojansky` (Tier 2) | Filled the .NET to PostgreSQL gap. Capped for independence. Dormant since 2023-05, admitted on the exception |
+| 2026-08-23 | Clarified that the watch list never feeds `sources:` | Back catalogue included, as `validate-sources.cs` enforces. A demotion re-sources or drops its claims in the same pull request |
 | 2026-08-23 | Removed `nick-chapsas` (was Tier 2) | Never cited, and his notes already said to cite the primary source instead |
-| 2026-08-23 | Scope narrowed to published writing | Video, talks and podcasts no longer count, as citations or as track record |
-| 2026-08-23 | Removed `steve-sanderson` (was Tier 1) | Stood on talks and repositories, which the narrowed scope excludes; never cited |
-| 2026-08-23 | Repository activity is not evidence of a live source | Commits and releases do not keep a dormant source admitted; documentation authored in a repository does |
+| 2026-08-23 | Narrowed scope to published writing | Video, talks, and podcasts no longer count, as citations or as track record |
+| 2026-08-23 | Removed `steve-sanderson` (was Tier 1) | Stood on talks and repositories, which the narrowed scope excludes. Never cited |
+| 2026-08-23 | Ruled that repository activity isn't evidence of a live source | Commits and releases don't keep a dormant source admitted. Documentation written in a repository does |
 | 2026-08-23 | Re-verified `nicholas-blumhardt` under the new rule (no tier change) | The Datalust blog alone holds the exception |
-| 2026-08-23 | Depth handled by a `**Corroborate.**` marking, not a tier cap | `code-with-mukesh` moves to Tier 1 marked; CI rejects an opinion whose only citable source is marked |
-| 2026-08-23 | Demoted `nick-polyak` to the watch list (was Tier 1) | No writing since 2025-05-04; his two `ui-frameworks.md` citations re-sourced to the Avalonia docs |
-| 2026-08-23 | Re-vetted `james-montemagno` and `shay-rojansky` on writing (no tier changes) | Montemagno citable pre-2024 only; Rojansky held on EF Core documentation authorship |
-| 2026-08-24 | Admitted `oskar-dudycz` (Tier 1, marked **Corroborate.**) | Sustained from 2020; filled the event-driven and vertical-slice gaps; conflict recorded |
-| 2026-08-24 | Watch-listed `udi-dahan` | Dormant since 2016-02-19 with no continuing written channel |
-| 2026-08-24 | Widened `ms-learn` scope across `learn.microsoft.com` (no tier change) | Took in the Azure Architecture Center; cite for mechanism and trade-offs, quoting each page's review date |
-| 2026-09-03 | Admitted `mark-seemann` (Tier 1) | Twenty years of writing, depth verifiable in code and measurements; conflict recorded |
-| 2026-09-03 | Admitted `jeremy-miller` (Tier 1, marked **Corroborate.**) | Writing since 2007; writes almost only about the stack his company sells |
-| 2026-09-03 | Admitted `derek-comartin` (Tier 1, marked **Corroborate.**) | Blog clears the writing scope on its own; marked for no code or measurements and in-body sponsorship |
-| 2026-09-03 | Admission pass aimed at `opinions/architecture.md` | Added `mark-seemann` as the unmarked design source the file lacked |
-| 2026-09-04 | Named the date field in the `ms-learn` citation rule (no tier change) | The rule said to quote "the page's own review date" without naming it, and a research pass followed it into six wrong dates by quoting `updated_at`, a build timestamp; the rule now names `ms.date` |
-| 2026-09-10 | Admitted `ardalis` (Tier 1, marked **Corroborate.**) | Writing since 2003, covering DevIQ and his documentation; marked for mixed depth; conflict recorded |
-| 2026-09-12 | Admitted `damien-bowden` (Tier 1) | Writing since 2013-01-31; the BFF and browser-app authentication depth source the `security` research topic lacked |
-| 2026-09-12 | Watch-listed `barry-dorrans` | Blog only since 2025-11-18; strong writing recorded in notes; re-evaluate from 2027-11 |
-| 2026-09-12 | Widened `khalid` scope to his Duende writing (no tier change) | His bylined Duende posts come into scope; never cite him alone on adopting a Duende product |
-| 2026-09-12 | Watch-listed `duende-blog` | Blocked on independence and five unvetted bylines; Khalid's posts citable under his own id |
-| 2026-09-12 | Watch-listed `scott-brady` | Dormant by his own statement; last substantial article 2024-04 |
-| 2026-09-12 | `vet-source` pass on the `security` research topic's candidates | Seven checked: `damien-bowden` admitted, `barry-dorrans` watch-listed, OWASP Cheat Sheet Series and Philippe De Ryck declined |
-| 2026-09-14 | Harvest (2026-08-19 → 2026-09-14) | Folded into `testing.md`, `ci.md`, `runtime-performance.md`, `ui-frameworks.md`, `fsharp.md`, `aspnet-core.md` and `data-access.md`, and gave `architecture.md` its unmarked corroboration; flagged `scott-wlaschin`, `steve-gordon` and `nicholas-blumhardt` |
-| 2026-09-15 | Defined references (no roster change) | A named package's own material may corroborate a roster-sourced claim inline, outside `sources:` (raised in review of #74) |
-| 2026-09-20 | Collapsed Tier 1 and Tier 2 into one **Citable** table | No skill or check read the tiers differently; longevity is now two years, carried by `Since`, and the independence cap became a usage limit in the notes. No source's citability changed |
-| 2026-09-25 | Admitted `aaron-stannard` | Sixteen years of writing, with depth in code-backed engineering posts; gave the `ai-usage` research topic a .NET practitioner source; Petabridge recorded as a conflict |
-| 2026-09-25 | Watch-listed `dotnet-skills` | Under a year old, samples verified not to compile against current packages, and multi-author; re-evaluate from 2027-11 |
-| 2026-09-25 | Folded `dotnet-skills` into `aaron-stannard` | Same human, so his track record carries the repository; uncompiled samples and co-authored skills became usage limits in his notes |
-| 2026-10-09 | Harvest (2026-09-15 → 2026-10-09) | Folded into `runtime-performance.md` (ILLink substitutions, a .NET 11 runtime async aside) and `ci.md` (signer allow-list upkeep); flagged `khalid`, `james-montemagno` and `nicholas-blumhardt` |
-| 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline bridged. The notes now record the restart and a token-shape limit on citing his scope-authorization post |
+| 2026-08-23 | Replaced the depth cap with the `**Corroborate.**` marking | `code-with-mukesh` moves to Tier 1, marked. CI rejects an opinion whose only citable source is marked |
+| 2026-08-23 | Demoted `nick-polyak` to the watch list (was Tier 1) | No writing since 2025-05-04. His two `ui-frameworks.md` citations moved to the Avalonia docs |
+| 2026-08-23 | Re-vetted `james-montemagno` and `shay-rojansky` on writing alone (no tier changes) | Montemagno is citable before 2024 only. Rojansky is held on his EF Core documentation |
+| 2026-08-24 | Admitted `oskar-dudycz` (Tier 1, marked **Corroborate.**) | Sustained output from 2020. Filled the event-driven and vertical-slice gaps. Conflict recorded |
+| 2026-08-24 | Watch-listed `udi-dahan` | Dormant since 2016-02-19, with no continuing written channel |
+| 2026-08-24 | Widened `ms-learn` across `learn.microsoft.com` (no tier change) | Took in the Azure Architecture Center. Cite it for mechanism and trade-offs, with each page's review date |
+| 2026-09-03 | Admitted `mark-seemann` (Tier 1) | Twenty years of writing, with depth you can verify in code and measurements. Conflict recorded |
+| 2026-09-03 | Admitted `jeremy-miller` (Tier 1, marked **Corroborate.**) | Writing since 2007, almost only about the stack his company sells |
+| 2026-09-03 | Admitted `derek-comartin` (Tier 1, marked **Corroborate.**) | The blog clears the writing scope by itself. Marked for having no code or measurements, and for sponsorship in the article body |
+| 2026-09-03 | Ran an admission pass for `opinions/architecture.md` | Added `mark-seemann` as the unmarked design source the file lacked |
+| 2026-09-04 | Named the date field in the `ms-learn` citation rule (no tier change) | A research pass quoted `updated_at`, a build timestamp, and got six dates wrong. The rule now names `ms.date` |
+| 2026-09-10 | Admitted `ardalis` (Tier 1, marked **Corroborate.**) | Writing since 2003, including DevIQ and his documentation. Marked for mixed depth. Conflict recorded |
+| 2026-09-12 | Admitted `damien-bowden` (Tier 1) | Writing since 2013-01-31. The BFF and browser-authentication depth source the `security` research topic lacked |
+| 2026-09-12 | Watch-listed `barry-dorrans` | Blog only since 2025-11-18. Strong writing recorded in the notes. Re-evaluate from 2027-11 |
+| 2026-09-12 | Widened `khalid` to his Duende writing (no tier change) | His bylined Duende posts come into scope. Never cite him alone on adopting a Duende product |
+| 2026-09-12 | Watch-listed `duende-blog` | Blocked on independence and five unvetted bylines. Khalid's posts are citable under his own ID |
+| 2026-09-12 | Watch-listed `scott-brady` | Dormant by his own statement. Last substantial article 2024-04 |
+| 2026-09-12 | Ran `vet-source` on the `security` research topic's candidates | Seven checked: `damien-bowden` admitted, `barry-dorrans` watch-listed, and the OWASP Cheat Sheet Series and Philippe De Ryck declined |
+| 2026-09-14 | Harvest (2026-08-19 to 2026-09-14) | Updated `testing.md`, `ci.md`, `runtime-performance.md`, `ui-frameworks.md`, `fsharp.md`, `aspnet-core.md`, and `data-access.md`, and gave `architecture.md` its unmarked corroboration. Flagged `scott-wlaschin`, `steve-gordon`, and `nicholas-blumhardt` |
+| 2026-09-15 | Defined references (no roster change) | A named package's own material can corroborate a roster-sourced claim inline, outside `sources:` (raised in review of #74) |
+| 2026-09-20 | Merged Tier 1 and Tier 2 into one **Citable** table | No skill or check treated the tiers differently. Longevity is now two years, shown by `Since`, and the independence cap became a usage limit in the notes. No source's citability changed |
+| 2026-09-25 | Admitted `aaron-stannard` | Sixteen years of writing, with depth in code-backed engineering posts. Gave the `ai-usage` research topic a .NET practitioner source. Petabridge recorded as a conflict |
+| 2026-09-25 | Watch-listed `dotnet-skills` | Under a year old, with samples that don't compile against current packages, and several authors. Re-evaluate from 2027-11 |
+| 2026-09-25 | Merged `dotnet-skills` into `aaron-stannard` | The same person, so his track record covers the repository. Uncompiled samples and co-authored skills became usage limits in his notes |
+| 2026-10-09 | Harvest (2026-09-15 to 2026-10-09) | Updated `runtime-performance.md` (ILLink substitutions, and a .NET 11 runtime async note) and `ci.md` (signer allow-list upkeep). Flagged `khalid`, `james-montemagno`, and `nicholas-blumhardt` |
+| 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline covered. The notes now record the restart, and a token-shape limit on citing his scope-authorization post |
