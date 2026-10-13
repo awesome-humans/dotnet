@@ -182,6 +182,10 @@ Marked for mixed depth, and conflicted on the architecture and data-access topic
 - **Cite:** The .NET posts. Most of the 2026 output is AI and agent tooling.
   GuardClauses, Result, and SmartEnum have had no release in about two years, and his Microsoft e-book [Architect modern web applications](https://learn.microsoft.com/dotnet/architecture/modern-web-apps-azure/) is still edition v8.0, so neither is current guidance for `net10.0`.
 
+### `aspnet-blog`: Citable
+
+The ASP.NET Core category of `dotnet-blog`: the same publisher and editorial standard, narrowed to ASP.NET Core posts.
+
 ### `avalonia-blog`: Citable
 
 A product-team blog, release-driven and close to marketing: cite it and the docs for how something works, not whether to adopt it.

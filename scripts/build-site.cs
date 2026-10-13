@@ -10,12 +10,12 @@
 // The hand-written pages under site/pages are copied as they are. The .NET ecosystem's
 // pages under /dotnet/ are generated from this repository's own files, so the site never
 // carries a second copy to drift: README.md up to its layout section becomes the overview,
-// opinions/ and the roster are copied in full, and every file under templates/ gets a page
-// showing it. llms.txt at the root points agents at the raw files. Relative links are
-// rewritten to the page they now point at, or to GitHub for a file the site does not
-// carry. The navigation is generated too: the opinions take their
-// titles and order from README.md's Scope list, which validate-readme-index.cs already
-// holds to the opinions directory.
+// opinions/ and skills/ are copied in full, the roster is split into a page per section,
+// and every file under templates/ gets a page showing it. llms.txt at the root points agents
+// at the raw files. Relative links are rewritten to the page they now point at, or to GitHub
+// for a file the site does not carry. The navigation is generated too: the opinions take their titles and order from
+// README.md's Scope list, and the skills theirs from its Maintenance via skills table, which
+// validate-readme-index.cs already holds to the opinions and skills directories.
 //
 // Zensical requires the build output inside the directory holding its configuration, so
 // the staged zensical.toml, docs/ and the built public/ all sit under site/build, which is
@@ -41,6 +41,7 @@ const string StagingDirectory = "site/build";
 const string DocsDirectory = "site/build/docs";
 const string DiagramsDirectory = "assets/diagrams";
 const string TemplatesDirectory = "templates";
+const string SkillsDirectory = "skills";
 const string Ecosystem = "dotnet";
 const string EcosystemName = ".NET";
 
@@ -77,14 +78,26 @@ string[] templates =
         .Order(StringComparer.OrdinalIgnoreCase),
 ];
 
+string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
+Match[] skills = Site.SkillRow().Matches(readme).ToArray();
+
 Dictionary<string, string> pages = new(StringComparer.Ordinal)
 {
     ["README.md"] = $"{Ecosystem}/index.md",
-    ["AWESOME-HUMANS.md"] = $"{Ecosystem}/awesome-humans.md",
+    ["AWESOME-HUMANS.md"] = $"{Ecosystem}/awesome-humans/index.md",
     ["HOUSE-OPINIONS.md"] = $"{Ecosystem}/house-opinions.md",
+    [Opinions.DirectoryName] = $"{Ecosystem}/opinions/index.md",
     [TemplatesDirectory] = $"{Ecosystem}/templates/index.md",
     [$"{TemplatesDirectory}/projects"] = $"{Ecosystem}/templates/index.md",
+    [SkillsDirectory] = $"{Ecosystem}/skills/index.md",
 };
+
+foreach (Match skill in skills)
+{
+    string name = skill.Groups["name"].Value;
+    pages[$"{SkillsDirectory}/{name}"] = $"{Ecosystem}/skills/{name}.md";
+    pages[Site.SkillPath(name)] = $"{Ecosystem}/skills/{name}.md";
+}
 
 foreach (string name in Opinions.Names())
 {
@@ -101,20 +114,107 @@ foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
     pages[Site.Normalise(file)] = $"{DiagramsDirectory}/{Path.GetFileName(file)}";
 }
 
+// The roster, split so that no page carries all of it. The overview holds the admission
+// criteria and the shape of a source's notes, each roster table gets a page beside the notes
+// for the sources in it, each collapsed so the page reads as a list of sources, and the
+// decision log gets its own. A heading's anchor resolves to the page now holding it,
+// preferring the linking page when two pages share one. A source's collapsed notes keep
+// the anchor its heading had, and javascripts/open-details.js opens them when linked to.
+const string RosterPath = "AWESOME-HUMANS.md";
+string roster = File.ReadAllText(RosterPath).ReplaceLineEndings("\n");
+Dictionary<string, string> rosterPages = new(StringComparer.Ordinal)
+{
+    ["citable"] = $"{Ecosystem}/awesome-humans/citable.md",
+    ["watch-list"] = $"{Ecosystem}/awesome-humans/watch-list.md",
+    ["decision-log"] = $"{Ecosystem}/awesome-humans/decision-log.md",
+};
+string[] rosterSections = Site.SplitBefore(roster, "## ");
+Dictionary<string, string> rosterText = new(StringComparer.Ordinal) { [pages[RosterPath]] = rosterSections[0] };
+foreach (string section in rosterSections.Skip(1))
+{
+    if (section.StartsWith("## Admission criteria", StringComparison.Ordinal))
+    {
+        rosterText[pages[RosterPath]] += section;
+    }
+    else if (section.StartsWith("## Citable", StringComparison.Ordinal))
+    {
+        rosterText[rosterPages["citable"]] = section[1..] + "\n## Source notes\n\n";
+    }
+    else if (section.StartsWith("## Watch list", StringComparison.Ordinal))
+    {
+        rosterText[rosterPages["watch-list"]] = section[1..] + "\n## Source notes\n\n";
+    }
+    else if (section.StartsWith("## Decision log", StringComparison.Ordinal))
+    {
+        rosterText[rosterPages["decision-log"]] = section[1..];
+    }
+    else if (section.StartsWith("## Source notes", StringComparison.Ordinal))
+    {
+        string[] notes = Site.SplitBefore(section, "### ");
+        rosterText[pages[RosterPath]] += notes[0];
+        foreach (string note in notes.Skip(1))
+        {
+            string? bucket = note.StartsWith("### `", StringComparison.Ordinal) && note.Contains("`: Citable", StringComparison.Ordinal) ? "citable"
+                : note.StartsWith("### `", StringComparison.Ordinal) && note.Contains("`: Watch list", StringComparison.Ordinal) ? "watch-list"
+                : null;
+            if (bucket is null || !rosterText.ContainsKey(rosterPages[bucket]))
+            {
+                errors.Add($"{RosterPath}: no roster page for the notes headed {note[..note.IndexOf('\n')]}");
+                continue;
+            }
+
+            rosterText[rosterPages[bucket]] += Site.Collapsible(note);
+        }
+    }
+    else
+    {
+        errors.Add($"{RosterPath}: no site page for the section headed {section[..section.IndexOf('\n')]}; add one in build-site.cs");
+    }
+}
+
+// Each id in a roster table links to the source's notes on the same page, when it has any.
+foreach (string bucket in (string[])["citable", "watch-list"])
+{
+    string page = rosterPages[bucket];
+    rosterText[page] = Site.TableId().Replace(rosterText[page], row =>
+    {
+        string id = row.Groups["id"].Value;
+        Match note = Regex.Match(rosterText[page], $@"^<details id=""({Regex.Escape(id)}-(?:citable|watch-list)[^""]*)""", RegexOptions.Multiline);
+        return note.Success ? $"| [`{id}`](#{note.Groups[1].Value}) |" : row.Value;
+    });
+}
+
+Dictionary<string, List<(string Page, bool Title)>> rosterAnchors = new(StringComparer.Ordinal);
+foreach ((string page, string text) in rosterText)
+{
+    foreach (Match heading in Site.Heading().Matches(text))
+    {
+        string slug = heading.Groups["id"].Success ? heading.Groups["id"].Value : Site.Slug(heading.Groups["text"].Value);
+        if (!rosterAnchors.TryGetValue(slug, out List<(string Page, bool Title)>? found))
+        {
+            rosterAnchors[slug] = found = [];
+        }
+
+        found.Add((page, heading.Groups["hashes"].Value.Length == 1));
+    }
+}
+
 // The overview: README.md up to its layout section, which is about the repository rather
 // than the opinions, without the rule for contributors adding an opinion file.
-string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
 int layout = readme.IndexOf("\n## Repository layout", StringComparison.Ordinal);
 string overview = string.Join(
     "\n\n",
     readme[..layout].Split("\n\n").Where(block => !block.StartsWith("A new opinion file must appear", StringComparison.Ordinal)));
 Write(pages["README.md"], Rewrite("README.md", overview + "\n", anchorsToGitHub: true));
 
-Write(pages["AWESOME-HUMANS.md"], Rewrite("AWESOME-HUMANS.md", File.ReadAllText("AWESOME-HUMANS.md")));
+foreach ((string page, string text) in rosterText)
+{
+    Write(page, Rewrite(RosterPath, text.TrimEnd('\n') + "\n", from: page));
+}
+
 Write(pages["HOUSE-OPINIONS.md"], Rewrite("HOUSE-OPINIONS.md", File.ReadAllText("HOUSE-OPINIONS.md")));
 
 // Opinions, each with a line under its title giving the metadata from its frontmatter.
-string roster = File.ReadAllText("AWESOME-HUMANS.md");
 IDeserializer deserializer = new DeserializerBuilder().Build();
 foreach (string name in Opinions.Names())
 {
@@ -130,12 +230,20 @@ foreach (string name in Opinions.Names())
         " · ",
         $"**Targets:** {string.Join(", ", Site.List(meta["targets"]).Select(target => $"`{target}`"))}",
         $"**Last reviewed:** {meta["last-reviewed"]}",
-        $"**Sources:** {string.Join(", ", Site.List(meta["sources"]).Select(id => SourceLink(id)))}");
+        $"**Sources:** {string.Join(", ", Site.List(meta["sources"]).Select(id => SourceLink(path, id)))}");
     string text = Rewrite(path, File.ReadAllText(path));
     int title = text.IndexOf("\n# ", StringComparison.Ordinal);
     int titleEnd = text.IndexOf('\n', title + 1);
     Write(pages[path], text[..titleEnd] + "\n\n" + line + text[titleEnd..]);
 }
+
+// An index of the opinions, in the order and with the summaries of README.md's Scope list.
+Write(
+    pages[Opinions.DirectoryName],
+    "# Opinions\n\n"
+    + "One topic per page. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.\n\n"
+    + string.Concat(Site.ScopeBullet().Matches(readme).Select(bullet =>
+        $"- **[{bullet.Groups["title"].Value}]({Path.GetFileName(bullet.Groups["path"].Value)}):**{bullet.Groups["summary"].Value}\n")));
 
 // A page per template file, and an index of them.
 List<string> index =
@@ -163,6 +271,50 @@ foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.G
 
 Write(pages[TemplatesDirectory], string.Concat(index));
 
+// A page per skill, its SKILL.md without the frontmatter, and an index of them in the order
+// of README.md's table, which validate-readme-index.cs holds to the skills directory.
+List<string> skillIndex =
+[
+    "# Skills\n\n",
+    "Agent skills that check a project against the opinions and keep the opinions current. ",
+    "They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. ",
+    "To run one, clone the repository and ask your agent to run the skill by name. ",
+    $"If your agent only discovers skills in a directory of its own, see [AGENTS.md: Skills]({Site.GitHub("AGENTS.md", isDirectory: false)}#skills).\n\n",
+    "`verify-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
+    "The others maintain this repository.\n\n",
+    "| Skill | Purpose |\n| --- | --- |\n",
+];
+foreach (Match skill in skills)
+{
+    string name = skill.Groups["name"].Value;
+    string path = Site.SkillPath(name);
+    if (!File.Exists(path))
+    {
+        errors.Add($"README.md: the skills table lists {name}, but {path} does not exist");
+        continue;
+    }
+
+    skillIndex.Add($"| [`{name}`]({name}.md) | {skill.Groups["purpose"].Value} |\n");
+
+    string text = File.ReadAllText(path).ReplaceLineEndings("\n");
+    int end = text.StartsWith("---\n", StringComparison.Ordinal) ? text.IndexOf("\n---\n", 4, StringComparison.Ordinal) : -1;
+    if (end == -1)
+    {
+        errors.Add($"{path}: no frontmatter block to strip");
+        continue;
+    }
+
+    string body = Rewrite(path, text[(end + "\n---\n".Length)..].TrimStart('\n'));
+    int titleEnd = body.IndexOf('\n', StringComparison.Ordinal);
+    Write(
+        pages[path],
+        body[..titleEnd] + "\n\n"
+        + $"[View on GitHub]({Site.GitHub(path, isDirectory: false)}) · [Raw]({Site.Raw(path)})"
+        + body[titleEnd..]);
+}
+
+Write(pages[SkillsDirectory], string.Concat(skillIndex));
+
 // llms.txt at the site root, per llmstxt.org: a summary and links an agent can follow, to
 // the raw Markdown of each opinion and the raw template files rather than rendered pages.
 List<string> llms =
@@ -177,6 +329,9 @@ List<string> llms =
     $"\n## {EcosystemName} templates\n\n",
     "Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.\n\n",
     .. templates.Select(template => $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({Site.Raw(template)})\n"),
+    $"\n## {EcosystemName} skills\n\n",
+    "Agent Skills procedures. Run verify-project to check a .NET project against the opinions. The others maintain the repository.\n\n",
+    .. skills.Select(skill => $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}\n"),
     "\n## Optional\n\n",
     $"- [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria\n",
     $"- [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear\n",
@@ -205,9 +360,16 @@ string[] nav =
     Section(EcosystemName,
     [
         Entry("Overview", pages["README.md"]),
-        Section("Opinions", opinionEntries),
+        Section("Opinions", [Entry("Overview", pages[Opinions.DirectoryName]), .. opinionEntries]),
         Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
-        Entry("Awesome humans", pages["AWESOME-HUMANS.md"]),
+        Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
+        Section("Awesome humans",
+        [
+            Entry("Overview", pages[RosterPath]),
+            Entry("Citable", rosterPages["citable"]),
+            Entry("Watch list", rosterPages["watch-list"]),
+            Entry("Decision log", rosterPages["decision-log"]),
+        ]),
         Entry("House opinions", pages["HOUSE-OPINIONS.md"]),
     ]),
 ];
@@ -240,24 +402,25 @@ return 0;
 
 // A source id links to its notes section in the roster, or to the citable table when it has
 // nothing to record and so no section, and house links to the house opinions.
-string SourceLink(string id)
+string SourceLink(string path, string id)
 {
+    string from = Path.GetDirectoryName(path) ?? "";
     if (id == "house")
     {
-        return "[house](../house-opinions.md)";
+        return $"[house]({Target(path, pages[path], Site.Normalise(Path.GetRelativePath(from, "HOUSE-OPINIONS.md")), anchorsToGitHub: false)})";
     }
 
     Match heading = Regex.Match(roster, $@"^### (`{Regex.Escape(id)}`.*)$", RegexOptions.Multiline);
     string anchor = heading.Success ? Site.Slug(heading.Groups[1].Value) : "citable-quotable-in-opinions-and-templates";
-    return $"[{id}](../awesome-humans.md#{anchor})";
+    return $"[{id}]({Target(path, pages[path], $"{Site.Normalise(Path.GetRelativePath(from, RosterPath))}#{anchor}", anchorsToGitHub: false)})";
 }
 
 // Rewrites every relative link in a Markdown file, read from its repository path, to point
 // from its page on the site, and escapes a heading's trailing # (C#, Testing F#), which
 // GitHub keeps but Zensical reads as a closing sequence. Fenced code blocks are left alone.
-string Rewrite(string source, string text, bool anchorsToGitHub = false)
+string Rewrite(string source, string text, bool anchorsToGitHub = false, string? from = null)
 {
-    string from = pages[source];
+    from ??= pages[source];
     bool fenced = false;
     IEnumerable<string> lines = text.ReplaceLineEndings("\n").Split('\n').Select(line =>
     {
@@ -287,12 +450,32 @@ string Target(string source, string from, string target, bool anchorsToGitHub)
     int hash = target.IndexOf('#');
     string path = hash == -1 ? target : target[..hash];
     string anchor = hash == -1 ? "" : target[hash..];
-    if (path.Length == 0)
+    if (path.Length == 0 && anchorsToGitHub)
     {
-        return anchorsToGitHub ? Site.GitHub(source, isDirectory: false) + anchor : target;
+        return Site.GitHub(source, isDirectory: false) + anchor;
     }
 
-    string resolved = Site.Normalise(Path.GetRelativePath(".", Path.Combine(Path.GetDirectoryName(source) ?? "", path))).TrimEnd('/');
+    string resolved = path.Length == 0
+        ? source
+        : Site.Normalise(Path.GetRelativePath(".", Path.Combine(Path.GetDirectoryName(source) ?? "", path))).TrimEnd('/');
+    if (resolved == RosterPath && anchor.Length > 1)
+    {
+        if (!rosterAnchors.TryGetValue(anchor[1..], out List<(string Page, bool Title)>? found))
+        {
+            errors.Add($"{source}: link to {target} names no heading in {RosterPath}");
+            return target;
+        }
+
+        (string sectionPage, bool title) = found.FirstOrDefault(candidate => candidate.Page == from, found[0]);
+        string relative = sectionPage == from ? "" : Site.Normalise(Path.GetRelativePath(Path.GetDirectoryName(from) ?? "", sectionPage));
+        return title ? (relative.Length == 0 ? "#" : relative) : relative + anchor;
+    }
+
+    if (path.Length == 0)
+    {
+        return target;
+    }
+
     if (pages.TryGetValue(resolved, out string? page))
     {
         return Site.Normalise(Path.GetRelativePath(Path.GetDirectoryName(from) ?? "", page)) + anchor;
@@ -323,6 +506,8 @@ internal static partial class Site
     public static string GitHub(string path, bool isDirectory) =>
         $"https://github.com/{Repository}/{(isDirectory ? "tree" : "blob")}/main/{path}";
 
+    public static string SkillPath(string name) => $"skills/{name}/SKILL.md";
+
     public static string Raw(string path) => $"https://raw.githubusercontent.com/{Repository}/main/{path}";
 
     // Zensical skips dotfiles, so .editorconfig's page drops the leading dot.
@@ -338,6 +523,21 @@ internal static partial class Site
         ".fs" => "fsharp",
         _ => "text",
     };
+
+    // Splits Markdown before each line that starts with the given heading prefix, keeping the
+    // text ahead of the first such line as the first part.
+    // Turns a source's notes, headed '### `id`: Citable', into a collapsed block whose id is
+    // the anchor the heading had, so links to it still land.
+    public static string Collapsible(string note)
+    {
+        int end = note.IndexOf('\n');
+        string heading = note[4..end];
+        string summary = Strong().Replace(Code().Replace(System.Net.WebUtility.HtmlEncode(heading), "<code>$1</code>"), "<strong>$1</strong>");
+        return $"<details id=\"{Slug(heading)}\" markdown=\"1\">\n<summary>{summary}</summary>\n\n{note[(end + 1)..].Trim('\n')}\n\n</details>\n\n";
+    }
+
+    public static string[] SplitBefore(string text, string prefix) =>
+        Regex.Split(text, $"(?=^{Regex.Escape(prefix)})", RegexOptions.Multiline);
 
     public static int LongestBacktickRun(string text) =>
         BacktickRun().Matches(text).Select(match => match.Length).DefaultIfEmpty(0).Max();
@@ -357,8 +557,26 @@ internal static partial class Site
     [GeneratedRegex(@"^- \*\*\[(?<title>[^\]]+)\]\((?<path>opinions/[^)]+)\):\*\*(?<summary>.*)$", RegexOptions.Multiline)]
     public static partial Regex ScopeBullet();
 
+    // A row in README.md's Maintenance via skills table: | [`name`](skills/name/SKILL.md) | purpose |.
+    [GeneratedRegex(@"^\| \[`(?<name>[^`]+)`\]\(skills/[^)]+\)\s*\|\s*(?<purpose>.*?)\s*\|$", RegexOptions.Multiline)]
+    public static partial Regex SkillRow();
+
     [GeneratedRegex(@"^(?<text>#{1,6} .*[^\s\\#])(?<hashes>#+)$")]
     public static partial Regex HeadingTrailingHash();
+
+    // A heading, or the opening of a source's collapsed notes, which stands in for one.
+    [GeneratedRegex(@"^(?:(?<hashes>#{1,6}) (?<text>.+)|<details id=""(?<id>[^""]+)"".*)$", RegexOptions.Multiline)]
+    public static partial Regex Heading();
+
+    // The id cell that opens a roster table row: | `id` |.
+    [GeneratedRegex(@"^\| `(?<id>[a-z0-9-]+)` +\|", RegexOptions.Multiline)]
+    public static partial Regex TableId();
+
+    [GeneratedRegex("`([^`]+)`")]
+    private static partial Regex Code();
+
+    [GeneratedRegex(@"\*\*(.+?)\*\*")]
+    private static partial Regex Strong();
 
     [GeneratedRegex(@"\]\((?<target>[^)\s]+)\)")]
     public static partial Regex MarkdownLink();

@@ -251,9 +251,9 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 
 ### Site
 
-- The awesome-humans.net site is generated. `scripts/build-site.cs` builds its `/dotnet/` pages from `README.md` (up to Repository layout), `opinions/`, `templates/`, `AWESOME-HUMANS.md`, and `HOUSE-OPINIONS.md`. Edit those files, never a staged page.
+- The awesome-humans.net site is generated. `scripts/build-site.cs` builds its `/dotnet/` pages from `README.md` (up to Repository layout), `opinions/`, `templates/`, `skills/`, `AWESOME-HUMANS.md`, and `HOUSE-OPINIONS.md`. Edit those files, never a staged page.
 - Only the pages that every ecosystem shares, under `site/pages/`, are written by hand. Their links are relative to the built site, not the repository.
-- The opinion navigation follows [README.md: Scope](README.md#scope), so a new opinion needs no separate site entry.
+- The opinion navigation follows [README.md: Scope](README.md#scope), and the skill navigation follows [README.md: Maintenance via skills](README.md#maintenance-via-skills), so a new opinion or skill needs no separate site entry.
 - The `Site` workflow fails a pull request on any link or anchor the site can't resolve. It uploads a preview of each same-repository pull request to Cloudflare, and deploys `main` to awesome-humans.net using `site/wrangler.jsonc`.
 
 ### Links

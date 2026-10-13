@@ -10,7 +10,7 @@ metadata:
 
 # Verify project
 
-Compare a target .NET project with this repository's opinions and `templates/`, and report where it deviates. This skill **only reports** unless the user asks for fixes.
+Compare a target .NET project with this repository's opinions and templates, and report where it deviates. This skill **only reports** unless the user asks for fixes.
 
 ## Steps
 
