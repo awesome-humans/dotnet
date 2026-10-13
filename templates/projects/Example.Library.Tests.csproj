@@ -9,7 +9,7 @@
     <!-- Keeps solution-level publish output for deployment only. Without it, the test host and a
          second copy of every referenced library go into artifacts/publish (opinions/ci.md). -->
     <IsPublishable>false</IsPublishable>
-    <!-- Required: xunit.v3 test projects build to a self-contained executable under
+    <!-- Required: xunit.v3 test projects build to an executable under
          Microsoft.Testing.Platform, and the build fails without this. -->
     <OutputType>Exe</OutputType>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
