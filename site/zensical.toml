@@ -17,6 +17,7 @@ repo_name = "si618/dotnet-awesome-humans"
 docs_dir = "docs"
 site_dir = "public"
 extra_css = ["stylesheets/extra.css"]
+extra_javascript = ["javascripts/open-details.js"]
 
 [project.theme]
 # Classic draws the header and tabs in the primary colour; the modern variant keeps

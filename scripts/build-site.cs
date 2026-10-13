@@ -116,8 +116,10 @@ foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
 
 // The roster, split so that no page carries all of it. The overview holds the admission
 // criteria and the shape of a source's notes, each roster table gets a page beside the notes
-// for the sources in it, and the decision log gets its own. A heading's anchor resolves to
-// the page now holding it, preferring the linking page when two pages share one.
+// for the sources in it, each collapsed so the page reads as a list of sources, and the
+// decision log gets its own. A heading's anchor resolves to the page now holding it,
+// preferring the linking page when two pages share one. A source's collapsed notes keep
+// the anchor its heading had, and javascripts/open-details.js opens them when linked to.
 const string RosterPath = "AWESOME-HUMANS.md";
 string roster = File.ReadAllText(RosterPath).ReplaceLineEndings("\n");
 Dictionary<string, string> rosterPages = new(StringComparer.Ordinal)
@@ -161,7 +163,7 @@ foreach (string section in rosterSections.Skip(1))
                 continue;
             }
 
-            rosterText[rosterPages[bucket]] += note;
+            rosterText[rosterPages[bucket]] += Site.Collapsible(note);
         }
     }
     else
@@ -175,7 +177,7 @@ foreach ((string page, string text) in rosterText)
 {
     foreach (Match heading in Site.Heading().Matches(text))
     {
-        string slug = Site.Slug(heading.Groups["text"].Value);
+        string slug = heading.Groups["id"].Success ? heading.Groups["id"].Value : Site.Slug(heading.Groups["text"].Value);
         if (!rosterAnchors.TryGetValue(slug, out List<(string Page, bool Title)>? found))
         {
             rosterAnchors[slug] = found = [];
@@ -512,6 +514,16 @@ internal static partial class Site
 
     // Splits Markdown before each line that starts with the given heading prefix, keeping the
     // text ahead of the first such line as the first part.
+    // Turns a source's notes, headed '### `id`: Citable', into a collapsed block whose id is
+    // the anchor the heading had, so links to it still land.
+    public static string Collapsible(string note)
+    {
+        int end = note.IndexOf('\n');
+        string heading = note[4..end];
+        string summary = Strong().Replace(Code().Replace(System.Net.WebUtility.HtmlEncode(heading), "<code>$1</code>"), "<strong>$1</strong>");
+        return $"<details id=\"{Slug(heading)}\" markdown=\"1\">\n<summary>{summary}</summary>\n\n{note[(end + 1)..].Trim('\n')}\n\n</details>\n\n";
+    }
+
     public static string[] SplitBefore(string text, string prefix) =>
         Regex.Split(text, $"(?=^{Regex.Escape(prefix)})", RegexOptions.Multiline);
 
@@ -540,8 +552,15 @@ internal static partial class Site
     [GeneratedRegex(@"^(?<text>#{1,6} .*[^\s\\#])(?<hashes>#+)$")]
     public static partial Regex HeadingTrailingHash();
 
-    [GeneratedRegex(@"^(?<hashes>#{1,6}) (?<text>.+)$", RegexOptions.Multiline)]
+    // A heading, or the opening of a source's collapsed notes, which stands in for one.
+    [GeneratedRegex(@"^(?:(?<hashes>#{1,6}) (?<text>.+)|<details id=""(?<id>[^""]+)"".*)$", RegexOptions.Multiline)]
     public static partial Regex Heading();
+
+    [GeneratedRegex("`([^`]+)`")]
+    private static partial Regex Code();
+
+    [GeneratedRegex(@"\*\*(.+?)\*\*")]
+    private static partial Regex Strong();
 
     [GeneratedRegex(@"\]\((?<target>[^)\s]+)\)")]
     public static partial Regex MarkdownLink();
