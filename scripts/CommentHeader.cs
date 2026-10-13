@@ -5,7 +5,7 @@
 //
 // Templates cannot carry YAML frontmatter: they are XML, INI, JSON and source files that
 // have to stay valid for the tools that read them, and a `---` block would break every
-// one. The same metadata rides in a comment on the first line instead, and this parses it:
+// one. The same metadata goes in a comment on the first line instead, and this parses it:
 //
 //     <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | … -->
 //     # dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | …

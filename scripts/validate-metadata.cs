@@ -5,7 +5,7 @@
 #:include CommentHeader.cs
 // PublishAot is on by default for file-based apps, and YamlDotNet's reflection-based
 // builder trips its analyzer (IL3050). These scripts are run, never published, so turn
-// AOT off rather than suppress the diagnostic that is telling the truth.
+// AOT off instead of suppressing an accurate diagnostic.
 #:property PublishAot=false
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
@@ -44,7 +44,7 @@ string[] required = ["targets", "last-reviewed", "last-used", "sources"];
 string[] researchRequired = ["targets", "last-reviewed", "sources"];
 
 // ...and two fields it must not carry. A last-used or status key on a research topic is
-// the retired frontmatter shape sneaking back in — a topic on disk is unresolved by
+// the retired frontmatter shape coming back. A topic on disk is unresolved by
 // definition, and deletion is the only promotion signal (AGENTS.md), so these are
 // rejected rather than ignored.
 string[] researchForbidden = ["last-used", "status"];

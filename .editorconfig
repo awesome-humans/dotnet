@@ -7,9 +7,9 @@
 # editing this file changes how we work, editing the template changes our advice.
 #
 # Values here match what `npm run format` (prettier) produces for the files it owns
-# (Markdown, JSON, JSONC and YAML), so the editor and the formatter agree rather
-# than fighting across saves. The C# and TOML settings below have no formatter
-# behind them; there, this file is the only thing holding the line.
+# (Markdown, JSON, JSONC and YAML), so the editor and the formatter don't undo
+# each other on save. No formatter covers the C# and TOML settings below, so
+# this file is the only thing that enforces them.
 
 root = true
 
@@ -47,7 +47,7 @@ indent_size = 2
 [*.cs]
 indent_size = 4
 
-# The one house rule worth duplicating, because it has teeth rather than being advice:
+# The one house rule worth duplicating, because it fails the build instead of advising:
 # the scripts set TreatWarningsAsErrors, so this turns the analyzer set into build
 # failures and holds the repository to the bar it publishes to consumers.
 [scripts/*.cs]
