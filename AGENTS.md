@@ -229,13 +229,14 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
   - This convention outranks the host environment's own. Replace a generated name such as `agent/youthful-wozniak-gm4k7m` before the first push. If a host only pushes under its own prefix, put the convention after it: `agent/harvest/2026-09-14`.
   - Settle the name before you open the pull request. Renaming the head branch of an open pull request on GitHub closes it, and you can't reopen it under the new name.
 - **Directory names:** Name the directory after the branch, with slashes replaced by dashes, so `resolve/globalization` becomes `resolve-globalization/`. Every worktree then sits one level beside the bare `.bare/` directory and tab-completes in one step. This also keeps a nested `research/` directory from appearing next to the repository's own `research/`.
-- **Setup:** A fresh worktree has no gitignored local state. Run `npm install` in it before `npm run check`. If your harness needs the skills symlink, re-create it there. For details, see [Skills](#skills).
+- **Setup:** A fresh worktree has no gitignored local state. Run `npm install` in it before `npm run check` or `npm run verify`. If your harness needs the skills symlink, re-create it there. For details, see [Skills](#skills).
 - **Finishing:** When a worktree's pull request merges, **offer to delete the worktree** with `git worktree remove <dir>` and then `git branch -d <branch>`. Ask first: the branch might still hold work that never reached the pull request.
 
 ### Formatting and linting
 
 - Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc`. The configuration uses the defaults minus three rules that conflict with the prose style, and records why.
 - Run `npm run format` to format, and `npm run check` to check formatting and lint together. Both use the versions pinned in `package.json`. Don't run `npx prettier` or `npx markdownlint-cli2` directly, because they resolve the latest version.
+- Run `npm run verify` before you open a pull request. It runs `npm run check` and the scripts in `scripts/` that CI runs, and redraws the diagrams. See [README.md: Repository scripts](README.md#repository-scripts).
 - Prettier formats Markdown and the JSON, JSONC, and YAML configuration, and reads `.editorconfig`, so the formatter and your editor agree. `.prettierignore` records two exceptions:
   - `package-lock.json` and `.github/state/dotnet-releases.json` are machine-written. Gating them on formatting would fail a build that nobody can fix by editing.
   - `lychee.toml` isn't formatted. Prettier has no built-in TOML parser, and one hand-written file doesn't justify a third-party plugin.
