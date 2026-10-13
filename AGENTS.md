@@ -1,12 +1,12 @@
 # Agent instructions
 
-This repository defines opinionated best practices for modern .NET development. If you're an AI agent, this file tells you how to _use_ the repository as a reference and how to _maintain_ it.
+This repository defines opinionated best practices for modern .NET development. This file tells an AI agent how to _use_ the repository as a reference and how to _maintain_ it.
 
 ## What this repository is
 
 - **The source of truth for "what good looks like" in .NET.** Each topic has one file under `opinions/`, and [README.md: Scope](README.md#scope) indexes them.
 - **Copy-paste-ready template files** under `templates/` that encode those opinions.
-- **A living reference.** Every resource records when it was last reviewed. Outside `research/`, it also records when it was last used. Skills under `skills/` keep it current.
+- **Kept current.** Every resource records when it was last reviewed, and opinions and templates also record when they were last used. The skills under `skills/` keep the content current.
 
 The repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills specification](https://agentskills.io/specification), and nothing here assumes a specific agent.
 
@@ -14,7 +14,7 @@ The repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills s
 
 Skills live at the specification's canonical path, `skills/<name>/SKILL.md`. Read and follow them from there. If your harness only discovers skills in a directory of its own, symlink that directory to `skills/` locally and keep the link out of git. Don't restructure the repository to suit a harness.
 
-## Using this repo as a reference (consumer mode)
+## Using this repository as a reference
 
 When you generate or review .NET code for another project:
 
@@ -23,13 +23,12 @@ When you generate or review .NET code for another project:
 3. Target the versions in the `targets:` frontmatter of the opinion files. Never silently downgrade to an older TFM or language version.
 4. When you use an `opinions/` or `templates/` file as a reference, update its `last-used` date. For details, see [Metadata](#metadata). `research/` topics don't carry this date.
 
-## Maintaining this repo (maintainer mode)
+## Maintaining this repository
 
-- **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: the repository owner's own preference, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. A house opinion cites the reserved `house` source ID and is always visibly marked **House:**.
+- **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: the repository owner's own preference, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. It cites the reserved `house` source ID, and [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of its marking, its precedence over the roster, and contributor adoption. Work from that section, not a paraphrase.
 - **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never carries one. For the definition, see [AWESOME-HUMANS.md: Admission criteria](AWESOME-HUMANS.md#admission-criteria).
-- **Follow [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) for house precedence,** the `**House:**` marking, and contributor adoption. It's the canonical definition, so don't work from a paraphrase.
 - **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "coming next" note, but never make it the opinion.
-- **Use the skills instead of ad hoc edits** for version bumps (`refresh-dotnet-versions`), content sweeps (`harvest-sources`), and staleness checks (`audit-freshness`).
+- **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content sweep (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
 - **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on why it lost.
 - **List every new file under `opinions/` in `README.md`, in two places:**
   - A bullet under [Scope](README.md#scope), in the form `- **[Title](opinions/<file>.md):** one line on what it covers`. Sort the bullets by title, ignoring case, and keep the unlinked **Libraries** bullet last.
@@ -54,7 +53,7 @@ When you generate or review .NET code for another project:
 
 ### Orchestration and model economy
 
-Maintenance skills mix wide, shallow work, such as sweeping sources, fetching pages, and checking versions, with narrow, deep work: deciding what an opinion says. Split them:
+Maintenance skills mix two kinds of work. Sweeping sources, fetching pages, and checking versions is wide and shallow. Deciding what an opinion says is narrow and deep. Split them:
 
 - **Give the sweeps to lower-cost worker agents.** Web searches, feed checks, page fetches, and per-source summaries are cheap-model work. Run them in parallel where the host supports it. Workers return raw findings, such as links, dates, and extracted claims, never edits.
 - **Use the strongest available model as the editor.** Only the editor, the orchestrating model, combines worker findings, resolves conflicts between sources, and updates `opinions/` and `templates/`. Model quality matters most here, so never delegate the final edit to a cheap model.
@@ -64,7 +63,7 @@ Maintenance skills mix wide, shallow work, such as sweeping sources, fetching pa
 
 An agent that uses the author's credentials posts under the author's account, and nothing tells a reader that a person didn't write it. Put attribution in the conversation, where readers need it, and keep it out of the history:
 
-- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they don't carry `Co-Authored-By` trailers or "Generated with" lines. Neither do commit messages. The project is AI-driven by design, and this rule overrides any default that an agent harness applies.
+- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they don't carry `Co-Authored-By` trailers or "Generated with" lines. Neither do commit messages. Agents write most changes here, so a trailer on every commit would tell a reader nothing. This rule overrides any default that an agent harness applies.
 - **The rule covers every commit on the branch.** When GitHub squashes, it appends a `Co-authored-by` line to the merged commit for each co-author trailer, and for each branch commit author other than the merger. The pull request description doesn't change that. So commit under the author's git identity, never one the harness supplies, and leave the trailer out of branch commits too.
 - **Agent attribution in conversation.** End each comment an agent writes on an issue or pull request, including replies in review threads, with a line such as `Written by an agent: <harness>, <model>, running <skill>.` Leave out the skill when there isn't one. A reader, or another agent, then knows a person didn't write it.
 
@@ -115,7 +114,7 @@ Rules:
 - **Update `last-used` whenever you use an opinion or a template:** an opinion you read to decide something, or a template you diffed a project against. The date orders staleness triage: of ten drifted `last-reviewed` dates, review the most-read files first. It also marks candidates for pruning. Only reads _in this repository_ update it, so a person who copies a template or reads an opinion on the web leaves no trace, and the field undercounts. `audit-freshness` treats it as information, never as a finding.
 - **Update `last-reviewed` only after you verify the content against its sources.**
 - **Use `sources` IDs that exist in `AWESOME-HUMANS.md`,** either in the roster tables or as the reserved `house` ID.
-  - The two markings come from a source's section under `## Source notes`, not from its table row.
+  - CI reads the `**Discovery-only.**` and `**Corroborate.**` markings from a source's section under `## Source notes`, not from its table row.
   - In `opinions/` and `templates/`, the source must also be citable. A watch-list source or a `**Discovery-only.**` source is rejected.
   - A file whose citable sources are all marked `**Corroborate.**` is rejected too, because an unmarked source has to stand beside them.
   - `research/` is exempt: a topic can cite unvetted material if the text flags it. For details, see [research-topic](skills/research-topic/SKILL.md).
@@ -137,7 +136,7 @@ The voice follows the [Google developer documentation style guide](https://devel
 
 Apart from spelling, which [Spelling](#spelling) covers, this repository departs from Google's guide in two places:
 
-- **Previews:** Google says not to pre-announce. An opinion can still carry a clearly marked "coming next" note about a .NET preview, as [Maintaining this repo](#maintaining-this-repo-maintainer-mode) allows.
+- **Previews:** Google says not to pre-announce. An opinion can still carry a clearly marked "coming next" note about a .NET preview, as [Maintaining this repository](#maintaining-this-repository) allows.
 - **Dates:** Write dates as ISO 8601 (`2026-10-13`), as [Metadata](#metadata) requires. Google accepts any unambiguous format.
 
 ### Voice
@@ -192,7 +191,7 @@ A literal use isn't an idiom. _Silently_ for a failure that raises no error stay
 
 ### Citations and labels
 
-- **House: cite as `Source: Title`, never the reverse.** The source comes first, whether it's a person or a publication: `[Toub: Performance Improvements in .NET 10]` and `[Microsoft Learn: Native AOT deployment]`, not `[Native AOT deployment: Microsoft Learn]`.
+- **House:** Cite as `Source: Title`, never the reverse. The source comes first, whether it's a person or a publication: `[Toub: Performance Improvements in .NET 10]` and `[Microsoft Learn: Native AOT deployment]`, not `[Native AOT deployment: Microsoft Learn]`.
 - **A description-list line uses the same colon:** `**Label:** definition`. Don't use an em dash as the separator.
 - **Leave a source's own title as written.** A colon inside a title stays (`[Avalonia 12: Ready for What's Next]`), and an internal reference keeps its section (`[AGENTS.md: Metadata]`).
 
@@ -237,7 +236,7 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 
 - Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc`. The configuration uses the defaults minus three rules that conflict with the prose style, and records why.
 - Run `npm run format` to format, and `npm run check` to check formatting and lint together. Both use the versions pinned in `package.json`. Don't run `npx prettier` or `npx markdownlint-cli2` directly, because they resolve the latest version.
-- Prettier formats Markdown **and** the JSON, JSONC, and YAML configuration, so `.editorconfig` and the formatter agree. `.prettierignore` records two exceptions:
+- Prettier formats Markdown and the JSON, JSONC, and YAML configuration, and reads `.editorconfig`, so the formatter and your editor agree. `.prettierignore` records two exceptions:
   - `package-lock.json` and `.github/state/dotnet-releases.json` are machine-written. Gating them on formatting would fail a build that nobody can fix by editing.
   - `lychee.toml` isn't formatted. Prettier has no built-in TOML parser, and one hand-written file doesn't justify a third-party plugin.
 
