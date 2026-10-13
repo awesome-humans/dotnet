@@ -317,26 +317,44 @@ Write(pages[SkillsDirectory], string.Concat(skillIndex));
 
 // llms.txt at the site root, per llmstxt.org: a summary and links an agent can follow, to
 // the raw Markdown of each opinion and the raw template files rather than rendered pages.
-List<string> llms =
-[
-    "# Awesome Humans\n\n",
-    "> Opinionated best practices for each software ecosystem, distilled from the published writing of people and publications with a proven, multi-year track record. ",
-    "Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.\n\n",
-    $"## {EcosystemName} opinions\n\n",
-    "Follow these when writing or reviewing .NET code. Target the versions in each file's `targets:` frontmatter, never an older one.\n\n",
-    .. Site.ScopeBullet().Matches(readme).Select(bullet =>
-        $"- [{bullet.Groups["title"].Value}]({Site.Raw(bullet.Groups["path"].Value)}): {bullet.Groups["summary"].Value.Trim()}\n"),
-    $"\n## {EcosystemName} templates\n\n",
-    "Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.\n\n",
-    .. templates.Select(template => $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({Site.Raw(template)})\n"),
-    $"\n## {EcosystemName} skills\n\n",
-    "Agent Skills procedures. Run verify-project to check a .NET project against the opinions. The others maintain the repository.\n\n",
-    .. skills.Select(skill => $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}\n"),
-    "\n## Optional\n\n",
-    $"- [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria\n",
-    $"- [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear\n",
-];
-Write("llms.txt", string.Concat(llms));
+// The raw string takes this file's line endings, which a Windows checkout can make CRLF, so
+// the result is normalised to LF like every file the script reads.
+string opinionLinks = string.Join("\n", Site.ScopeBullet().Matches(readme).Select(bullet =>
+    $"- [{bullet.Groups["title"].Value}]({Site.Raw(bullet.Groups["path"].Value)}): {bullet.Groups["summary"].Value.Trim()}"));
+string templateLinks = string.Join("\n", templates.Select(template =>
+    $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({Site.Raw(template)})"));
+string skillLinks = string.Join("\n", skills.Select(skill =>
+    $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}"));
+string llms = $"""
+    # Awesome Humans
+
+    > Opinionated best practices for each software ecosystem, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.
+
+    ## {EcosystemName} opinions
+
+    Follow these when writing or reviewing .NET code. Target the versions in each file's `targets:` frontmatter, never an older one.
+
+    {opinionLinks}
+
+    ## {EcosystemName} templates
+
+    Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.
+
+    {templateLinks}
+
+    ## {EcosystemName} skills
+
+    Agent Skills procedures. Run verify-project to check a .NET project against the opinions. The others maintain the repository.
+
+    {skillLinks}
+
+    ## Optional
+
+    - [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria
+    - [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear
+
+    """;
+Write("llms.txt", llms.ReplaceLineEndings("\n"));
 
 // The navigation, added to the committed configuration as it is staged.
 string Entry(string title, string page) => $"{{ {Site.TomlString(title)} = {Site.TomlString(page)} }}";
