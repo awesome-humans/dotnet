@@ -1,6 +1,6 @@
 # Awesome humans
 
-What does good look like in your codebase right now? Starting with .NET, each software ecosystem listed here answers with opinions distilled from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, independent writing on the subject. Every opinion starts with its recommendation, cites its sources, and targets the latest released versions.
+What does good look like in your codebase right now? Starting with .NET, each ecosystem here answers with opinions distilled from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, independent writing on the subject. Every opinion starts with its recommendation, cites its sources, and targets the latest released versions.
 
 ## Software ecosystems
 
@@ -12,7 +12,7 @@ Every ecosystem has the same layout:
 - Copy-paste-ready templates that encode the opinions.
 - The roster of awesome humans that the opinions cite.
 
-More ecosystems to follow with the same layout, such as Rust and TypeScript.
+Rust and TypeScript are next, with the same layout.
 
 ## Using it
 
@@ -20,4 +20,4 @@ More ecosystems to follow with the same layout, such as Rust and TypeScript.
 - **Scaffold from it.** Copy the templates into a new project, or have an agent check an existing codebase against the opinions.
 - **Read it.** Each opinion page gives the recommendation, the rationale, and the sources behind it.
 
-To learn how sources are vetted and how the opinions stay current, see [How it works](how-it-works.md).
+For how sources are vetted and how the opinions stay current, see [How it works](how-it-works.md).
