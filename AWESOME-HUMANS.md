@@ -146,7 +146,7 @@ Citable on his code-backed engineering posts and on the dotnet-skills he wrote h
   The package examples pin xUnit v2, FluentAssertions 6 and 7, and `Verify.Xunit`, which pulls in xUnit v2.
   Six skills ship CI on `dotnet-version: 9.0.x`, with 22 mutable action tags and no SHA pins.
   Its release notes do record corrections, including "fabricated APIs, compile errors" in the OpenTelemetry skill, and guidance that wrongly called adding optional parameters binary-compatible.
-- **Authorship:** He made 68 of 82 dotnet-skills commits, but the skills that held up best under checking (`aot-trimming`, `csharp-nullable-reference-types`, and `opentelementry-dotnet-instrumentation`) came largely from Daniel Marbach, Mauro Servienti, and Tomasz Masternak of Particular Software.
+- **Authorship:** He made 68 of 82 dotnet-skills commits, but the skills that held up best under checking (`aot-trimming`, `csharp-nullable-reference-types`, and `opentelementry-dotnet-instrumentation` (sic)) came largely from Daniel Marbach, Mauro Servienti, and Tomasz Masternak of Particular Software.
   Their work isn't citable under this ID. Where one of them has a written track record, vet that person.
 - **Conflict of interest:** He's CEO of Petabridge, which sells Akka.NET support plans, consulting, and training, and sells the Phobos monitoring product through Sdkbin, a marketplace he built.
   Never cite him alone on adopting Akka.NET, the actor model, or Phobos.
@@ -411,6 +411,8 @@ Blocked on dormancy, in his own words on the site: "While I am no longer activel
 - **Use:** The OAuth and identity archive stays usable for cross-checking. Citing it needs admission first.
 
 ### `scott-wlaschin`: Citable
+
+<!-- cspell:ignore Modeling -->
 
 The standard independent F# resource, and author of _Domain Modeling Made Functional_.
 

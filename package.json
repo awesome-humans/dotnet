@@ -6,10 +6,12 @@
     "format": "prettier --prose-wrap preserve --write \"**/*.{md,json,jsonc,yml,yaml}\"",
     "format:check": "prettier --prose-wrap preserve --check \"**/*.{md,json,jsonc,yml,yaml}\"",
     "lint": "markdownlint-cli2",
-    "check": "npm run format:check && npm run lint",
+    "spell": "cspell lint --no-progress --dot \"**/*.{md,cs,props,slnx,yml,yaml,json,jsonc,toml}\" \"templates/**\" .editorconfig",
+    "check": "npm run format:check && npm run lint && npm run spell",
     "verify": "npm run check && dotnet run scripts/validate-metadata.cs && dotnet run scripts/validate-sources.cs && dotnet run scripts/validate-readme-index.cs && dotnet run scripts/export-diagrams.cs && dotnet run scripts/build-site.cs"
   },
   "devDependencies": {
+    "cspell": "9.8.0",
     "markdownlint-cli2": "0.23.3",
     "prettier": "3.9.10"
   },

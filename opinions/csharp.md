@@ -156,7 +156,7 @@ The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`
 ```
 
 - **`latest-recommended`:** Picks up new rules with each SDK, without the noise of `all`.
-- **`EnforceCodeStyleInBuild`:** Reports `.editorconfig` style rules (IDExxxx) in the build, not only in the IDE, so CI and editors agree.
+- **`EnforceCodeStyleInBuild`:** Reports `.editorconfig` style rules (`IDExxxx`) in the build, not only in the IDE, so CI and editors agree.
 - **Meziantou.Analyzer:** Adds correctness rules the SDK lacks, such as culture-sensitive string operations, `CancellationToken` forwarding, and async mistakes. Add other analyzers alongside it for rules it doesn't cover. Skip StyleCop if `dotnet format` already enforces your formatting.
 
 Fix each diagnostic, or suppress it with a written justification. Never lower severity across the board. ([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm), [Meziantou: Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))

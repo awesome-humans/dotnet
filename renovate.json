@@ -11,7 +11,7 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
-      "description": "Markdown tooling moves together — prettier and markdownlint gate the same checks, so review them in one PR.",
+      "description": "Markdown tooling moves together — prettier, markdownlint, and cspell gate the same checks, so review them in one PR.",
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
       "groupName": "markdown tooling"
