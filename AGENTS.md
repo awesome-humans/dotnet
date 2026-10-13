@@ -54,15 +54,15 @@ When you generate or review .NET code for another project:
 
 ### Orchestration and model economy
 
-Maintenance skills mix wide, shallow work, such as sweeping sources, fetching pages, and checking versions, with narrow, deep work: deciding what an opinion should say. Split them accordingly:
+Maintenance skills mix wide, shallow work, such as sweeping sources, fetching pages, and checking versions, with narrow, deep work: deciding what an opinion says. Split them:
 
-- **Fan out the sweeps to lower-cost worker agents.** Web searches, feed checks, page fetches, and per-source summaries are cheap-model work. Run them in parallel where the host supports it. Workers return raw findings, such as links, dates, and extracted claims, and never edits.
-- **Use the strongest available model as the editor.** Only the editor, the orchestrating model, combines worker findings, resolves conflicts between sources, and updates `opinions/` and `templates/`. Model quality matters most for this judgment, so never delegate the final edit to a cheap model.
-- **The split is a recommendation.** A single-model host can run everything itself, but it should still keep gathering and deciding as separate steps.
+- **Give the sweeps to lower-cost worker agents.** Web searches, feed checks, page fetches, and per-source summaries are cheap-model work. Run them in parallel where the host supports it. Workers return raw findings, such as links, dates, and extracted claims, never edits.
+- **Use the strongest available model as the editor.** Only the editor, the orchestrating model, combines worker findings, resolves conflicts between sources, and updates `opinions/` and `templates/`. Model quality matters most here, so never delegate the final edit to a cheap model.
+- **The split is a recommendation.** A single-model host can run everything itself, but it keeps gathering and deciding as separate steps.
 
 ### Agent attribution
 
-An agent that uses the author's credentials speaks in the author's name. A comment it posts appears under the author's account, and nothing tells a reader that a person didn't write it. So put attribution in the conversation, where readers need it, and keep it out of the history:
+An agent that uses the author's credentials posts under the author's account, and nothing tells a reader that a person didn't write it. Put attribution in the conversation, where readers need it, and keep it out of the history:
 
 - **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they don't carry `Co-Authored-By` trailers or "Generated with" lines. Neither do commit messages. The project is AI-driven by design, and this rule overrides any default that an agent harness applies.
 - **The rule covers every commit on the branch.** When GitHub squashes, it appends a `Co-authored-by` line to the merged commit for each co-author trailer, and for each branch commit author other than the merger. The pull request description doesn't change that. So commit under the author's git identity, never one the harness supplies, and leave the trailer out of branch commits too.
@@ -112,7 +112,7 @@ For details, see [research-topic](skills/research-topic/SKILL.md) and [resolve-r
 
 Rules:
 
-- **Update `last-used` whenever you consume an opinion or a template:** an opinion you read to decide something, or a template you diffed a project against. The date orders staleness triage: of ten drifted `last-reviewed` dates, review the most-read files first. It also marks candidates for pruning. Only reads _in this repository_ update it, so a person who copies a template or reads an opinion on the web leaves no trace, and the field always undercounts. For that reason, `audit-freshness` treats it as information, never as a finding.
+- **Update `last-used` whenever you use an opinion or a template:** an opinion you read to decide something, or a template you diffed a project against. The date orders staleness triage: of ten drifted `last-reviewed` dates, review the most-read files first. It also marks candidates for pruning. Only reads _in this repository_ update it, so a person who copies a template or reads an opinion on the web leaves no trace, and the field undercounts. `audit-freshness` treats it as information, never as a finding.
 - **Update `last-reviewed` only after you verify the content against its sources.**
 - **Use `sources` IDs that exist in `AWESOME-HUMANS.md`,** either in the roster tables or as the reserved `house` ID.
   - The two markings come from a source's section under `## Source notes`, not from its table row.
@@ -123,7 +123,7 @@ Rules:
 - **Two template files are exempt from the header:** `templates/global.json` and `templates/example.slnf`, because JSON has no comment syntax. What they pin is audited against the latest releases instead. Smoke-testing the example projects leaves build output under `templates/` (`artifacts/`, `bin/`, and `obj/`, all gitignored). That output isn't a resource, and the check skips it.
 - **`skills/` are deliberately exempt.** The [Agent Skills specification](https://agentskills.io/specification) defines their frontmatter, they're procedures and not reference material, and nothing reads a date from them. Use `git log` to see when a skill last changed.
 
-CI runs `dotnet run scripts/validate-metadata.cs` against both syntaxes. A missing field or a relative date fails the pull request instead of drifting silently.
+CI runs `dotnet run scripts/validate-metadata.cs` against both syntaxes, and a missing field or a relative date fails the pull request.
 
 ## Writing style
 
@@ -165,7 +165,7 @@ Apart from spelling, which [Spelling](#spelling) covers, this repository departs
 
 ### Rhythm
 
-Prose here is mostly agent-written, and it drifts in rhythm more than in vocabulary. The classic tells (_delve_, _leverage_, _seamless_, _robust_, _comprehensive_, _in today's_, a "here is" lead-in, an "in conclusion" wrap-up) don't appear here and aren't worth policing. Four patterns are fine occasionally and read as machine-written in bulk:
+Agents write most of the prose here, and it goes wrong in rhythm more than vocabulary. The well-known tells (_delve_, _leverage_, _seamless_, _robust_, _comprehensive_, _in today's_, a "here is" lead-in, an "in conclusion" wrap-up) don't appear here, so don't hunt for them. Four patterns are fine occasionally and read as machine-written in bulk:
 
 - **Em dashes.** Use at most one per sentence, and only for a real turn. A colon, a comma, or a full stop usually works better.
 - **"X, not Y" contrasts.** Keep one when the rejected option is the one a reader would otherwise choose: "Pin to commit SHAs, not mutable tags". Cut it when nobody would choose the alternative: "a build artefact, not an afterthought".
@@ -222,7 +222,7 @@ A literal use isn't an idiom. _Silently_ for a failure that raises no error stay
 
 ### Worktrees
 
-Work in a git worktree, with one branch per directory. The local clone is bare, and each branch is checked out beside it, so you move between pieces of work with `cd` instead of `git checkout`. An in-place branch switch changes the tree under anything that holds a path into it, such as a running `dotnet` build, a formatter, or another agent mid-edit. It also discards gitignored state that the branch you left already paid for: `node_modules/`, `artifacts/`, `bin/`, and `obj/`.
+Work in a git worktree, with one branch per directory. The local clone is bare, and each branch is checked out beside it, so you move between pieces of work with `cd` instead of `git checkout`. An in-place branch switch changes the tree under anything that holds a path into it, such as a running `dotnet` build, a formatter, or another agent mid-edit. It also discards the gitignored state the old branch had built: `node_modules/`, `artifacts/`, `bin/`, and `obj/`.
 
 - **Starting:** Start every new piece of work as a **new worktree, not just a new branch**, whether it's a feature, a fix, a research topic, or a version bump. Use `git worktree add -b <branch> <dir> main` as one step. Never run `git checkout -b` in a worktree that already holds other work.
 - **Branch names:** Prefix a skill's branch with what the skill produces: `research/<topic-slug>`, `resolve/<topic-slug>`, `harvest/<YYYY-MM-DD>` (dated the day the sweep window ends), `vet/<source-id>` or a slug for a multi-source pass, `house/<slug>`, and `refresh/dotnet-<version>`.
@@ -245,7 +245,7 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 
 - CI checks live in `scripts/` as .NET file-based apps. Run them from the repository root with `dotnet run scripts/<name>.cs`. Code that two scripts share goes in a helper file that both `#:include`, not in a copy.
 - Entry points use kebab-case names because you type them on a command line. Helper files take the name of the type they contain, following C# file-naming convention.
-- Add a check as a script, not as an inline script in a workflow. Hold it to the repository's own opinions: `global.json` pins the SDK, `TreatWarningsAsErrors` is on, the language version is latest, and the `[scripts/*.cs]` block in `.editorconfig` turns the analyzer set into build failures.
+- Add a check as a script, not as an inline script in a workflow, and hold it to the repository's own opinions: `global.json` pins the SDK, `TreatWarningsAsErrors` is on, the language version is latest, and the `[scripts/*.cs]` block in `.editorconfig` turns the analyzer set into build failures.
 - When you add or rename a script, update the [Repository scripts](README.md#repository-scripts) table and the layout tree.
 - Renovate bumps `#:package` pins. It reads the directive but only scans `.cs` files under `scripts/`, because `renovate.json` opts that directory into the NuGet manager. A check placed anywhere else wouldn't get bumped.
 
@@ -258,4 +258,4 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 
 ### Links
 
-The `Markdown` workflow checks links with `lychee.toml`, and a broken link **blocks the pull request**, because a dead citation is a content defect. If the failure is a third-party host that's down, not link rot, re-run the job after the host recovers. Never merge past a red link check.
+The `Markdown` workflow checks links with `lychee.toml`, and a broken link **blocks the pull request**, because a dead citation is a content defect. If a third-party host is down, re-run the job after it recovers. Never merge past a failed link check.
