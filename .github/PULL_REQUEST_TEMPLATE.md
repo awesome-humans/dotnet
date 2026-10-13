@@ -1,4 +1,4 @@
-<!-- Thanks for contributing! For opinion or template changes, fill in the sections below.
+<!-- Thanks for contributing. For opinion or template changes, fill in the sections below.
      For mechanical fixes, such as typos, broken links, or CI, delete them and describe the fix. -->
 
 ## Proposed opinion

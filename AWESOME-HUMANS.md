@@ -8,8 +8,8 @@ These are the vetted sources behind every opinion in this repository. An opinion
 
 A **source** is the published work of an awesome human: a person or a publication. Admission needs an **established track record**:
 
-1. **Longevity:** At least two years of sustained publishing. A source with less goes on the watch list, however good the writing. The `Since` column shows how far back each record goes. Thin depth gets the `**Corroborate.**` marking instead, so a long-lived but shallow source stays citable with a usage limit.
-2. **Depth:** Original insight, such as internals, measurements, or worked reasoning. Paraphrased release notes don't count.
+1. **Longevity:** At least two years of sustained publishing. A source with less goes on the watch list, however good the writing. The `Since` column shows how far back each record goes.
+2. **Depth:** Original insight, such as internals, measurements, or worked reasoning. Paraphrased release notes don't count. A long-lived source with thin depth is admitted with the `**Corroborate.**` marking, which limits how it's cited.
 3. **Accuracy:** A history of being right, and of publishing corrections when wrong.
 4. **Independence:** The content stands on its merit, not on marketing reach.
 
@@ -31,15 +31,15 @@ The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but
 - **Order:** Rows in every roster table, and the sections under [Source notes](#source-notes), are sorted by `id`. Insert a new source in order.
 - **Tables:** A row holds only what identifies a source: its ID, where to read it, what it covers, and how far back it goes.
 - **Notes:** The evidence behind a row goes in its notes section, in the shape [Source notes](#source-notes) describes, one sentence per line. Rows stay short, and a reworded sentence shows in a diff as that one sentence.
-- **Decision log:** It's the only table Prettier doesn't align. `<!-- prettier-ignore -->` marks it, because its Detail column has no natural width, and realigning it rewrote every row whenever one grew. Each entry gives the decision and the fact behind it. The evidence is in the source's notes and the pull request.
+- **Decision log:** Each entry gives the decision and the fact behind it. The evidence is in the source's notes and the pull request. It's the only table Prettier doesn't align: `<!-- prettier-ignore -->` stops one long Detail cell from realigning every row.
 
 ### Reserved IDs, markings, and references
 
-**Reserved ID: `house`.** The repository owner's opinions use the `house` source ID, described in [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority comes from owning the repository, not a track record, so it skips the admission criteria, and every house opinion is visibly marked in exchange. [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of the marking, of precedence in a conflict, and of contributor adoption. The `house` ID never appears in the roster tables.
+**Reserved ID: `house`.** The repository owner's opinions use the `house` source ID, described in [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is ownership of the repository, not a track record, so it skips the admission criteria, and every house opinion is visibly marked instead. [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of the marking, of precedence in a conflict, and of contributor adoption. The `house` ID never appears in the roster tables.
 
 **Reserved marking: `**Discovery-only.**`.** Aggregators, such as link roundups, newsletters, and curated lists, are admitted for discovery and never cited. They lead to a primary source, and the opinion cites that. CI rejects the ID of a source whose notes carry this marking in any `sources:` list under `opinions/` or `templates/`. Like `**House:**`, it's a fixed string, so a check can match it exactly.
 
-**Reserved marking: `**Corroborate.**`.** Some sources have a real track record but thin depth: SEO-shaped roundups, course funnels, or release paraphrase with occasional substance. They're admitted and marked. The marking limits how you cite the source, not its standing. An opinion can cite it, but never alone: every claim it supports also needs an unmarked citable source. `scripts/validate-sources.cs` rejects an opinion or template whose citable sources are all marked. Neither `house` nor a Discovery-only ID counts as the unmarked source.
+**Reserved marking: `**Corroborate.**`.** Some sources have a long track record but thin depth: SEO-shaped roundups, course funnels, or release paraphrase with occasional substance. They're admitted and marked. The marking limits how you cite the source, not its standing. An opinion can cite it, but never alone: every claim it supports also needs an unmarked citable source. `scripts/validate-sources.cs` rejects an opinion or template whose citable sources are all marked. Neither `house` nor a Discovery-only ID counts as the unmarked source.
 
 **References: a named package's own material.** When an opinion or template names a package, you can link the project's own material inline as a reference: its documentation site or in-repository docs, release notes and changelogs, issues and pull requests, or nuget.org page. The standard behind a named format or protocol qualifies on the same terms, such as an RFC or the IANA time zone database.
 
@@ -49,7 +49,7 @@ The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but
 
 ## Citable: quotable in opinions and templates
 
-Every source here meets all four criteria. Differences between them are recorded per source: the `Since` column shows the length of the record, and any independence concern, conflict of interest, or usage limit is in the source's section under [Source notes](#source-notes).
+Every source here meets all four criteria. The `Since` column shows the length of each record, and any independence concern, conflict of interest, or usage limit is in the source's section under [Source notes](#source-notes).
 
 | id                   | Source                                                                                                                                             | Focus                                                                                                           | Since                                       |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
@@ -86,7 +86,7 @@ Every source here meets all four criteria. Differences between them are recorded
 
 ## Watch list: track record still forming, or previously strong but now dormant
 
-A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:` list, however good the back catalogue. Use these sources for discovery and cross-checking: follow a claim you find here to a citable source, and cite that. Re-evaluate them periodically.
+A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:` list, however good the back catalogue. Use these sources for discovery and cross-checking: follow a claim you find here to a citable source, and cite that. `vet-source` re-evaluates them when a blocker might have cleared.
 
 | id                | Source                                                          | Focus                                             | Since |
 | ----------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |

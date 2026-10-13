@@ -1,6 +1,6 @@
 # House opinions
 
-These are the repository owner's opinions: preferences from experience, not from a vetted source. They carry the same weight as sourced opinions, and they're **always visibly marked**, so a reader, person or agent, can tell community best practice from this repository's convention.
+These are the repository owner's opinions: preferences from experience, not from a vetted source. They carry the same weight as sourced opinions, and they're **always visibly marked**, so a reader can tell community best practice from this repository's convention.
 
 ## How this works
 
@@ -10,7 +10,7 @@ These are the repository owner's opinions: preferences from experience, not from
 4. **A house opinion wins a conflict with the roster.** This is the canonical statement, and other files link here. Keep the house opinion, and cut the sourced position to a one-line note that cites the source: "The community default is X (source); we do Y because Z." Harvest, refresh, and audit runs never remove, weaken, or unmark house content.
 5. **Other contributors propose opinions in a pull request,** as the [PR template](.github/PULL_REQUEST_TEMPLATE.md) describes. When the owner accepts an experience-based opinion, the owner adopts it as a house opinion, and the Woven table's Provenance column credits the contributor and the pull request.
 
-The `house` source ID is reserved and documented in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Its authority comes from owning the repository, so it skips the admission criteria, and that's why it stays marked wherever it's used.
+The `house` source ID is reserved and documented in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). It skips the admission criteria because its authority is ownership of the repository, which is why it's marked wherever it's used.
 
 ## Entry format
 

@@ -29,19 +29,17 @@ Use it in three ways:
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor and WebAssembly, .NET MAUI, and cross-platform desktop with Avalonia
 - **Libraries:** what to use and what to avoid, covered in the files above
 
-List a new opinion file in two places: here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order. CI fails a pull request that leaves either list incomplete or out of order.
-
 ## Freshness policy
 
 Opinions target the latest released .NET, C#, and F#, never an older LTS release. Preview features appear only in "Coming next" notes. The [skills](#maintenance-via-skills) move the repository to each new version.
 
-Every resource records when it was last reviewed, and files in `opinions/` and `templates/` also record when they were last used. Opinions and research topics keep these dates in YAML frontmatter. Templates keep them in a first-line comment, because an XML or INI file can't open with a `---` block. [AGENTS.md: Metadata](AGENTS.md#metadata) defines the fields, and CI enforces them.
+Every resource records when it was last reviewed against its sources, and opinions and templates also record when an agent last used them. [AGENTS.md: Metadata](AGENTS.md#metadata) defines the fields, and CI enforces them.
 
 ## Awesome humans
 
-Every opinion cites a vetted source: a person, such as Stephen Toub or Andrew Lock, or a publication, such as the .NET Blog or Microsoft Learn. A source gets in on its track record: at least two years of sustained writing, with depth, accuracy, and an independent view. Videos, talks, and podcasts are out of scope for now, because an opinion cites text a reader can check. [AWESOME-HUMANS.md](AWESOME-HUMANS.md) has the roster and the criteria.
+Every opinion cites a vetted source: a person, such as Stephen Toub or Andrew Lock, or a publication, such as the .NET Blog or Microsoft Learn. A source is admitted on its track record: at least two years of sustained writing, with depth, accuracy, and an independent view. Videos, talks, and podcasts are out of scope for now, because an opinion cites text a reader can check. [AWESOME-HUMANS.md](AWESOME-HUMANS.md) has the roster and the criteria.
 
-This diagram shows how a source gets in and what its standing allows. The admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical.
+This diagram shows how a source is admitted and what its standing allows. The admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical.
 
 ![Source standing: vet-source sorts a candidate into citable, watch list or declined, and a citable source is unmarked, Corroborate or Discovery-only](assets/diagrams/source-standing.svg)
 
@@ -129,7 +127,7 @@ Research is staged, never merged in place. `research-topic` saves the evidence, 
 
 ![Research lifecycle: research-topic saves research/{topic}.md, and resolve-research promotes, discards or partly promotes it](assets/diagrams/research-lifecycle.svg)
 
-If part of a topic waits on a source, it goes back through `resolve-research` once `vet-source` admits that source. Otherwise, it's discarded.
+A part that waits on an unvetted source stays on disk. It goes back through `resolve-research` if `vet-source` admits the source, and is discarded if not.
 
 ### Release watch automation
 
@@ -137,7 +135,7 @@ A scheduled GitHub Action, [`.github/workflows/dotnet-release-watch.yml`](.githu
 
 ## Repository scripts
 
-The pull request checks use the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps, with no project file and no build step. Each declares its dependencies with `#:package` and pulls in shared code with `#:include`.
+[`scripts/`](scripts) holds the pull request checks as .NET 10 file-based apps, with no project file and no build step. Each declares its dependencies with `#:package` and pulls in shared code with `#:include`.
 
 | Script                                                         | Checks                                                                                                                                                                                                                   |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -161,7 +159,9 @@ Three helper files support the scripts:
 
 The helpers have no top-level statements, so they don't run alone. Each compiles into the scripts that `#:include` it.
 
-[`global.json`](global.json) sets the SDK minimum to the first feature band that supports `#:include`, and `rollForward: latestFeature` picks up newer bands. It's independent of [`templates/global.json`](templates/global.json), because each pin follows what its own consumers need. One check runs in Python: the Agent Skills specification validator, which is published only to PyPI.
+[`global.json`](global.json) sets the SDK minimum to the first feature band that supports `#:include`, and `rollForward: latestFeature` picks up newer bands. It's independent of [`templates/global.json`](templates/global.json), because each pin follows what its own consumers need.
+
+One check runs in Python: the Agent Skills specification validator, which is published only to PyPI.
 
 ## License
 
