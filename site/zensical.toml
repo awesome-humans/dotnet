@@ -30,7 +30,6 @@ features = [
   "content.code.copy",
   "navigation.footer",
   "navigation.indexes",
-  "navigation.sections",
   "navigation.tabs",
   "navigation.top",
   "search.highlight",

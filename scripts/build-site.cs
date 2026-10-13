@@ -10,12 +10,12 @@
 // The hand-written pages under site/pages are copied as they are. The .NET ecosystem's
 // pages under /dotnet/ are generated from this repository's own files, so the site never
 // carries a second copy to drift: README.md up to its layout section becomes the overview,
-// opinions/ and the roster are copied in full, and every file under templates/ gets a page
-// showing it. llms.txt at the root points agents at the raw files. Relative links are
+// opinions/, skills/ and the roster are copied in full, and every file under templates/ gets
+// a page showing it. llms.txt at the root points agents at the raw files. Relative links are
 // rewritten to the page they now point at, or to GitHub for a file the site does not
-// carry. The navigation is generated too: the opinions take their
-// titles and order from README.md's Scope list, which validate-readme-index.cs already
-// holds to the opinions directory.
+// carry. The navigation is generated too: the opinions take their titles and order from
+// README.md's Scope list, and the skills theirs from its Maintenance via skills table, which
+// validate-readme-index.cs already holds to the opinions and skills directories.
 //
 // Zensical requires the build output inside the directory holding its configuration, so
 // the staged zensical.toml, docs/ and the built public/ all sit under site/build, which is
@@ -41,6 +41,7 @@ const string StagingDirectory = "site/build";
 const string DocsDirectory = "site/build/docs";
 const string DiagramsDirectory = "assets/diagrams";
 const string TemplatesDirectory = "templates";
+const string SkillsDirectory = "skills";
 const string Ecosystem = "dotnet";
 const string EcosystemName = ".NET";
 
@@ -77,6 +78,9 @@ string[] templates =
         .Order(StringComparer.OrdinalIgnoreCase),
 ];
 
+string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
+Match[] skills = Site.SkillRow().Matches(readme).ToArray();
+
 Dictionary<string, string> pages = new(StringComparer.Ordinal)
 {
     ["README.md"] = $"{Ecosystem}/index.md",
@@ -84,7 +88,15 @@ Dictionary<string, string> pages = new(StringComparer.Ordinal)
     ["HOUSE-OPINIONS.md"] = $"{Ecosystem}/house-opinions.md",
     [TemplatesDirectory] = $"{Ecosystem}/templates/index.md",
     [$"{TemplatesDirectory}/projects"] = $"{Ecosystem}/templates/index.md",
+    [SkillsDirectory] = $"{Ecosystem}/skills/index.md",
 };
+
+foreach (Match skill in skills)
+{
+    string name = skill.Groups["name"].Value;
+    pages[$"{SkillsDirectory}/{name}"] = $"{Ecosystem}/skills/{name}.md";
+    pages[Site.SkillPath(name)] = $"{Ecosystem}/skills/{name}.md";
+}
 
 foreach (string name in Opinions.Names())
 {
@@ -103,7 +115,6 @@ foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
 
 // The overview: README.md up to its layout section, which is about the repository rather
 // than the opinions, without the rule for contributors adding an opinion file.
-string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
 int layout = readme.IndexOf("\n## Repository layout", StringComparison.Ordinal);
 string overview = string.Join(
     "\n\n",
@@ -163,6 +174,50 @@ foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.G
 
 Write(pages[TemplatesDirectory], string.Concat(index));
 
+// A page per skill, its SKILL.md without the frontmatter, and an index of them in the order
+// of README.md's table, which validate-readme-index.cs holds to the skills directory.
+List<string> skillIndex =
+[
+    "# Skills\n\n",
+    "Agent skills that check a project against the opinions and keep the opinions current. ",
+    "They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. ",
+    "To run one, clone the repository and ask your agent to run the skill by name. ",
+    $"If your agent only discovers skills in a directory of its own, see [AGENTS.md: Skills]({Site.GitHub("AGENTS.md", isDirectory: false)}#skills).\n\n",
+    "`verify-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
+    "The others maintain this repository.\n\n",
+    "| Skill | Purpose |\n| --- | --- |\n",
+];
+foreach (Match skill in skills)
+{
+    string name = skill.Groups["name"].Value;
+    string path = Site.SkillPath(name);
+    if (!File.Exists(path))
+    {
+        errors.Add($"README.md: the skills table lists {name}, but {path} does not exist");
+        continue;
+    }
+
+    skillIndex.Add($"| [`{name}`]({name}.md) | {skill.Groups["purpose"].Value} |\n");
+
+    string text = File.ReadAllText(path).ReplaceLineEndings("\n");
+    int end = text.StartsWith("---\n", StringComparison.Ordinal) ? text.IndexOf("\n---\n", 4, StringComparison.Ordinal) : -1;
+    if (end == -1)
+    {
+        errors.Add($"{path}: no frontmatter block to strip");
+        continue;
+    }
+
+    string body = Rewrite(path, text[(end + "\n---\n".Length)..].TrimStart('\n'));
+    int titleEnd = body.IndexOf('\n', StringComparison.Ordinal);
+    Write(
+        pages[path],
+        body[..titleEnd] + "\n\n"
+        + $"[View on GitHub]({Site.GitHub(path, isDirectory: false)}) · [Raw]({Site.Raw(path)})"
+        + body[titleEnd..]);
+}
+
+Write(pages[SkillsDirectory], string.Concat(skillIndex));
+
 // llms.txt at the site root, per llmstxt.org: a summary and links an agent can follow, to
 // the raw Markdown of each opinion and the raw template files rather than rendered pages.
 List<string> llms =
@@ -177,6 +232,9 @@ List<string> llms =
     $"\n## {EcosystemName} templates\n\n",
     "Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.\n\n",
     .. templates.Select(template => $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({Site.Raw(template)})\n"),
+    $"\n## {EcosystemName} skills\n\n",
+    "Agent Skills procedures. Run verify-project to check a .NET project against the opinions. The others maintain the repository.\n\n",
+    .. skills.Select(skill => $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}\n"),
     "\n## Optional\n\n",
     $"- [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria\n",
     $"- [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear\n",
@@ -207,6 +265,7 @@ string[] nav =
         Entry("Overview", pages["README.md"]),
         Section("Opinions", opinionEntries),
         Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
+        Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
         Entry("Awesome humans", pages["AWESOME-HUMANS.md"]),
         Entry("House opinions", pages["HOUSE-OPINIONS.md"]),
     ]),
@@ -323,6 +382,8 @@ internal static partial class Site
     public static string GitHub(string path, bool isDirectory) =>
         $"https://github.com/{Repository}/{(isDirectory ? "tree" : "blob")}/main/{path}";
 
+    public static string SkillPath(string name) => $"skills/{name}/SKILL.md";
+
     public static string Raw(string path) => $"https://raw.githubusercontent.com/{Repository}/main/{path}";
 
     // Zensical skips dotfiles, so .editorconfig's page drops the leading dot.
@@ -356,6 +417,10 @@ internal static partial class Site
     // A bullet in README.md's Scope list: - **[Title](opinions/file.md):** what it covers.
     [GeneratedRegex(@"^- \*\*\[(?<title>[^\]]+)\]\((?<path>opinions/[^)]+)\):\*\*(?<summary>.*)$", RegexOptions.Multiline)]
     public static partial Regex ScopeBullet();
+
+    // A row in README.md's Maintenance via skills table: | [`name`](skills/name/SKILL.md) | purpose |.
+    [GeneratedRegex(@"^\| \[`(?<name>[^`]+)`\]\(skills/[^)]+\)\s*\|\s*(?<purpose>.*?)\s*\|$", RegexOptions.Multiline)]
+    public static partial Regex SkillRow();
 
     [GeneratedRegex(@"^(?<text>#{1,6} .*[^\s\\#])(?<hashes>#+)$")]
     public static partial Regex HeadingTrailingHash();
