@@ -86,6 +86,7 @@ Dictionary<string, string> pages = new(StringComparer.Ordinal)
     ["README.md"] = $"{Ecosystem}/index.md",
     ["AWESOME-HUMANS.md"] = $"{Ecosystem}/awesome-humans.md",
     ["HOUSE-OPINIONS.md"] = $"{Ecosystem}/house-opinions.md",
+    [Opinions.DirectoryName] = $"{Ecosystem}/opinions/index.md",
     [TemplatesDirectory] = $"{Ecosystem}/templates/index.md",
     [$"{TemplatesDirectory}/projects"] = $"{Ecosystem}/templates/index.md",
     [SkillsDirectory] = $"{Ecosystem}/skills/index.md",
@@ -147,6 +148,14 @@ foreach (string name in Opinions.Names())
     int titleEnd = text.IndexOf('\n', title + 1);
     Write(pages[path], text[..titleEnd] + "\n\n" + line + text[titleEnd..]);
 }
+
+// An index of the opinions, in the order and with the summaries of README.md's Scope list.
+Write(
+    pages[Opinions.DirectoryName],
+    "# Opinions\n\n"
+    + "One topic per page. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.\n\n"
+    + string.Concat(Site.ScopeBullet().Matches(readme).Select(bullet =>
+        $"- **[{bullet.Groups["title"].Value}]({Path.GetFileName(bullet.Groups["path"].Value)}):**{bullet.Groups["summary"].Value}\n")));
 
 // A page per template file, and an index of them.
 List<string> index =
@@ -263,7 +272,7 @@ string[] nav =
     Section(EcosystemName,
     [
         Entry("Overview", pages["README.md"]),
-        Section("Opinions", opinionEntries),
+        Section("Opinions", [Entry("Overview", pages[Opinions.DirectoryName]), .. opinionEntries]),
         Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
         Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
         Entry("Awesome humans", pages["AWESOME-HUMANS.md"]),
