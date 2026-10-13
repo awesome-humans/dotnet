@@ -151,6 +151,8 @@ Run them from the repository root, as CI does:
 dotnet run scripts/validate-metadata.cs
 ```
 
+`npm run verify` runs everything CI checks locally, in one command: `npm run check`, the three validators, `export-diagrams.cs` and `build-site.cs`. It redraws the diagrams in place, so commit any SVG it changes. The Zensical build is left to CI, because it needs Python.
+
 Three helper files support the scripts:
 
 - [`Opinions.cs`](scripts/Opinions.cs) lists the opinion files.

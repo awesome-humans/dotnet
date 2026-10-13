@@ -6,7 +6,8 @@
     "format": "prettier --prose-wrap preserve --write \"**/*.{md,json,jsonc,yml,yaml}\"",
     "format:check": "prettier --prose-wrap preserve --check \"**/*.{md,json,jsonc,yml,yaml}\"",
     "lint": "markdownlint-cli2",
-    "check": "npm run format:check && npm run lint"
+    "check": "npm run format:check && npm run lint",
+    "verify": "npm run check && dotnet run scripts/validate-metadata.cs && dotnet run scripts/validate-sources.cs && dotnet run scripts/validate-readme-index.cs && dotnet run scripts/export-diagrams.cs && dotnet run scripts/build-site.cs"
   },
   "devDependencies": {
     "markdownlint-cli2": "0.23.3",
