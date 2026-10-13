@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-14
-last-used: 2026-09-25
+last-used: 2026-10-13
 sources:
   [dotnet-blog, aspnet-blog, ms-learn, meziantou, andrew-lock, milan-jovanovic]
 ---
@@ -57,8 +57,9 @@ Validation applies to every endpoint. To exclude one, call `.DisableValidation()
 
 ### OpenAPI and API versioning
 
-**Generate the OpenAPI document at build time with `Microsoft.AspNetCore.OpenApi`.** It produces OpenAPI 3.1, and the Web API template already references and calls it.
+**Generate the OpenAPI document with `Microsoft.AspNetCore.OpenApi`.** It produces OpenAPI 3.1 on .NET 10, and the Web API template already references and calls it. It generates the document at run time, and `MapOpenApi()` serves it at `/openapi/{documentName}.json`.
 
+- To also write the document to disk during `dotnet build`, add `Microsoft.Extensions.ApiDescription.Server`. Do this when a build step consumes the file, such as the Kiota client in [Typed clients](#typed-clients). Set `<OpenApiDocumentsDirectory>` to choose where the file goes. The build runs the app's entry point against a mock server, so guard startup code that needs live infrastructure.
 - Set `<GenerateDocumentationFile>true</GenerateDocumentationFile>`, so the source generator copies your XML doc comments into the document.
 - Use named methods as handlers. A lambda's doc comments don't reach the document.
 - Version APIs with `Asp.Versioning` v10 (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Call `WithDocumentPerVersion()` to get one document per version:
@@ -78,7 +79,7 @@ var orders = app.NewVersionedApi("Orders");
 var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 ```
 
-([.NET Blog: Combining API versioning with OpenAPI in .NET 10 applications](https://devblogs.microsoft.com/dotnet/api-versioning-in-dotnet-10-applications/), [Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+([Microsoft Learn: Generate OpenAPI documents](https://learn.microsoft.com/aspnet/core/fundamentals/openapi/aspnetcore-openapi), [.NET Blog: Combining API versioning with OpenAPI in .NET 10 applications](https://devblogs.microsoft.com/dotnet/api-versioning-in-dotnet-10-applications/), [Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 
 ### Typed clients
 
