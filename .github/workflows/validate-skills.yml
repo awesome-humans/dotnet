@@ -11,7 +11,7 @@ permissions:
 
 # Set explicitly rather than inherited: the GitHub runner image puts NOLOGO in
 # /etc/environment but only exports the telemetry opt-out while installing the SDK,
-# so a job gets the quiet banner and the phone-home. Declaring both here also means
+# so a job gets the quiet banner but still sends telemetry. Declaring both here also means
 # a self-hosted runner behaves the same as a GitHub-hosted one.
 env:
   DOTNET_NOLOGO: "true"

@@ -10,43 +10,70 @@ metadata:
 
 # Audit freshness
 
-Make staleness visible. This skill only **reports**; it never edits content. Follow-up work goes to `refresh-dotnet-versions` (version drift) or `harvest-sources` (content drift).
+Report what's stale. This skill never edits content. Version drift goes to `refresh-dotnet-versions`, and content drift goes to `harvest-sources`.
 
 ## Tolerances
 
-| Check                                                                                      | Tolerance                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `last-reviewed` on any `opinions/` file                                                    | 180 days                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `last-reviewed` after a new major .NET release ships                                       | 60 days from release                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `targets:` vs latest released .NET/C#/F#                                                   | zero: any lag is a finding                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `last-reviewed` on any commented `templates/` header                                       | 180 days, same as `opinions/`                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `sdk.version` in `global.json` and `templates/global.json`                                 | not a band-lag check: the pin is a floor, and `latestFeature` takes a newer band without an edit (`refresh-dotnet-versions`, step 4a). Findings are a patch-level pin where a band floor belongs (`10.0.412` rather than `10.0.400`), a `rollForward` missing or narrower than `latestFeature`, and a floor whose major.minor no longer matches `targets:`                                                                            |
-| `<PackageVersion>` pins in `templates/Directory.Packages.props` vs nuget.org latest stable | one minor version, or any major; patch-only drift is informational                                                                                                                                                                                                                                                                                                                                                                    |
-| `Versions verified against nuget.org … on <date>` comment in `Directory.Packages.props`    | 90 days, because the pins move faster than the prose                                                                                                                                                                                                                                                                                                                                                                                  |
-| `research/` topics (all of them: a topic on disk is unresolved)                            | 90 days, then reported as promote-or-discard triage, resolved with `resolve-research`; one left on disk after promotion is itself a finding (promotion ends in deletion)                                                                                                                                                                                                                                                              |
-| `sources:` ids                                                                             | must all resolve to a Citable row in `AWESOME-HUMANS.md`, or be the reserved `house` id (never a finding). A watch-list or `**Discovery-only.**` id in an opinion or a template is a finding, as is a file whose every citable source is `**Corroborate.**`-marked; `scripts/validate-sources.cs` already fails the build on all three. `research/` topics only: unvetted source names are permitted when flagged as such in the text |
-| `**Review by YYYY-MM-DD.**` markings in `opinions/` and `templates/`                       | zero past the date: report it as drop-or-re-date triage, because the note it heads is transition guidance ([AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions))                                                                                                                                                                                                                                       |
-| `last-used`                                                                                | informational only: never a finding, but report never-used resources as candidates for pruning                                                                                                                                                                                                                                                                                                                                        |
-| `templates/` still implement what `opinions/` mandate                                      | zero: an opinion naming a property, package, or setting that its nominated template omits is a finding. `templates/` is what people copy, so a divergence ships the advice without the substance                                                                                                                                                                                                                                      |
-| `templates/` build and test clean                                                          | zero: assemble the example projects into the layout `example.slnx` describes and run `dotnet build` + `dotnet test`. Analyzer and package-compatibility failures only appear here, never from reading the files                                                                                                                                                                                                                       |
-| Citation and roster URLs resolving                                                         | zero: a dead link is a content finding. Checked by the `Markdown` workflow (`lychee.toml`); read its most recent run rather than re-checking every URL by hand                                                                                                                                                                                                                                                                        |
+| Check                                                                             | Tolerance                                                                                     |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `last-reviewed` on any `opinions/` file                                           | 180 days                                                                                      |
+| `last-reviewed` after a new major .NET release ships                              | 60 days from the release                                                                      |
+| `targets:` against the latest released .NET, C#, and F#                           | Zero: any lag is a finding                                                                    |
+| `last-reviewed` on any commented `templates/` header                              | 180 days                                                                                      |
+| `sdk.version` in `global.json` and `templates/global.json`                        | Checked for shape, not band lag. For details, see [SDK pins](#sdk-pins)                       |
+| `<PackageVersion>` pins in `templates/Directory.Packages.props` against nuget.org | One minor version, or any major version. Patch-only drift is informational                    |
+| The `Versions verified against nuget.org … on <date>` comment in the same file    | 90 days, because the pins change faster than the prose                                        |
+| `research/` topics                                                                | 90 days, then reported for `resolve-research`. For details, see [Research](#research)         |
+| `sources:` IDs                                                                    | For the rules, see [Sources](#sources)                                                        |
+| `**Review by YYYY-MM-DD.**` markings in `opinions/` and `templates/`              | Zero past the date. Report each for drop-or-re-date triage                                    |
+| `last-used`                                                                       | Informational, never a finding. Report never-used resources as pruning candidates             |
+| `templates/` still implement what `opinions/` require                             | Zero. For details, see [Templates](#templates)                                                |
+| `templates/` build and test without errors                                        | Zero. For details, see [Templates](#templates)                                                |
+| Citation and roster URLs resolve                                                  | Zero: a dead link is a content finding. Read the latest `Markdown` workflow run, not each URL |
+
+### SDK pins
+
+The SDK pin is a minimum, and `latestFeature` picks up newer bands without an edit (`refresh-dotnet-versions`, step 4a). Don't report how far the pin trails the latest band. Report these instead:
+
+- A patch-level pin where a band minimum belongs, such as `10.0.412` instead of `10.0.400`.
+- A `rollForward` that's missing or narrower than `latestFeature`.
+- A minimum whose major and minor version don't match `targets:`.
+
+### Research
+
+Every topic on disk is unresolved, so all of them count. A topic still on disk after promotion is a finding, because promotion ends in deletion.
+
+### Sources
+
+- Every ID must resolve to a Citable row in `AWESOME-HUMANS.md`, or be the reserved `house` ID, which is never a finding.
+- In an opinion or template, a watch-list ID or a `**Discovery-only.**` ID is a finding. So is a file whose citable sources are all marked `**Corroborate.**`. `scripts/validate-sources.cs` already fails the build on all three.
+- `research/` topics can name unvetted sources if the text flags them.
+
+### Templates
+
+- **Templates match the opinions.** If an opinion names a property, package, or setting, and its template leaves it out, that's a finding. People copy `templates/`, so a gap ships the advice without the setting.
+- **Templates build and test.** Assemble the example projects into the layout `example.slnx` describes, and run `dotnet build` and `dotnet test`. Analyzer and package compatibility failures show up only this way.
 
 ## Steps
 
-1. **Collect frontmatter** from every file under `opinions/` and `research/`, and the commented headers in `templates/` files: `targets`, `last-reviewed`, `sources`, plus `last-used` on `opinions/` and `templates/` only. `research/` topics carry neither `last-used` nor a status field (AGENTS.md explains why).
-2. **Determine the latest released versions** of .NET, C#, and F# (same sources as `refresh-dotnet-versions`, step 1), plus the latest stable version of every package pinned in `templates/Directory.Packages.props` (same lookup as `refresh-dotnet-versions`, step 4b). No SDK-band lookup is needed: the `global.json` check reads the shape of the pin, not its distance from the newest release. Skip whichever of these checks is unavailable if offline and say so in the report: an unchecked pin is reported as "not verified", never as fresh.
-3. **Evaluate each resource** against the tolerances above, including any `**Review by YYYY-MM-DD.**` marking in its body. Malformed or missing frontmatter is itself a finding (severity: high, because the living-reference mechanism depends on it).
-4. **Check the roster:** flag `AWESOME-HUMANS.md` sources with no _published writing_ recorded in over a year as candidates for `vet-source` re-evaluation. Repository activity does not clear this: it is not what an opinion cites.
-5. **Produce the report**, ordered most-stale first:
-   - Per resource: path, findings, days over tolerance, and which skill fixes it.
-   - Summary counts: fresh / stale / malformed, plus the oldest `last-reviewed` in the repository.
-6. **Recommend next actions:** typically "run `refresh-dotnet-versions`", "run `harvest-sources`", or "run `resolve-research`" for an open research topic past tolerance, but do not run them unless asked.
+1. **Collect the metadata** from every file under `opinions/` and `research/`, and from the comment headers in `templates/`: `targets`, `last-reviewed`, and `sources`, plus `last-used` on `opinions/` and `templates/`. AGENTS.md explains why `research/` has no `last-used`.
+2. **Find the latest released versions** of .NET, C#, and F#, from the same sources as `refresh-dotnet-versions` step 1. Find the latest stable version of every package in `templates/Directory.Packages.props`, with the lookup in `refresh-dotnet-versions` step 4b.
+   - Skip SDK band lookups: the `global.json` check reads the pin's shape, not its distance from the newest release.
+   - If you're offline, skip the checks you can't run, and say so in the report. Report an unchecked pin as "not verified", never as fresh.
+3. **Evaluate each resource** against the tolerances, including any `**Review by YYYY-MM-DD.**` marking in its body ([AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions)). Missing or malformed metadata is a high-severity finding.
+4. **Check the roster.** Flag sources in `AWESOME-HUMANS.md` with no _published writing_ in over a year for `vet-source` re-evaluation. Repository activity doesn't count, because opinions don't cite it.
+5. **Write the report,** most stale first:
+   - For each resource: the path, the findings, the days over tolerance, and the skill that fixes it.
+   - Counts of fresh, stale, and malformed resources, and the oldest `last-reviewed` date.
+6. **Recommend next actions,** usually `refresh-dotnet-versions`, `harvest-sources`, or `resolve-research` for an overdue topic. Don't run them unless asked.
 
 ## Edge cases
 
-- **Brand-new repository** (no opinions yet): report that the audit has nothing to check rather than passing vacuously.
-- **House content** (`house` in `sources:`, `**House:**` markings; see HOUSE-OPINIONS.md): the reserved id is never an unknown-source finding, and this skill must never suggest stripping it. A `house` id with no `**House:**`-marked content in the file (or vice versa) IS a finding: the marking and the id travel together.
-- **Files that cannot carry a comment header** (the repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`): they have no `last-reviewed`, so absence of frontmatter is not a malformed-frontmatter finding for them. Audit the pinned value itself against the latest release instead. `.slnx` is XML and does carry one, so it is not exempt. `scripts/validate-metadata.cs` enforces exactly this two-file exemption list in CI, so any other headerless JSON added under `templates/` fails there rather than escaping silently.
-- **A package pin deliberately held back** (a known-bad release, or a major whose migration is tracked elsewhere): still report the drift, but as informational once the reason is recorded as a comment beside the pin. Silent staleness and deliberate staleness must look different in the report.
-- **A resource that is intentionally version-agnostic** (e.g. naming conventions): may declare `targets: [any]`; version-drift checks skip it, review-age checks still apply.
-- **Clock skew / future dates** in frontmatter: report as malformed.
+- **A repository with no opinions yet:** Report that there's nothing to check. Don't pass.
+- **House content** (`house` in `sources:`, and `**House:**` markings; see HOUSE-OPINIONS.md): The reserved ID is never an unknown-source finding, and never suggest removing it. A `house` ID without `**House:**` content in the file, or the reverse, **is** a finding: the two always appear together.
+- **Files that can't carry a comment header:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
+  - `.slnx` is XML and carries a header, so it isn't exempt.
+  - `scripts/validate-metadata.cs` enforces this two-file list in CI, so any other headerless JSON under `templates/` fails there.
+- **A package pin held back on purpose,** for a known-bad release or a tracked major migration: Report the drift as informational once a comment beside the pin gives the reason. Deliberate staleness must look different from silent staleness.
+- **A resource that doesn't depend on a version,** such as naming conventions: It can declare `targets: [any]`. Version checks skip it, and review-age checks still apply.
+- **Clock skew or future dates** in the metadata: Report them as malformed.

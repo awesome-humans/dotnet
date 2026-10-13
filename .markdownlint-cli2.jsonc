@@ -7,7 +7,7 @@
     "default": true,
 
     // Prose is one sentence per line, unwrapped — prettier preserves it and the
-    // diffs stay readable. A hard column limit would fight that on every edit.
+    // diffs stay readable. A hard column limit would conflict with that on every edit.
     "MD013": false,
 
     // Misfires on headings that legitimately end in "#": "# C#", "## Testing F#".

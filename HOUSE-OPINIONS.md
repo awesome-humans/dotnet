@@ -1,16 +1,16 @@
-# House Opinions
+# House opinions
 
-The repository owner's own opinions: preferences earned from experience rather than traced to a vetted source. They are first-class but **always visibly marked**, so a reader (human or agent) can tell "the community's best practice" from "how we do it here".
+These are the repository owner's opinions: preferences from experience, not from a vetted source. They carry the same weight as sourced opinions, and they're **always visibly marked**, so a reader can tell community best practice from this repository's convention.
 
 ## How this works
 
-1. **The owner adds an entry** to the [Inbox](#inbox) below. A sentence or two is enough; the rationale matters more than polish.
-2. **The `weave-house-opinion` skill weaves it in**: the opinion lands in the right `opinions/` file (and `templates/` where applicable) with `house` in the file's `sources:` frontmatter, and the inbox entry moves to [Woven](#woven) with a link.
-3. **The marking is a fixed literal.** Every house opinion is prefixed with the exact string `**House:**` (bold, colon inside), machine-checkable via `grep -F '**House:**'`. The `house` id and the marking always travel together: one without the other is an audit finding.
-4. **House beats roster on conflict** _(canonical statement; other files point here)_: if a house opinion contradicts a sourced one, the house opinion wins and the sourced position is kept as a one-line "the community default is X (source); we do Y because Z" note, citing the source. Harvest, refresh, and audit runs must never remove, dilute, or un-mark house content.
-5. **External contributors propose opinions via pull request:** see the [PR template](.github/PULL_REQUEST_TEMPLATE.md). An experience-based contributor opinion the owner accepts is woven by adoption: the owner takes responsibility for it as a house opinion, and the contributor and PR are credited in the Woven table's Provenance column.
+1. **The owner adds an entry to the [Inbox](#inbox).** A sentence or two is enough, as long as it gives the reasoning.
+2. **The `weave-house-opinion` skill writes it in.** The opinion goes into the right `opinions/` file, and into `templates/` where it applies, with `house` in the file's `sources:`. The inbox entry then moves to [Woven](#woven), with a link.
+3. **The marking is a fixed string.** Every house opinion starts with exactly `**House:**`, bold with the colon inside, so `grep -F '**House:**'` finds it. The `house` ID and the marking always appear together, and one without the other is an audit finding.
+4. **A house opinion wins a conflict with the roster.** This is the canonical statement, and other files link here. Keep the house opinion, and cut the sourced position to a one-line note that cites the source: "The community default is X (source); we do Y because Z." Harvest, refresh, and audit runs never remove, weaken, or unmark house content.
+5. **Other contributors propose opinions in a pull request,** as the [PR template](.github/PULL_REQUEST_TEMPLATE.md) describes. When the owner accepts an experience-based opinion, the owner adopts it as a house opinion, and the Woven table's Provenance column credits the contributor and the pull request.
 
-The `house` source id is reserved and documented in [AWESOME-HUMANS.md](AWESOME-HUMANS.md); its authority is repository ownership, so it is exempt from the admission criteria, which is why it must stay visibly marked wherever it is used.
+The `house` source ID is reserved and documented in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). It skips the admission criteria because its authority is ownership of the repository, which is why it's marked wherever it's used.
 
 ## Entry format
 
@@ -28,9 +28,9 @@ _Nothing waiting._
 
 ## Woven
 
-| Date       | Opinion                                                                                                                            | Woven into                                                                                                                                                           | Provenance |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| 2026-08-12 | Test naming `UnitOfWork_Scenario_ExpectedBehaviour` + explicit Arrange/Act/Assert comments                                         | [opinions/testing.md](opinions/testing.md) (retrofitted; predates this file)                                                                                         | Owner      |
-| 2026-08-12 | Warnings are always treated as errors (not CI-only); any suppression carries an inline comment explaining why                      | [opinions/ci.md](opinions/ci.md), [opinions/project-structure.md](opinions/project-structure.md), [templates/Directory.Build.props](templates/Directory.Build.props) | Owner      |
-| 2026-08-18 | The dependency bot's dashboard issue stays permanently open: it is bot-managed state, not a task, and closing it is not an opt-out | [opinions/ci.md](opinions/ci.md)                                                                                                                                     | Owner      |
-| 2026-09-25 | The solution carries a `/build/` solution folder listing the root build files                                                      | [opinions/project-structure.md](opinions/project-structure.md), [templates/example.slnx](templates/example.slnx)                                                     | Owner      |
+| Date       | Opinion                                                                                                                 | Woven into                                                                                                                                                           | Provenance |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 2026-08-12 | Name tests `UnitOfWork_Scenario_ExpectedBehaviour`, and mark Arrange, Act, and Assert with comments                     | [opinions/testing.md](opinions/testing.md) (added retroactively; predates this file)                                                                                 | Owner      |
+| 2026-08-12 | Treat warnings as errors everywhere, not only in CI. Every suppression has an inline comment that explains it           | [opinions/ci.md](opinions/ci.md), [opinions/project-structure.md](opinions/project-structure.md), [templates/Directory.Build.props](templates/Directory.Build.props) | Owner      |
+| 2026-08-18 | Leave the dependency bot's dashboard issue open. It's state the bot manages, not a task, and closing it doesn't opt out | [opinions/ci.md](opinions/ci.md)                                                                                                                                     | Owner      |
+| 2026-09-25 | Give the solution a `/build/` solution folder that lists the root build files                                           | [opinions/project-structure.md](opinions/project-structure.md), [templates/example.slnx](templates/example.slnx)                                                     | Owner      |

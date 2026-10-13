@@ -10,35 +10,47 @@ metadata:
 
 # Vet a source
 
-Apply the admission criteria in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) to a candidate source, or re-evaluate an existing one. The roster is the trust boundary for every opinion in this repository, so err on the side of declining.
+Apply the admission criteria in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) to a candidate source, or re-evaluate an existing one. Every opinion cites only the roster, so when in doubt, decline.
 
 ## Orchestration
 
-Per [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy), delegate the evidence gathering (step 2's archive digging and post sampling) to worker agents; the editor alone weighs the evidence, decides, and edits the roster.
+As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, delegate the evidence gathering in step 2, such as searching archives and sampling posts, to worker agents. Only the editor weighs the evidence, decides, and edits the roster.
 
 ## Steps
 
-1. **Identify the candidate** (URL, author, focus area) and check the roster: already listed? Then this is a re-evaluation (promotion/demotion), not an admission.
-2. **Establish the track record.** Gather evidence for each criterion:
-   - **Longevity:** earliest verifiable publication (archives, post history, Wayback Machine). Admission needs two years of sustained output; under two years is the watch list regardless of quality. Record the start year precisely. It goes in the roster's `Since` column, which is what carries the length of a record now that there is one citable tier.
-   - **Depth:** sample 3–5 representative posts. Original insight (internals, measurements, worked reasoning) or paraphrased release notes?
-   - **Accuracy:** any history of corrections issued, or of claims later shown wrong and left standing?
-   - **Independence of signal:** does the content stand on merit, or on marketing reach / algorithm-chasing? Vendor blogs and personality-driven channels need extra scrutiny here.
-3. **Classify**, applying the two qualifying rules from [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
-   - All four criteria met at two years or more → **admit** to the **Citable** table.
-   - **An independence concern is a recorded usage limit, never a rank**: a live concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) → admit, and write into Notes what a citation may rest on, typically mechanism rather than adoption. Vendor employment alone needs no limit; depth with critical distance carries itself. A concern no limit would contain is a decline or a watch-listing, not an admission with a weaker limit.
-   - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless their **writing** demonstrably continues elsewhere (official documentation, another publication, a book), in which case the track record follows the human and the dormant channel is noted. Repository activity is not evidence: commits, releases and issue threads are not what an opinion cites, so a busy GitHub profile beside a silent blog is a dormant source rather than a live one. Documentation authored in a repository does count: what was published is the test, not where the commits landed.
-   - Strong on depth/accuracy but short on longevity → **watch list**, with the blocker recorded.
-   - Aggregators (link roundups, newsletters) → admissible, but marked as **discovery-only**; they never appear in an opinion's `sources:`.
-   - Thin on depth but sound on the other three → admit and mark **`**Corroborate.**`**. The table states that a source is citable; the marking states what a citation may rest on.
-   - Otherwise → **decline**, with a one-line reason (kept only in the PR, not the roster).
-4. **For re-evaluations:** promote a watch-list source whose blocker has cleared; demote or annotate an admitted source that has gone dormant (no posts in over a year) or declined in quality. With one citable tier, an admitted source that slips has two outcomes rather than three: a tightened usage limit in its notes, or the watch list. A demoted source keeps its row with a note, but **demotion to the watch list revokes citation, including the back catalogue**, and `scripts/validate-sources.cs` rejects a watch-list id wherever it appears in `sources:`. So a demotion is not finished until no opinion cites it: in the same PR, re-source each affected claim from a citable source, or drop it. A back catalogue worth keeping citable is an argument for annotating the row rather than demoting it.
-5. **Apply in a worktree** on branch `vet/<source-id>`, or a slug naming a multi-source pass, per [AGENTS.md](../../AGENTS.md): update the roster table, assign a stable kebab-case `id` and insert the row alphabetically by it, add the source's section under `## Source notes` (also alphabetical) with the evidence and any marking, in the verdict-then-labelled-bullets shape that section's introduction sets out, and append the decision to the decision log. **Keep the log entry to the decision and the fact behind it**, in two sentences. The per-criterion evidence belongs in the PR (step 6), not the table.
-6. **Open a PR** with the evidence per criterion so a human ratifies the admission. A human reviews before the source can feed opinions.
+1. **Identify the candidate:** its URL, author, and focus area. If the roster already lists it, this is a re-evaluation for promotion or demotion, not an admission.
+2. **Establish the track record** against each criterion:
+   - **Longevity:** Find the earliest verifiable publication, from archives, post history, or the Wayback Machine. Admission needs two years of sustained output, and less means the watch list, whatever the quality. Record the exact start year in the roster's `Since` column.
+   - **Depth:** Sample three to five representative posts. Do they offer original insight, such as internals, measurements, or worked reasoning, or do they paraphrase release notes?
+   - **Accuracy:** Has the source published corrections? Has it left claims standing that were later shown wrong?
+   - **Independence:** Does the content stand on its merit, or on marketing reach? Vendor blogs and personality-driven channels need extra scrutiny.
+3. **Classify the source,** applying the two qualifying rules in [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
+
+   | Evidence                                             | Outcome                                                                 |
+   | ---------------------------------------------------- | ----------------------------------------------------------------------- |
+   | All four criteria met, over two years or more        | **Admit** to the **Citable** table                                      |
+   | A live independence concern                          | **Admit,** with a usage limit in the notes                              |
+   | Publishing stopped over a year ago                   | **Watch list,** unless the writing continues elsewhere                  |
+   | Strong on depth and accuracy, but short on longevity | **Watch list,** with the blocker recorded                               |
+   | An aggregator, such as a link roundup or newsletter  | **Admit,** marked `**Discovery-only.**`. It never appears in `sources:` |
+   | Thin on depth, but sound on the other three criteria | **Admit,** marked `**Corroborate.**`                                    |
+   | Anything else                                        | **Decline,** with a one-line reason in the pull request only            |
+
+   The table decides whether a source is citable. A marking or a usage limit says what a citation can rest on.
+
+4. **For a re-evaluation,** promote a watch-list source whose blocker has cleared. Demote or annotate an admitted source that has published nothing in over a year, or whose quality has dropped.
+   - A source that slips gets either a tighter usage limit in its notes, or the watch list.
+   - A demoted source keeps its row, with a note. **Moving a source to the watch list revokes citation, back catalogue included,** and `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:`.
+   - So a demotion is finished only when no opinion cites the source. In the same pull request, re-source each affected claim from a citable source, or drop it. To keep the back catalogue citable, annotate the row instead of demoting it.
+5. **Edit in a worktree** on the branch `vet/<source-id>`, or a slug for a multi-source pass, as [AGENTS.md](../../AGENTS.md) describes:
+   1. Update the roster table. Assign a stable kebab-case `id`, and insert the row in ID order.
+   2. Add the source's section under `## Source notes`, also in ID order, with the evidence and any marking, in the verdict-then-labelled-bullets shape the section's introduction describes.
+   3. Add the decision to the decision log, in two sentences: the decision and the fact behind it. Put the evidence for each criterion in the pull request.
+6. **Open a pull request** with the evidence for each criterion. A person approves it before the source can feed opinions.
 
 ## Edge cases
 
-- **Institutional sources** (Microsoft, JetBrains): longevity attaches to the publication, not individual authors; depth still needs per-author scrutiny when citing.
-- **An author who moved platforms** (e.g. personal blog → an employer's engineering blog → newsletter): the track record follows the human, not the URL, so aggregate their writing across platforms. A move to video, talks or a podcast is not a platform change but an exit from scope ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
-- **Candidate found via a single viral post:** never admit on one post; watch-list at most.
-- **Conflicts of interest** (the candidate sells a product the opinions might recommend): admissible, but record it in the source's section under `## Source notes` so opinions citing them flag it.
+- **Institutional sources,** such as Microsoft or JetBrains: Longevity belongs to the publication, not individual authors. When you cite one author, still check their depth.
+- **An author who moved platforms,** for example from a personal blog to an employer's engineering blog to a newsletter: The track record follows the person, so combine their writing across platforms. A move to video, talks, or a podcast leaves the scope ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
+- **A candidate found through one viral post:** Never admit a source on one post. At most, watch-list it.
+- **Conflicts of interest,** where the candidate sells a product the opinions might recommend: You can admit it, but record the conflict in its `## Source notes` section, so opinions that cite it flag it.

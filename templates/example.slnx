@@ -8,7 +8,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Example.Library.Tests/Example.Library.Tests.csproj" />
   </Folder>
-  <!-- House: root build files show in the IDE under /build/, beside the projects they configure. -->
+  <!-- **House:** root build files show in the IDE under /build/, beside the projects they configure. -->
   <Folder Name="/build/">
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />

@@ -1,10 +1,10 @@
 <!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-20 | last-used: 2026-09-24 | sources: ms-learn, dotnet-blog, house -->
-<!-- Copy to the repository root. Every project inherits these; override per-project only with a recorded reason. -->
+<!-- Copy to the repository root. Every project inherits these settings. Override one in a project only with a recorded reason. -->
 <Project>
 
   <PropertyGroup Label="Output layout">
-    <!-- One artifacts/<type>/<project>/<pivot> root for all build output. Must be set here or on the
-         command line — MSBuild reads it before project evaluation, so a .csproj setting fails with
+    <!-- One artifacts/<type>/<project>/<pivot> root for all build output. Set it here or on the
+         command line: MSBuild reads it before project evaluation, so a .csproj setting fails with
          NETSDK1199 (opinions/project-structure.md). -->
     <UseArtifactsOutput>true</UseArtifactsOutput>
   </PropertyGroup>
@@ -13,13 +13,13 @@
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <!-- Promotes nullable warnings to errors so annotations are enforced, not advisory (opinions/csharp.md) -->
+    <!-- Promotes nullable warnings to errors, so the compiler enforces annotations (opinions/csharp.md) -->
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup Label="Quality gates">
-    <!-- **House:** always on, not just in CI: a warning is an error the moment it's introduced. Suppress with NoWarn/pragma only alongside a comment explaining why. -->
+    <!-- **House:** Always on, not only in CI, so a warning fails the build as soon as it's introduced. Suppress with NoWarn or a pragma only with a comment that explains why. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
@@ -28,18 +28,18 @@
 
   <PropertyGroup Label="Packaging hygiene">
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- CPM above pins the dependency graph; flip this to true and add locked-mode restore in CI
-         if you also want packages.lock.json guarding against feed drift (opinions/ci.md). -->
+    <!-- CPM above pins the dependency graph. Set this to true, and add locked-mode restore in CI,
+         if you also want packages.lock.json to guard against feed drift (opinions/ci.md). -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- Doc file feeds IDE tooltips and OpenAPI XML comments; CS1591 exempted so undocumented internals don't fail the build -->
+    <!-- The doc file feeds IDE tooltips and OpenAPI XML comments. CS1591 is exempt, so undocumented internals don't fail the build. -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Label="Analyzers">
-    <!-- Correctness rules the SDK set misses (culture-sensitive strings, CancellationToken
-         forwarding, async pitfalls); see opinions/csharp.md. Version pinned in
-         Directory.Packages.props. -->
+    <!-- Correctness rules that the SDK set misses, such as culture-sensitive strings,
+         CancellationToken forwarding, and async pitfalls (opinions/csharp.md). The version is
+         pinned in Directory.Packages.props. -->
     <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
   </ItemGroup>
 

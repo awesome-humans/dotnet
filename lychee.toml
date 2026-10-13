@@ -13,7 +13,7 @@
 # formatting nit. Microsoft Learn reorganises URLs regularly and blogs migrate;
 # audit-freshness treats a failure here as a staleness finding.
 
-# Be patient and gentle — this hits a few hundred third-party hosts.
+# Throttle requests: this checks a few hundred third-party hosts.
 max_concurrency = 8
 timeout = 30
 retry_wait_time = 5

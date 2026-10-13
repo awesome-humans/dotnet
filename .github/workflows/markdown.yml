@@ -9,8 +9,8 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Weekly, Mondays 06:00 UTC — the link check needs to run on a cadence, not
-    # only on PRs: links rot while the repository sits still.
+    # Weekly, Mondays 06:00 UTC. The link check runs on a schedule, not only on
+    # PRs, because links break even when the repository doesn't change.
     - cron: "0 6 * * 1"
 
 permissions:
@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      # Restore lychee's result cache so a run does not re-hit every host cold.
+      # Restore lychee's result cache, so a run doesn't request every host again.
       # The action has no cache input of its own — this is the supported way.
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:

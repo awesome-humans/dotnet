@@ -3,6 +3,6 @@ node_modules/
 # Generated, not authored — nobody edits these by hand, so holding them to a
 # formatting gate only risks a red build on churn. npm writes package-lock.json;
 # the dotnet-release-watch workflow writes the release snapshot with jq. Both
-# happen to match prettier's output today, which is luck, not a contract.
+# happen to match prettier's output today, but nothing guarantees it.
 package-lock.json
 .github/state/dotnet-releases.json

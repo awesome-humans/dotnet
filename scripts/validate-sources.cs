@@ -5,7 +5,7 @@
 #:include CommentHeader.cs
 // PublishAot is on by default for file-based apps, and YamlDotNet's reflection-based
 // builder trips its analyzer (IL3050). These scripts are run, never published, so turn
-// AOT off rather than suppress the diagnostic that is telling the truth.
+// AOT off instead of suppressing an accurate diagnostic.
 #:property PublishAot=false
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
@@ -188,7 +188,7 @@ foreach ((string heading, List<string> tableIds) in tables)
 }
 
 // A notes section for an id that no table row declares is a leftover from a demotion or a
-// typo, and would sit there looking authoritative while feeding nothing. The reverse is
+// typo, and would look authoritative while applying to nothing. The reverse is
 // allowed: a source with nothing worth recording has no section.
 foreach (string noteId in noteIds)
 {
