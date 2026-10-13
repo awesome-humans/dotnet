@@ -2,11 +2,11 @@
 
 Opinionated best practices for modern .NET.
 
-It distils the published guidance of awesome humans: people and publications with a multi-year track record, listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
+It distils the guidance of awesome humans, listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET. It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
 
-Use it in three ways:
+## Usage
 
-- **Point an agent at it.** Tell your agent: "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code." The opinions cover conventions, project layout, language usage, and library choices.
+- **Point an agent at it.** Tell your agent: "Follow the conventions in <https://awesome-humans.net/llms.txt> when you write .NET code." The opinions cover conventions, project layout, language usage, and library choices.
 - **Scaffold from it.** Copy files from [`templates/`](templates), or check an existing codebase with [`verify-project`](skills/verify-project/SKILL.md).
 - **Read it.** Browse it at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives the recommendation, then the rationale, then the sources, with code where it helps.
 
@@ -166,6 +166,10 @@ The helpers have no top-level statements, so they don't run alone. Each compiles
 [`global.json`](global.json) sets the SDK minimum to the first feature band that supports `#:include`, and `rollForward: latestFeature` picks up newer bands. It's independent of [`templates/global.json`](templates/global.json), because each pin follows what its own consumers need.
 
 One check runs in Python: the Agent Skills specification validator, which is published only to PyPI.
+
+## Acknowledgement
+
+Agents build and maintain this project, but it wouldn't exist without the people whose writing it draws on. Every opinion cites their work. Thank you to all of these awesome humans, and to everyone who supports them.
 
 ## License
 

@@ -200,11 +200,9 @@ foreach ((string page, string text) in rosterText)
 }
 
 // The overview: README.md up to its layout section, which is about the repository rather
-// than the opinions, without the rule for contributors adding an opinion file.
+// than the opinions.
 int layout = readme.IndexOf("\n## Repository layout", StringComparison.Ordinal);
-string overview = string.Join(
-    "\n\n",
-    readme[..layout].Split("\n\n").Where(block => !block.StartsWith("A new opinion file must appear", StringComparison.Ordinal)));
+string overview = readme[..layout];
 Write(pages["README.md"], Rewrite("README.md", overview + "\n", anchorsToGitHub: true));
 
 foreach ((string page, string text) in rosterText)
