@@ -14,7 +14,7 @@ Target ASP.NET Core 10, and use minimal APIs for new HTTP APIs.
 
 ### Hosting and deployment
 
-**Run Kestrel directly, in a container image that `dotnet publish /t:PublishContainer` builds without a Dockerfile.** Kestrel is supported as an edge server. If you run behind a proxy or ingress for port sharing, TLS termination, or load balancing, enable host filtering and forwarded headers. The proxy setup is incomplete without them.
+**Run Kestrel directly, in a container image that `dotnet publish /t:PublishContainer` builds without a Dockerfile.** Kestrel is supported as an edge server. If you run behind a proxy or ingress for port sharing, TLS termination, or load balancing, enable host filtering and forwarded headers. Without forwarded headers, the app sees the proxy's scheme and IP address instead of the client's.
 
 Container publish builds an OCI image from MSBuild properties such as `ContainerRepository` and `ContainerRegistry`. The base image stays patched with the SDK, and you don't need a Docker daemon to produce a tarball for a scanner. Write a Dockerfile only when you need custom image layers, because a hand-written one drifts from the SDK's. ([Microsoft Learn: When to use a reverse proxy with Kestrel](https://learn.microsoft.com/aspnet/core/fundamentals/servers/kestrel/when-to-use-a-reverse-proxy), [Microsoft Learn: Containerize an app with dotnet publish](https://learn.microsoft.com/dotnet/core/containers/sdk-publish))
 

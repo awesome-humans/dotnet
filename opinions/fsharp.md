@@ -7,7 +7,7 @@ sources: [dotnet-blog, ms-learn, scott-wlaschin, mark-seemann]
 
 # F#
 
-Target F# 10, which ships with .NET 10. These opinions carry the same weight as the C# ones.
+Target F# 10, which ships with .NET 10.
 
 ## Domain modelling
 
@@ -83,7 +83,7 @@ let describe payment =
   ```
 
 - **Scope a warning suppression with a `#nowarn` and `#warnon` pair around the lines concerned.** Never leave a bare `#nowarn` that runs to the end of the file. ([.NET Blog: Introducing F# 10](https://devblogs.microsoft.com/dotnet/introducing-fsharp-10/))
-- **Enable `ParallelCompilation` on multi-project F# solutions** for graph-based type checking, parallel IL generation, and parallel optimization. It's a preview in F# 10, so turn it on when it ships, or now if build time hurts. ([Microsoft Learn: What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
+- **Enable `ParallelCompilation` on multi-project F# solutions once it leaves preview.** It turns on graph-based type checking, parallel IL generation, and parallel optimization. In F# 10 it's still a preview feature, so turn it on now only if compile time is your bottleneck. ([Microsoft Learn: What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
 
 ## Mixed C#/F# solutions
 
@@ -113,12 +113,12 @@ let ``Create_StringWithoutAtSign_ReturnsNone`` () =
     Assert.Equal(None, result)
 ```
 
-## Source-redundancy note
+## Source redundancy
 
 Independent F# sources are scarce:
 
-- F# for Fun and Profit hasn't published since its two-part design series in December 2025. Its back catalogue on domain modelling and functional design is still the standard reference. The roster records the gap against `scott-wlaschin` for the next `vet-source` pass.
+- F# for Fun and Profit hasn't published since its two-part design series in December 2025. Its back catalogue on domain modelling and functional design is still the standard reference. The 2026-09-14 harvest flagged the gap for a `vet-source` pass.
 - F# Weekly reports news, not argument.
-- `mark-seemann` is independent and unmarked, though he writes more about F# than in it.
+- `mark-seemann` is independent and unmarked, and this file cites him only on F# versus C# trade-offs.
 
 So the F# opinions lean on official sources more than the C# ones do.

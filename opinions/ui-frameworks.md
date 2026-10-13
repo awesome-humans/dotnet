@@ -133,10 +133,11 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
   - It needs an `AvaloniaUILicenseKey` and a Plus, Pro, or Enterprise subscription. ([Avalonia: Hot Reload for Avalonia](https://avaloniaui.net/blog/hot-reload-ga))
 - **Don't build on Impeller yet.** Avalonia and Google's Flutter team are building an experimental GPU-first Impeller renderer for .NET. A maintainer paused the work on 2026-03-09 to ship v12, and no restart had been announced by 2026-09-24. Stay on the default Skia renderer. ([Avalonia: Avalonia Partnering with Google's Flutter Team to Bring Impeller Rendering to .NET](https://avaloniaui.net/blog/avalonia-partners-with-google-s-flutter-t-eam-to-bring-impeller-rendering-to-net); [Avalonia: Impeller rendering subsystem, discussion #20838](https://github.com/AvaloniaUI/Avalonia/discussions/20838))
 
-- **Source-redundancy note:** Avalonia has the fewest sources of any topic here. Its only independent source, `nick-polyak`, moved to the watch list for dormancy on 2026-08-23, back catalogue included.
-  - What remains is `avalonia-blog` and the discovery-only `awesome-avalonia`. Both were admitted on 2026-08-14 under the lowered longevity bars, and both come from the project itself.
-  - They're authoritative on what shipped and how the API works, but they argue for adoption. Read release claims, especially headline FPS numbers, as vendor benchmarks.
-  - Cite the docs for how something works, such as a binding, a control, or a collection view, the way [csharp.md](csharp.md) cites `ms-learn`. Treat any judgement about whether to adopt something as uncorroborated until an independent source supports it.
-  - No current source offers that view, so it's an open gap for `vet-source`.
+## Source redundancy
+
+Avalonia has the fewest sources of any topic here. Its only independent source, `nick-polyak`, moved to the watch list for dormancy on 2026-08-23, back catalogue included. What remains is `avalonia-blog` and the discovery-only `awesome-avalonia`, both from the Avalonia project and its community.
+
+- They're authoritative on what shipped and how the API works, but they argue for adoption. Read release claims, especially headline FPS numbers, as vendor benchmarks.
+- Cite the docs for how something works, such as a binding, a control, or a collection view. Treat any judgement about whether to adopt something as uncorroborated until an independent source supports it. No current source does, so it's an open gap for `vet-source`.
 
 <!-- Mobile practice opinions (lifecycle, offline/sync, store compliance) split out into their own file if the MAUI section outgrows this one -->

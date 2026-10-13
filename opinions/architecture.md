@@ -29,12 +29,7 @@ Start with a modular monolith. Build each module from vertical slices, and add l
 
 ## Source redundancy
 
-Two sources seeded this file on the same day, both admitted under the lowered longevity bars:
-
-- `milan-jovanovic`, with a conflict-of-interest note.
-- `code-with-mukesh`, marked **Corroborate.**
-
-Both sell templates and courses built on these patterns. `mark-seemann` and `ms-learn` now support the same claims, unmarked and with nothing to sell on this topic. `derek-comartin` is marked **Corroborate.**, and NServiceBus sponsors the cited article. So the events bullet cites Microsoft Learn first and flags the sponsorship beside the link.
+`milan-jovanovic`, with a recorded conflict of interest, and `code-with-mukesh`, marked **Corroborate.**, seeded this file. Both sell templates and courses built on these patterns. `mark-seemann` and `ms-learn` support the same claims, unmarked and with nothing to sell on this topic. `derek-comartin` is marked **Corroborate.**, and NServiceBus sponsors the cited article, so the events bullet cites Microsoft Learn first and flags the sponsorship beside the link.
 
 Treat anything more specific than these opinions as unsourced, such as prescribed folder names, mediator libraries, and project counts per slice.
 

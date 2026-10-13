@@ -11,7 +11,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
 ## Opinions
 
-- **Pin GitHub Actions to commit SHAs, not mutable tags.** A tag can move without warning, and a SHA can't. Automate the sweep across repositories. ([Meziantou: SHA pinning](https://www.meziantou.net/enable-sha-pinning-for-github-actions-across-personal-repositories.htm))
+- **Pin GitHub Actions to commit SHAs, not mutable tags.** A tag can move without warning, and a SHA can't. Enforce pinning in every repository, and script it when you have many. ([Meziantou: SHA pinning](https://www.meziantou.net/enable-sha-pinning-for-github-actions-across-personal-repositories.htm))
 - **Never interpolate user input into a workflow script.** Pass it in an environment variable, and parse it in the script. Script injection is the most common GitHub Actions vulnerability. ([Meziantou: Safely passing extra arguments](https://www.meziantou.net/safely-passing-extra-arguments-in-github-actions-workflows-using-powershell.htm))
 - **Pin the SDK and every package in CI.** `global.json` sets the SDK, and lock files or Central Package Management set the packages. A CI run must never pick up a version the repository didn't choose. ([Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json), [Meziantou: Faster and Safer NuGet restore using Source Mapping and Lock files](https://www.meziantou.net/faster-and-safer-nuget-restore-using-source-mapping-and-lock-files.htm))
 - **Restrict what a package can run, not only which version restores.** A `PackageReference` can bring MSBuild props and targets, analyzers, and source generators. All of them run during restore, design-time build, and compile. A version pin decides which code you get, not whether it runs. List only the asset types a package needs:
@@ -30,7 +30,7 @@ Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Re
 
 1. **Restore.** If the repository commits `packages.lock.json` (`RestorePackagesWithLockFile=true`), pass `--locked-mode`, so a stale lock file fails the build. Without a lock file, the flag fails every restore with `NU1004`. [templates/Directory.Build.props](../templates/Directory.Build.props) pins packages with Central Package Management and no lock files, so the example restores without it.
 2. **Build.** Build once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`. The property covers compiler and analyzer diagnostics. The switch also fails on MSBuild warnings, such as MSB3277 assembly version conflicts.
-   - **House:** [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too. This replaces earlier advice to enforce warnings only in CI for faster local builds.
+   - **House:** [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too.
    - Enforce style the same way: run analyzers in the build, and add a `dotnet format --verify-no-changes` step. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
 3. **Test.** Run `dotnet test` on Microsoft.Testing.Platform (MTP). MTP needs the `test.runner` opt-in in `global.json`, as [testing.md](testing.md) describes. Without it, the SDK uses VSTest, which fails on .NET 10 before `--no-build` takes effect.
    - Upload TRX and coverage files as build artifacts, so you can diagnose a failure without a rerun.
@@ -92,7 +92,7 @@ Merge updates only through the pipeline above. An update that skips locked resto
 **House:** Leave the bot's dependency dashboard issue open. Renovate manages it, and closing it doesn't opt out: the next run re-creates it under a new number and notifies everyone again.
 
 - **It's the only list of pending updates.** Updates held back by `prConcurrentLimit`, or blocked by a failing branch, appear nowhere else. Its checkboxes trigger an off-schedule run without a configuration change.
-- **On a large solution, it releases the work.** If you gate updates behind `dependencyDashboardApproval`, you approve them from the dashboard.
+- **It's where you approve gated updates.** With `dependencyDashboardApproval` set, Renovate opens a pull request only after you tick the update's box on the dashboard.
 - **`dependencyDashboardAutoclose` lost.** It closes the issue whenever nothing is pending. A new issue every cycle costs more attention than one that stays open, and the closed issue hides a growing backlog.
 - If a stale-issue bot flags the dashboard, exempt it by label.
 

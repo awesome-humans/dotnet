@@ -43,8 +43,8 @@ Use EF Core as the default ORM. Write set-based work as set-based SQL, and keep 
 
 ## Source redundancy
 
-`code-with-mukesh`, marked **Corroborate.**, and `milan-jovanovic` were both admitted on 2026-08-14 under the lowered longevity bars. The benchmark numbers in the first opinion are theirs, and this repository hasn't reproduced them. Both support the general rule: use set-based writes for set-based work, and accept losing change tracker behaviour. Check the ratios against the EF Core documentation on Microsoft Learn before you quote them.
+The benchmark numbers in the first opinion come from `code-with-mukesh`, marked **Corroborate.**, and `milan-jovanovic`, and this repository hasn't reproduced them. Both support the general rule: use set-based writes for set-based work, and accept losing change tracker behaviour. Before you quote the ratios, check them against the EF Core documentation on Microsoft Learn.
 
-`shay-rojansky` has a recorded independence limit: he maintains Npgsql and works on Microsoft's EF Core team. So this file cites him only for how the mapping works, as his notes allow. When to use those types comes from `jon-skeet`, in [datetime.md](datetime.md).
+`shay-rojansky` has a recorded independence limit: he maintains Npgsql and works on Microsoft's EF Core team. This file cites him only for how the mapping works, as his notes allow. When to use those types comes from `jon-skeet`, in [datetime.md](datetime.md).
 
 <!-- TODO: extend with query-side opinions (AsNoTracking defaults, split queries, projection over Include), migrations workflow, and connection resiliency. None of it is sourced yet. -->

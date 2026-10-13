@@ -79,7 +79,7 @@ Hold tests to the same review bar and conventions as production code.
 
 ## Integration testing
 
-- **Integration-test ASP.NET Core apps with `WebApplicationFactory<TEntryPoint>` instead of unit-testing controllers or handlers.** `Microsoft.AspNetCore.Mvc.Testing` runs the real app in memory, with routing, model binding, filters, DI, and middleware. A few factory tests catch wiring bugs that controller unit tests miss. Unit-test the domain logic the endpoints call, not the endpoints. ([Microsoft Learn: Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests), [Andrew Lock: Should you unit-test API/MVC controllers?](https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/))
+- **Integration-test ASP.NET Core apps with `WebApplicationFactory<TEntryPoint>` instead of unit-testing controllers or handlers.** `Microsoft.AspNetCore.Mvc.Testing` runs the real app in memory, with routing, model binding, filters, DI, and middleware. A few factory tests catch wiring bugs that controller unit tests miss. Unit-test the domain logic the endpoints call, not the endpoints. ([Microsoft Learn: Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests), [Lock: Should you unit-test API/MVC controllers?](https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/))
 - **Replace services for a test with `ConfigureTestServices`, scoped by `WithWebHostBuilder`.** ([Microsoft Learn: Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests))
 
 ## Deterministic time
@@ -89,7 +89,7 @@ Hold tests to the same review bar and conventions as production code.
   - Arrange with `time.GetUtcNow()`, and move time with `Advance`.
   - Assert time-derived results against `time.Start` plus the elapsed time, so the expected value visibly follows from the input.
 
-  Two literals six minutes apart are correct today, and a puzzle at the next review. A hand-typed expected value repeats the arithmetic the code under test should do. For the two constructor overloads that break this rule, see [datetime.md](datetime.md#testing-time). ([Andrew Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/) for `Advance` and `GetUtcNow`)
+  Two literals six minutes apart are correct today, and a puzzle at the next review. A hand-typed expected value repeats the arithmetic the code under test should do. For the two constructor overloads that break this rule, see [datetime.md](datetime.md#testing-time). ([Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/) for `Advance` and `GetUtcNow`)
 
   Before: two unrelated literals, which the reader has to compare.
 
