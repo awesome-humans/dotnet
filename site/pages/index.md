@@ -1,6 +1,6 @@
 # Awesome Humans
 
-This project shows you what good code looks like today. Each recommendation comes from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, and independent writing on the subject.
+This project shows you what good code looks like today, and keeps that answer current as each ecosystem changes. Each recommendation comes from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, and independent writing on the subject.
 
 Every opinion states its recommendation first, cites its sources, and targets the latest released versions.
 
@@ -15,7 +15,7 @@ Rust and TypeScript are next. Each ecosystem has the same parts:
 - **Skills:** Agent skills that check a project against the opinions and keep the opinions current.
 - **Awesome humans:** The roster of sources that the opinions cite.
 
-## Using it
+## Usage
 
 - **Point your agent at it.** Tell your coding agent to follow the opinions when it writes code. For example: "Follow the conventions in <https://awesome-humans.net/llms.txt> when you write .NET code." That file links the raw Markdown of every opinion, template, and skill.
 - **Check an existing project.** Clone the repository, and ask your agent to run [`verify-project`](dotnet/skills/verify-project.md) on a local path or a repository URL. It reports each deviation from the opinions with a severity and a one-line fix, and applies the fixes only if you ask. To narrow the review, say so in the request, such as "focus on testing".
