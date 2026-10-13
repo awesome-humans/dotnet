@@ -25,6 +25,7 @@ Use it in three ways:
 - **[Logging & tracing](opinions/logging.md):** structured logging, source-generated log messages, and OpenTelemetry over OTLP
 - **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, and source generators
 - **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>` and memory, async code, and the GC
+- **[Security](opinions/security.md):** secrets, deserialization, cryptography, and servicing cadence
 - **[Testing](opinions/testing.md):** choosing a framework, naming and structure, integration tests, and coverage
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor and WebAssembly, .NET MAUI, and cross-platform desktop with Avalonia
 - **Libraries:** what to use and what to avoid, covered in the files above
@@ -76,6 +77,7 @@ The repository owner outranks the roster. The owner's preferences come in throug
 │   ├── logging.md
 │   ├── project-structure.md
 │   ├── runtime-performance.md
+│   ├── security.md
 │   ├── testing.md
 │   └── ui-frameworks.md
 ├── research/                 ← saved research topics (staging: promote or discard)
