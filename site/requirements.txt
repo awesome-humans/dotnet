@@ -1,3 +1,3 @@
 # The site generator, pinned so a new release arrives as a reviewed Renovate PR rather
 # than a silent change to how the site builds.
-zensical==0.0.67
+zensical==0.0.70
