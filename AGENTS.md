@@ -200,10 +200,11 @@ A literal use isn't an idiom. _Silently_ for a failure that raises no error stay
 - **Use British spelling, except where .NET names the word.** Write _defence_, _modelling_, _catalogue_, _behaviour_, and _colour_. This overrides Google's American spelling and its dictionary, Merriam-Webster.
 - **Use the platform's spelling for a .NET concept,** so prose and identifiers match and a search for one finds the other. `System.Globalization` and `IStringLocalizer` give _globalization_ and _localization_, down to the file name `opinions/globalization.md`. EF Core's materialization gives _materialized_.
 - **Don't extend the exception to words that only share a stem with an API.** "A behaviour change in SQLite" keeps its British spelling, even though MAUI has a `Behavior` type. Never anglicise an API name.
+- **`npm run spell` checks spelling.** For details, see [Formatting and linting](#formatting-and-linting). When it flags a correctly spelled name or term, add the word to `cspell.words.txt` in the same commit. Never add an American spelling there. In Markdown, it skips link text, inline code, and double-quoted text, so a cited title or a quotation keeps its spelling. For a title outside those, such as an italic book title, put `<!-- cspell:ignore <word> -->` above the paragraph.
 
 ### Scope of these rules
 
-- **They're review guidance, not a build check.** Whether a contrast is justified can't be decided by counting. Read for these patterns in review, and don't add a check that fails a build over them.
+- **They're review guidance, not a build check.** Whether a contrast is justified can't be decided by counting. Read for these patterns in review, and don't add a check that fails a build over them. Spelling is the exception: a misspelled word is wrong whatever its context, so `npm run spell` fails the build over it.
 - **They apply only to prose written here.** A third-party title and its URL keep the author's wording and spelling, so Andrew Lock's "Adding Localisation to an ASP.NET Core application" stays as written. Correcting a source misquotes it, and correcting a URL breaks it.
 - **They don't apply to other people's code.** `verify-project` reviews a codebase against `opinions/`. Spelling and wording in someone else's identifiers, comments, or documentation is never a finding.
 
@@ -235,7 +236,8 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 ### Formatting and linting
 
 - Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc`. The configuration uses the defaults minus three rules that conflict with the prose style, and records why.
-- Run `npm run format` to format, and `npm run check` to check formatting and lint together. Both use the versions pinned in `package.json`. Don't run `npx prettier` or `npx markdownlint-cli2` directly, because they resolve the latest version.
+- Spelling follows cspell, configured in `cspell.jsonc` with the `en-GB` dictionary, the .NET dictionaries, and the repository's own word list in `cspell.words.txt`. The .NET dictionaries accept American spellings because API names use them, such as `Behavior` and `Color`, so the configuration flags them in Markdown prose. Editors with a cspell extension read the same configuration.
+- Run `npm run format` to format, and `npm run check` to check formatting, lint, and spelling together. All three use the versions pinned in `package.json`. Don't run `npx prettier`, `npx markdownlint-cli2`, or `npx cspell` directly, because they resolve the latest version.
 - Run `npm run verify` before you open a pull request. It runs `npm run check` and the scripts in `scripts/` that CI runs, and redraws the diagrams. See [README.md: Repository scripts](README.md#repository-scripts).
 - Prettier formats Markdown and the JSON, JSONC, and YAML configuration, and reads `.editorconfig`, so the formatter and your editor agree. `.prettierignore` records two exceptions:
   - `package-lock.json` and `.github/state/dotnet-releases.json` are machine-written. Gating them on formatting would fail a build that nobody can fix by editing.

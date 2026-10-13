@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   format-and-lint:
-    # Formatting and structure are deterministic and offline, so they gate PRs.
+    # Formatting, structure, and spelling are deterministic and offline, so they gate PRs.
     # On a push to main they would only repeat what the merged PR already passed.
     if: github.event_name != 'schedule' && github.event_name != 'push'
     runs-on: ubuntu-latest
@@ -39,6 +39,9 @@ jobs:
 
       - name: Lint markdown
         run: npm run lint
+
+      - name: Check spelling
+        run: npm run spell
 
   links:
     runs-on: ubuntu-latest
