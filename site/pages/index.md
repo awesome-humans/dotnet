@@ -1,6 +1,6 @@
 # Awesome Humans
 
-This project shows you what good code looks like today, and keeps that answer current as each ecosystem changes. Each recommendation comes from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, and independent writing on the subject.
+This project shows you what good code looks like today, and keeps that answer current as each ecosystem changes. Recommendations come from awesome humans: people and publications with at least two years of accurate, independent writing on the subject.
 
 Every opinion states its recommendation first, cites its sources, and targets the latest released versions.
 

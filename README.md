@@ -2,7 +2,7 @@
 
 Opinionated best practices for modern .NET.
 
-It distils the published guidance of awesome humans: people and publications with a multi-year track record, listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
+It distils the guidance of awesome humans, listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET. It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
 
 ## Usage
 
