@@ -172,6 +172,18 @@ foreach (string section in rosterSections.Skip(1))
     }
 }
 
+// Each id in a roster table links to the source's notes on the same page, when it has any.
+foreach (string bucket in (string[])["citable", "watch-list"])
+{
+    string page = rosterPages[bucket];
+    rosterText[page] = Site.TableId().Replace(rosterText[page], row =>
+    {
+        string id = row.Groups["id"].Value;
+        Match note = Regex.Match(rosterText[page], $@"^<details id=""({Regex.Escape(id)}-(?:citable|watch-list)[^""]*)""", RegexOptions.Multiline);
+        return note.Success ? $"| [`{id}`](#{note.Groups[1].Value}) |" : row.Value;
+    });
+}
+
 Dictionary<string, List<(string Page, bool Title)>> rosterAnchors = new(StringComparer.Ordinal);
 foreach ((string page, string text) in rosterText)
 {
@@ -555,6 +567,10 @@ internal static partial class Site
     // A heading, or the opening of a source's collapsed notes, which stands in for one.
     [GeneratedRegex(@"^(?:(?<hashes>#{1,6}) (?<text>.+)|<details id=""(?<id>[^""]+)"".*)$", RegexOptions.Multiline)]
     public static partial Regex Heading();
+
+    // The id cell that opens a roster table row: | `id` |.
+    [GeneratedRegex(@"^\| `(?<id>[a-z0-9-]+)` +\|", RegexOptions.Multiline)]
+    public static partial Regex TableId();
 
     [GeneratedRegex("`([^`]+)`")]
     private static partial Regex Code();
