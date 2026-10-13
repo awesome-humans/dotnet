@@ -19,7 +19,7 @@ Rust and TypeScript are next. Each ecosystem has the same parts:
 
 - **Point your agent at it.** Tell your coding agent to follow the opinions when it writes code. For example: "Follow the conventions in <https://awesome-humans.net/llms.txt> when you write .NET code." That file links the raw Markdown of every opinion, template, and skill.
 - **Start a project from the templates.** Copy the [.NET templates](dotnet/templates/index.md) into a new project, and trim what you don't need.
-- **Check an existing project.** Clone the repository, and ask your agent to run [`verify-project`](dotnet/skills/verify-project.md) on a local path or a repository URL. It reports each deviation from the opinions with a severity and a one-line fix, and applies the fixes only if you ask.
+- **Check an existing project.** Clone the repository, and ask your agent to run [`verify-project`](dotnet/skills/verify-project.md) on a local path or a repository URL. It reports each deviation from the opinions with a severity and a one-line fix, and applies the fixes only if you ask. To narrow the review, say so in the request, such as "focus on testing".
 - **Read the opinions.** Each page gives the recommendation, the rationale, and the sources behind it.
 
 For how sources are vetted and how the opinions stay current, see [How it works](how-it-works.md).
