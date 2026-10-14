@@ -2,7 +2,7 @@
 targets: [net10.0, fsharp-10]
 last-reviewed: 2026-09-14
 last-used: 2026-09-14
-sources: [dotnet-blog, ms-learn, scott-wlaschin, mark-seemann]
+sources: [dotnet-blog, mark-seemann, ms-learn, scott-wlaschin]
 ---
 
 # F#

@@ -1,4 +1,4 @@
-<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-09-13 | last-used: 2026-09-24 | sources: ms-learn, dotnet-blog, meziantou -->
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-09-13 | last-used: 2026-09-24 | sources: dotnet-blog, meziantou, ms-learn -->
 <!-- Central Package Management: every PackageReference in the repository takes its version from here. -->
 <!-- Versions verified against nuget.org (latest stable) on 2026-09-13. Refresh them with the refresh-dotnet-versions skill. -->
 <Project>

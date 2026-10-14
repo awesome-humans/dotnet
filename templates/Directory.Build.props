@@ -1,4 +1,4 @@
-<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-09-25 | last-used: 2026-10-13 | sources: ms-learn, dotnet-blog, meziantou, house -->
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-09-25 | last-used: 2026-10-13 | sources: dotnet-blog, house, meziantou, ms-learn -->
 <!-- Copy to the repository root. Every project inherits these settings. Override one in a project only with a recorded reason. -->
 <Project>
 

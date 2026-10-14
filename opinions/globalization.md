@@ -4,13 +4,13 @@ last-reviewed: 2026-08-21
 last-used: 2026-08-21
 sources:
   [
-    ms-learn,
-    meziantou,
     andrew-lock,
-    khalid,
-    steve-gordon,
-    jon-skeet,
     avalonia-blog,
+    jon-skeet,
+    khalid,
+    meziantou,
+    ms-learn,
+    steve-gordon,
   ]
 ---
 

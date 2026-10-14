@@ -2,7 +2,7 @@
 targets: [net10.0]
 last-reviewed: 2026-10-09
 last-used: 2026-10-13
-sources: [meziantou, ms-learn, dotnet-blog, andrew-lock, house]
+sources: [andrew-lock, dotnet-blog, house, meziantou, ms-learn]
 ---
 
 # CI & automation

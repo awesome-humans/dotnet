@@ -3,13 +3,13 @@ targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-10
 sources:
   [
-    ms-learn,
     ardalis,
-    mark-seemann,
-    jeremy-miller,
-    oskar-dudycz,
     derek-comartin,
+    jeremy-miller,
+    mark-seemann,
     milan-jovanovic,
+    ms-learn,
+    oskar-dudycz,
   ]
 ---
 

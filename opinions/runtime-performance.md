@@ -4,14 +4,14 @@ last-reviewed: 2026-10-09
 last-used: 2026-09-25
 sources:
   [
-    stephen-toub,
-    dotnet-blog,
-    ms-learn,
-    steve-gordon,
-    jetbrains-dotnet,
-    jon-skeet,
     andrew-lock,
     ardalis,
+    dotnet-blog,
+    jetbrains-dotnet,
+    jon-skeet,
+    ms-learn,
+    stephen-toub,
+    steve-gordon,
   ]
 ---
 

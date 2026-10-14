@@ -4,12 +4,12 @@ last-reviewed: 2026-09-14
 last-used: 2026-09-25
 sources:
   [
-    ms-learn,
     aspnet-blog,
-    meziantou,
+    avalonia-blog,
     gerald-versluis,
     james-montemagno,
-    avalonia-blog,
+    meziantou,
+    ms-learn,
   ]
 ---
 

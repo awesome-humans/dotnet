@@ -3,7 +3,7 @@ targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-18
 last-used: 2026-09-25
 sources:
-  [ms-learn, dotnet-blog, jetbrains-dotnet, andrew-lock, meziantou, jon-skeet]
+  [andrew-lock, dotnet-blog, jetbrains-dotnet, jon-skeet, meziantou, ms-learn]
 ---
 
 # C#
