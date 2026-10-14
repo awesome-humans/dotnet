@@ -5,12 +5,12 @@ sources:
   [
     aaron-stannard,
     andrew-lock,
+    ardalis,
     dotnet-blog,
+    house,
+    jeremy-miller,
     jetbrains-dotnet,
     mark-seemann,
-    jeremy-miller,
-    ardalis,
-    house,
   ]
 ---
 

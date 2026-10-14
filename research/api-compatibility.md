@@ -3,14 +3,14 @@ targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-25
 sources:
   [
-    ms-learn,
-    dotnet-blog,
     aaron-stannard,
-    jon-skeet,
-    meziantou,
     andrew-lock,
-    mark-seemann,
+    dotnet-blog,
     house,
+    jon-skeet,
+    mark-seemann,
+    meziantou,
+    ms-learn,
   ]
 ---
 

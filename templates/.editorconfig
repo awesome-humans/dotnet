@@ -1,4 +1,4 @@
-# dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-21 | last-used: 2026-09-24 | sources: ms-learn, meziantou
+# dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-21 | last-used: 2026-09-24 | sources: meziantou, ms-learn
 # Copy to the repository root. Trim rules you disagree with, but disagree deliberately.
 
 root = true

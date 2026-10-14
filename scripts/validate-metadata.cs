@@ -11,8 +11,8 @@
 #:property TreatWarningsAsErrors=true
 
 // Verifies that every resource carries the metadata fields AGENTS.md requires
-// (targets, last-reviewed, sources, plus last-used outside research/) and that the
-// dates are ISO 8601.
+// (targets, last-reviewed, sources, plus last-used outside research/), that the
+// dates are ISO 8601, and that each sources list is in ordinal order.
 //
 // Three resource kinds carry them two ways. opinions/ and research/ use YAML
 // frontmatter; templates/ use a first-line comment header, because an XML or INI file
@@ -123,6 +123,18 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRe
             errors.Add($"{path}: '{field}' is '{text}', not an ISO 8601 date (YYYY-MM-DD)");
         }
     }
+
+    // AGENTS.md: a sources list is sorted by ID, `house` included. One order means two
+    // edits that add the same source land on the same line, and a reader scanning for an
+    // ID knows where to look.
+    if (fields.Contains("sources") && SourceIds(fields["sources"]) is string[] ids)
+    {
+        string[] sorted = [.. ids.Order(StringComparer.Ordinal)];
+        if (!ids.SequenceEqual(sorted, StringComparer.Ordinal))
+        {
+            errors.Add($"{path}: 'sources' is not sorted; expected [{string.Join(", ", sorted)}]");
+        }
+    }
 }
 
 if (errors.Count > 0)
@@ -149,6 +161,16 @@ static bool IsEmpty(object? value) => value switch
     string text => text.Length == 0,
     ICollection collection => collection.Count == 0,
     _ => false,
+};
+
+// The source IDs in declared order: a YAML list from frontmatter, or the comma-separated
+// text of a comment header. Null when the value is neither, which the required-field and
+// roster checks already report.
+static string[]? SourceIds(object? value) => value switch
+{
+    string text => text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+    IList list => [.. list.Cast<object?>().Select(entry => entry?.ToString() ?? "")],
+    _ => null,
 };
 
 // AGENTS.md: dates are ISO 8601, always absolute, never relative. An exact parse is

@@ -3,7 +3,7 @@ targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-21
 last-used: 2026-09-25
 sources:
-  [ms-learn, dotnet-blog, gerald-versluis, steve-gordon, aaron-stannard, house]
+  [aaron-stannard, dotnet-blog, gerald-versluis, house, ms-learn, steve-gordon]
 ---
 
 # Project structure & SDK

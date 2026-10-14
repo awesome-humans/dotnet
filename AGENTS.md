@@ -84,7 +84,7 @@ Three kinds of resource carry this metadata, in the two syntaxes their file form
 targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-12 # last time content was verified against sources
 last-used: 2026-08-12 # last time an agent used this as a reference
-sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
+sources: [andrew-lock, dotnet-blog] # ids from AWESOME-HUMANS.md, sorted
 ---
 ```
 
@@ -118,11 +118,12 @@ Rules:
   - In `opinions/` and `templates/`, the source must also be citable. A watch-list source or a `**Discovery-only.**` source is rejected.
   - A file whose citable sources are all marked `**Corroborate.**` is rejected too, because an unmarked source has to stand beside them.
   - `research/` is exempt: a topic can cite unvetted material if the text flags it. For details, see [research-topic](skills/research-topic/SKILL.md).
+- **Sort `sources` by ID in ordinal order, with `house` sorted like any other ID.** Write `[andrew-lock, dotnet-blog, house, ms-learn]`. The rule applies in all three directories and to both syntaxes.
 - **Write dates in ISO 8601 (`YYYY-MM-DD`).** Always use absolute dates, never relative ones.
 - **Two template files are exempt from the header:** `templates/global.json` and `templates/example.slnf`, because JSON has no comment syntax. What they pin is audited against the latest releases instead. Smoke-testing the example projects leaves build output under `templates/` (`artifacts/`, `bin/`, and `obj/`, all gitignored). That output isn't a resource, and the check skips it.
 - **`skills/` are deliberately exempt.** The [Agent Skills specification](https://agentskills.io/specification) defines their frontmatter, they're procedures and not reference material, and nothing reads a date from them. Use `git log` to see when a skill last changed.
 
-CI runs `dotnet run scripts/validate-metadata.cs` against both syntaxes, and a missing field or a relative date fails the pull request.
+CI runs `dotnet run scripts/validate-metadata.cs` against both syntaxes, and a missing field, a relative date, or an unsorted `sources` list fails the pull request.
 
 ## Writing style
 

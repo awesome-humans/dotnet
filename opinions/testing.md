@@ -2,7 +2,7 @@
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-15
 last-used: 2026-09-28
-sources: [ms-learn, meziantou, andrew-lock, house, dotnet-blog, mark-seemann]
+sources: [andrew-lock, dotnet-blog, house, mark-seemann, meziantou, ms-learn]
 ---
 
 # Testing
