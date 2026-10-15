@@ -6,9 +6,8 @@
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
 
-// Stages the awesome-humans.net documentation site into site/build, ready for Zensical.
-// The hand-written pages under site/pages are copied as they are. The .NET ecosystem's
-// pages under /dotnet/ are generated from this repository's own files, so the site never
+// Stages the awesome-humans.net documentation site, ready for Zensical. The .NET
+// ecosystem's pages under /dotnet/ are generated from this repository's own files, so the site never
 // carries a second copy to drift: README.md up to its layout section becomes the overview,
 // opinions/ and skills/ are copied in full, the roster is split into a page per section,
 // and every file under templates/ gets a page showing it. llms.txt at the root points agents
@@ -17,10 +16,19 @@
 // README.md's Scope list, and the skills theirs from its Maintenance via skills table, which
 // validate-readme-index.cs already holds to the opinions and skills directories.
 //
-// Zensical requires the build output inside the directory holding its configuration, so
-// the staged zensical.toml, docs/ and the built public/ all sit under site/build, which is
-// gitignored. site/zensical.toml is the committed configuration this script stages, with
-// the navigation added.
+// It runs in one of two modes:
+//
+// - With --out <dir>, it follows the awesome-humans/website staging contract
+//   (https://github.com/awesome-humans/website#staging-contract): everything goes under
+//   <dir>/dotnet/, with the diagrams in dotnet/assets/, the section's navigation in
+//   nav.json, the roster in sources.json, and this ecosystem's own llms.txt. The website
+//   repository adds the shared pages, the configuration, and the root llms.txt.
+// - With no arguments, it stages the whole site into site/build, as the Site workflow here
+//   deploys it until the website repository takes over: the hand-written pages under
+//   site/pages, llms.txt at the root, and site/zensical.toml with the navigation added.
+//   Zensical requires the build output inside the directory holding its configuration, so
+//   the staged zensical.toml, docs/ and the built public/ all sit under site/build, which is
+//   gitignored.
 //
 // A .NET 10 file-based app. Run it from the repository root, then build or preview the site:
 //
@@ -28,24 +36,49 @@
 //     uvx --with-requirements site/requirements.txt zensical build --strict -f site/build/zensical.toml
 //     uvx --with-requirements site/requirements.txt zensical serve -f site/build/zensical.toml
 //
+// or stage to the contract:
+//
+//     dotnet run scripts/build-site.cs -- --out <dir>
+//
 // Exit codes: 0 staged, 1 a link or file the site needs could not be resolved, 2 not run
-// from the repository root.
+// from the repository root, or arguments it doesn't recognise.
 
 using System.Collections;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using YamlDotNet.Serialization;
 
 const string SiteDirectory = "site";
 const string PagesDirectory = "site/pages";
 const string StagingDirectory = "site/build";
-const string DocsDirectory = "site/build/docs";
-const string DiagramsDirectory = "assets/diagrams";
 const string TemplatesDirectory = "templates";
 const string SkillsDirectory = "skills";
 const string Ecosystem = "dotnet";
 const string EcosystemName = ".NET";
+const string SchemaBase = "https://raw.githubusercontent.com/awesome-humans/website/main/schemas";
 
-if (!Directory.Exists(SiteDirectory) || !Opinions.DirectoryExists)
+// The repository's diagrams, and where they land on the site.
+const string DiagramsDirectory = "assets/diagrams";
+
+string? outDirectory = args switch
+{
+    [] => null,
+    ["--out", string directory] => directory,
+    _ => "",
+};
+if (outDirectory is { Length: 0 })
+{
+    Console.Error.WriteLine("Usage: dotnet run scripts/build-site.cs [-- --out <dir>]");
+    return 2;
+}
+
+bool contract = outDirectory is not null;
+string docsDirectory = outDirectory ?? "site/build/docs";
+string diagramsPage = contract ? $"{Ecosystem}/{DiagramsDirectory}" : DiagramsDirectory;
+
+if ((!contract && !Directory.Exists(SiteDirectory)) || !Opinions.DirectoryExists)
 {
     Console.Error.WriteLine("No site/ or opinions/ directory here. Run this script from the repository root.");
     return 2;
@@ -53,20 +86,27 @@ if (!Directory.Exists(SiteDirectory) || !Opinions.DirectoryExists)
 
 List<string> errors = [];
 
-if (Directory.Exists(DocsDirectory))
+// Under the contract, other ecosystems may already have staged beside this one, so only
+// this ecosystem's directory is cleared.
+string cleared = contract ? Path.Combine(docsDirectory, Ecosystem) : docsDirectory;
+if (Directory.Exists(cleared))
 {
-    Directory.Delete(DocsDirectory, recursive: true);
+    Directory.Delete(cleared, recursive: true);
 }
 
-// Hand-written pages, then the diagrams they and the generated pages show.
-foreach (string file in Directory.EnumerateFiles(PagesDirectory, "*", SearchOption.AllDirectories))
+// Hand-written pages, which belong to the website repository under the contract, then the
+// diagrams they and the generated pages show.
+if (!contract)
 {
-    Write(Path.GetRelativePath(PagesDirectory, file), File.ReadAllText(file));
+    foreach (string file in Directory.EnumerateFiles(PagesDirectory, "*", SearchOption.AllDirectories))
+    {
+        Write(Path.GetRelativePath(PagesDirectory, file), File.ReadAllText(file));
+    }
 }
 
 foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
 {
-    Write($"{DiagramsDirectory}/{Path.GetFileName(file)}", File.ReadAllText(file));
+    Write($"{diagramsPage}/{Path.GetFileName(file)}", File.ReadAllText(file));
 }
 
 // Where each repository file lands on the site. A link to anything else goes to GitHub.
@@ -111,7 +151,7 @@ foreach (string template in templates)
 
 foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
 {
-    pages[Site.Normalise(file)] = $"{DiagramsDirectory}/{Path.GetFileName(file)}";
+    pages[Site.Normalise(file)] = $"{diagramsPage}/{Path.GetFileName(file)}";
 }
 
 // The roster, split so that no page carries all of it. The overview holds the admission
@@ -313,10 +353,15 @@ foreach (Match skill in skills)
 
 Write(pages[SkillsDirectory], string.Concat(skillIndex));
 
-// llms.txt at the site root, per llmstxt.org: a summary and links an agent can follow, to
-// the raw Markdown of each opinion and the raw template files rather than rendered pages.
-// The raw string takes this file's line endings, which a Windows checkout can make CRLF, so
-// the result is normalised to LF like every file the script reads.
+// llms.txt, per llmstxt.org: a summary and links an agent can follow, to the raw Markdown
+// of each opinion and the raw template files rather than rendered pages. Under the contract
+// it describes this ecosystem alone, at /dotnet/llms.txt, and the website repository's root
+// llms.txt links to it. Standalone, it sits at the site root. The raw string takes this
+// file's line endings, which a Windows checkout can make CRLF, so the result is normalised
+// to LF like every file the script reads.
+(string llmsTitle, string llmsSummary, string llmsPage) = contract
+    ? ($"Awesome Humans of {EcosystemName}", "Opinionated best practices for building with .NET, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.", $"{Ecosystem}/llms.txt")
+    : ("Awesome Humans", "Opinionated best practices for each software ecosystem, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.", "llms.txt");
 string opinionLinks = string.Join("\n", Site.ScopeBullet().Matches(readme).Select(bullet =>
     $"- [{bullet.Groups["title"].Value}]({Site.Raw(bullet.Groups["path"].Value)}): {bullet.Groups["summary"].Value.Trim()}"));
 string templateLinks = string.Join("\n", templates.Select(template =>
@@ -324,9 +369,9 @@ string templateLinks = string.Join("\n", templates.Select(template =>
 string skillLinks = string.Join("\n", skills.Select(skill =>
     $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}"));
 string llms = $"""
-    # Awesome Humans
+    # {llmsTitle}
 
-    > Opinionated best practices for each software ecosystem, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.
+    > {llmsSummary}
 
     ## {EcosystemName} opinions
 
@@ -352,13 +397,15 @@ string llms = $"""
     - [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear
 
     """;
-Write("llms.txt", llms.ReplaceLineEndings("\n"));
+Write(llmsPage, llms.ReplaceLineEndings("\n"));
 
-// The navigation, added to the committed configuration as it is staged.
-string Entry(string title, string page) => $"{{ {Site.TomlString(title)} = {Site.TomlString(page)} }}";
-string Section(string title, IEnumerable<string> entries) => $"{{ {Site.TomlString(title)} = [{string.Join(", ", entries)}] }}";
+// The navigation. Standalone, it's added to the committed configuration as it is staged.
+// Under the contract, this ecosystem's section goes to nav.json, with its paths relative to
+// dotnet/, and the website repository places it.
+NavItem Entry(string title, string page) => new NavPage(title, page);
+NavItem Section(string title, IEnumerable<NavItem> entries) => new NavSection(title, [.. entries]);
 
-List<string> opinionEntries = [];
+List<NavItem> opinionEntries = [];
 foreach (Match bullet in Site.ScopeBullet().Matches(readme))
 {
     opinionEntries.Add(Entry(bullet.Groups["title"].Value, pages[bullet.Groups["path"].Value]));
@@ -369,38 +416,69 @@ if (opinionEntries.Count != Opinions.Names().Length)
     errors.Add($"README.md: Scope lists {opinionEntries.Count} opinions but opinions/ holds {Opinions.Names().Length}; run validate-readme-index.cs");
 }
 
-string[] nav =
+NavItem[] ecosystemNav =
 [
-    Entry("Home", "index.md"),
-    Entry("How it works", "how-it-works.md"),
-    Section(EcosystemName,
+    Entry("Overview", pages["README.md"]),
+    Section("Opinions", [Entry("Overview", pages[Opinions.DirectoryName]), .. opinionEntries]),
+    Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
+    Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
+    Section("Awesome humans",
     [
-        Entry("Overview", pages["README.md"]),
-        Section("Opinions", [Entry("Overview", pages[Opinions.DirectoryName]), .. opinionEntries]),
-        Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
-        Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
-        Section("Awesome humans",
-        [
-            Entry("Overview", pages[RosterPath]),
-            Entry("Citable", rosterPages["citable"]),
-            Entry("Watch list", rosterPages["watch-list"]),
-            Entry("Decision log", rosterPages["decision-log"]),
-        ]),
-        Entry("House opinions", pages["HOUSE-OPINIONS.md"]),
+        Entry("Overview", pages[RosterPath]),
+        Entry("Citable", rosterPages["citable"]),
+        Entry("Watch list", rosterPages["watch-list"]),
+        Entry("Decision log", rosterPages["decision-log"]),
     ]),
+    Entry("House opinions", pages["HOUSE-OPINIONS.md"]),
 ];
 
-string config = File.ReadAllText(Path.Combine(SiteDirectory, "zensical.toml")).ReplaceLineEndings("\n");
-const string ProjectTable = "[project]\n";
-int project = config.IndexOf(ProjectTable, StringComparison.Ordinal);
-if (project == -1)
+JsonSerializerOptions json = new() { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+if (contract)
 {
-    errors.Add("site/zensical.toml: no [project] table to add the navigation to");
+    JsonObject navJson = new()
+    {
+        ["$schema"] = $"{SchemaBase}/nav.schema.json",
+        ["version"] = 1,
+        ["nav"] = new JsonArray([.. ecosystemNav.Select(item => item.ToJson($"{Ecosystem}/"))]),
+    };
+    Write($"{Ecosystem}/nav.json", navJson.ToJsonString(json) + "\n");
+
+    JsonArray sources = [];
+    foreach (string bucket in (string[])["citable", "watch-list"])
+    {
+        foreach (Match row in Site.RosterRow().Matches(rosterSections.First(section => section.StartsWith(bucket == "citable" ? "## Citable" : "## Watch list", StringComparison.Ordinal))))
+        {
+            JsonObject? source = Site.Source(row, bucket, roster, errors);
+            if (source is not null)
+            {
+                sources.Add(source);
+            }
+        }
+    }
+
+    JsonObject sourcesJson = new()
+    {
+        ["$schema"] = $"{SchemaBase}/sources.schema.json",
+        ["version"] = 1,
+        ["sources"] = new JsonArray([.. sources.OrderBy(source => (string)source!["id"]!, StringComparer.Ordinal).Select(source => source!.DeepClone())]),
+    };
+    Write($"{Ecosystem}/sources.json", sourcesJson.ToJsonString(json) + "\n");
 }
 else
 {
-    config = config.Insert(project + ProjectTable.Length, "nav = [\n  " + string.Join(",\n  ", nav) + ",\n]\n");
-    File.WriteAllText(Path.Combine(StagingDirectory, "zensical.toml"), config);
+    NavItem[] nav = [Entry("Home", "index.md"), Entry("How it works", "how-it-works.md"), Section(EcosystemName, ecosystemNav)];
+    string config = File.ReadAllText(Path.Combine(SiteDirectory, "zensical.toml")).ReplaceLineEndings("\n");
+    const string ProjectTable = "[project]\n";
+    int project = config.IndexOf(ProjectTable, StringComparison.Ordinal);
+    if (project == -1)
+    {
+        errors.Add("site/zensical.toml: no [project] table to add the navigation to");
+    }
+    else
+    {
+        config = config.Insert(project + ProjectTable.Length, "nav = [\n  " + string.Join(",\n  ", nav.Select(item => item.ToToml())) + ",\n]\n");
+        File.WriteAllText(Path.Combine(StagingDirectory, "zensical.toml"), config);
+    }
 }
 
 foreach (string error in errors)
@@ -413,7 +491,7 @@ if (errors.Count > 0)
     return 1;
 }
 
-Console.WriteLine($"Staged to {StagingDirectory}/");
+Console.WriteLine(contract ? $"Staged to {Path.Combine(docsDirectory, Ecosystem)}/" : $"Staged to {StagingDirectory}/");
 return 0;
 
 // A source id links to its notes section in the roster, or to the citable table when it has
@@ -508,13 +586,89 @@ string Target(string source, string from, string target, bool anchorsToGitHub)
 
 void Write(string page, string content)
 {
-    string path = Path.Combine(DocsDirectory, page);
+    string path = Path.Combine(docsDirectory, page);
     Directory.CreateDirectory(Path.GetDirectoryName(path)!);
     File.WriteAllText(path, content);
 }
 
+// A navigation entry, written as TOML into the standalone configuration or as JSON into the
+// contract's nav.json, where the paths drop the ecosystem's own prefix.
+internal abstract record NavItem(string Title)
+{
+    public abstract string ToToml();
+
+    public abstract JsonNode ToJson(string prefix);
+}
+
+internal sealed record NavPage(string Title, string Page) : NavItem(Title)
+{
+    public override string ToToml() => $"{{ {Site.TomlString(Title)} = {Site.TomlString(Page)} }}";
+
+    public override JsonNode ToJson(string prefix) =>
+        new JsonObject { [Title] = Page.StartsWith(prefix, StringComparison.Ordinal) ? Page[prefix.Length..] : Page };
+}
+
+internal sealed record NavSection(string Title, NavItem[] Items) : NavItem(Title)
+{
+    public override string ToToml() => $"{{ {Site.TomlString(Title)} = [{string.Join(", ", Items.Select(item => item.ToToml()))}] }}";
+
+    public override JsonNode ToJson(string prefix) =>
+        new JsonObject { [Title] = new JsonArray([.. Items.Select(item => item.ToJson(prefix))]) };
+}
+
 internal static partial class Site
 {
+    // One source in the contract's sources.json, from its roster row and the heading of its
+    // notes, which carries the marking. A person's name is the start of their Source link
+    // text, before ": ", " (", or "'s", as AWESOME-HUMANS.md: How the roster is organised
+    // requires. A publication's is the whole link text. Since keeps only its leading year,
+    // so "~2016 (docs.microsoft.com era)" exports as "~2016".
+    public static JsonObject? Source(Match row, string bucket, string roster, List<string> errors)
+    {
+        string id = row.Groups["id"].Value;
+        string kind = row.Groups["kind"].Value;
+        Match link = FirstLink().Match(row.Groups["source"].Value);
+        if (!link.Success)
+        {
+            errors.Add($"AWESOME-HUMANS.md: the Source cell for '{id}' has no link");
+            return null;
+        }
+
+        string text = link.Groups["text"].Value;
+        string name = kind == "person" ? PersonName().Match(text).Groups["name"].Value : text;
+        string since = row.Groups["since"].Value.Trim();
+        Match year = Year().Match(since);
+        if (!year.Success && since != "—")
+        {
+            errors.Add($"AWESOME-HUMANS.md: the Since cell for '{id}' is '{since}', not a year, a ~year, or —");
+        }
+
+        Match heading = Regex.Match(roster, $@"^### `{Regex.Escape(id)}`:(?<rest>.*)$", RegexOptions.Multiline);
+        string? marking = heading.Groups["rest"].Value switch
+        {
+            string rest when rest.Contains("**Corroborate.**", StringComparison.Ordinal) => "corroborate",
+            string rest when rest.Contains("**Discovery-only.**", StringComparison.Ordinal) => "discovery-only",
+            _ => null,
+        };
+
+        JsonObject source = new()
+        {
+            ["id"] = id,
+            ["name"] = name,
+            ["kind"] = kind,
+            ["url"] = link.Groups["url"].Value,
+            ["standing"] = bucket,
+        };
+        if (marking is not null)
+        {
+            source["marking"] = marking;
+        }
+
+        source["focus"] = row.Groups["focus"].Value.Trim();
+        source["since"] = year.Success ? year.Value : null;
+        return source;
+    }
+
     private const string Repository = "awesome-humans/dotnet";
 
     public static string Normalise(string path) => path.Replace('\\', '/');
@@ -587,6 +741,19 @@ internal static partial class Site
     // The id cell that opens a roster table row: | `id` |.
     [GeneratedRegex(@"^\| `(?<id>[a-z0-9-]+)` +\|", RegexOptions.Multiline)]
     public static partial Regex TableId();
+
+    // A whole roster table row: | `id` | Kind | Source | Focus | Since |.
+    [GeneratedRegex(@"^\| `(?<id>[a-z0-9-]+)` +\| (?<kind>person|publication) +\| (?<source>[^|]+)\| (?<focus>[^|]+)\| (?<since>[^|]+)\|$", RegexOptions.Multiline)]
+    public static partial Regex RosterRow();
+
+    [GeneratedRegex(@"\[(?<text>[^\]]+)\]\((?<url>https://[^)\s]+)\)")]
+    private static partial Regex FirstLink();
+
+    [GeneratedRegex(@"^(?<name>.+?)(?::\s| \(|'s\s|$)")]
+    private static partial Regex PersonName();
+
+    [GeneratedRegex(@"^~?\d{4}")]
+    private static partial Regex Year();
 
     [GeneratedRegex("`([^`]+)`")]
     private static partial Regex Code();
