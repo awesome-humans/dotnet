@@ -14,10 +14,6 @@
     // markdownlint reads the trailing # as closed-atx syntax. No way to satisfy
     // it without renaming the languages.
     "MD020": false,
-
-    // .github/PULL_REQUEST_TEMPLATE.md opens at "##" by design — it is a fragment
-    // rendered inside GitHub's PR form, not a standalone document.
-    "MD041": false,
   },
   "globs": ["**/*.md"],
   // .claude/skills is a local symlink to skills/ (see AGENTS.md: Skills), and
