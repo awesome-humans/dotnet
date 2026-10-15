@@ -43,7 +43,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - A demoted source keeps its row, with a note. **Moving a source to the watch list revokes citation, back catalogue included,** and `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:`.
    - So a demotion is finished only when no opinion cites the source. In the same pull request, re-source each affected claim from a citable source, or drop it. To keep the back catalogue citable, annotate the row instead of demoting it.
 5. **Edit in a worktree** on the branch `vet/<source-id>`, or a slug for a multi-source pass, as [AGENTS.md](../../AGENTS.md) describes:
-   1. Update the roster table. Assign a stable kebab-case `id`, and insert the row in ID order.
+   1. Update the roster table. Assign a stable kebab-case `id`, set its Kind to `person` or `publication` as [AWESOME-HUMANS.md: How the roster is organised](../../AWESOME-HUMANS.md#how-the-roster-is-organised) defines, and insert the row in ID order. If the same source is on another awesome-humans ecosystem's roster, use its `id` and Kind there.
    2. Add the source's section under `## Source notes`, also in ID order, with the evidence and any marking, in the verdict-then-labelled-bullets shape the section's introduction describes.
    3. Add the decision to the decision log, in two sentences: the decision and the fact behind it. Put the evidence for each criterion in the pull request.
 6. **Open a pull request** with the evidence for each criterion. A person approves it before the source can feed opinions.

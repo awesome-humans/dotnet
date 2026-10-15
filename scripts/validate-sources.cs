@@ -65,7 +65,7 @@ HashSet<string> reserved = ["house"];
     (WatchBucket, ["## Watch list"]),
 ];
 
-// The roster tables carry only id, Source, Focus and Since. The evidence behind each row,
+// The roster tables carry only id, Kind, Source, Focus and Since. The evidence behind each row,
 // and with it the two markings, lives under '## Source notes', one '### `id`' section per
 // source. Splitting them is what keeps a diff readable: a table row is a short line, and a
 // reworded sentence in a note touches that sentence rather than a 4,000-character row.
@@ -143,11 +143,6 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
     }
 
     string[] cells = [.. line.Trim().Trim('|').Split('|').Select(cell => cell.Trim())];
-    if (cells.Length < 4)
-    {
-        continue;
-    }
-
     Match id = Patterns.SourceId().Match(cells[0]);
     if (!id.Success)
     {
@@ -156,6 +151,17 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
 
     string rowId = id.Groups[1].Value;
     ids.Add(rowId);
+
+    // The site reads the kind to decide whether a source can have a portrait, so a row
+    // missing it, or one the site doesn't know, fails here rather than in the site build.
+    if (cells.Length < 5)
+    {
+        errors.Add($"{RosterPath}: the row for '{rowId}' has {cells.Length} cells, not the 5 of id, Kind, Source, Focus and Since");
+    }
+    else if (cells[1] is not ("person" or "publication"))
+    {
+        errors.Add($"{RosterPath}: the row for '{rowId}' has Kind '{cells[1]}', not 'person' or 'publication'");
+    }
 
     // TryAdd rather than the indexer: two rows sharing an id would otherwise leave the
     // roster holding whichever came last, deciding a source's bucket by row order.
