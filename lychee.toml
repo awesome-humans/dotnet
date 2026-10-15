@@ -21,7 +21,7 @@ max_retries = 3
 
 # Identify as a browser. Several documentation hosts return 403 to default
 # HTTP-client user agents, which would otherwise read as link rot.
-user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/si618/dotnet-awesome-humans)"
+user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/awesome-humans/dotnet)"
 
 # 429 is rate limiting, not a broken link. 403 is usually bot protection on
 # hosts that a human browser reaches fine — checked manually when it appears.
