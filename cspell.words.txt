@@ -58,6 +58,7 @@ idunno
 isolutions
 javascripts
 jeremydmiller
+katex
 Kiota
 labelledby
 Lhotka
