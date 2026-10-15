@@ -4,7 +4,7 @@ description: Sweep the vetted sources in AWESOME-HUMANS.md for new posts and upd
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: branch-pr
 ---
 

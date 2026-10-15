@@ -1,10 +1,10 @@
 ---
 name: verify-project
-description: Check an external .NET project or solution, given a local path or a repository URL, against this repository's opinions and templates, and report deviations with severity and suggested fixes. Use when asked to verify, audit, review, or grade a .NET codebase against dotnet-awesome-humans conventions, or to check whether a project "does what good looks like".
+description: Check an external .NET project or solution, given a local path or a repository URL, against this repository's opinions and templates, and report deviations with severity and suggested fixes. Use when asked to verify, audit, review, or grade a .NET codebase against Awesome Humans of .NET conventions, or to check whether a project "does what good looks like".
 license: See repository LICENSE
 compatibility: Requires read access to the target project; git and internet access for URL targets; .NET SDK helpful but optional
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: report-only
 ---
 

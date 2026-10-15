@@ -4,7 +4,7 @@ description: Detect new .NET, C#, and F# releases and update all opinions and te
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: branch-pr
 ---
 

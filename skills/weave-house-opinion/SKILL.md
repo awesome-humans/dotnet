@@ -4,7 +4,7 @@ description: Weave a repository-owner opinion from HOUSE-OPINIONS.md (or given d
 license: See repository LICENSE
 compatibility: Requires git
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: branch-pr
 ---
 

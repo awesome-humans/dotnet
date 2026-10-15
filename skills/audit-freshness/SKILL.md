@@ -4,7 +4,7 @@ description: Report every resource in this repository whose last-reviewed date h
 license: See repository LICENSE
 compatibility: Requires git; internet access only needed to check latest release versions
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: report-only
 ---
 

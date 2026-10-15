@@ -4,7 +4,7 @@ description: Evaluate a candidate source (blog, author, documentation site, news
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: branch-pr
 ---
 
