@@ -1,6 +1,6 @@
 # Agent instructions
 
-This repository defines opinionated best practices for modern .NET development. This file tells an AI agent how to _use_ the repository as a reference and how to _maintain_ it.
+This repository defines opinionated best practices for building with .NET. This file tells an AI agent how to _use_ the repository as a reference and how to _maintain_ it.
 
 ## What this repository is
 
