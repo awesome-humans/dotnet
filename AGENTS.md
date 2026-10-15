@@ -236,7 +236,7 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 
 ### Formatting and linting
 
-- Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc`. The configuration uses the defaults minus three rules that conflict with the prose style, and records why.
+- Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc`. The configuration uses the defaults minus two rules that conflict with the prose style, and records why.
 - Spelling follows cspell, configured in `cspell.jsonc` with the `en-GB` dictionary, the .NET dictionaries, and the repository's own word list in `cspell.words.txt`. The .NET dictionaries accept American spellings because API names use them, such as `Behavior` and `Color`, so the configuration flags them in Markdown prose. Editors with a cspell extension read the same configuration.
 - Run `npm run format` to format, and `npm run check` to check formatting, lint, and spelling together. All three use the versions pinned in `package.json`. Don't run `npx prettier`, `npx markdownlint-cli2`, or `npx cspell` directly, because they resolve the latest version.
 - Run `npm run verify` before you open a pull request. It runs `npm run check` and the scripts in `scripts/` that CI runs, and redraws the diagrams. See [README.md: Repository scripts](README.md#repository-scripts).
