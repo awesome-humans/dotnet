@@ -1,0 +1,39 @@
+name: Site dispatch
+
+# Tells awesome-humans/website that main changed here, so its Site workflow rebuilds
+# awesome-humans.net with the new /dotnet/ pages. The dispatch carries no content:
+# website fetches every ecosystem at main itself.
+#
+# It sends the dispatch as the organisation's awesome-humans-app, with a short-lived token
+# limited to the website repository. The APP_ID variable and APP_PRIVATE_KEY secret are
+# set on the organisation.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      # app-id is deprecated in v3 in favour of client-id. Switch when the organisation
+      # has an APP_CLIENT_ID variable.
+      - name: Mint an app token for website
+        id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: awesome-humans
+          repositories: website
+          permission-contents: write
+
+      - name: Send ecosystem-updated to website
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          gh api repos/awesome-humans/website/dispatches --input - <<EOF
+          {"event_type": "ecosystem-updated", "client_payload": {"ecosystem": "dotnet", "sha": "$GITHUB_SHA"}}
+          EOF
