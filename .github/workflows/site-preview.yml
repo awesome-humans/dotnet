@@ -3,7 +3,7 @@ name: Site preview
 # Builds the whole awesome-humans.net site with this pull request's head commit as the
 # /dotnet/ section and every other ecosystem at main, and deploys it as a preview at its
 # own URL. awesome-humans/website owns the build and the deploy; this repository only
-# stages its pages, as README.md: Site describes. A pull request from a fork builds
+# stages its pages, as AGENTS.md: Site describes. A pull request from a fork builds
 # without deploying, because it gets no secrets.
 on:
   pull_request:

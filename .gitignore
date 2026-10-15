@@ -1,4 +1,5 @@
-# Build artifacts from smoke-testing the example projects in templates/
+# Build artifacts from smoke-testing the example projects in templates/, and the
+# pages `npm run verify` stages with build-site.cs
 artifacts/
 bin/
 obj/
@@ -23,7 +24,3 @@ node_modules/
 
 # lychee link-check result cache
 .lycheecache
-site/build/
-
-# Wrangler's local state from `wrangler dev` and dry runs
-site/.wrangler/

@@ -37,10 +37,10 @@ exclude_path = [
   "templates/artifacts",
   "templates/projects/obj",
   "templates/projects/bin",
-  # Links in the site's hand-written pages are relative to the built site, not to
-  # the repository, so only the strict site build can check them. site/build is the
-  # generated site, when one has been built locally.
-  "site",
+  # Links in the pages `npm run verify` stages into artifacts/site are relative to
+  # the built site, not to the repository, so only awesome-humans/website's strict
+  # build can check them.
+  "artifacts",
 ]
 
 # Example URLs that are illustrative and not meant to resolve.

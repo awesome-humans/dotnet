@@ -22,6 +22,7 @@
   "globs": ["**/*.md"],
   // .claude/skills is a local symlink to skills/ (see AGENTS.md: Skills), and
   // markdownlint follows symlinks, so linting it reports every finding twice.
-  // site/build is the staged site, generated from files already linted at source.
-  "ignores": ["node_modules", ".claude", "site/build"],
+  // artifacts/site holds the pages `npm run verify` stages, generated from files
+  // already linted at source.
+  "ignores": ["node_modules", ".claude", "artifacts"],
 }
