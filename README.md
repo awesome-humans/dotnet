@@ -1,6 +1,6 @@
 # dotnet-awesome-humans
 
-Opinionated best practices for modern .NET.
+Opinionated best practices for building with .NET.
 
 It distils the guidance of awesome humans, listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET. It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
 
