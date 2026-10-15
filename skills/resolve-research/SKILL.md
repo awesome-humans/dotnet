@@ -4,7 +4,7 @@ description: Resolve a saved research topic in research/ by weaving its recommen
 license: See repository LICENSE
 compatibility: Requires git; internet access only needed to re-verify a stale research topic's claims
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: branch-pr
 ---
 

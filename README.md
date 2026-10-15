@@ -1,4 +1,4 @@
-# dotnet-awesome-humans
+# Awesome Humans of .NET
 
 Opinionated best practices for building with .NET.
 

@@ -4,7 +4,7 @@ description: Research a .NET topic conversationally using this repository's opin
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
-  repo: dotnet-awesome-humans
+  repo: awesome-humans/dotnet
   change-flow: branch-pr
 ---
 
