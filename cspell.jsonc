@@ -28,13 +28,13 @@
   ],
 
   "useGitignore": true,
-  // .claude/skills is a local symlink to skills/, and site/build is generated
+  // .claude/skills is a local symlink to skills/, and artifacts/site is generated
   // from files already checked at source (see .markdownlint-cli2.jsonc).
   // The others are machine-written.
   "ignorePaths": [
     "node_modules",
     ".claude",
-    "site/build",
+    "artifacts",
     "package-lock.json",
     ".github/state",
     "assets/diagrams",
