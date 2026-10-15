@@ -515,7 +515,7 @@ void Write(string page, string content)
 
 internal static partial class Site
 {
-    private const string Repository = "si618/dotnet-awesome-humans";
+    private const string Repository = "awesome-humans/dotnet";
 
     public static string Normalise(string path) => path.Replace('\\', '/');
 

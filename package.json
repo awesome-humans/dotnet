@@ -1,5 +1,5 @@
 {
-  "name": "dotnet-awesome-humans",
+  "name": "awesome-humans-dotnet",
   "private": true,
   "description": "Markdown and configuration formatting for this repository. Not a published package — the repository ships opinions, templates, and skills, not JavaScript.",
   "scripts": {

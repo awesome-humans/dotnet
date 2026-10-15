@@ -12,8 +12,8 @@
 site_name = "Awesome Humans"
 site_description = "What good looks like in each ecosystem, distilled from people with a proven track record of writing about it."
 site_url = "https://awesome-humans.net/"
-repo_url = "https://github.com/si618/dotnet-awesome-humans"
-repo_name = "si618/dotnet-awesome-humans"
+repo_url = "https://github.com/awesome-humans/dotnet"
+repo_name = "awesome-humans/dotnet"
 docs_dir = "docs"
 site_dir = "public"
 extra_css = ["stylesheets/extra.css"]
