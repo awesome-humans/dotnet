@@ -71,7 +71,7 @@ internal static class Pipeline
     private static readonly Row[] Rows =
     [
         new("sources", ["candidate source,", "or a standing change"], "vet-source", "vet/<source-id>", "check evidence", ["roster row, notes,", "decision log entry"], "roster"),
-        new("research", ["a .NET question"], "research-topic", "research/<topic>", "review", ["cited topic,", "last-used bumps"], "research"),
+        new("research", ["a question", "on a topic"], "research-topic", "research/<topic>", "review", ["cited topic,", "last-used bumps"], "research"),
         new("research", ["topic saved in", "research/"], "resolve-research", "resolve/<topic>", "approve weave", ["promoted or discarded,", "topic deleted"], "opinions"),
         new("opinions", ["monthly harvest", "reminder issue"], "harvest-sources", "harvest/<date>", "review", ["edits traced to", "roster sources"], "opinions"),
         new("opinions", ["release-watch PR,", "or a newer pin"], "refresh-dotnet-versions", "refresh/dotnet-<version>", "review", ["new targets", "and pins"], "opinions"),
