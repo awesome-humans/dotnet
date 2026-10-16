@@ -6,25 +6,25 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 
 ## Usage
 
-**Point your agent at it.** Tell your coding agent to follow the opinions when it writes code:
+- **Point your agent at it.** Tell your coding agent to follow the opinions when it writes code:
 
-```text title="Prompt"
-Follow the conventions at awesome-humans.net when writing .NET code
-```
+  ```text title="Prompt"
+  Follow the conventions at awesome-humans.net when writing .NET code
+  ```
 
-The opinions cover conventions, project layout, language usage, and library choices.
+  The opinions cover conventions, project layout, language usage, and library choices.
 
-**Check an existing project.** Ask your coding agent to run [`verify-project`](skills/verify-project/SKILL.md):
+- **Check an existing project.** Ask your coding agent to run [`verify-project`](skills/verify-project/SKILL.md):
 
-```text title="Prompt"
-Use the verify project skill at awesome-humans.net against <repo>
-```
+  ```text title="Prompt"
+  Use the verify project skill at awesome-humans.net against <repo>
+  ```
 
-To narrow the review, say so in the request, such as "focus on testing".
+  To narrow the review, say so in the request, such as "focus on testing".
 
-**Start a project from the templates.** Copy the files in [`templates/`](templates) into a new project, and trim what you don't need.
+- **Start a project from the templates.** Copy the files in [`templates/`](templates) into a new project, and trim what you don't need.
 
-**Read the opinions.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives the recommendation, then the rationale, then the sources, with code where it helps.
+- **Read the opinions.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives the recommendation, then the rationale, then the sources, with code where it helps.
 
 ## Scope
 
