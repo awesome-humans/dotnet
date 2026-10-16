@@ -63,8 +63,10 @@ Kiota
 labelledby
 Lhotka
 linted
+linters
 llms
 llmstxt
+lockfiles
 lycheecache
 lycheeverse
 Maarten
@@ -140,3 +142,4 @@ Worktrees
 Xamarin
 xunit
 YARP
+zizmor
