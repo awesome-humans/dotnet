@@ -1,8 +1,8 @@
 # Awesome Humans of .NET
 
-Opinionated best practices for building with .NET.
+A modern take on the curated awesome-\* list, for coding agents. Instead of links, it distils what proven .NET writers recommend into opinions your agent can follow, each one citing its sources.
 
-It distils the guidance of awesome humans, listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET. It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
+The writers are the awesome humans listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET. It answers _"What does good look like in .NET right now?"_, and updates the answer as .NET changes.
 
 ## Usage
 
