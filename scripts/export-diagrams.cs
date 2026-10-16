@@ -149,12 +149,12 @@ internal static class Pipeline
             if (row.Branch is not null)
             {
                 s.Add(Svg.Arrow(XSkill + WSkill, cy, XAgentGate - 2, cy));
-                s.Add(Svg.Rect(XAgentGate, cy - GateHalf, WAgentGate, GateHalf * 2, GateHalf, "check"));
+                s.Add(Svg.Rect(XAgentGate, cy - GateHalf, WAgentGate, GateHalf * 2, 6, "check"));
                 s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy - 3, "CI: metadata,", "check-t", "middle"));
                 s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy + 13, "sources, links", "check-t", "middle"));
                 s.Add(Svg.Arrow(XAgentGate + WAgentGate, cy, XHumanGate - GateHalf - 2, cy));
 
-                // The human gate is a diamond the height of the agent gate's capsule.
+                // The human gate is a diamond the height of the agent gate's box.
                 s.Add(Svg.Diamond(XHumanGate, cy, GateHalf, "gate"));
                 s.Add(Svg.Arrow(XHumanGate + GateHalf, cy, XLandsIn - 2, cy));
                 s.Add(Svg.Text(XHumanGate + GateHalf + 8, cy - 9, row.HumanGate, "gate-t"));
