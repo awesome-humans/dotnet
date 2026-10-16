@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg role="img" aria-labelledby="title desc" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1104 320"><title id="title">Research lifecycle</title><desc id="desc">Flow diagram: research-topic opens a pull request that saves research/&lt;topic&gt;.md; resolve-research then promotes it into the opinions and templates, discards it, or promotes part of it, deleting the topic in the same pull request. A blocked remainder stays staged and goes back through resolve-research once vet-source clears the source it waits on.</desc><style>
-svg { --bg: #f5f6f8; --surface: #ffffff; --band: #eceef2; --fg: #16181d; --muted: #5b6170; --line: #bcc1cc;
-  --accent: #512bd4; --human: #b4534f; --auto: #1d4ed8;
-  --sources: #0f766e; --research: #0369a1; --opinions: #512bd4; --reports: #b45309; }
-@media (prefers-color-scheme: dark) { svg { --bg: #0f1115; --surface: #171a21; --band: #1e222b; --fg: #e6e8ee; --muted: #9aa1b2; --line: #3a404d;
-  --accent: #a48bff; --human: #e8948f; --auto: #60a5fa;
-  --sources: #2dd4bf; --research: #38bdf8; --opinions: #a48bff; --reports: #fbbf24; } }
+svg { --bg: #ffffff; --surface: #f6f7f8; --band: #eef0f2; --fg: #0d1117; --muted: #5b6572; --line: #e3e6ea;
+  --accent: #087d4e; --human: #9a6100; --auto: #087d4e;
+  --sources: var(--accent); --research: var(--accent); --opinions: var(--accent); --reports: var(--muted); }
+@media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --surface: #151a21; --band: #1c232c; --fg: #e8ecf0; --muted: #8b95a1; --line: #2a323c;
+  --accent: #3dd392; --human: #f2c14e; --auto: #3dd392;
+  --sources: var(--accent); --research: var(--accent); --opinions: var(--accent); --reports: var(--muted); } }
 
-.t, .tb, .ts, .gate-t, .check-t { font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", "Helvetica Neue", Arial, sans-serif; }
-.tm, .th { font-family: "Cascadia Mono", Consolas, "Noto Sans Mono", "DejaVu Sans Mono", Menlo, monospace; }.bg { fill: var(--bg); }
+.t, .tb, .ts, .gate-t, .check-t { font-family: "IBM Plex Sans", "Segoe UI", "Noto Sans", "DejaVu Sans", "Helvetica Neue", Arial, sans-serif; }
+.tm, .th { font-family: "IBM Plex Mono", "Cascadia Mono", Consolas, "Noto Sans Mono", "DejaVu Sans Mono", Menlo, monospace; }.bg { fill: var(--bg); }
 .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
 .chip { fill: var(--band); stroke: none; }
 .ext { fill: var(--band); stroke: var(--muted); stroke-width: 1.2; }
 .store { fill: var(--band); stroke: var(--line); stroke-width: 1.2; }
-.t { fill: var(--fg); font-weight: 500; font-size: 12.5px; }
-.tb { fill: var(--fg); font-weight: 600; font-size: 14px; letter-spacing: .02em; }
-.tm { fill: var(--fg); font-weight: 600; font-size: 12.5px; }
-.ts { fill: var(--muted); font-weight: 400; font-size: 11.5px; }
-.th { fill: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.t { fill: var(--fg); font-weight: 500; font-size: 14px; }
+.tb { fill: var(--fg); font-weight: 600; font-size: 15px; letter-spacing: .02em; }
+.tm { fill: var(--fg); font-weight: 600; font-size: 14px; }
+.ts { fill: var(--muted); font-weight: 400; font-size: 13px; }
+.th { fill: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 .edge { stroke: var(--muted); stroke-width: 1.4; fill: none; }
 .edge.dash { stroke-dasharray: 4 4; }
 .arrowhead { fill: var(--muted); }
 .gate { fill: var(--surface); stroke: var(--human); stroke-width: 2; }
-.gate-t { fill: var(--human); font-weight: 600; font-size: 11.5px; }
+.gate-t { fill: var(--human); font-weight: 600; font-size: 13px; }
 .check { fill: var(--surface); stroke: var(--auto); stroke-width: 2; }
-.check-t { fill: var(--auto); font-weight: 600; font-size: 11.5px; }
+.check-t { fill: var(--auto); font-weight: 600; font-size: 13px; }
 .decision { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
 
 </style><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs><rect width="1104" height="320" rx="10" class="bg"/><rect x="24" y="108" width="196" height="64" rx="8" class="box"/><text x="40" y="137" class="tm" text-anchor="start">research-topic</text><text x="40" y="155" class="ts" text-anchor="start">cited, on research/&lt;topic&gt;</text><line x1="220" y1="140" x2="298" y2="140" class="edge" marker-end="url(#ah)"/><text x="260" y="132" class="ts" text-anchor="middle">PR merges</text><rect x="300" y="108" width="210" height="64" rx="8" class="store"/><text x="316" y="137" class="tm" text-anchor="start">research/&lt;topic&gt;.md</text><text x="316" y="155" class="ts" text-anchor="start">on record, unresolved</text><line x1="510" y1="140" x2="562" y2="140" class="edge" marker-end="url(#ah)"/><path d="M600 104L636 140L600 176L564 140z" class="decision"/><text x="600" y="92" class="tm" text-anchor="middle">resolve-research</text><text x="600" y="144" class="ts" text-anchor="middle">own PR</text><line x1="636" y1="140" x2="680" y2="140" class="edge"/><path d="M680 140V68H718" class="edge" marker-end="url(#ah)"/><rect x="720" y="40" width="360" height="56" rx="8" class="box"/><rect x="720" y="40" width="4" height="56" rx="2" fill="var(--accent)"/><text x="736" y="65" class="tb" text-anchor="start">Promote</text><text x="736" y="83" class="ts" text-anchor="start">opinions and templates updated, topic deleted</text><path d="M680 140V140H718" class="edge" marker-end="url(#ah)"/><rect x="720" y="112" width="360" height="56" rx="8" class="ext"/><text x="736" y="137" class="tb" text-anchor="start">Discard</text><text x="736" y="155" class="ts" text-anchor="start">nothing woven, topic deleted</text><path d="M680 140V212H718" class="edge" marker-end="url(#ah)"/><rect x="720" y="184" width="360" height="56" rx="8" class="ext"/><text x="736" y="209" class="tb" text-anchor="start">Partial promotion</text><text x="736" y="227" class="ts" text-anchor="start">the rest woven, the blocked remainder stays staged</text><path d="M900 240V292H600V178" class="edge dash" marker-end="url(#ah)"/><text x="750" y="284" class="ts" text-anchor="middle">once vet-source clears its source</text></svg>
