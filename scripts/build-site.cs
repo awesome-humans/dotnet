@@ -41,6 +41,9 @@ const string Ecosystem = "dotnet";
 const string EcosystemName = ".NET";
 const string SchemaBase = "https://raw.githubusercontent.com/awesome-humans/website/main/schemas";
 
+// Days after its last-reviewed date that an opinion counts as stale, from audit-freshness.
+const int OpinionTolerance = 180;
+
 // The repository's diagrams, and where they land on the site.
 const string DiagramsDirectory = "assets/diagrams";
 
@@ -217,8 +220,12 @@ foreach ((string page, string text) in rosterText)
 
 Write(pages["HOUSE-OPINIONS.md"], Rewrite("HOUSE-OPINIONS.md", File.ReadAllText("HOUSE-OPINIONS.md")));
 
-// Opinions, each with a line under its title giving the metadata from its frontmatter.
+// Opinions, each with the design system's OpinionMeta strip under its title, from its
+// frontmatter: a paragraph marked { .ah-meta }, as the staging contract defines. The
+// freshness chip turns stale past audit-freshness's 180-day tolerance, counted from the
+// day the site is staged, which the weekly rebuild keeps current.
 IDeserializer deserializer = new DeserializerBuilder().Build();
+DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow);
 foreach (string name in Opinions.Names())
 {
     string path = Opinions.PathOf(name);
@@ -229,11 +236,18 @@ foreach (string name in Opinions.Names())
         continue;
     }
 
-    string line = string.Join(
-        " · ",
-        $"**Targets:** {string.Join(", ", Site.List(meta["targets"]).Select(target => $"`{target}`"))}",
-        $"**Last reviewed:** {meta["last-reviewed"]}",
-        $"**Sources:** {string.Join(", ", Site.List(meta["sources"]).Select(id => SourceLink(path, id)))}");
+    if (!DateOnly.TryParseExact($"{meta["last-reviewed"]}", "yyyy-MM-dd", out DateOnly reviewed))
+    {
+        errors.Add($"{path}: last-reviewed isn't a YYYY-MM-DD date");
+        continue;
+    }
+
+    string freshness = today.DayNumber - reviewed.DayNumber > OpinionTolerance ? "stale" : "fresh";
+    string line = string.Concat(
+        MetaItem("Targets", string.Join(" ", Site.List(meta["targets"]).Select(target => $"`{target}`"))),
+        MetaItem("Last reviewed", $"{reviewed:yyyy-MM-dd} <span class=\"ah-chip ah-chip--{freshness} ah-chip--dot\">{freshness}</span>"),
+        MetaItem("Sources", string.Join(" ", Site.List(meta["sources"]).Select(id => $"{SourceLink(path, id)}{{ .ah-chip }}"))))
+        + "\n{ .ah-meta }";
     string text = Rewrite(path, File.ReadAllText(path));
     int title = text.IndexOf("\n# ", StringComparison.Ordinal);
     int titleEnd = text.IndexOf('\n', title + 1);
@@ -438,6 +452,10 @@ return 0;
 
 // A source id links to its notes section in the roster, or to the citable table when it has
 // nothing to record and so no section, and house links to the house opinions.
+// One labelled group in an opinion's metadata strip. Markdown inside the span still renders.
+static string MetaItem(string label, string values) =>
+    $"<span class=\"ah-meta__item\"><span class=\"ah-label\">{label}</span> {values}</span>";
+
 string SourceLink(string path, string id)
 {
     string from = Path.GetDirectoryName(path) ?? "";
