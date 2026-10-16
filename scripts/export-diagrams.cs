@@ -71,7 +71,7 @@ internal static class Pipeline
     private static readonly Row[] Rows =
     [
         new("sources", ["candidate source,", "or a standing change"], "vet-source", "vet/<source-id>", "check evidence", ["roster row, notes,", "decision log entry"], "roster"),
-        new("research", ["a .NET question"], "research-topic", "research/<topic>", "review", ["cited topic,", "last-used bumps"], "research"),
+        new("research", ["a question", "on a topic"], "research-topic", "research/<topic>", "review", ["cited topic,", "last-used bumps"], "research"),
         new("research", ["topic saved in", "research/"], "resolve-research", "resolve/<topic>", "approve weave", ["promoted or discarded,", "topic deleted"], "opinions"),
         new("opinions", ["monthly harvest", "reminder issue"], "harvest-sources", "harvest/<date>", "review", ["edits traced to", "roster sources"], "opinions"),
         new("opinions", ["release-watch PR,", "or a newer pin"], "refresh-dotnet-versions", "refresh/dotnet-<version>", "review", ["new targets", "and pins"], "opinions"),
@@ -291,7 +291,7 @@ internal static class Research
     private const string Title = "Research lifecycle";
 
     private const string Description =
-        "Flow diagram: research-topic opens a pull request that saves research/{topic}.md; resolve-research then promotes it into the opinions and templates, " +
+        "Flow diagram: research-topic opens a pull request that saves research/<topic>.md; resolve-research then promotes it into the opinions and templates, " +
         "discards it, or promotes part of it, deleting the topic in the same pull request. A blocked remainder stays staged and goes back through resolve-research " +
         "once vet-source clears the source it waits on.";
 
@@ -317,7 +317,7 @@ internal static class Research
             Svg.Node(TopicX, CenterY - 32, TopicWidth, 64, "research-topic", "cited, on research/<topic>", titleCls: "tm"),
             Svg.Arrow(TopicX + TopicWidth, CenterY, StagedX - 2, CenterY),
             Svg.Text((TopicX + TopicWidth + StagedX) / 2, CenterY - 8, "PR merges", "ts", "middle"),
-            Svg.Node(StagedX, CenterY - 32, StagedWidth, 64, "research/{topic}.md", "on record, unresolved", cls: "store", titleCls: "tm"),
+            Svg.Node(StagedX, CenterY - 32, StagedWidth, 64, "research/<topic>.md", "on record, unresolved", cls: "store", titleCls: "tm"),
             Svg.Arrow(StagedX + StagedWidth, CenterY, ResolveX - ResolveHalf - 2, CenterY),
             Svg.Diamond(ResolveX, CenterY, ResolveHalf, "decision"),
             Svg.Text(ResolveX, CenterY - ResolveHalf - 12, "resolve-research", "tm", "middle"),
@@ -352,8 +352,8 @@ internal static class Svg
 
     private const string TokensDark = """
         --bg: #0f1115; --surface: #171a21; --band: #1e222b; --fg: #e6e8ee; --muted: #9aa1b2; --line: #3a404d;
-          --accent: #a08cf0; --human: #e8948f; --auto: #60a5fa;
-          --sources: #2dd4bf; --research: #38bdf8; --opinions: #a08cf0; --reports: #fbbf24;
+          --accent: #a48bff; --human: #e8948f; --auto: #60a5fa;
+          --sources: #2dd4bf; --research: #38bdf8; --opinions: #a48bff; --reports: #fbbf24;
         """;
 
     // Font families are literal rather than custom properties, and set apart from size and
