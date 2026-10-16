@@ -9,8 +9,10 @@
 // CI reruns it and fails when the committed SVGs differ from what it draws.
 //
 // Each diagram is data at the top of its class, rows or nodes with their labels, and layout
-// code below. Text uses system fonts, so a diagram makes no third-party requests, and colours
-// follow the reader's light or dark preference through prefers-color-scheme. Every diagram
+// code below. Colours and fonts come from the Awesome Humans design system, so these match the
+// diagrams on awesome-humans.net. Text names IBM Plex where the reader has it installed and
+// falls back to system fonts, so a diagram makes no third-party requests. Colours follow the
+// reader's light or dark preference through prefers-color-scheme. Every diagram
 // paints its own background, because GitHub can show a README in a theme other than the
 // operating system's, and a transparent diagram would then put light text on a light page.
 //
@@ -48,7 +50,6 @@ internal sealed record Row(
     string Skill,
     string? Branch,
     string HumanGate,
-    string[] HandsOff,
     string LandsIn);
 
 internal static class Pipeline
@@ -70,27 +71,26 @@ internal static class Pipeline
 
     private static readonly Row[] Rows =
     [
-        new("sources", ["candidate source,", "or a standing change"], "vet-source", "vet/<source-id>", "check evidence", ["roster row, notes,", "decision log entry"], "roster"),
-        new("research", ["a question", "on a topic"], "research-topic", "research/<topic>", "review", ["cited topic,", "last-used bumps"], "research"),
-        new("research", ["topic saved in", "research/"], "resolve-research", "resolve/<topic>", "approve weave", ["promoted or discarded,", "topic deleted"], "opinions"),
-        new("opinions", ["monthly harvest", "reminder issue"], "harvest-sources", "harvest/<date>", "review", ["edits traced to", "roster sources"], "opinions"),
-        new("opinions", ["release-watch PR,", "or a newer pin"], "refresh-dotnet-versions", "refresh/dotnet-<version>", "review", ["new targets", "and pins"], "opinions"),
-        new("opinions", ["HOUSE-OPINIONS.md", "inbox entry"], "weave-house-opinion", "house/<slug>", "confirm wording", ["edits marked", "House:"], "opinions"),
-        new("reports", ["periodic cadence"], "audit-freshness", null, "", ["drifted dates,", "lagging targets, pins"], "report"),
-        new("reports", ["a project path", "or repository URL"], "verify-project", null, "", ["deviations with", "severity and fixes"], "report"),
+        new("sources", ["candidate source,", "or a standing change"], "vet-source", "vet/<source-id>", "check evidence", "roster"),
+        new("research", ["a question", "on a topic"], "research-topic", "research/<topic>", "review", "research"),
+        new("research", ["topic saved in", "research/"], "resolve-research", "resolve/<topic>", "approve weave", "opinions"),
+        new("opinions", ["monthly harvest", "reminder issue"], "harvest-sources", "harvest/<date>", "review", "opinions"),
+        new("opinions", ["release-watch PR,", "or a newer pin"], "refresh-dotnet-versions", "refresh/dotnet-<version>", "review", "opinions"),
+        new("opinions", ["HOUSE-OPINIONS.md", "inbox entry"], "weave-house-opinion", "house/<slug>", "confirm wording", "opinions"),
+        new("reports", ["periodic cadence"], "audit-freshness", null, "", "report"),
+        new("reports", ["a project path", "or repository URL"], "verify-project", null, "", "report"),
     ];
 
     // Columns, left to right, and the height of one row.
-    private const double XBand = 12, WBand = 100;
-    private const double XBracket = 122;
-    private const double XPicksUp = 132, WPicksUp = 160;
-    private const double XSkill = 318, WSkill = 200;
-    private const double XAgentGate = 544, WAgentGate = 112;
-    private const double XHumanGate = 700;
-    private const double XHandsOff = 840, WHandsOff = 170;
-    private const double XLandsIn = 1034, WLandsIn = 170;
-    private const double Width = 1220;
-    private const double RowHeight = 60;
+    private const double XBand = 12, WBand = 104;
+    private const double XBracket = 126;
+    private const double XPicksUp = 136, WPicksUp = 180;
+    private const double XSkill = 342, WSkill = 236;
+    private const double XAgentGate = 604, WAgentGate = 128;
+    private const double XHumanGate = 774;
+    private const double XLandsIn = 934, WLandsIn = 200;
+    private const double Width = 1148;
+    private const double RowHeight = 64;
 
     public static string Build()
     {
@@ -116,7 +116,7 @@ internal static class Pipeline
         foreach ((double x, string label) in new (double, string)[]
         {
             (XBand, "lane"), (XPicksUp, "picks up"), (XSkill, "skill"), (XAgentGate, "agent gate"),
-            (XHumanGate - 17, "human gate"), (XHandsOff, "hands off"), (XLandsIn, "lands in"),
+            (XHumanGate - 17, "human gate"), (XLandsIn, "lands in"),
         })
         {
             s.Add(Svg.Text(x, 24, label, "th"));
@@ -149,24 +149,20 @@ internal static class Pipeline
             {
                 s.Add(Svg.Arrow(XSkill + WSkill, cy, XAgentGate - 2, cy));
                 s.Add(Svg.Rect(XAgentGate, cy - 17, WAgentGate, 34, 17, "check"));
-                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy - 1, "CI: metadata,", "check-t", "middle"));
-                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy + 12, "sources, links", "check-t", "middle"));
+                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy - 2, "CI: metadata,", "check-t", "middle"));
+                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy + 13, "sources, links", "check-t", "middle"));
                 s.Add(Svg.Arrow(XAgentGate + WAgentGate, cy, XHumanGate - 19, cy));
 
                 // The human gate is a diamond the height of the agent gate's capsule.
                 s.Add(Svg.Diamond(XHumanGate, cy, 17, "gate"));
-                s.Add(Svg.Arrow(XHumanGate + 17, cy, XHandsOff - 2, cy));
+                s.Add(Svg.Arrow(XHumanGate + 17, cy, XLandsIn - 2, cy));
                 s.Add(Svg.Text(XHumanGate + 26, cy - 8, row.HumanGate, "gate-t"));
             }
             else
             {
-                s.Add(Svg.Arrow(XSkill + WSkill, cy, XHandsOff - 2, cy, dash: true));
-                s.Add(Svg.Text((XAgentGate + XHandsOff) / 2, cy - 7, "no pull request", "ts", "middle"));
+                s.Add(Svg.Arrow(XSkill + WSkill, cy, XLandsIn - 2, cy, dash: true));
+                s.Add(Svg.Text((XAgentGate + XLandsIn) / 2, cy - 8, "no pull request", "ts", "middle"));
             }
-
-            s.Add(Svg.Rect(XHandsOff, y0 + 6, WHandsOff, RowHeight - 12, 6, "chip"));
-            s.Add(Svg.Lines(XHandsOff + 12, cy, row.HandsOff));
-            s.Add(Svg.Arrow(XHandsOff + WHandsOff, cy, XLandsIn - 2, cy));
         }
 
         // Each destination is one store spanning the rows that land in it.
@@ -181,24 +177,24 @@ internal static class Pipeline
             int[] rows = [.. Enumerable.Range(0, Rows.Length).Where(i => Rows[i].LandsIn == key)];
             double top = ys[rows[0]] + 4, bottom = ys[rows[^1]] + RowHeight - 4;
             s.Add(Svg.Rect(XLandsIn, top, WLandsIn, bottom - top, 6, cls));
-            double ty = ((top + bottom) / 2) - (lines.Length * 9) + 4;
+            double ty = ((top + bottom) / 2) - (lines.Length * 10) + 5;
             for (int l = 0; l < lines.Length; l++)
             {
-                s.Add(Svg.Text(XLandsIn + 12, ty + (l * 18), lines[l], key == "report" ? "tb" : "tm"));
+                s.Add(Svg.Text(XLandsIn + 14, ty + (l * 20), lines[l], key == "report" ? "tb" : "tm"));
             }
 
-            s.Add(Svg.Text(XLandsIn + 12, ty + (lines.Length * 18), subtitle, "ts"));
+            s.Add(Svg.Text(XLandsIn + 14, ty + (lines.Length * 20), subtitle, "ts"));
         }
 
         // The loop: a report's findings, with the scheduled workflows and the owner, start
         // the next run in whichever row it belongs to.
         double loopY = rowsBottom + 56;
-        const double StartX = 586, StartWidth = 360;
+        const double StartX = 480, StartWidth = 420;
         s.Add(Svg.PathArrow($"M{Svg.N(XLandsIn + (WLandsIn / 2))} {Svg.N(rowsBottom - 4)}V{Svg.N(loopY)}H{Svg.N(StartX + StartWidth + 2)}"));
         s.Add(Svg.Text(XLandsIn + (WLandsIn / 2) - 8, loopY - 8, "findings", "ts", "end"));
-        s.Add(Svg.Rect(StartX, loopY - 30, StartWidth, 60, 6, "box"));
-        s.Add(Svg.Text(StartX + 14, loopY - 4, "What starts a run", "tb"));
-        s.Add(Svg.Text(StartX + 14, loopY + 14, "findings, the release watch, the harvest reminder, you", "ts"));
+        s.Add(Svg.Rect(StartX, loopY - 32, StartWidth, 64, 6, "box"));
+        s.Add(Svg.Text(StartX + 16, loopY - 4, "What starts a run", "tb"));
+        s.Add(Svg.Text(StartX + 16, loopY + 16, "findings, the release watch, the harvest reminder, you", "ts"));
         s.Add($"<path d=\"M{Svg.N(StartX)} {Svg.N(loopY)}H{Svg.N(XBracket)}V{Svg.N(ys[0] + (RowHeight / 2))}\" class=\"edge\"/>");
         s.Add(Svg.Text((StartX + XBracket) / 2, loopY - 8, "starts the next skill", "ts", "middle"));
         foreach (double y0 in ys)
@@ -206,7 +202,7 @@ internal static class Pipeline
             s.Add(Svg.Arrow(XBracket, y0 + (RowHeight / 2), XPicksUp - 1, y0 + (RowHeight / 2)));
         }
 
-        return Svg.Document(Width, loopY + 46, Title, Description, string.Concat(s));
+        return Svg.Document(Width, loopY + 48, Title, Description, string.Concat(s));
     }
 }
 
@@ -227,11 +223,11 @@ internal static class Standing
         ("**Discovery-only.**", "never cited, only followed to its primary source"),
     ];
 
-    private const double CandidateX = 24, CandidateWidth = 196;
-    private const double VetX = 300, VetY = 182, VetHalf = 36;
-    private const double SpineX = 368;
-    private const double OutX = 580, OutWidth = 500;
-    private const double LoopX = 1196, LoopY = 412;
+    private const double CandidateX = 24, CandidateWidth = 212;
+    private const double VetX = 308, VetY = 182, VetHalf = 36;
+    private const double SpineX = 376;
+    private const double OutX = 606, OutWidth = 540;
+    private const double LoopX = 1270, LoopY = 412;
 
     public static string Build()
     {
@@ -256,7 +252,7 @@ internal static class Standing
             double y0 = CitableY + 60 + (i * 44);
             s.Add(Svg.Rect(OutX + 16, y0, OutWidth - 32, 36, 6, "chip"));
             s.Add(Svg.Text(OutX + 28, y0 + 23, Markings[i].Marking, "tm"));
-            s.Add(Svg.Text(OutX + 196, y0 + 23, Markings[i].Rule));
+            s.Add(Svg.Text(OutX + 212, y0 + 23, Markings[i].Rule, "ts"));
         }
 
         const double WatchY = 244, DeclinedY = 324;
@@ -282,7 +278,7 @@ internal static class Standing
         s.Add(Svg.Text(OutX + OutWidth + 10, WatchY + 20, "blocker clears", "ts"));
         s.Add(Svg.Text((VetX + LoopX) / 2, LoopY - 8, "re-vetted: standing is never permanent", "ts", "middle"));
 
-        return Svg.Document(1220, LoopY + 28, Title, Description, string.Concat(s));
+        return Svg.Document(1290, LoopY + 28, Title, Description, string.Concat(s));
     }
 }
 
@@ -344,26 +340,34 @@ internal static class Research
 
 internal static class Svg
 {
+    // The design system's tokens: bg, surface, raised, line, ink, muted, brand, and house.
+    // Copy a changed value from https://claude.ai/artifact/QfYm5d57sbJxs3W3jMyGiy, as the
+    // website repository's awesome-humans.css does. The .NET accent stays out: the design
+    // system shows an ecosystem's accent only in four places on the site, and a diagram
+    // isn't one. Brand marks what the agents do, house what the owner decides, and muted
+    // the report-only lane, which changes nothing here.
     private const string TokensLight = """
-        --bg: #f5f6f8; --surface: #ffffff; --band: #eceef2; --fg: #16181d; --muted: #5b6170; --line: #bcc1cc;
-          --accent: #512bd4; --human: #b4534f; --auto: #1d4ed8;
-          --sources: #0f766e; --research: #0369a1; --opinions: #512bd4; --reports: #b45309;
+        --bg: #ffffff; --surface: #f6f7f8; --band: #eef0f2; --fg: #0d1117; --muted: #5b6572; --line: #e3e6ea;
+          --accent: #087d4e; --human: #9a6100; --auto: #087d4e;
+          --sources: var(--accent); --research: var(--accent); --opinions: var(--accent); --reports: var(--muted);
         """;
 
     private const string TokensDark = """
-        --bg: #0f1115; --surface: #171a21; --band: #1e222b; --fg: #e6e8ee; --muted: #9aa1b2; --line: #3a404d;
-          --accent: #a48bff; --human: #e8948f; --auto: #60a5fa;
-          --sources: #2dd4bf; --research: #38bdf8; --opinions: #a48bff; --reports: #fbbf24;
+        --bg: #0d1117; --surface: #151a21; --band: #1c232c; --fg: #e8ecf0; --muted: #8b95a1; --line: #2a323c;
+          --accent: #3dd392; --human: #f2c14e; --auto: #3dd392;
+          --sources: var(--accent); --research: var(--accent); --opinions: var(--accent); --reports: var(--muted);
         """;
 
     // Font families are literal rather than custom properties, and set apart from size and
     // weight rather than through the font shorthand: a browser that rejects either form
     // drops the whole declaration and draws every label in its default font, which is wider
     // than the layout allows for. system-ui is left out because privacy-hardened browsers
-    // restrict it. Each stack names a common font per platform before the generic family.
+    // restrict it. Each stack names the design system's IBM Plex first, then a common font
+    // per platform before the generic family. An SVG shown as an image can't load a web
+    // font, so most readers see a fallback.
     private const string Fonts = """
-        .t, .tb, .ts, .gate-t, .check-t { font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", "Helvetica Neue", Arial, sans-serif; }
-        .tm, .th { font-family: "Cascadia Mono", Consolas, "Noto Sans Mono", "DejaVu Sans Mono", Menlo, monospace; }
+        .t, .tb, .ts, .gate-t, .check-t { font-family: "IBM Plex Sans", "Segoe UI", "Noto Sans", "DejaVu Sans", "Helvetica Neue", Arial, sans-serif; }
+        .tm, .th { font-family: "IBM Plex Mono", "Cascadia Mono", Consolas, "Noto Sans Mono", "DejaVu Sans Mono", Menlo, monospace; }
         """;
 
     private const string Classes = """
@@ -372,18 +376,18 @@ internal static class Svg
         .chip { fill: var(--band); stroke: none; }
         .ext { fill: var(--band); stroke: var(--muted); stroke-width: 1.2; }
         .store { fill: var(--band); stroke: var(--line); stroke-width: 1.2; }
-        .t { fill: var(--fg); font-weight: 500; font-size: 12.5px; }
-        .tb { fill: var(--fg); font-weight: 600; font-size: 14px; letter-spacing: .02em; }
-        .tm { fill: var(--fg); font-weight: 600; font-size: 12.5px; }
-        .ts { fill: var(--muted); font-weight: 400; font-size: 11.5px; }
-        .th { fill: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+        .t { fill: var(--fg); font-weight: 500; font-size: 14px; }
+        .tb { fill: var(--fg); font-weight: 600; font-size: 15px; letter-spacing: .02em; }
+        .tm { fill: var(--fg); font-weight: 600; font-size: 14px; }
+        .ts { fill: var(--muted); font-weight: 400; font-size: 13px; }
+        .th { fill: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
         .edge { stroke: var(--muted); stroke-width: 1.4; fill: none; }
         .edge.dash { stroke-dasharray: 4 4; }
         .arrowhead { fill: var(--muted); }
         .gate { fill: var(--surface); stroke: var(--human); stroke-width: 2; }
-        .gate-t { fill: var(--human); font-weight: 600; font-size: 11.5px; }
+        .gate-t { fill: var(--human); font-weight: 600; font-size: 13px; }
         .check { fill: var(--surface); stroke: var(--auto); stroke-width: 2; }
-        .check-t { fill: var(--auto); font-weight: 600; font-size: 11.5px; }
+        .check-t { fill: var(--auto); font-weight: 600; font-size: 13px; }
         .decision { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
         """;
 
@@ -421,7 +425,7 @@ internal static class Svg
     // Lines of text, vertically centred on y.
     public static string Lines(double x, double y, string[] items, string cls = "t")
     {
-        const double Step = 15;
+        const double Step = 17;
         double top = y - ((items.Length - 1) * Step / 2) + 4;
         return string.Concat(items.Select((item, i) => Text(x, top + (i * Step), item, cls)));
     }
