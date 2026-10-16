@@ -126,7 +126,7 @@ Every skill except the two report-only ones works on its own branch, and its cha
 
 Research is staged, never merged in place. `research-topic` saves the evidence, and `resolve-research` decides what becomes an opinion and deletes the file in the same pull request. A topic on disk is unresolved. The two `SKILL.md` files are canonical over this diagram.
 
-![Research lifecycle: research-topic saves research/{topic}.md, and resolve-research promotes, discards or partly promotes it](assets/diagrams/research-lifecycle.svg)
+![Research lifecycle: research-topic saves research/<topic>.md, and resolve-research promotes, discards or partly promotes it](assets/diagrams/research-lifecycle.svg)
 
 A part that waits on an unvetted source stays on disk. It goes back through `resolve-research` if `vet-source` admits the source, and is discarded if not.
 
