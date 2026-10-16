@@ -127,7 +127,7 @@ internal static class Pipeline
         {
             int[] rows = [.. Enumerable.Range(0, Rows.Length).Where(i => Rows[i].Lane == key)];
             double top = ys[rows[0]], bottom = ys[rows[^1]] + RowHeight;
-            s.Add($"<rect x=\"{Svg.N(XBand)}\" y=\"{Svg.N(top)}\" width=\"{Svg.N(WBand)}\" height=\"{Svg.N(bottom - top)}\" rx=\"6\" class=\"chip\"/>");
+            s.Add($"<rect x=\"{Svg.N(XBand)}\" y=\"{Svg.N(top)}\" width=\"{Svg.N(WBand)}\" height=\"{Svg.N(bottom - top)}\" rx=\"6\" fill=\"var(--{key})\" opacity=\".14\"/>");
             s.Add($"<rect x=\"{Svg.N(XBand)}\" y=\"{Svg.N(top)}\" width=\"4\" height=\"{Svg.N(bottom - top)}\" rx=\"2\" fill=\"var(--{key})\"/>");
             s.Add(Svg.Text(XBand + 14, ((top + bottom) / 2) + 6, name, "tb"));
         }
@@ -342,22 +342,24 @@ internal static class Research
 
 internal static class Svg
 {
-    // The design system's tokens: bg, surface, raised, line, ink, muted, brand, and house.
+    // The design system's tokens: bg, surface, raised, line, ink, muted, brand, house,
+    // and the three lane-* tokens.
     // Copy a changed value from https://claude.ai/artifact/QfYm5d57sbJxs3W3jMyGiy, as the
     // website repository's awesome-humans.css does. The .NET accent stays out: the design
     // system shows an ecosystem's accent only in four places on the site, and a diagram
-    // isn't one. Colour carries meaning only: brand marks the CI gate and the outcome the
-    // agents work towards, and house what the owner decides. The lanes stay neutral, in ink-2.
+    // isn't one. Brand marks the CI gate and the outcome the agents work towards, and house
+    // what the owner decides. Each lane takes its lane-* token, chosen to stay apart from
+    // those, from stale, and from every ecosystem accent, and the report-only lane is muted.
     private const string TokensLight = """
         --bg: #ffffff; --surface: #f6f7f8; --band: #eef0f2; --fg: #0d1117; --muted: #5b6572; --line: #e3e6ea;
           --accent: #087d4e; --human: #9a6100; --auto: #087d4e;
-          --sources: #3b4450; --research: #3b4450; --opinions: #3b4450; --reports: #3b4450;
+          --sources: #017b80; --research: #955080; --opinions: #6d7123; --reports: var(--muted);
         """;
 
     private const string TokensDark = """
         --bg: #0d1117; --surface: #151a21; --band: #1c232c; --fg: #e8ecf0; --muted: #8b95a1; --line: #2a323c;
           --accent: #3dd392; --human: #f2c14e; --auto: #3dd392;
-          --sources: #c3cad2; --research: #c3cad2; --opinions: #c3cad2; --reports: #c3cad2;
+          --sources: #6ac9ce; --research: #e79bce; --opinions: #b9be71; --reports: var(--muted);
         """;
 
     // Font families are literal rather than custom properties, and set apart from size and
