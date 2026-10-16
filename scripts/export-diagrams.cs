@@ -224,48 +224,54 @@ internal static class Standing
         ("**Discovery-only.**", "never cited, only followed to its primary source"),
     ];
 
-    // Boxes leave room for DejaVu Sans, the widest fallback a reader without IBM Plex sees.
-    private const double CandidateX = 20, CandidateWidth = 232;
-    private const double VetX = 320, VetY = 190, VetHalf = 38;
-    private const double SpineX = 382;
-    private const double OutX = 612, OutWidth = 566;
-    private const double LoopX = 1314, LoopY = 440;
+    // The candidate sits above vet-source, and each marking's rule sits under it, so the
+    // diagram is narrow enough for its text to stay legible in a README. Boxes leave room
+    // for DejaVu Sans, the widest fallback a reader without IBM Plex sees.
+    private const double CandidateX = 20, CandidateY = 20, CandidateWidth = 232;
+    private const double VetX = 136, VetY = 196, VetHalf = 38;
+    private const double SpineX = 276;
+    private const double OutX = 508, OutWidth = 416;
+    private const double LoopX = 1066;
+    private const double ChipHeight = 52;
 
     public static string Build()
     {
         List<string> s =
         [
-            Svg.Node(CandidateX, VetY - 32, CandidateWidth, 64, "Candidate source", "blog, docs, book, newsletter"),
-            Svg.Arrow(CandidateX + CandidateWidth, VetY, VetX - VetHalf - 2, VetY),
+            Svg.Node(CandidateX, CandidateY, CandidateWidth, 64, "Candidate source", "blog, docs, book, newsletter"),
+            Svg.Arrow(VetX, CandidateY + 64, VetX, VetY - VetHalf - 2),
             Svg.Diamond(VetX, VetY, VetHalf, "decision"),
-            Svg.Text(VetX, VetY - VetHalf - 14, "vet-source", "tm", "middle"),
+            Svg.Text(VetX + 12, CandidateY + 64 + 40, "vet-source", "tm"),
             Svg.Text(VetX, VetY + 4, "criteria", "ts", "middle"),
             $"<line x1=\"{Svg.N(VetX + VetHalf)}\" y1=\"{Svg.N(VetY)}\" x2=\"{Svg.N(SpineX)}\" y2=\"{Svg.N(VetY)}\" class=\"edge\"/>",
         ];
 
         // Citable, with its markings inside.
-        const double CitableY = 24, CitableHeight = 212;
-        s.Add(Svg.Rect(OutX, CitableY, OutWidth, CitableHeight, 8, "box"));
-        s.Add($"<rect x=\"{Svg.N(OutX)}\" y=\"{Svg.N(CitableY)}\" width=\"4\" height=\"{Svg.N(CitableHeight)}\" rx=\"2\" fill=\"var(--accent)\"/>");
+        const double CitableY = 20;
+        double citableHeight = 64 + (Markings.Length * (ChipHeight + 8)) + 8;
+        s.Add(Svg.Rect(OutX, CitableY, OutWidth, citableHeight, 8, "box"));
+        s.Add($"<rect x=\"{Svg.N(OutX)}\" y=\"{Svg.N(CitableY)}\" width=\"4\" height=\"{Svg.N(citableHeight)}\" rx=\"2\" fill=\"var(--accent)\"/>");
         s.Add(Svg.Text(OutX + 16, CitableY + 27, "Citable", "tb"));
         s.Add(Svg.Text(OutX + 16, CitableY + 48, "quotable in opinions and templates, within its marking", "ts"));
         for (int i = 0; i < Markings.Length; i++)
         {
-            double y0 = CitableY + 64 + (i * 48);
-            s.Add(Svg.Rect(OutX + 16, y0, OutWidth - 32, 40, 6, "chip"));
-            s.Add(Svg.Text(OutX + 28, y0 + 25, Markings[i].Marking, "tm"));
-            s.Add(Svg.Text(OutX + 214, y0 + 25, Markings[i].Rule, "ts"));
+            double y0 = CitableY + 64 + (i * (ChipHeight + 8));
+            s.Add(Svg.Rect(OutX + 16, y0, OutWidth - 32, ChipHeight, 6, "chip"));
+            s.Add(Svg.Text(OutX + 28, y0 + 22, Markings[i].Marking, "tm"));
+            s.Add(Svg.Text(OutX + 28, y0 + 42, Markings[i].Rule, "ts"));
         }
 
-        const double WatchY = 260, DeclinedY = 344;
-        s.Add(Svg.Node(OutX, WatchY, OutWidth, 60, "Watch list", "leads only, never cited", cls: "ext"));
-        s.Add(Svg.Node(OutX, DeclinedY, OutWidth, 60, "Declined", "off the roster, the decision logged", cls: "ext"));
+        double watchY = CitableY + citableHeight + 24;
+        double declinedY = watchY + 84;
+        double loopY = declinedY + 60 + 36;
+        s.Add(Svg.Node(OutX, watchY, OutWidth, 60, "Watch list", "leads only, never cited", cls: "ext"));
+        s.Add(Svg.Node(OutX, declinedY, OutWidth, 60, "Declined", "off the roster, the decision logged", cls: "ext"));
 
         foreach ((double y, string label) in new (double, string)[]
         {
             (CitableY + 32, "two years and all four criteria"),
-            (WatchY + 30, "under two years, or dormant"),
-            (DeclinedY + 30, "otherwise"),
+            (watchY + 30, "under two years, or dormant"),
+            (declinedY + 30, "otherwise"),
         })
         {
             s.Add(Svg.PathArrow($"M{Svg.N(SpineX)} {Svg.N(VetY)}V{Svg.N(y)}H{Svg.N(OutX - 2)}"));
@@ -273,14 +279,14 @@ internal static class Standing
         }
 
         // Standing is never permanent: citable and watch-listed sources share one path back.
-        s.Add($"<path d=\"M{Svg.N(OutX + OutWidth)} {Svg.N(CitableY + 32)}H{Svg.N(LoopX)}V{Svg.N(LoopY)}\" class=\"edge dash\"/>");
-        s.Add($"<path d=\"M{Svg.N(OutX + OutWidth)} {Svg.N(WatchY + 30)}H{Svg.N(LoopX)}\" class=\"edge dash\"/>");
-        s.Add(Svg.PathArrow($"M{Svg.N(LoopX)} {Svg.N(LoopY)}H{Svg.N(VetX)}V{Svg.N(VetY + VetHalf + 2)}", dash: true));
+        s.Add($"<path d=\"M{Svg.N(OutX + OutWidth)} {Svg.N(CitableY + 32)}H{Svg.N(LoopX)}V{Svg.N(loopY)}\" class=\"edge dash\"/>");
+        s.Add($"<path d=\"M{Svg.N(OutX + OutWidth)} {Svg.N(watchY + 30)}H{Svg.N(LoopX)}\" class=\"edge dash\"/>");
+        s.Add(Svg.PathArrow($"M{Svg.N(LoopX)} {Svg.N(loopY)}H{Svg.N(VetX)}V{Svg.N(VetY + VetHalf + 2)}", dash: true));
         s.Add(Svg.Text(OutX + OutWidth + 10, CitableY + 24, "dormant, weaker", "ts"));
-        s.Add(Svg.Text(OutX + OutWidth + 10, WatchY + 22, "blocker clears", "ts"));
-        s.Add(Svg.Text((VetX + LoopX) / 2, LoopY - 8, "re-vetted: standing is never permanent", "ts", "middle"));
+        s.Add(Svg.Text(OutX + OutWidth + 10, watchY + 22, "blocker clears", "ts"));
+        s.Add(Svg.Text((VetX + LoopX) / 2, loopY - 8, "re-vetted: standing is never permanent", "ts", "middle"));
 
-        return Svg.Document(1330, LoopY + 28, Title, Description, string.Concat(s));
+        return Svg.Document(LoopX + 20, loopY + 28, Title, Description, string.Concat(s));
     }
 }
 
@@ -300,23 +306,24 @@ internal static class Research
         ("Partial promotion", "the rest woven, the blocked remainder stays staged"),
     ];
 
-    private const double CenterY = 150;
-    private const double TopicX = 20, TopicWidth = 212;
-    private const double StagedX = 316, StagedWidth = 204;
-    private const double ResolveX = 616, ResolveHalf = 38;
-    private const double SpineX = 704;
-    private const double OutX = 736, OutWidth = 386, OutHeight = 60;
-    private const double LoopY = 314;
+    // research-topic sits above the topic it saves, so the diagram is narrow enough for its
+    // text to stay legible in a README.
+    private const double CenterY = 182;
+    private const double TopicX = 20, TopicY = 20, TopicWidth = 232;
+    private const double ResolveX = 340, ResolveHalf = 38;
+    private const double SpineX = 424;
+    private const double OutX = 448, OutWidth = 386, OutHeight = 60;
+    private const double LoopY = 328;
 
     public static string Build()
     {
         List<string> s =
         [
-            Svg.Node(TopicX, CenterY - 32, TopicWidth, 64, "research-topic", "cited, on research/<topic>", titleCls: "tm"),
-            Svg.Arrow(TopicX + TopicWidth, CenterY, StagedX - 2, CenterY),
-            Svg.Text((TopicX + TopicWidth + StagedX) / 2, CenterY - 8, "PR merges", "ts", "middle"),
-            Svg.Node(StagedX, CenterY - 32, StagedWidth, 64, "research/<topic>.md", "on record, unresolved", cls: "store", titleCls: "tm"),
-            Svg.Arrow(StagedX + StagedWidth, CenterY, ResolveX - ResolveHalf - 2, CenterY),
+            Svg.Node(TopicX, TopicY, TopicWidth, 64, "research-topic", "cited, on research/<topic>", titleCls: "tm"),
+            Svg.Arrow(TopicX + (TopicWidth / 2), TopicY + 64, TopicX + (TopicWidth / 2), CenterY - 34),
+            Svg.Text(TopicX + (TopicWidth / 2) + 12, CenterY - 60, "PR merges", "ts"),
+            Svg.Node(TopicX, CenterY - 32, TopicWidth, 64, "research/<topic>.md", "on record, unresolved", cls: "store", titleCls: "tm"),
+            Svg.Arrow(TopicX + TopicWidth, CenterY, ResolveX - ResolveHalf - 2, CenterY),
             Svg.Diamond(ResolveX, CenterY, ResolveHalf, "decision"),
             Svg.Text(ResolveX, CenterY - ResolveHalf - 14, "resolve-research", "tm", "middle"),
             Svg.Text(ResolveX, CenterY + 4, "own PR", "ts", "middle"),
@@ -336,7 +343,7 @@ internal static class Research
         s.Add(Svg.PathArrow($"M{Svg.N(OutX + (OutWidth / 2))} {Svg.N(partialBottom)}V{Svg.N(LoopY)}H{Svg.N(ResolveX)}V{Svg.N(CenterY + ResolveHalf + 2)}", dash: true));
         s.Add(Svg.Text((ResolveX + OutX + (OutWidth / 2)) / 2, LoopY - 8, "once vet-source clears its source", "ts", "middle"));
 
-        return Svg.Document(1138, LoopY + 28, Title, Description, string.Concat(s));
+        return Svg.Document(OutX + OutWidth + 20, LoopY + 28, Title, Description, string.Concat(s));
     }
 }
 
