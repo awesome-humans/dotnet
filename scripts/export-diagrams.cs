@@ -71,7 +71,7 @@ internal static class Pipeline
 
     private static readonly Row[] Rows =
     [
-        new("sources", ["candidate source,", "or a standing change"], "vet-source", "vet/<source-id>", "check evidence", "roster"),
+        new("sources", ["candidate source,", "or a change in standing"], "vet-source", "vet/<source-id>", "check evidence", "roster"),
         new("research", ["a question", "about <topic>"], "research-topic", "research/<topic>", "review", "research"),
         new("research", ["topic saved in", "research/"], "resolve-research", "resolve/<topic>", "approve weave", "opinions"),
         new("opinions", ["monthly harvest", "reminder issue"], "harvest-sources", "harvest/<date>", "review", "opinions"),
@@ -356,17 +356,17 @@ internal static class Svg
     // system shows an ecosystem's accent only in four places on the site, and a diagram
     // isn't one. Brand marks the CI gate and the outcome the agents work towards, and house
     // what the owner decides. Each lane takes its lane-* token, chosen to stay apart from
-    // those, from stale, and from every ecosystem accent, and the report-only lane is muted.
+    // those and from stale. lane-reports sits near the .NET accent, which no diagram shows.
     private const string TokensLight = """
         --bg: #ffffff; --surface: #f6f7f8; --band: #eef0f2; --fg: #0d1117; --muted: #5b6572; --line: #e3e6ea;
           --accent: #087d4e; --human: #9a6100; --auto: #087d4e;
-          --sources: #017b80; --research: #955080; --opinions: #6d7123; --reports: var(--muted);
+          --sources: #017b80; --research: #6d7123; --opinions: #955080; --reports: #8253ac;
         """;
 
     private const string TokensDark = """
         --bg: #0d1117; --surface: #151a21; --band: #1c232c; --fg: #e8ecf0; --muted: #8b95a1; --line: #2a323c;
           --accent: #3dd392; --human: #f2c14e; --auto: #3dd392;
-          --sources: #6ac9ce; --research: #e79bce; --opinions: #b9be71; --reports: var(--muted);
+          --sources: #6ac9ce; --research: #b9be71; --opinions: #e79bce; --reports: #c9a5e9;
         """;
 
     // Font families are literal rather than custom properties, and set apart from size and
