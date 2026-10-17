@@ -140,7 +140,7 @@ string[] rosterSections = Site.SplitBefore(roster, "## ");
 Dictionary<string, string> rosterText = new(StringComparer.Ordinal) { [pages[RosterPath]] = rosterSections[0] };
 foreach (string section in rosterSections.Skip(1))
 {
-    if (section.StartsWith("## Admission criteria", StringComparison.Ordinal))
+    if (section.StartsWith("## Admission criteria", StringComparison.Ordinal) || section.StartsWith("## Opted out", StringComparison.Ordinal))
     {
         rosterText[pages[RosterPath]] += section;
     }
@@ -417,9 +417,10 @@ JsonObject navJson = new()
 Write($"{Ecosystem}/nav.json", navJson.ToJsonString(json) + "\n");
 
 JsonArray sources = [];
-foreach (string bucket in (string[])["citable", "watch-list"])
+// An opted-out source is exported too, so intake can turn away a suggestion of it.
+foreach ((string bucket, string heading) in ((string, string)[])[("citable", "## Citable"), ("watch-list", "## Watch list"), ("opted-out", "## Opted out")])
 {
-    foreach (Match row in Site.RosterRow().Matches(rosterSections.First(section => section.StartsWith(bucket == "citable" ? "## Citable" : "## Watch list", StringComparison.Ordinal))))
+    foreach (Match row in Site.RosterRow().Matches(rosterSections.First(section => section.StartsWith(heading, StringComparison.Ordinal))))
     {
         JsonObject? source = Site.Source(row, bucket, roster, errors);
         if (source is not null)

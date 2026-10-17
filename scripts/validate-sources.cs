@@ -12,8 +12,9 @@
 
 // Verifies that every source id in an opinion's frontmatter or a template's comment
 // header resolves to the roster in AWESOME-HUMANS.md, and that it is allowed to feed
-// one: watch-list sources have not been admitted yet, and discovery-only sources are
-// channels that lead you to a primary source rather than being one. templates/ is held
+// one: watch-list sources have not been admitted yet, opted-out sources asked not to be
+// cited, and discovery-only sources are channels that lead you to a primary source rather
+// than being one. templates/ is held
 // to the same gate as opinions/ because it is what people copy.
 //
 // research/ is deliberately outside the gate. A topic may cite unvetted material as long
@@ -41,6 +42,7 @@ const string RosterPath = "AWESOME-HUMANS.md";
 const string DiscoveryMarker = "**Discovery-only.**";
 const string CorroborateMarker = "**Corroborate.**";
 const string WatchBucket = "watch";
+const string OptedOutBucket = "opted-out";
 
 if (!Opinions.DirectoryExists)
 {
@@ -63,6 +65,7 @@ HashSet<string> reserved = ["house"];
 [
     ("citable", ["## Citable"]),
     (WatchBucket, ["## Watch list"]),
+    (OptedOutBucket, ["## Opted out"]),
 ];
 
 // The roster tables carry only id, Kind, Source, Focus and Since. The evidence behind each row,
@@ -152,7 +155,7 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
     string rowId = id.Groups[1].Value;
     ids.Add(rowId);
 
-    // The site reads the kind to decide whether a source can have a portrait, so a row
+    // The site reads the kind to decide how to take a source's name from its link, so a row
     // missing it, or one the site doesn't know, fails here rather than in the site build.
     if (cells.Length < 5)
     {
@@ -203,6 +206,18 @@ foreach (string noteId in noteIds)
         errors.Add(
             $"{RosterPath}: '{NotesHeading}' has a section for '{noteId}', "
             + "which is on no roster table");
+    }
+}
+
+// An opted-out source's notes go with it: the evidence was about work it asked us to stop
+// citing, and its row and the decision log are all the roster keeps.
+foreach (string noteId in noteIds)
+{
+    if (roster.TryGetValue(noteId, out (string Bucket, string Notes) entry) && entry.Bucket == OptedOutBucket)
+    {
+        errors.Add(
+            $"{RosterPath}: '{NotesHeading}' has a section for '{noteId}', "
+            + "which has opted out — delete the section");
     }
 }
 
@@ -312,6 +327,12 @@ foreach ((string path, List<string> sourceIds) in citing)
             errors.Add(
                 $"{path}: source '{sourceId}' is on the watch list and may not feed opinions or templates "
                     + "— corroborate with a citable source or admit it via vet-source");
+        }
+        else if (row.Bucket == OptedOutBucket)
+        {
+            errors.Add(
+                $"{path}: source '{sourceId}' has opted out and may not feed opinions or templates "
+                    + "— re-source the claim with research-topic, or cut it back to what other citable sources support");
         }
         else if (discovery.Contains(sourceId))
         {
