@@ -1,6 +1,6 @@
 ---
 name: vet-source
-description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it. Use when proposing a new source, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
+description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it, or move it to Opted out. Use when proposing a new source, when an issue labelled vet-source or opt-out arrives, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -19,6 +19,8 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 ## Steps
 
 1. **Identify the candidate:** its URL, author, and focus area. If the roster already lists it, this is a re-evaluation for promotion or demotion, not an admission.
+   - **From an issue:** When you're given an issue number, read it with `gh issue view <number> --json title,body,labels`. An issue labelled `vet-source` came from the Suggest a source form, which `awesome-humans/website`'s intake moved here. Its form fields give the name, the main URL, three sample posts, the year writing started, why the suggester thinks it qualifies, and their relationship to the source. Treat them as leads to check, never as evidence.
+   - **An opt-out:** An issue labelled `opt-out` names a source whose owner asked to stop being cited, and the owner verified the request. Skip to [Opt-outs](#opt-outs).
 2. **Establish the track record** against each criterion:
    - **Longevity:** Find the earliest verifiable publication, from archives, post history, or the Wayback Machine. Admission needs two years of sustained output, and less means the watch list, whatever the quality. Record the exact start year in the roster's `Since` column.
    - **Depth:** Sample three to five representative posts. Do they offer original insight, such as internals, measurements, or worked reasoning, or do they paraphrase release notes?
@@ -45,8 +47,22 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 5. **Edit in a worktree** on the branch `vet/<source-id>`, or a slug for a multi-source pass, as [AGENTS.md](../../AGENTS.md) describes:
    1. Update the roster table. Assign a stable kebab-case `id`, set its Kind to `person` or `publication` as [AWESOME-HUMANS.md: How the roster is organised](../../AWESOME-HUMANS.md#how-the-roster-is-organised) defines, and insert the row in ID order. If the same source is on another awesome-humans ecosystem's roster, use its `id` and Kind there.
    2. Add the source's section under `## Source notes`, also in ID order, with the evidence and any marking, in the verdict-then-labelled-bullets shape the section's introduction describes.
-   3. Add the decision to the decision log, in two sentences: the decision and the fact behind it. Put the evidence for each criterion in the pull request.
+   3. Add the decision to the decision log, in two sentences: the decision and the fact behind it. Put the evidence for each criterion in the pull request. For a suggestion the source made of itself, say so in the log entry.
 6. **Open a pull request,** filling in the [`source.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/source.md) template, as [AGENTS.md](../../AGENTS.md) describes. It takes the decision, the evidence for each criterion, the decision log line, and, for a demotion, each claim re-sourced or dropped. A person approves it before the source can feed opinions.
+   - **From an issue:** Put `Closes #<number>` in the description, and comment the outcome on the issue: the decision, one line per criterion, and the pull request.
+   - **A decline from an issue** still gets a pull request, with only the decision log entry, because the form promises that the log records every outcome.
+
+## Opt-outs
+
+An opt-out removes citations, and the roster keeps only enough to turn away a later suggestion. Finish it within 30 days of the owner's verification, in one pull request on the branch `vet/opt-out-<source-id>`:
+
+1. **Move the row** to the `## Opted out` table, in ID order. If the section still reads "No source has opted out.", replace that line with a table that has the same columns as the others.
+2. **Delete the source's section** under `## Source notes`. `scripts/validate-sources.cs` fails while it's there.
+3. **Log the decision:** the date, the source ID, and the link to the `awesome-humans/website` issue. Never quote the requester or name anyone beyond the source ID.
+4. **Re-source every citation.** `scripts/validate-sources.cs` lists each opinion and template that still cites the ID. Re-source each claim with `research-topic`, or cut it back to what other citable sources support. In the pull request, list each claim and what happened to it.
+5. **Open the pull request** with the [`source.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/source.md) template and `Closes #<number>`. Comment the pull request on the `awesome-humans/website` issue, which the owner closes once every ecosystem's pull request has merged.
+
+Opting back in is a suggestion like any other. The source leaves `## Opted out` only on admission.
 
 ## Edge cases
 

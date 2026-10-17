@@ -2,6 +2,8 @@
 
 These are the vetted sources behind every opinion in this repository. An opinion can use content only if it traces to a source listed here, or carries the reserved `house` ID described below.
 
+To propose a source, [suggest it for vetting](https://github.com/awesome-humans/website/issues/new?template=suggest-source.yml&ecosystem=.NET). If you're a listed source and don't want your work cited, [ask to opt out](https://github.com/awesome-humans/website/issues/new?template=opt-out.yml). For how both work, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
+
 ## Admission criteria
 
 **Scope: published writing.** A source qualifies on text a reader can check: blog posts, documentation, books, and newsletters. Videos, conference talks, and podcasts are out of scope for now, both as citable material and as evidence of a track record. A source that moves to those formats stops qualifying, and becomes a `vet-source` candidate again if the writing resumes.
@@ -30,7 +32,7 @@ The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but
 - **IDs:** Each source has a stable `id`, which `sources:` metadata uses.
 - **Order:** Rows in every roster table, and the sections under [Source notes](#source-notes), are sorted by `id`. Insert a new source in order.
 - **Tables:** A row holds only what identifies a source: its ID, its kind, where to read it, what it covers, and how far back it goes.
-- **Kind:** `person` or `publication`. A person can have a portrait on awesome-humans.net, with their permission, and a publication never does. A newsletter or link blog that one person writes is still a `publication`. A person's Source link text starts with their name, as in `Andrew Lock: .NET Escapades`, because the site takes the name from it.
+- **Kind:** `person` or `publication`. A newsletter or link blog that one person writes is still a `publication`. A person's Source link text starts with their name, as in `Andrew Lock: .NET Escapades`, because the site takes the name from it.
 - **Notes:** The evidence behind a row goes in its notes section, in the shape [Source notes](#source-notes) describes, one sentence per line. Rows stay short, and a reworded sentence shows in a diff as that one sentence.
 - **Decision log:** Each entry gives the decision and the fact behind it. The evidence is in the source's notes and the pull request. It's the only table Prettier doesn't align: `<!-- prettier-ignore -->` stops one long Detail cell from realigning every row.
 
@@ -102,6 +104,12 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 | `syncfusion-blog` | publication | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)           | Release summaries, performance roundups           | —     |
 | `telerik-blog`    | publication | [Telerik Blogs: .NET](https://www.telerik.com/blogs)            | Release summaries                                 | —     |
 | `udi-dahan`       | person      | [Udi Dahan: The Software Simplist](https://udidahan.com/)       | SOA, messaging, service boundaries, domain events | ~2007 |
+
+## Opted out
+
+A source moves here when its owner asks to stop being cited. Its row keeps the same five columns, and its section under [Source notes](#source-notes) goes. The ID stays reserved, so a later suggestion of the source is turned away, and `scripts/validate-sources.cs` rejects it in any `sources:` list. Opting back in is a suggestion like any other, and the source leaves this section only on admission. For the policy, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
+
+No source has opted out.
 
 ## Source notes
 
