@@ -69,6 +69,13 @@ An agent that uses the author's credentials posts under the author's account, an
 - **The rule covers every commit on the branch.** When GitHub squashes, it appends a `Co-authored-by` line to the merged commit for each co-author trailer, and for each branch commit author other than the merger. The pull request description doesn't change that. So commit under the author's git identity, never one the harness supplies, and leave the trailer out of branch commits too.
 - **Agent attribution in conversation.** End each comment an agent writes on an issue or pull request, including replies in review threads, with a line such as `Written by an agent: <harness>, <model>, running <skill>.` Leave out the skill when there isn't one. A reader, or another agent, then knows a person didn't write it.
 
+### CodeRabbit reviews
+
+[CodeRabbit](https://coderabbit.ai) reviews pull requests here, using the organisation's central configuration in [awesome-humans/coderabbit](https://github.com/awesome-humans/coderabbit/blob/main/.coderabbit.yaml). It reads this file as its guidelines.
+
+- **Ask for the review.** A repository with fewer than 10 stars gets no automatic reviews. When a pull request is ready and its checks pass, comment `@coderabbitai review`. The comment does no harm once the repository passes 10 stars.
+- **Its findings are advisory.** CodeRabbit never blocks a merge, and the owner's review stays the gate. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
+
 ## Metadata
 
 Three kinds of resource carry this metadata, in the two syntaxes their file formats allow:
