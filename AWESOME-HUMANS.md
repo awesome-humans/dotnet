@@ -82,6 +82,7 @@ Every source here meets all four criteria. The `Since` column shows the length o
 | `oskar-dudycz`       | person      | [Oskar Dudycz: Event-Driven.io](https://event-driven.io/)                                                                                          | Event sourcing, event-driven architecture, CQRS, vertical slices                                                | 2011                                        |
 | `scott-wlaschin`     | person      | [Scott Wlaschin: F# for Fun and Profit](https://fsharpforfunandprofit.com/)                                                                        | F#, functional design, domain modelling                                                                         | 2012                                        |
 | `shay-rojansky`      | person      | [Shay Rojansky](https://www.roji.org/)                                                                                                             | .NET ↔ PostgreSQL mapping (Npgsql), EF Core internals                                                           | 2014                                        |
+| `stephen-cleary`     | person      | [Stephen Cleary](https://blog.stephencleary.com/)                                                                                                  | Async and concurrency, `SynchronizationContext` and `ConfigureAwait`, cancellation                              | 2008                                        |
 | `stephen-toub`       | person      | [Stephen Toub (author page)](https://devblogs.microsoft.com/dotnet/author/toub/)                                                                   | Runtime/BCL performance, async internals                                                                        | ~2005                                       |
 | `steve-gordon`       | person      | [Steve Gordon](https://www.stevejgordon.co.uk/)                                                                                                    | High-performance .NET, HttpClient, Span/ArrayPool                                                               | ~2016                                       |
 
@@ -428,6 +429,30 @@ Lead maintainer of Npgsql and on Microsoft's EF Core team, with the deepest writ
 - **Cite:** For mechanism, meaning how Npgsql and EF Core behave and why. Corroborate adoption judgements elsewhere.
   The 2014 to 2023 blog catalogue is citable. Expect nothing new from blog harvests.
 
+### `stephen-cleary`: Citable
+
+Independent depth on async and concurrency in .NET, and author of _Concurrency in C# Cookbook_.
+The cadence is thin, so watch it for dormancy.
+
+- **Longevity:** Writing since [2008-06-20](https://blog.stephencleary.com/2008/06/interop-on-64-bit-platforms.html), at 30 to 67 posts a year from 2009 to 2013, and fewer than 20 a year after.
+  The blog has no posts in 2019, between 2018-06 and 2020-03. The second edition of the book (O'Reilly, 2019-08) covers that year.
+  He wrote eight MSDN Magazine articles from 2011 to 2015, including ["Async/Await: Best Practices in Asynchronous Programming"](https://learn.microsoft.com/archive/msdn-magazine/2013/march/async-await-best-practices-in-asynchronous-programming) (2013-03).
+- **Dormancy:** Not dormant, but close: the latest post is ["Debug Dumps in Visual Studio"](https://blog.stephencleary.com/2025/12/debug-dumps-in-visual-studio.html) (2025-12-04), the only post in 2025, after five in 2024.
+- **Depth:** ["There Is No Thread"](https://blog.stephencleary.com/2013/11/there-is-no-thread.html) traces an async write from the library through the driver, the interrupt, and the I/O completion port back to the awaiting context.
+  ["Don't Block on Async Code"](https://blog.stephencleary.com/2012/07/dont-block-on-async-code.html) walks a `SynchronizationContext` deadlock step by step, and argues for async all the way over `ConfigureAwait(false)` as the fix.
+  ["ConfigureAwait in .NET 8"](https://blog.stephencleary.com/2023/11/configureawait-in-net-8.html) covers each `ConfigureAwaitOptions` value, including that `SuppressThrowing` throws on `Task<T>`, which `CA2261` reports.
+  ["Cancellation, Part 6: Linking"](https://blog.stephencleary.com/2024/10/cancellation-6-linking.html) explains why comparing `OperationCanceledException.CancellationToken` fails once a linked source sits between, and checks `IsCancellationRequested` instead.
+  The 2025 post is a Visual Studio settings recipe, thinner than the async catalogue.
+- **Accuracy:** Corrections are in the posts.
+  The .NET 8 post says an earlier version wrongly claimed EF Core avoids `ConfigureAwait(false)`, and that EF Core added it in 5.0.0.
+  The 2012 deadlock post carries a 2014-12-01 update pointing to newer material.
+  ["ASP.NET Core SynchronizationContext"](https://blog.stephencleary.com/2017/03/aspnetcore-synchronization-context.html) (2017) revisits the deadlock guidance for a host with no context.
+- **Independence:** An independent consultant and Microsoft MVP with no vendor employer, so no independence limit.
+- **Conflict of interest:** He sells the book and contract work, and maintains the free Nito.AsyncEx library, which some posts link. Flag it where an opinion names Nito.AsyncEx.
+- **Cite:** The async, concurrency, and cancellation posts.
+  The 2012 and 2013 posts predate ASP.NET Core, so check any claim about a `SynchronizationContext` against the host the citing opinion targets.
+- **Re-evaluate:** From 2026-12-04, if no post or other writing has appeared since 2025-12-04.
+
 ### `stephen-toub`: Citable
 
 Publishes through `dotnet-blog`.
@@ -527,3 +552,4 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 | 2026-09-25 | Merged `dotnet-skills` into `aaron-stannard` | The same person, so his track record covers the repository. Uncompiled samples and co-authored skills became usage limits in his notes |
 | 2026-10-09 | Harvest (2026-09-15 to 2026-10-09) | Updated `runtime-performance.md` (ILLink substitutions, and a .NET 11 runtime async note) and `ci.md` (signer allow-list upkeep). Flagged `khalid`, `james-montemagno`, and `nicholas-blumhardt` |
 | 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline covered. The notes now record the restart, and a token-shape limit on citing his scope-authorization post |
+| 2026-10-17 | Admitted `stephen-cleary` | Writing on async and concurrency since 2008-06-20, with in-post corrections. Latest post 2025-12-04, so re-evaluate from 2026-12-04 if nothing follows (#167) |
