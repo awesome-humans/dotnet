@@ -73,7 +73,7 @@ An agent that uses the author's credentials posts under the author's account, an
 
 [CodeRabbit](https://coderabbit.ai) reviews pull requests here, using the organisation's central configuration in [awesome-humans/coderabbit](https://github.com/awesome-humans/coderabbit/blob/main/.coderabbit.yaml). It reads this file as its guidelines.
 
-- **Ask for the review.** A repository with fewer than 10 stars gets no automatic reviews. When a pull request is ready and its checks pass, comment `@coderabbitai review`. The comment does no harm once the repository passes 10 stars.
+- **Check that the review started.** CodeRabbit reviews a new pull request on its own, and each push after that. If its status comment says it skipped or paused the review, comment `@coderabbitai review`. CodeRabbit's docs say a repository with fewer than 10 stars needs that comment every time, but on 2026-10-17 `website` and `dotnet` were reviewed automatically with 0 and 1 stars.
 - **Its findings are advisory.** CodeRabbit never blocks a merge, and the owner's review stays the gate. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
 
 ## Metadata
