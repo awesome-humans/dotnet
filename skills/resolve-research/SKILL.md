@@ -34,7 +34,7 @@ This is **editor-only work, so don't fan it out**. The research did the sweeping
 6. **Carry the change into `templates/`** wherever the opinion changes scaffolding, such as a build property, an `.editorconfig` rule, or a package pin. `audit-freshness` reports an opinion whose template leaves out a setting it names, so land both together. Add the source IDs to the template's comment header.
 7. **Fix what the research found along the way,** such as a stale example, a colliding path, or a rule enforced with no opinion behind it, in the same pull request.
 8. **Update the metadata** on every file you change: an opinion's frontmatter, or a template's first-line header. Add the promoted source IDs to `sources:`. Update `last-reviewed` only after you verify the content, as [Rules](#rules) describes.
-9. **Delete the research topic file,** and only that file. `research/.gitkeep` keeps the directory after the last topic goes. Commit on the branch `resolve/<topic-slug>`, and open a pull request titled `docs: promote <topic>` or `research: discard <topic>`.
+9. **Delete the research topic file,** and only that file. `research/.gitkeep` keeps the directory after the last topic goes. Commit on the branch `resolve/<topic-slug>`, and open a pull request titled `docs: promote <topic>` or `research: discard <topic>`. Fill in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section names the topic, the outcome, and the roster ID behind each claim, or why the claim was dropped or held. A discard says "Doesn't apply" under the proposed opinion.
 
 ## Rules
 

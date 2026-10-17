@@ -49,6 +49,8 @@ When you generate or review .NET code for another project:
 
   A skill that sets its own title says so in its `SKILL.md`, as `research-topic` and `resolve-research` do.
 
+- **Fill in the pull request template a skill names.** The templates are the organisation's, in [awesome-humans/.github: `PULL_REQUEST_TEMPLATE/`](https://github.com/awesome-humans/.github/tree/main/PULL_REQUEST_TEMPLATE), and each skill's "Open a pull request" step names its own. Fill in every section, and pass the result to `gh pr create --body-file`. A section that doesn't apply says "Doesn't apply" and why, instead of being deleted. A person opening a pull request in the browser gets the default template, which links the others.
+
 - **Update a diagram in the same commit as the skill or lifecycle it shows.** `README.md` has diagrams of the maintenance pipeline and of the research and source-admission lifecycles. They're for orientation only, and the prose here and in the `SKILL.md` files stays canonical. `scripts/export-diagrams.cs` draws them as SVG into `assets/diagrams/`. To change one, edit the data at the top of the diagram's class, rerun the script, and commit both. Never edit an SVG by hand: CI reruns the script and fails on any difference.
 
 ### Orchestration and model economy
