@@ -98,15 +98,15 @@ For details, see [research-topic](skills/research-topic/SKILL.md) and [resolve-r
 **`templates/` carry a first-line comment header.** An XML, INI, or source file can't open with a `---` block and stay valid for the tools that read it. So the same fields go in a comment instead, separated by pipes after a fixed marker:
 
 ```xml
-<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
 ```
 
 ```ini
-# dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn
+# awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn
 ```
 
 ```fsharp
-// dotnet-awesome-humans template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: scott-wlaschin
+// awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: scott-wlaschin
 ```
 
 Rules:

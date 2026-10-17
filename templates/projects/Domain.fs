@@ -1,4 +1,4 @@
-// dotnet-awesome-humans template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-21 | last-used: 2026-08-21 | sources: scott-wlaschin
+// awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-21 | last-used: 2026-08-21 | sources: scott-wlaschin
 // Domain model example: make illegal states unrepresentable (opinions/fsharp.md).
 namespace Example.Library.FSharp
 

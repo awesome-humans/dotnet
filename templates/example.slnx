@@ -1,4 +1,4 @@
-<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-14 | last-used: 2026-09-24 | sources: house, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-14 | last-used: 2026-09-24 | sources: house, ms-learn -->
 <!-- SLNX is the default solution format since the .NET 10 SDK (`dotnet new sln`). -->
 <Solution>
   <Folder Name="/src/">
