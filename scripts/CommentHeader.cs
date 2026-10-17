@@ -7,16 +7,16 @@
 // have to stay valid for the tools that read them, and a `---` block would break every
 // one. The same metadata goes in a comment on the first line instead, and this parses it:
 //
-//     <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | … -->
-//     # dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | …
-//     // dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | …
+//     <!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: … | … -->
+//     # awesome-humans/dotnet template | targets: net10.0 | last-reviewed: … | …
+//     // awesome-humans/dotnet template | targets: net10.0 | last-reviewed: … | …
 
 using System.Collections;
 
 internal static class CommentHeader
 {
     /// <summary>The literal every template header opens with, inside its comment marker.</summary>
-    internal const string Marker = "dotnet-awesome-humans template";
+    internal const string Marker = "awesome-humans/dotnet template";
 
     /// <summary>The directory whose files carry these headers, as the reports quote it.</summary>
     internal const string TemplatesDirectory = "templates";

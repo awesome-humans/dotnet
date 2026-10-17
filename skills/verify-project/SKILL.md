@@ -50,7 +50,7 @@ Compare a target .NET project with this repository's opinions and templates, and
    - Clone a URL target now, and branch from **the SHA recorded in step 1**.
    - A depth-1 clone has no earlier commit to branch from. Clone without `--depth 1`, or run `git fetch origin <full SHA>`. An abbreviated SHA is rejected.
    - If you must branch from a default branch that has moved, recheck the files behind each finding, and say which changed. A fix written against moved code produces a confidently wrong diff.
-   - In commit messages, pull requests, and comments in the target, name this repository `awesome-humans/dotnet`. The `dotnet-awesome-humans template` marker in template headers is a fixed string, not the name ([AGENTS.md: Metadata](../../AGENTS.md#metadata)).
+   - In commit messages, pull requests, and comments in the target, name this repository `awesome-humans/dotnet`.
 
 ## Edge cases
 
