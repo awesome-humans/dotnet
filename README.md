@@ -71,7 +71,7 @@ Any other limit, such as a concern about independence or an outdated back catalo
 
 ## House opinions
 
-The repository owner outranks the roster. The owner's preferences come in through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md) skill, and they're marked wherever they appear, so you can tell community best practice from local convention. HOUSE-OPINIONS.md defines the marking and which side wins a conflict. Other contributors can propose sourced or experience-based opinions through the organisation's [pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE.md).
+The repository owner outranks the roster. The owner's preferences come in through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md) skill, and they're marked wherever they appear, so you can tell community best practice from local convention. HOUSE-OPINIONS.md defines the marking and which side wins a conflict. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
 
 ## Repository layout
 

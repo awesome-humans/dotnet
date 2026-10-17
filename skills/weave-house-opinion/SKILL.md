@@ -21,13 +21,13 @@ House opinions are the owner's preferences. They carry full weight, and they're 
    - **In `templates/`:** Make the change, and add `house` to the `sources:` list in the comment header. Where the format allows, add an inline comment on the changed setting.
 4. **Handle a conflict explicitly,** following [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works). The house opinion wins, and the sourced position stays as the cited one-line note. Never delete the sourced view without saying so.
 5. **Move the inbox entry to the Woven table** in HOUSE-OPINIONS.md, with the date and a link to where it went.
-6. **Update `last-reviewed`** on every file you change. Work on a `house/<slug>` branch, as [AGENTS.md](../../AGENTS.md) describes, and open a pull request to the default branch with a title that shows the house origin, such as `docs: weave house opinion on <title>`.
+6. **Update `last-reviewed`** on every file you change. Work on a `house/<slug>` branch, as [AGENTS.md](../../AGENTS.md) describes, and open a pull request to the default branch with a title that shows the house origin, such as `docs: weave house opinion on <title>`. Fill in the [`house-opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/house-opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes.
 
 ## Rules
 
 - **Never present a house opinion as sourced.** If a vetted source later publishes the same guidance, a harvest can add the citation beside the house marking, and the marking stays.
 - **House opinions need no source, but they need the same quality.** Code must compile against the declared `targets`, and the opinion must give one recommendation.
-- **Only the owner's opinions are written in directly.** Contributors propose opinions in a pull request, as the organisation's [pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE.md) describes. Once the owner accepts one, it becomes a house opinion, and the Woven table's Provenance column credits the contributor and the pull request.
+- **Only the owner's opinions are written in directly.** Contributors propose opinions in a pull request, as the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) describes. Once the owner accepts one, it becomes a house opinion, and the Woven table's Provenance column credits the contributor and the pull request.
 - **Harvest and refresh skills never remove or weaken house content.** They update the sourced context around it.
 
 ## Edge cases

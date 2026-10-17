@@ -30,7 +30,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - **Never remove, weaken, or unmark house content** ([HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). When a source now agrees with a house opinion, add the citation beside the marking.
    - Add the post's source ID to the opinion's `sources:`, and update `last-reviewed:`.
 6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: the date, the window, and what changed, as briefly as the existing entries. Per-source findings go in the pull request, not the table.
-7. **Open a pull request** to the default branch, with findings per source and changes per opinion. A person reviews it before it changes any opinion.
+7. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.
    - If an open `Harvest due: <Month> <Year>` issue asked for this sweep, put `Closes #<number>` in the pull request body.
    - The `Harvest reminder` workflow opens that issue on the 1st of each month, and skips the month while an issue with that title is open. An issue left open blocks the next reminder.
    - If another pull request replaces this one, copy the `Closes` line to it. The reference doesn't carry over.

@@ -59,9 +59,10 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - Treat "0 tests ran, exit code 0" as a failure. It's what a test project reports after losing its runner configuration.
    - Without an SDK, flag the samples as unverified in the pull request.
 7. **If the source roster changed, record it** in the `AWESOME-HUMANS.md` decision log. Otherwise, summarise the run in the pull request.
-8. **Open a pull request** to the default branch that lists:
+8. **Open a pull request** to the default branch, filling in the [`version-refresh.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/version-refresh.md) template, as [AGENTS.md](../../AGENTS.md) describes. It lists:
    - The versions before and after: the framework, the SDK band, and each package pin that changed.
    - The opinions that changed, and the ones verified as unchanged.
+   - Whether the samples built and tested.
    - Anything left as a TODO.
 
    A person reviews it before it changes any opinion.
