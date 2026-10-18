@@ -6,8 +6,9 @@
 // Verifies that README.md indexes the repository in both directions: every file
 // under opinions/ has a linked Scope bullet and a Repository layout entry, every
 // directory under skills/ has a row in the Maintenance via skills table, and none
-// of those three places points at something that no longer exists. Scope and the
-// layout tree are also held to their order: Scope by title, the tree by file name.
+// of those three places points at something that no longer exists. All three are
+// also held to their order: Scope by title, the tree by file name, and the skills
+// table by skill name.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root:
@@ -158,7 +159,7 @@ if (skills.Count == 0)
 
 if (skillsTable is not null)
 {
-    HashSet<string> rows = TableIds(skillsTable);
+    List<string> rows = TableIds(skillsTable);
 
     if (rows.Count == 0)
     {
@@ -174,6 +175,18 @@ if (skillsTable is not null)
     {
         errors.Add(
             $"README.md: 'Maintenance via skills' table has a row for `{stale}`, which is not a skill directory");
+    }
+
+    // Sorted by skill name, the order a directory listing of skills/ uses, so a new row lands in
+    // one predictable place. The pipeline diagram above the table shows the workflow order.
+    for (int index = 1; index < rows.Count; index++)
+    {
+        if (StringComparer.Ordinal.Compare(rows[index - 1], rows[index]) > 0)
+        {
+            errors.Add(
+                $"README.md: 'Maintenance via skills' table is not sorted by skill name "
+                    + $"— `{rows[index]}` follows `{rows[index - 1]}`");
+        }
     }
 }
 
@@ -259,10 +272,10 @@ static List<string> TreeOpinions(string layout)
     return listed;
 }
 
-// First-cell `code` ids from the Markdown table rows in a section.
-static HashSet<string> TableIds(string body)
+// First-cell `code` ids from the Markdown table rows in a section, in table order.
+static List<string> TableIds(string body)
 {
-    HashSet<string> ids = [];
+    List<string> ids = [];
 
     foreach (string line in body.Split('\n'))
     {

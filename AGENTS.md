@@ -35,7 +35,7 @@ When you generate or review .NET code for another project:
   - A bullet under [Scope](README.md#scope), in the form `- **[Title](opinions/<file>.md):** one line on what it covers`. Sort the bullets by title, ignoring case, and keep the unlinked **Libraries** bullet last.
   - An entry in the [Repository layout](README.md#repository-layout) tree, sorted by file name.
 
-  The two orders differ: `architecture.md` is titled "Application architecture". When you rename or remove a file, update both places in the same commit. A skill directory and its row in the [Maintenance via skills](README.md#maintenance-via-skills) table follow the same rule. `scripts/validate-readme-index.cs` fails the pull request if an entry is missing, out of order, or points at a file that doesn't exist.
+  The two orders differ: `architecture.md` is titled "Application architecture". When you rename or remove a file, update both places in the same commit. The same goes for a skill directory and its row in the [Maintenance via skills](README.md#maintenance-via-skills) table, which is sorted by skill name. `scripts/validate-readme-index.cs` fails the pull request if an entry is missing, out of order, or points at a file that doesn't exist.
 
 - **Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages and pull request titles.** A pull request squash-merges under its title, so the title becomes the commit subject in `git log`. Use the form `<type>[(scope)]: <description>`, in lowercase and the imperative. The scope is optional, as in `chore(deps)` or `docs(review-project)`.
 
