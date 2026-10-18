@@ -256,8 +256,8 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 
 ### Scripts
 
-- CI checks live in `scripts/` as .NET file-based apps. Run them from the repository root through their recipes, such as `just validate-metadata`, or directly with `dotnet run scripts/<name>.cs`. Code that two scripts share goes in a helper file that both `#:include`, not in a copy.
-- The `justfile` is every local and CI entry point. Each check has a recipe named after its script, and CI calls the recipes, never `npm` or `dotnet` directly. `just` with no arguments lists them. The website builds the site with `dotnet run scripts/build-site.cs` and doesn't install `just`, so keep that script runnable on its own.
+- CI checks live in `scripts/` as .NET file-based apps. Run them from the repository root through their recipes, such as `just validate-metadata`. Code that two scripts share goes in a helper file that both `#:include`, not in a copy.
+- The `justfile` is every local and CI entry point. Each check has a recipe named after its script, and CI calls the recipes, never `npm` or `dotnet` directly. `just` with no arguments lists them. The one exception is the website, which doesn't install `just` and runs `dotnet run scripts/build-site.cs` directly. So keep every script runnable on its own, with `dotnet run` or its shebang, even though nothing here calls it that way.
 - Entry points use kebab-case names because you type them on a command line. Helper files take the name of the type they contain, following C# file-naming convention.
 - Add a check as a script with a recipe, not as an inline script in a workflow, and hold it to the repository's own opinions: `global.json` pins the SDK, `TreatWarningsAsErrors` is on, the language version is latest, and the `[scripts/*.cs]` block in `.editorconfig` turns the analyzer set into build failures.
 - When you add or rename a script, add or rename its recipe, and update the [Repository scripts](README.md#repository-scripts) table and the layout tree.
