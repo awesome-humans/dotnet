@@ -32,7 +32,7 @@ jobs:
 
       # Pinned to a release at least two weeks old when chosen. The justfile is every entry
       # point, so the steps below call its recipes, never npm.
-      - uses: taiki-e/install-action@83ac0ad63c0167e6f06796fab0fce28db1bf3db0 # v2.87.22
+      - uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
         with:
           tool: just@1.58.0
 
