@@ -3,6 +3,7 @@
 #:include Opinions.cs
 #:include Frontmatter.cs
 #:include CommentHeader.cs
+#:include House.cs
 // PublishAot is on by default for file-based apps, and YamlDotNet's reflection-based
 // builder trips its analyzer (IL3050). These scripts are run, never published, so turn
 // AOT off instead of suppressing an accurate diagnostic.
@@ -20,6 +21,10 @@
 // research/ is deliberately outside the gate. A topic may cite unvetted material as long
 // as the text flags it as such (research-topic, audit-freshness); the roster gate lands at
 // promotion instead, where resolve-research drops or re-sources every unvetted claim.
+//
+// A house profile's id, house:<profile>, isn't on the roster. Instead, each one in a file's
+// sources must match a house block in the opinion, or a house region in the template, and
+// every house opinion must sit inside one (HOUSE-OPINIONS.md: How this works).
 //
 // It also holds the roster itself to its shape: each table sorted by id, and no id
 // used twice. Both are conventions a reader cannot spot in a 30-row table, and the
@@ -55,9 +60,6 @@ if (!File.Exists(RosterPath))
     Console.WriteLine($"{RosterPath} not found");
     return 1;
 }
-
-// The reserved id for house opinions: the repository owner is not on the roster.
-HashSet<string> reserved = ["house"];
 
 // Which level-2 headings open which bucket. Anything outside them, such as the admission
 // criteria and the decision log, carries no source rows.
@@ -311,8 +313,15 @@ foreach ((string path, List<string> sourceIds) in citing)
 {
     foreach (string sourceId in sourceIds)
     {
-        if (reserved.Contains(sourceId))
+        // A house profile isn't on the roster. The pairing check below holds it to its blocks.
+        if (House.ProfileOf(sourceId) is not null)
         {
+            continue;
+        }
+
+        if (sourceId == "house")
+        {
+            errors.Add($"{path}: 'house' names no profile — write {House.Prefix}<profile>, such as {House.Prefix}simon-mckenna");
             continue;
         }
 
@@ -343,8 +352,8 @@ foreach ((string path, List<string> sourceIds) in citing)
     }
 
     // A Corroborate-marked source may carry the shape of a claim but never the claim alone,
-    // so something unmarked has to stand beside it. `house` does not count: it is the owner's
-    // position, not a second reading of the evidence.
+    // so something unmarked has to stand beside it. A house profile does not count: it is its
+    // owner's position, not a second reading of the evidence.
     bool marked = false;
     bool unmarked = false;
     foreach (string sourceId in sourceIds)
@@ -353,7 +362,7 @@ foreach ((string path, List<string> sourceIds) in citing)
         {
             marked = true;
         }
-        else if (!reserved.Contains(sourceId) && roster.ContainsKey(sourceId) && !discovery.Contains(sourceId))
+        else if (roster.ContainsKey(sourceId) && !discovery.Contains(sourceId))
         {
             unmarked = true;
         }
@@ -364,6 +373,39 @@ foreach ((string path, List<string> sourceIds) in citing)
         errors.Add(
             $"{path}: every citable source here is marked '{CorroborateMarker}' "
                 + "— add a citable source that is not, or drop the claim");
+    }
+
+    // A house profile in the sources and its blocks or regions always appear together, and
+    // every house opinion sits inside one, so removing them leaves no house opinion behind
+    // (HOUSE-OPINIONS.md: How this works).
+    string text = File.ReadAllText(path);
+    List<House.Span> spans = House.Spans(path, text, errors);
+    string kind = path.EndsWith(".md", StringComparison.Ordinal) ? "block" : "region";
+    HashSet<string> declared = [.. sourceIds.Select(House.ProfileOf).OfType<string>()];
+    HashSet<string> found = [.. spans.Select(span => span.Profile)];
+    foreach (string profile in declared.Except(found).Order(StringComparer.Ordinal))
+    {
+        errors.Add($"{path}: sources name {House.Prefix}{profile}, but no house {kind} here belongs to it");
+    }
+
+    foreach (string profile in found.Except(declared).Order(StringComparer.Ordinal))
+    {
+        errors.Add($"{path}: a house {kind} belongs to {profile}, but sources don't name {House.Prefix}{profile}");
+    }
+
+    foreach (House.Span span in spans.Where(span => !span.Marked))
+    {
+        errors.Add($"{path}:{span.Start + 1}: the house {kind} for {span.Profile} doesn't carry '{House.Marking}'");
+    }
+
+    string[] lines = text.ReplaceLineEndings("\n").Split('\n');
+    for (int index = 0; index < lines.Length; index++)
+    {
+        if (lines[index].Contains(House.Marking, StringComparison.Ordinal)
+            && !spans.Any(span => span.Start < index && index < span.End))
+        {
+            errors.Add($"{path}:{index + 1}: '{House.Marking}' outside a house {kind}, so the default copy would carry it");
+        }
     }
 }
 

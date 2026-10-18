@@ -2,7 +2,7 @@
 targets: [net10.0]
 last-reviewed: 2026-10-09
 last-used: 2026-10-17
-sources: [andrew-lock, dotnet-blog, house, meziantou, ms-learn]
+sources: [andrew-lock, dotnet-blog, house:simon-mckenna, meziantou, ms-learn]
 ---
 
 # CI & automation
@@ -34,7 +34,11 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
   Packages that are mostly build logic need these loosened. Re-test after you tighten them. ([Meziantou: Limit what NuGet packages can do in your project](https://www.meziantou.net/limit-what-nuget-packages-can-do-in-your-project.htm))
 
-- **House:** Treat warnings as errors on every machine, not only in CI. A warning that fails CI but not your local build reaches a pull request before anyone sees it. Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none.
+/// house | simon-mckenna
+
+**House:** Treat warnings as errors on every machine, not only in CI. A warning that fails CI but not your local build reaches a pull request before anyone sees it. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too. Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none.
+
+///
 
 ## Pipeline shape
 
@@ -44,7 +48,6 @@ Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Re
 
 1. **Restore.** If the repository commits `packages.lock.json` (`RestorePackagesWithLockFile=true`), pass `--locked-mode`, so a stale lock file fails the build. Without a lock file, the flag fails every restore with `NU1004`. [templates/Directory.Build.props](../templates/Directory.Build.props) pins packages with Central Package Management and no lock files, so the example restores without it.
 2. **Build.** Build once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`. The property covers compiler and analyzer diagnostics. The switch also fails on MSBuild warnings, such as MSB3277 assembly version conflicts.
-   - **House:** [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too.
    - Enforce style the same way: run analyzers in the build, and add a `dotnet format --verify-no-changes` step. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
 3. **Test.** Run `dotnet test` on Microsoft.Testing.Platform (MTP). MTP needs the `test.runner` opt-in in `global.json`, as [testing.md](testing.md) describes. Without it, the SDK uses VSTest, which fails on .NET 10 before `--no-build` takes effect.
    - Upload TRX and coverage files as build artifacts, so you can diagnose a failure without a rerun.
@@ -106,6 +109,8 @@ Don't add a signer allow list (`signatureValidationMode` set to `require`, with 
 
 Merge updates only through the pipeline above. An update that skips locked restore and tests is a supply-chain risk.
 
+/// house | simon-mckenna
+
 **House:** Leave the bot's dependency dashboard issue open. Renovate manages it, and closing it doesn't opt out: the next run re-creates it under a new number and notifies everyone again.
 
 - **It's the only list of pending updates.** Updates held back by `prConcurrentLimit`, or blocked by a failing branch, appear nowhere else. Its checkboxes trigger an off-schedule run without a configuration change.
@@ -117,3 +122,5 @@ Two rules keep the dashboard useful as a repository grows:
 
 - **Don't use its list of detected dependencies as an audit record.** GitHub caps an issue body at 65,536 characters, so Renovate trims the list in a large repository. Check what the bot manages in a configuration test or a scheduled dry run, where truncation fails visibly.
 - **Keep the pending list short, and give it an owner.** People stop reading a dashboard with hundreds of open entries. Fix the cause in the grouping and scheduling policy: group related updates, widen the schedule until the queue clears, and name the team that works through it.
+
+///

@@ -2,12 +2,46 @@
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-15
 last-used: 2026-09-28
-sources: [andrew-lock, dotnet-blog, house, mark-seemann, meziantou, ms-learn]
+sources:
+  [
+    andrew-lock,
+    dotnet-blog,
+    house:simon-mckenna,
+    mark-seemann,
+    meziantou,
+    ms-learn,
+  ]
 ---
 
 # Testing
 
 Hold tests to the same review bar and conventions as production code.
+
+/// house | simon-mckenna
+
+**House:** Name tests `UnitOfWork_Scenario_ExpectedBehaviour`, and mark each test's Arrange, Act, and Assert sections with comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
+
+```csharp
+public class BasketTests
+{
+    [Fact]
+    public void Total_MultipleItemsAdded_SumsAllItemPrices()
+    {
+        // Arrange
+        var basket = new Basket();
+        basket.Add(10.00m);
+        basket.Add(2.50m);
+
+        // Act
+        var total = basket.Total;
+
+        // Assert
+        Assert.Equal(12.50m, total);
+    }
+}
+```
+
+///
 
 ## Framework and platform
 
@@ -52,30 +86,6 @@ Hold tests to the same review bar and conventions as production code.
   - `System.Text.Json` usually fails first, with `InvalidOperationException`, because reflection-based serialization is off. Fix it with a `[JsonSerializable]` context in the app, not in the test.
   - The native project references `xunit.v3.aot.mtp-v2` instead of `xunit.v3`. The AOT package replaces the reflection-based one, so it can't share a project with the managed suite.
   - Keep F# test projects in the managed run. NUnit doesn't support Native AOT. ([xUnit.net: Testing with Native AOT](https://xunit.net/docs/getting-started/v3/native-aot), [.NET Blog: Test what you ship: MSTest and Native AOT](https://devblogs.microsoft.com/dotnet/mstest-source-generation/), [Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
-
-## Naming and structure
-
-- **House:** Name tests `UnitOfWork_Scenario_ExpectedBehaviour`, and mark each test's Arrange, Act, and Assert sections with comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
-
-  ```csharp
-  public class BasketTests
-  {
-      [Fact]
-      public void Total_MultipleItemsAdded_SumsAllItemPrices()
-      {
-          // Arrange
-          var basket = new Basket();
-          basket.Add(10.00m);
-          basket.Add(2.50m);
-
-          // Act
-          var total = basket.Total;
-
-          // Assert
-          Assert.Equal(12.50m, total);
-      }
-  }
-  ```
 
 ## Integration testing
 

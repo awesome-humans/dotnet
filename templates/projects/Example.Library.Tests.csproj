@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-20 | last-used: 2026-09-24 | sources: ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-20 | last-used: 2026-09-24 | sources: house:simon-mckenna, ms-learn -->
 <!-- Test project on Microsoft.Testing.Platform with xUnit v3. `dotnet test` runs it through the
      runner opt-in in global.json. Don't add TestingPlatformDotnetTestSupport: it's the VSTest
      bridge, which MTP v2 (xunit.v3 4.0.0) rejects on the .NET 10 SDK. -->
@@ -13,10 +13,12 @@
          Microsoft.Testing.Platform, and the build fails without this. -->
     <OutputType>Exe</OutputType>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-    <!-- CA1707 (no underscores in member names) contradicts the house test-naming
+    <!-- house:simon-mckenna begin -->
+    <!-- **House:** CA1707 (no underscores in member names) contradicts the test-naming
          convention UnitOfWork_Scenario_ExpectedBehaviour (opinions/testing.md). The
          convention wins in test projects, and CA1707 still applies to shipping code. -->
     <NoWarn>$(NoWarn);CA1707</NoWarn>
+    <!-- house:simon-mckenna end -->
   </PropertyGroup>
 
   <ItemGroup>

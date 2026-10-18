@@ -45,7 +45,7 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 
 ### Sources
 
-- Every ID must resolve to a Citable row in `AWESOME-HUMANS.md`, or be the reserved `house` ID, which is never a finding.
+- Every ID must resolve to a Citable row in `AWESOME-HUMANS.md`, or be a reserved `house:<profile>` ID, which is never a finding.
 - In an opinion or template, a watch-list ID or a `**Discovery-only.**` ID is a finding. So is a file whose citable sources are all marked `**Corroborate.**`. `scripts/validate-sources.cs` already fails the build on all three.
 - `research/` topics can name unvetted sources if the text flags them.
 
@@ -70,7 +70,7 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 ## Edge cases
 
 - **A repository with no opinions yet:** Report that there's nothing to check. Don't pass.
-- **House content** (`house` in `sources:`, and `**House:**` markings; see HOUSE-OPINIONS.md): The reserved ID is never an unknown-source finding, and never suggest removing it. A `house` ID without `**House:**` content in the file, or the reverse, **is** a finding: the two always appear together.
+- **House content** (`house:<profile>` in `sources:`, and that profile's house blocks or regions; see HOUSE-OPINIONS.md): The reserved ID is never an unknown-source finding, and never suggest removing it. `scripts/validate-sources.cs` fails a build where the ID and its blocks don't appear together, or `**House:**` sits outside a block. Review a house block's age with its file, and never count it as stale sourced text.
 - **Files that can't carry a comment header:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
   - `.slnx` is XML and carries a header, so it isn't exempt.
   - `scripts/validate-metadata.cs` enforces this two-file list in CI, so any other headerless JSON under `templates/` fails there.

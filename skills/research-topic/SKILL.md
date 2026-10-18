@@ -26,7 +26,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    Research a clear request without asking.
 
 2. **Start a worktree** on the branch `research/<topic-slug>`, such as `research/union-types`, following [AGENTS.md](../../AGENTS.md). Create it before the first write, so the topic and the `last-used` updates land together. Use the repository's existing kebab-case name for the topic (`union-types`, not `union-type`), so the branch, topic, and opinions share one search term.
-3. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or carry a "Coming next" note. Present **House:** content as "local convention, not community consensus". Update `last-used` on every opinion you read.
+3. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or carry a "Coming next" note. Skip house blocks unless the user named a house profile. Present that profile's blocks as "its owner's convention, not community consensus". Update `last-used` on every opinion you read.
 4. **Sweep the roster in this order:**
    1. **Citable sources,** weighted by how well their Focus column matches. You can quote these.
    2. **Watch-list sources,** for discovery and cross-checking. Label them as watch-list.
@@ -68,4 +68,4 @@ Every saved topic is eventually promoted or discarded by `resolve-research`, and
 - **Preview-only topics,** such as union types: Research them fully. Lead with the maturity status, and mark guidance for "when it reaches GA" as hypothetical.
 - **A topic outside .NET:** Say that the roster has no authority there, and stop. Don't present general knowledge as vetted research.
 - **Offline:** Answer from `opinions/` alone, and say you skipped the roster sweep. The answer is sourced, but only as current as the opinions' `last-reviewed` dates.
-- **House and community positions conflict:** Present both, house first, with the house reasoning. The reader might not follow this repository's conventions.
+- **House and community positions conflict, for the profile the user named:** Present both, house first, with the house reasoning. The reader might not follow the profile's conventions.

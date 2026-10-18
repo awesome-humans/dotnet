@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-09-25 | last-used: 2026-10-13 | sources: dotnet-blog, house, meziantou, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-09-25 | last-used: 2026-10-13 | sources: dotnet-blog, house:simon-mckenna, meziantou, ms-learn -->
 <!-- Copy to the repository root. Every project inherits these settings. Override one in a project only with a recorded reason. -->
 <Project>
 
@@ -19,7 +19,9 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Quality gates">
+    <!-- house:simon-mckenna begin -->
     <!-- **House:** Always on, not only in CI, so a warning fails the build as soon as it's introduced. Suppress with NoWarn or a pragma only with a comment that explains why. -->
+    <!-- house:simon-mckenna end -->
     <!-- This includes NuGet Audit. NU1901 to NU1904 fail restore on purpose, even on a branch nobody
          changed, on the day an advisory lands against the dependency graph. To suppress one advisory,
          use NuGetAuditSuppress with its URL and a reason. Never list the codes in WarningsNotAsErrors
