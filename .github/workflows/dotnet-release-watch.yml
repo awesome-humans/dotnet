@@ -26,6 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        # The shell steps only read downloaded data, and create-pull-request authenticates
+        # with its own token input, so the job token stays out of .git/config.
+        with:
+          persist-credentials: false
 
       # pipefail is set explicitly: the default shell for an unqualified `run` is
       # `bash -e`, which reports only the LAST command in a pipeline. Without it a failed

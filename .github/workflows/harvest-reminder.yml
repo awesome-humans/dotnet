@@ -20,8 +20,10 @@ jobs:
           set -eu
           title="Harvest due: $(date -u '+%B %Y')"
 
-          existing=$(gh issue list --state open --search "in:title \"$title\"" --json title --jq '.[].title' \
-            | grep -Fxc "$title" || true)
+          # List first, so a failed gh call stops the job under set -e. Piped straight into
+          # grep, its failure was masked by the || true, and the job opened a duplicate.
+          titles=$(gh issue list --state open --search "in:title \"$title\"" --json title --jq '.[].title')
+          existing=$(printf '%s\n' "$titles" | grep -Fxc "$title" || true)
           if [ "${existing:-0}" -gt 0 ]; then
             echo "Open issue titled '$title' already exists — skipping."
             exit 0
