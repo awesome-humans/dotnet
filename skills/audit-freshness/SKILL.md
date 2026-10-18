@@ -26,7 +26,7 @@ Report what's stale. This skill never edits content. Version drift goes to `refr
 | `research/` topics                                                                | 90 days, then reported for `resolve-research`. For details, see [Research](#research)         |
 | `sources:` IDs                                                                    | For the rules, see [Sources](#sources)                                                        |
 | `**Review by YYYY-MM-DD.**` markings in `opinions/` and `templates/`              | Zero past the date. Report each for drop-or-re-date triage                                    |
-| `last-used`                                                                       | Informational, never a finding. Report never-used resources as pruning candidates             |
+| Inbound references to each `opinions/` and `templates/` file                      | Informational, never a finding. For details, see [References](#references)                    |
 | `templates/` still implement what `opinions/` require                             | Zero. For details, see [Templates](#templates)                                                |
 | `templates/` build and test without errors                                        | Zero. For details, see [Templates](#templates)                                                |
 | Citation and roster URLs resolve                                                  | Zero: a dead link is a content finding. Read the latest `Markdown` workflow run, not each URL |
@@ -49,6 +49,12 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 - In an opinion or template, a watch-list ID or a `**Discovery-only.**` ID is a finding. So is a file whose citable sources are all marked `**Corroborate.**`. `scripts/validate-sources.cs` already fails the build on all three.
 - `research/` topics can name unvetted sources if the text flags them.
 
+### References
+
+Count what refers to each opinion and template, by link or by file name, from the repository itself: `skills/`, `AGENTS.md`, `HOUSE-OPINIONS.md`, the other opinions, the template comments, and `research/` topics. Leave out the `README.md` Scope bullets and layout tree, because every opinion appears there.
+
+Report each file with no inbound references as a pruning candidate. Nothing on the web or in another project shows up here, so a file with no references might still be read. Never report it as stale on that count alone.
+
 ### Templates
 
 - **Templates match the opinions.** If an opinion names a property, package, or setting, and its template leaves it out, that's a finding. People copy `templates/`, so a gap ships the advice without the setting.
@@ -56,7 +62,7 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 
 ## Steps
 
-1. **Collect the metadata** from every file under `opinions/` and `research/`, and from the comment headers in `templates/`: `targets`, `last-reviewed`, and `sources`, plus `last-used` on `opinions/` and `templates/`. AGENTS.md explains why `research/` has no `last-used`.
+1. **Collect the metadata** from every file under `opinions/` and `research/`, and from the comment headers in `templates/`: `targets`, `last-reviewed`, and `sources`. Count the inbound references to each opinion and template, as [References](#references) describes.
 2. **Find the latest released versions** of .NET, C#, and F#, from the same sources as `refresh-dotnet-versions` step 1. Find the latest stable version of every package in `templates/Directory.Packages.props`, with the lookup in `refresh-dotnet-versions` step 4b.
    - Skip SDK band lookups: the `global.json` check reads the pin's shape, not its distance from the newest release.
    - If you're offline, skip the checks you can't run, and say so in the report. Report an unchecked pin as "not verified", never as fresh.

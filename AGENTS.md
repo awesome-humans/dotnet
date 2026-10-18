@@ -6,7 +6,7 @@ This repository defines opinionated best practices for building with .NET. This 
 
 - **The source of truth for "what good looks like" in .NET.** Each topic has one file under `opinions/`, and [README.md: Scope](README.md#scope) indexes them.
 - **Copy-paste-ready template files** under `templates/` that encode those opinions.
-- **Kept current.** Every resource records when it was last reviewed, and opinions and templates also record when they were last used. The skills under `skills/` keep the content current.
+- **Kept current.** Every resource records when it was last reviewed. The skills under `skills/` keep the content current.
 
 The repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills specification](https://agentskills.io/specification), and nothing here assumes a specific agent.
 
@@ -21,8 +21,7 @@ When you generate or review .NET code for another project:
 1. Read the relevant files under `opinions/`. Each one states the opinion first, then the rationale, then the sources.
 2. Start from the `templates/` files for `.editorconfig`, `Directory.Build.props`, `Directory.Packages.props`, `global.json`, `.slnx`, `.slnf`, and project files. Copy them verbatim and trim, instead of writing your own.
 3. Target the versions in the `targets:` frontmatter of the opinion files. Never silently downgrade to an older TFM or language version.
-4. When you use an `opinions/` or `templates/` file as a reference, update its `last-used` date. For details, see [Metadata](#metadata). `research/` topics don't carry this date.
-5. Follow a house opinion only for the house profile the user chose. It's a block that opens with `/// house | <profile>` in an opinion, or a region between `house:<profile> begin` and `house:<profile> end` comments in a template. Without a chosen profile, skip every block, and copy a template without its regions. For details, see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md).
+4. Follow a house opinion only for the house profile the user chose. It's a block that opens with `/// house | <profile>` in an opinion, or a region between `house:<profile> begin` and `house:<profile> end` comments in a template. Without a chosen profile, skip every block, and copy a template without its regions. For details, see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md).
 
 ## Maintaining this repository
 
@@ -81,11 +80,11 @@ An agent that uses the author's credentials posts under the author's account, an
 
 Three kinds of resource carry this metadata, in the two syntaxes their file formats allow:
 
-| Directory    | `targets` | `last-reviewed` | `last-used` | `sources` | Syntax             |
-| ------------ | --------- | --------------- | ----------- | --------- | ------------------ |
-| `opinions/`  | Yes       | Yes             | Yes         | Yes       | YAML frontmatter   |
-| `templates/` | Yes       | Yes             | Yes         | Yes       | First-line comment |
-| `research/`  | Yes       | Yes             | No          | Yes       | YAML frontmatter   |
+| Directory    | `targets` | `last-reviewed` | `sources` | Syntax             |
+| ------------ | --------- | --------------- | --------- | ------------------ |
+| `opinions/`  | Yes       | Yes             | Yes       | YAML frontmatter   |
+| `templates/` | Yes       | Yes             | Yes       | First-line comment |
+| `research/`  | Yes       | Yes             | Yes       | YAML frontmatter   |
 
 **`opinions/` and `research/` carry YAML frontmatter:**
 
@@ -93,35 +92,29 @@ Three kinds of resource carry this metadata, in the two syntaxes their file form
 ---
 targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-12 # last time content was verified against sources
-last-used: 2026-08-12 # last time an agent used this as a reference
 sources: [andrew-lock, dotnet-blog] # ids from AWESOME-HUMANS.md, sorted
 ---
 ```
 
-A `research/` topic has no `last-used` field and no status field:
-
-- **No `last-used`:** The only way to consult a topic is to build on it, which re-verifies it. The two dates would always move together, so `last-reviewed` is enough.
-- **No status:** Promoting or discarding a topic deletes it. A topic on disk is unresolved by definition, so a status could only ever read `open`.
-
-For details, see [research-topic](skills/research-topic/SKILL.md) and [resolve-research](skills/resolve-research/SKILL.md).
+A `research/` topic has no status field. Promoting or discarding a topic deletes it, so a topic on disk is unresolved by definition, and a status could only ever read `open`. For details, see [research-topic](skills/research-topic/SKILL.md) and [resolve-research](skills/resolve-research/SKILL.md).
 
 **`templates/` carry a first-line comment header.** An XML, INI, or source file can't open with a `---` block and stay valid for the tools that read it. So the same fields go in a comment instead, separated by pipes after a fixed marker:
 
 ```xml
-<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn -->
 ```
 
 ```ini
-# awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn
+# awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn
 ```
 
 ```fsharp
-// awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: scott-wlaschin
+// awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | sources: scott-wlaschin
 ```
 
 Rules:
 
-- **Update `last-used` whenever you use an opinion or a template:** an opinion you read to decide something, or a template you diffed a project against. The date orders staleness triage: of ten drifted `last-reviewed` dates, review the most-read files first. It also marks candidates for pruning. Only reads _in this repository_ update it, so a person who copies a template or reads an opinion on the web leaves no trace, and the field undercounts. `audit-freshness` treats it as information, never as a finding.
+- **Don't record when a resource was used.** A `last-used` field is rejected. Writing a date on every read left uncommitted edits in every checkout an agent read from, and they conflicted with real changes to the same line. To find pruning candidates, `audit-freshness` counts what refers to each opinion and template instead.
 - **Update `last-reviewed` only after you verify the content against its sources.**
 - **Use `sources` IDs that exist in `AWESOME-HUMANS.md`,** either in the roster tables or as a house profile's reserved `house:<profile>` ID.
   - CI reads the `**Discovery-only.**` and `**Corroborate.**` markings from a source's section under `## Source notes`, not from its table row.
