@@ -34,8 +34,11 @@ internal static partial class House
     internal static string? ProfileOf(string sourceId) =>
         sourceId.StartsWith(Prefix, StringComparison.Ordinal) ? sourceId[Prefix.Length..] : null;
 
-    /// <summary>Whether a profile id is lowercase words joined by hyphens, as a roster id is.</summary>
-    internal static bool IsValidProfile(string profile) => ProfileId().IsMatch(profile);
+    /// <summary>
+    /// Whether a profile id is lowercase words joined by hyphens, as a roster id is. none is
+    /// reserved for the default, which the site's ?house=none and the raw/none/ copies name.
+    /// </summary>
+    internal static bool IsValidProfile(string profile) => ProfileId().IsMatch(profile) && profile != "none";
 
     /// <summary>
     /// The house blocks in an opinion, or the house regions in a template, in file order:
@@ -94,7 +97,7 @@ internal static partial class House
 
                 if (!IsValidProfile(found.Profile))
                 {
-                    errors.Add($"{path}:{index + 1}: '{found.Profile}' isn't a profile id: use lowercase words joined by hyphens");
+                    errors.Add($"{path}:{index + 1}: '{found.Profile}' isn't a profile id: use lowercase words joined by hyphens, other than none");
                 }
 
                 open = found.Profile;

@@ -25,7 +25,7 @@ This file covers the security rules outside the HTTP pipeline: secrets, deserial
 // The managed identity works in the deployed app and the second credential is the
 // developer's own sign-in, so one code path covers both. Pass the id explicitly:
 // the parameterless ManagedIdentityCredential constructor is obsolete as of
-// Azure.Identity 1.21.0, and CS0618 is an error under the warnings rule.
+// Azure.Identity 1.21.0, and CS0618 is an error under TreatWarningsAsErrors.
 builder.Configuration.AddAzureKeyVault(
     new Uri($"https://{builder.Configuration["VaultName"]}.vault.azure.net/"),
     new ChainedTokenCredential(

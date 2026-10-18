@@ -79,7 +79,7 @@ House opinions are preferences from experience rather than from a vetted source.
 ├── README.md                 ← you are here
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
-├── HOUSE-OPINIONS.md         ← the owner's own opinions: intake and audit trail
+├── HOUSE-OPINIONS.md         ← house profiles' opinions: intake and audit trail
 ├── assets/diagrams/          ← generated SVG diagrams: rerun the script, never edit by hand
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
 │   ├── architecture.md
@@ -135,7 +135,7 @@ Every skill except the two report-only ones works on its own branch, and its cha
 | [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline          |
 | [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                      |
 | [`review-project`](skills/review-project/SKILL.md)                   | Check an external project against the opinions and templates, and report deviations         |
-| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House   |
+| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a house profile's opinion into the opinions and templates, visibly marked as House    |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic from the opinions and vetted sources, and save it with citations      |
 | [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic by weaving it into the opinions and templates, or discard it |
 
