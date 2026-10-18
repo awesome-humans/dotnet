@@ -1,0 +1,17 @@
+name: Attribution
+
+# Fails a pull request whose title, description, or commits carry agent attribution,
+# using the organisation's shared check in awesome-humans/.github. pull_request_target
+# runs the base branch's copy of this file, so a pull request can't edit the check
+# it's held to. The shared job never checks out or runs the pull request's code.
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  attribution:
+    uses: awesome-humans/.github/.github/workflows/attribution.yml@e5c45b2f8b26dae7dd1472d603cf699a73f98be2 # main
