@@ -95,6 +95,13 @@ List<string> ids = [];
 List<string> errors = [];
 string? bucket = null;
 
+// The Citable section states how many people and publications its table holds, and the
+// site shows that sentence. A hand-kept count drifts with every admission, so the rows
+// are counted here and the sentence has to agree.
+Match? statedCount = null;
+int citablePeople = 0;
+int citablePublications = 0;
+
 foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Split('\n'))
 {
     if (line.StartsWith("### ", StringComparison.Ordinal) && notesFor is not null)
@@ -142,6 +149,12 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
         continue;
     }
 
+    if (bucket == "citable" && Patterns.CitableCount().Match(line) is { Success: true } count)
+    {
+        statedCount = count;
+        continue;
+    }
+
     if (bucket is null || !line.StartsWith('|'))
     {
         continue;
@@ -167,12 +180,39 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
     {
         errors.Add($"{RosterPath}: the row for '{rowId}' has Kind '{cells[1]}', not 'person' or 'publication'");
     }
+    else if (bucket == "citable")
+    {
+        if (cells[1] == "person")
+        {
+            citablePeople++;
+        }
+        else
+        {
+            citablePublications++;
+        }
+    }
 
     // TryAdd rather than the indexer: two rows sharing an id would otherwise leave the
     // roster holding whichever came last, deciding a source's bucket by row order.
     if (!roster.TryAdd(rowId, (bucket, string.Empty)))
     {
         errors.Add($"{RosterPath}: source id '{rowId}' appears on more than one row — ids are unique");
+    }
+}
+
+if (statedCount is null)
+{
+    errors.Add(
+        $"{RosterPath}: '## Citable' has no sentence of the form "
+        + "'The table lists N sources: N people and N publications.'");
+}
+else
+{
+    string expected = $"{citablePeople + citablePublications} sources: {citablePeople} people and {citablePublications} publications";
+    string stated = $"{statedCount.Groups[1].Value} sources: {statedCount.Groups[2].Value} people and {statedCount.Groups[3].Value} publications";
+    if (stated != expected)
+    {
+        errors.Add($"{RosterPath}: '## Citable' says it lists {stated}, but the table has {expected}");
     }
 }
 
@@ -437,4 +477,9 @@ internal static partial class Patterns
     // '### `ardalis`: Citable, **Corroborate.**'.
     [GeneratedRegex(@"\A### `([a-z0-9-]+)`")]
     internal static partial Regex NotesHeadingId();
+
+    // The count sentence above the Citable table: 'The table lists 31 sources: 21 people and
+    // 10 publications.'
+    [GeneratedRegex(@"\AThe table lists (\d+) sources: (\d+) people and (\d+) publications\.\z")]
+    internal static partial Regex CitableCount();
 }
