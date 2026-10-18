@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-14 | last-used: 2026-09-24 | sources: house, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-14 | last-used: 2026-09-24 | sources: house:simon-mckenna, ms-learn -->
 <!-- SLNX is the default solution format since the .NET 10 SDK (`dotnet new sln`). -->
 <Solution>
   <Folder Name="/src/">
@@ -8,6 +8,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Example.Library.Tests/Example.Library.Tests.csproj" />
   </Folder>
+  <!-- house:simon-mckenna begin -->
   <!-- **House:** root build files show in the IDE under /build/, beside the projects they configure. -->
   <Folder Name="/build/">
     <File Path="Directory.Build.props" />
@@ -15,4 +16,5 @@
     <File Path="global.json" />
     <File Path=".editorconfig" />
   </Folder>
+  <!-- house:simon-mckenna end -->
 </Solution>

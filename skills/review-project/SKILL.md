@@ -1,6 +1,6 @@
 ---
 name: review-project
-description: Check an external .NET project or solution, given a local path or a repository URL, against this repository's opinions and templates, and report deviations with severity and suggested fixes. Use when asked to verify, audit, review, or grade a .NET codebase against Awesome Humans of .NET conventions, or to check whether a project "does what good looks like".
+description: Check an external .NET project or solution, given a local path or a repository URL and optionally a house profile, against this repository's opinions and templates, and report deviations with severity and suggested fixes. Use when asked to verify, audit, review, or grade a .NET codebase against Awesome Humans of .NET conventions, or to check whether a project "does what good looks like".
 license: See repository LICENSE
 compatibility: Requires read access to the target project; git and internet access for URL targets; .NET SDK helpful but optional
 metadata:
@@ -12,11 +12,14 @@ metadata:
 
 Compare a target .NET project with this repository's opinions and templates, and report where it deviates. This skill **only reports** unless the user asks for fixes.
 
+By default, it checks sourced community practice only. If the user names a house profile, such as `simon-mckenna`, it checks that profile's house opinions too ([HOUSE-OPINIONS.md](../../HOUSE-OPINIONS.md)).
+
 ## Steps
 
 1. **Resolve the target,** from a local path or a repository URL:
    - **Local path:** Read it in place. Never write to it during the review.
    - **URL:** Read it remotely, with whatever repository browsing the host provides. Clone only when the user asks for a fix (step 9), or when the host can't browse the tree well enough to sample files. A shallow `git clone --depth 1` into a scratch location is a read cache, not a write to the target.
+   - **Record the house profile,** or that there's none. Without one, skip every house block in `opinions/`, and diff against each template with its house regions removed. With one, keep that profile's blocks and regions, and skip the others.
    - **Record what you read:**
      - For a URL, the branch and commit SHA. Without the SHA, nobody can reproduce the review, and step 9 branches from it.
      - For a local git worktree, the SHA. If the tree has uncommitted changes, note that the findings describe the working tree, not the commit.
@@ -37,7 +40,7 @@ Compare a target .NET project with this repository's opinions and templates, and
      - **Gap:** Missing scaffolding.
      - **Observation:** A local choice worth a look.
    - For each finding, give the path in the target, what the opinion says, and a one-line fix, ideally "copy `templates/<file>` and trim".
-   - If the violated opinion is marked `**House:**` (see HOUSE-OPINIONS.md), say so, and grade the finding one level lower. The target can reasonably follow the community default instead.
+   - If the violated opinion is a house block of the chosen profile, say so, and grade the finding one level lower. The target can reasonably follow the sourced text instead.
    - End with a short verdict that reads on its own.
 8. **After you present the report, ask in one question whether to save it, and where.** Never save without asking, and never assume a location.
    - Offer `review-<target-name>-<YYYY-MM-DD>.md` in the directory where the user ran the skill, or any path they name. `<target-name>` is the target repository or solution, so two same-day reviews don't collide.

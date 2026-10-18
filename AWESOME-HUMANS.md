@@ -1,6 +1,6 @@
 # Awesome humans
 
-These are the vetted sources behind every opinion in this repository. An opinion can use content only if it traces to a source listed here, or carries the reserved `house` ID described below.
+These are the vetted sources behind every opinion in this repository. An opinion can use content only if it traces to a source listed here, or carries a reserved `house:<profile>` ID described below.
 
 To propose a source, [suggest it for vetting](https://github.com/awesome-humans/website/issues/new?template=suggest-source.yml&ecosystem=.NET). If you're a listed source and don't want your work cited, [ask to opt out](https://github.com/awesome-humans/website/issues/new?template=opt-out.yml). For how both work, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
 
@@ -38,7 +38,7 @@ The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but
 
 ### Reserved IDs, markings, and references
 
-**Reserved ID: `house`.** The repository owner's opinions use the `house` source ID, described in [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is ownership of the repository, not a track record, so it skips the admission criteria, and every house opinion is visibly marked instead. [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of the marking, of precedence in a conflict, and of contributor adoption. The `house` ID never appears in the roster tables.
+**Reserved prefix: `house:`.** A house profile's opinions use the source ID `house:<profile>`, such as `house:simon-mckenna`, described in [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). A profile's authority is its owner's experience, not a track record, so it skips the admission criteria, and every house opinion is visibly marked instead. [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of the marking, of how a house opinion sits beside the sourced text, and of contributor adoption. A `house:` ID never appears in the roster tables.
 
 **Reserved marking: `**Discovery-only.**`.** Aggregators, such as link roundups, newsletters, and curated lists, are admitted for discovery and never cited. They lead to a primary source, and the opinion cites that. CI rejects the ID of a source whose notes carry this marking in any `sources:` list under `opinions/` or `templates/`. Like `**House:**`, it's a fixed string, so a check can match it exactly.
 
@@ -561,3 +561,4 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 | 2026-10-09 | Harvest (2026-09-15 to 2026-10-09) | Updated `runtime-performance.md` (ILLink substitutions, and a .NET 11 runtime async note) and `ci.md` (signer allow-list upkeep). Flagged `khalid`, `james-montemagno`, and `nicholas-blumhardt` |
 | 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline covered. The notes now record the restart, and a token-shape limit on citing his scope-authorization post |
 | 2026-10-17 | Admitted `stephen-cleary` | Writing on async and concurrency since 2008-06-20, with in-post corrections. Latest post 2025-12-04, so re-evaluate from 2026-12-04 if nothing follows (#167) |
+| 2026-10-18 | Replaced the `house` ID with `house:<profile>` | House opinions belong to a house profile, such as `house:simon-mckenna`, and the site shows a profile's only to a reader who chooses it |

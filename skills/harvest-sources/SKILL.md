@@ -27,7 +27,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - **Noise:** Release chatter, marketing, or a one-off tip that doesn't generalise. Skip it.
 5. **Edit in a worktree** on the branch `harvest/<YYYY-MM-DD>`, dated the day the sweep window ends, as [AGENTS.md](../../AGENTS.md) describes:
    - Keep one recommendation per opinion. If a post contradicts the current opinion, choose the position with the stronger sources or evidence, and note the change in one line.
-   - **Never remove, weaken, or unmark house content** ([HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). When a source now agrees with a house opinion, add the citation beside the marking.
+   - **Never remove, weaken, or unmark a house block or region** ([HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). Update the sourced text beside it as usual. When a source now agrees with a house opinion, add the citation inside its block.
    - Add the post's source ID to the opinion's `sources:`, and update `last-reviewed:`.
 6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: the date, the window, and what changed, as briefly as the existing entries. Per-source findings go in the pull request, not the table.
 7. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.

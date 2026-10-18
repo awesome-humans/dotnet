@@ -3,7 +3,14 @@ targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-21
 last-used: 2026-09-25
 sources:
-  [aaron-stannard, dotnet-blog, gerald-versluis, house, ms-learn, steve-gordon]
+  [
+    aaron-stannard,
+    dotnet-blog,
+    gerald-versluis,
+    house:simon-mckenna,
+    ms-learn,
+    steve-gordon,
+  ]
 ---
 
 # Project structure & SDK
@@ -35,7 +42,13 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 - **Use Central Package Management (`Directory.Packages.props`) in multi-project repositories.** Per-project versions drift apart as projects multiply. NU1510 flags direct references that can be pruned. Start from [templates/Directory.Packages.props](../templates/Directory.Packages.props), which enables `CentralPackageTransitivePinningEnabled`. ([Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Put shared build settings in `Directory.Build.props`:** the TFM, `LangVersion` set to latest, nullable enabled, analyzers on, and warnings as errors. Copy [templates/Directory.Build.props](../templates/Directory.Build.props). Project files are then nearly empty, as in [templates/projects/](../templates/projects/).
-- **House:** Warnings as errors is always on, not only in CI, and every suppression has a comment that gives the reason. [ci.md](ci.md) holds the canonical statement.
+
+/// house | simon-mckenna
+
+**House:** Warnings as errors is always on, not only in CI, and every suppression has a comment that gives the reason. [ci.md](ci.md) holds the canonical statement.
+
+///
+
 - **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
 - **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 10 is an LTS release, supported until November 2028. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support))
@@ -43,7 +56,13 @@ Use one solution format and Central Package Management, and pin versions at the 
 ## Repository layout
 
 - **Put shipping code in `src/`, test projects in `tests/`, and build configuration at the root.** Give each project its own directory, named after the assembly. Mirror the disk layout in the solution with `/src/` and `/tests/` solution folders, as [templates/example.slnx](../templates/example.slnx) does. ([Microsoft Learn: Organize projects for .NET Framework and .NET](https://learn.microsoft.com/dotnet/core/porting/project-structure), [dotnet/samples: migrate-library-csproj](https://github.com/dotnet/samples/tree/main/framework/libraries/migrate-library-csproj))
-- **House:** Add a `/build/` solution folder that lists `Directory.Build.props`, `Directory.Packages.props`, `global.json`, and `.editorconfig`. They configure every project, and the folder shows them in Solution Explorer. [templates/example.slnx](../templates/example.slnx) includes it, and [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md) uses the same shape.
+
+/// house | simon-mckenna
+
+**House:** Add a `/build/` solution folder that lists `Directory.Build.props`, `Directory.Packages.props`, `global.json`, and `.editorconfig`. They configure every project, and the folder shows them in Solution Explorer. [templates/example.slnx](../templates/example.slnx) includes it, and [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md) uses the same shape.
+
+///
+
 - **Set `<UseArtifactsOutput>true</UseArtifactsOutput>` in the root `Directory.Build.props`.** All build output goes under one `artifacts/<type>/<project>/<pivot>` root, instead of `bin/` and `obj/` in each project.
   - The types are `bin`, `obj`, `publish`, and `package`. `package` has no project folder, so `.nupkg` files go to `artifacts/package/<configuration>`.
   - Tools and CI steps can rely on the layout. The per-project layout "can change drastically via relatively simple MSBuild changes".

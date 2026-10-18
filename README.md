@@ -42,7 +42,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 - **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, and source generators
 - **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>` and memory, async code, and the GC
 - **[Security](opinions/security.md):** secrets, deserialization, cryptography, and servicing cadence
-- **[Testing](opinions/testing.md):** choosing a framework, naming and structure, integration tests, and coverage
+- **[Testing](opinions/testing.md):** choosing a framework, integration tests, deterministic time, and coverage
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor and WebAssembly, .NET MAUI, and cross-platform desktop with Avalonia
 - **Libraries:** what to use and what to avoid, covered in the files above
 
@@ -71,7 +71,7 @@ Any other limit, such as a concern about independence or an outdated back catalo
 
 ## House opinions
 
-The repository owner outranks the roster. The owner's preferences come in through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md) skill, and they're marked wherever they appear, so you can tell community best practice from local convention. HOUSE-OPINIONS.md defines the marking and which side wins a conflict. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
+House opinions are preferences from experience rather than from a vetted source. Each belongs to a house profile, named for the person or organisation that owns it, such as the owner's, `simon-mckenna`. On awesome-humans.net, every page shows sourced community practice only, until you choose a profile in the header. Agents read `llms-<profile>.txt` instead of `llms.txt`. In this repository, each house opinion is a marked block beside the sourced text it changes, and [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) defines the format and records each one. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
 
 ## Repository layout
 
@@ -79,7 +79,7 @@ The repository owner outranks the roster. The owner's preferences come in throug
 ├── README.md                 ← you are here
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
-├── HOUSE-OPINIONS.md         ← the owner's own opinions: intake and audit trail
+├── HOUSE-OPINIONS.md         ← house profiles' opinions: intake and audit trail
 ├── assets/diagrams/          ← generated SVG diagrams: rerun the script, never edit by hand
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
 │   ├── architecture.md
@@ -100,6 +100,7 @@ The repository owner outranks the roster. The owner's preferences come in throug
 ├── scripts/                  ← this repository's own CI checks, as .NET file-based apps
 │   ├── CommentHeader.cs      ← shared helper, pulled in with #:include
 │   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
+│   ├── House.cs              ← shared helper, pulled in with #:include
 │   ├── Opinions.cs           ← shared helper, pulled in with #:include
 │   ├── build-site.cs
 │   ├── export-diagrams.cs
@@ -134,7 +135,7 @@ Every skill except the two report-only ones works on its own branch, and its cha
 | [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline          |
 | [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                      |
 | [`review-project`](skills/review-project/SKILL.md)                   | Check an external project against the opinions and templates, and report deviations         |
-| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House   |
+| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a house profile's opinion into the opinions and templates, visibly marked as House    |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic from the opinions and vetted sources, and save it with citations      |
 | [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic by weaving it into the opinions and templates, or discard it |
 
@@ -157,7 +158,7 @@ A scheduled GitHub Action, [`.github/workflows/dotnet-release-watch.yml`](.githu
 | Script                                                         | Checks                                                                                                                                                                                                                                                                                                                                    |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/`, and `templates/` has `targets`, `last-reviewed`, and `sources`, plus `last-used` outside `research/`, with ISO 8601 dates and a sorted `sources` list                                                                                                                                      |
-| [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source ID in `opinions/` and `templates/` exists in the AWESOME-HUMANS.md roster and is citable. The roster tables and notes sections are sorted by ID, no ID appears twice, and every notes section matches a row                                                                                                                  |
+| [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source ID in `opinions/` and `templates/` exists in the AWESOME-HUMANS.md roster and is citable. Each `house:<profile>` ID has a house block or region of that profile, and every house opinion sits inside one. The roster tables and notes sections are sorted by ID, no ID appears twice, and every notes section matches a row  |
 | [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README lists every opinion and skill, and lists nothing that doesn't exist. Scope is sorted by title, and the layout tree by file name                                                                                                                                                                                               |
 | [`export-diagrams.cs`](scripts/export-diagrams.cs)             | Draws the SVG diagrams in `assets/diagrams/`. It doesn't check anything, but CI reruns it and fails if the committed SVGs differ from its output                                                                                                                                                                                          |
 | [`build-site.cs`](scripts/build-site.cs)                       | Stages the `/dotnet/` pages of awesome-humans.net in `<dir>/dotnet/`, given `-- --out <dir>`, to the [awesome-humans/website staging contract](https://github.com/awesome-humans/website#staging-contract). The `Site preview` workflow then builds the whole site with Zensical in strict mode, which fails on any broken link or anchor |
@@ -170,11 +171,12 @@ dotnet run scripts/validate-metadata.cs
 
 `npm run verify` runs everything CI checks locally, in one command: `npm run check`, the three validators, `export-diagrams.cs` and `build-site.cs`, which stages into `artifacts/site/`. It redraws the diagrams in place, so commit any SVG it changes. The Zensical build is left to CI, because it needs Python and the website repository.
 
-Three helper files support the scripts:
+Four helper files support the scripts:
 
 - [`Opinions.cs`](scripts/Opinions.cs) lists the opinion files.
 - [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter in `opinions/` and `research/` files.
 - [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the `templates/` files that carry a header and parses their first-line comment.
+- [`House.cs`](scripts/House.cs) finds the house blocks in `opinions/` and the house regions in `templates/`, and writes a file's copy for one house profile, or for none.
 
 The helpers have no top-level statements, so they don't run alone. Each compiles into the scripts that `#:include` it.
 

@@ -2,6 +2,7 @@
 #:package YamlDotNet@18.1.0
 #:include Opinions.cs
 #:include Frontmatter.cs
+#:include House.cs
 #:property PublishAot=false
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
@@ -20,6 +21,12 @@
 // <dir>/dotnet/, with the diagrams in dotnet/assets/, the section's navigation in nav.json,
 // the roster in sources.json, and this ecosystem's own llms.txt. The website repository
 // adds the shared pages, the configuration, and the root llms.txt, and builds the site.
+//
+// House opinions stay in the pages as house blocks, and the site shows a profile's only to a
+// reader who chooses it. A template with house regions shows its default copy, with each
+// profile's copy in a house block below it. Agents get the same choice as files:
+// llms.txt links copies of the opinions and templates with every house block and region
+// removed, and llms-<profile>.txt links copies with only that profile's, under raw/.
 //
 // A .NET 10 file-based app. Run it from the repository root:
 //
@@ -40,6 +47,10 @@ const string SkillsDirectory = "skills";
 const string Ecosystem = "dotnet";
 const string EcosystemName = ".NET";
 const string SchemaBase = "https://raw.githubusercontent.com/awesome-humans/website/main/schemas";
+const string SiteUrl = "https://awesome-humans.net/";
+
+// The default profile, which carries no house opinions. Its copies go under raw/none/.
+const string NoProfile = "none";
 
 // Days after its last-reviewed date that an opinion counts as stale, from audit-freshness.
 const int OpinionTolerance = 180;
@@ -85,6 +96,21 @@ string[] templates =
         .Where(path => !path.Split('/').Any(part => part is "artifacts" or "bin" or "obj"))
         .Order(StringComparer.OrdinalIgnoreCase),
 ];
+
+// The opinions and templates that hold house opinions, and the profiles they belong to.
+// validate-sources.cs holds each one to its sources list, so a malformed one is an error
+// here too, rather than a page that shows the wrong thing.
+Dictionary<string, string[]> housed = new(StringComparer.Ordinal);
+foreach (string path in Opinions.Names().Select(Opinions.PathOf).Concat(templates))
+{
+    string[] found = [.. House.Spans(path, File.ReadAllText(path), errors).Select(span => span.Profile).Distinct().Order(StringComparer.Ordinal)];
+    if (found.Length > 0)
+    {
+        housed[path] = found;
+    }
+}
+
+string[] profiles = [.. housed.Values.SelectMany(found => found).Distinct().Order(StringComparer.Ordinal)];
 
 string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
 Match[] skills = Site.SkillRow().Matches(readme).ToArray();
@@ -246,7 +272,7 @@ foreach (string name in Opinions.Names())
     string line = string.Concat(
         MetaItem("Targets", string.Join(" ", Site.List(meta["targets"]).Select(target => $"`{target}`"))),
         MetaItem("Last reviewed", $"{reviewed:yyyy-MM-dd} <span class=\"ah-chip ah-chip--{freshness} ah-chip--dot\">{freshness}</span>"),
-        MetaItem("Sources", string.Join(" ", Site.List(meta["sources"]).Select(id => $"{SourceLink(path, id)}{{ .ah-chip }}"))))
+        MetaItem("Sources", string.Join(" ", Site.List(meta["sources"]).Select(id => $"{SourceLink(path, id)}{{ .ah-chip{HouseAttribute(id)} }}"))))
         + "\n{ .ah-meta }";
     string text = Rewrite(path, File.ReadAllText(path));
     int title = text.IndexOf("\n# ", StringComparison.Ordinal);
@@ -276,13 +302,19 @@ foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.G
     {
         index.Add($"- [`{Path.GetFileName(template)}`]({Site.TemplatePage(template)})\n");
 
-        string content = File.ReadAllText(template).ReplaceLineEndings("\n").TrimEnd('\n');
-        string fence = new('`', Math.Max(3, Site.LongestBacktickRun(content) + 1));
+        string text = File.ReadAllText(template).ReplaceLineEndings("\n");
+        string content = House.ForProfile(template, text, null).TrimEnd('\n');
+        string fence = new('`', Math.Max(3, Site.LongestBacktickRun(text) + 1));
+        string variants = string.Concat(housed.GetValueOrDefault(template, []).Select(profile =>
+            $"\n/// house | {profile}\n\n"
+            + $"**House:** With this house profile, the file reads:\n\n"
+            + $"{fence}{Site.Language(template)}\n{House.ForProfile(template, text, profile).TrimEnd('\n')}\n{fence}\n\n///\n"));
         Write(
             pages[template],
             $"# `{Path.GetFileName(template)}`\n\n"
-            + $"[View on GitHub]({Site.GitHub(template, isDirectory: false)}) · [Raw]({Site.Raw(template)})\n\n"
-            + $"{fence}{Site.Language(template)}\n{content}\n{fence}\n");
+            + $"[View on GitHub]({Site.GitHub(template, isDirectory: false)}) · [Raw]({RawLink(template, null)})\n\n"
+            + $"{fence}{Site.Language(template)}\n{content}\n{fence}\n"
+            + variants);
     }
 }
 
@@ -332,48 +364,75 @@ foreach (Match skill in skills)
 
 Write(pages[SkillsDirectory], string.Concat(skillIndex));
 
+// Copies of each opinion and template that holds house opinions, for agents: one with every
+// house block or region removed, and one per profile it holds, with only that profile's.
+// An opinion's copy ends in .md.txt, because the site renders every .md file as a page.
+foreach ((string path, string[] found) in housed)
+{
+    string text = File.ReadAllText(path);
+    foreach (string? profile in found.Prepend(null))
+    {
+        Write($"{Ecosystem}/{RawPage(path, profile)}", House.ForProfile(path, text, profile));
+    }
+}
+
 // llms.txt, per llmstxt.org: a summary and links an agent can follow, to the raw Markdown
 // of each opinion and the raw template files rather than rendered pages. It describes this
 // ecosystem alone, at /dotnet/llms.txt, and the website repository's root llms.txt links to
-// it. The raw string takes this file's line endings, which a Windows checkout can make CRLF,
-// so the result is normalised to LF like every file the script reads.
+// it. It carries no house opinions, and llms-<profile>.txt carries one profile's. The raw
+// string takes this file's line endings, which a Windows checkout can make CRLF, so the
+// result is normalised to LF like every file the script reads.
 const string LlmsSummary = "Opinionated best practices for building with .NET, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.";
-string opinionLinks = string.Join("\n", Site.ScopeBullet().Matches(readme).Select(bullet =>
-    $"- [{bullet.Groups["title"].Value}]({Site.Raw(bullet.Groups["path"].Value)}): {bullet.Groups["summary"].Value.Trim()}"));
-string templateLinks = string.Join("\n", templates.Select(template =>
-    $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({Site.Raw(template)})"));
 string skillLinks = string.Join("\n", skills.Select(skill =>
     $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}"));
-string llms = $"""
-    # Awesome Humans of {EcosystemName}
 
-    > {LlmsSummary}
+foreach (string? profile in profiles.Prepend(null))
+{
+    string opinionLinks = string.Join("\n", Site.ScopeBullet().Matches(readme).Select(bullet =>
+        $"- [{bullet.Groups["title"].Value}]({RawLink(bullet.Groups["path"].Value, profile)}): {bullet.Groups["summary"].Value.Trim()}"));
+    string templateLinks = string.Join("\n", templates.Select(template =>
+        $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({RawLink(template, profile)})"));
+    string house = profile is null
+        ? $"These files carry no house opinions. For a house profile's, read its llms-<profile>.txt beside this file instead: {string.Join(", ", profiles.Select(other => $"[{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt)"))}."
+        : $"These files carry the {profile} house profile's opinions. Each is a block that opens with `/// house | {profile}`, starts with `**House:**`, and closes with `///`, or a template region between `house:{profile} begin` and `house:{profile} end` comments. A house opinion is its owner's preference from experience, not sourced community practice. Where it conflicts with the sourced text beside it, follow the house opinion. For the default, which carries no house opinions, read [llms.txt]({SiteUrl}{Ecosystem}/llms.txt).";
+    if (profile is null && profiles.Length == 0)
+    {
+        house = "These files carry no house opinions.";
+    }
 
-    ## {EcosystemName} opinions
+    string llms = $"""
+        # Awesome Humans of {EcosystemName}{(profile is null ? "" : $", with the {profile} house profile")}
 
-    Follow these when writing or reviewing .NET code. Target the versions in each file's `targets:` frontmatter, never an older one.
+        > {LlmsSummary}
 
-    {opinionLinks}
+        {house}
 
-    ## {EcosystemName} templates
+        ## {EcosystemName} opinions
 
-    Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.
+        Follow these when writing or reviewing .NET code. Target the versions in each file's `targets:` frontmatter, never an older one.
 
-    {templateLinks}
+        {opinionLinks}
 
-    ## {EcosystemName} skills
+        ## {EcosystemName} templates
 
-    Agent Skills procedures. Run review-project to check a .NET project against the opinions. The others maintain the repository.
+        Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.
 
-    {skillLinks}
+        {templateLinks}
 
-    ## Optional
+        ## {EcosystemName} skills
 
-    - [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria
-    - [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear
+        Agent Skills procedures. Run review-project to check a .NET project against the opinions. The others maintain the repository.
 
-    """;
-Write($"{Ecosystem}/llms.txt", llms.ReplaceLineEndings("\n"));
+        {skillLinks}
+
+        ## Optional
+
+        - [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria
+        - [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the house profiles, and the record of every house opinion woven in
+
+        """;
+    Write($"{Ecosystem}/{(profile is null ? "llms.txt" : $"llms-{profile}.txt")}", llms.ReplaceLineEndings("\n"));
+}
 
 // The navigation. This ecosystem's section goes to nav.json, with its paths relative to
 // dotnet/, and the website repository places it.
@@ -452,17 +511,36 @@ Console.WriteLine($"Staged to {Path.Combine(docsDirectory, Ecosystem)}/");
 return 0;
 
 // A source id links to its notes section in the roster, or to the citable table when it has
-// nothing to record and so no section, and house links to the house opinions.
+// nothing to record and so no section, and a house profile links to the house opinions.
 // One labelled group in an opinion's metadata strip. Markdown inside the span still renders.
 static string MetaItem(string label, string values) =>
     $"<span class=\"ah-meta__item\"><span class=\"ah-label\">{label}</span> {values}</span>";
 
+// A house profile's chip carries the profile, so the site shows it only with the profile's blocks.
+static string HouseAttribute(string id) =>
+    House.ProfileOf(id) is string profile ? $" data-house=\"{profile}\"" : "";
+
+// Where an opinion or template's copy for a profile lands under dotnet/, for a file that holds
+// house opinions. Zensical skips dotfiles, so a template's leading dot is dropped, as on its page.
+static string RawPage(string path, string? profile)
+{
+    string name = path.EndsWith(".md", StringComparison.Ordinal) ? path + ".txt" : path.Replace("/.", "/", StringComparison.Ordinal);
+    return $"raw/{profile ?? NoProfile}/{name}";
+}
+
+// The raw file an agent reads for a profile, or for the default with null. A file without
+// house opinions is the same for everyone, so it's GitHub's raw copy. A file with them is
+// this profile's copy, or the default copy when none of its house opinions are this profile's.
+string RawLink(string path, string? profile) =>
+    !housed.TryGetValue(path, out string[]? found) ? Site.Raw(path)
+        : $"{SiteUrl}{Ecosystem}/{RawPage(path, profile is not null && found.Contains(profile) ? profile : null)}";
+
 string SourceLink(string path, string id)
 {
     string from = Path.GetDirectoryName(path) ?? "";
-    if (id == "house")
+    if (House.ProfileOf(id) is not null)
     {
-        return $"[house]({Target(path, pages[path], Site.Normalise(Path.GetRelativePath(from, "HOUSE-OPINIONS.md")), anchorsToGitHub: false)})";
+        return $"[{id}]({Target(path, pages[path], Site.Normalise(Path.GetRelativePath(from, "HOUSE-OPINIONS.md")), anchorsToGitHub: false)})";
     }
 
     Match heading = Regex.Match(roster, $@"^### (`{Regex.Escape(id)}`.*)$", RegexOptions.Multiline);
