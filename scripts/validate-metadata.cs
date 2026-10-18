@@ -20,8 +20,10 @@
 // required set spans both syntaxes, so they cannot drift apart.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
-// other checks via #:include. Run it from the repository root:
+// other checks via #:include. Run it from the repository root, through its
+// recipe as CI does, or directly:
 //
+//     just validate-metadata
 //     dotnet run scripts/validate-metadata.cs
 //     ./scripts/validate-metadata.cs      (the shebang above)
 //

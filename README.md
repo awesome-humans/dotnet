@@ -81,6 +81,7 @@ House opinions are preferences from experience rather than from a vetted source.
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── HOUSE-OPINIONS.md         ← house profiles' opinions: intake and audit trail
 ├── assets/diagrams/          ← generated SVG diagrams: rerun the script, never edit by hand
+├── justfile                  ← every local and CI entry point: run `just` to list them
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
 │   ├── architecture.md
 │   ├── aspnet-core.md
@@ -163,13 +164,13 @@ A scheduled GitHub Action, [`.github/workflows/dotnet-release-watch.yml`](.githu
 | [`export-diagrams.cs`](scripts/export-diagrams.cs)             | Draws the SVG diagrams in `assets/diagrams/`. It doesn't check anything, but CI reruns it and fails if the committed SVGs differ from its output                                                                                                                                                                                          |
 | [`build-site.cs`](scripts/build-site.cs)                       | Stages the `/dotnet/` pages of awesome-humans.net in `<dir>/dotnet/`, given `-- --out <dir>`, to the [awesome-humans/website staging contract](https://github.com/awesome-humans/website#staging-contract). The `Site preview` workflow then builds the whole site with Zensical in strict mode, which fails on any broken link or anchor |
 
-Run them from the repository root, as CI does:
+Run them from the repository root through their [`justfile`](justfile) recipes, as CI does. Each recipe has the script's name, and `just` with no arguments lists them:
 
 ```sh
-dotnet run scripts/validate-metadata.cs
+just validate-metadata
 ```
 
-`npm run verify` runs everything CI checks locally, in one command: `npm run check`, the three validators, `export-diagrams.cs` and `build-site.cs`, which stages into `artifacts/site/`. It redraws the diagrams in place, so commit any SVG it changes. The Zensical build is left to CI, because it needs Python and the website repository.
+`just verify` runs every offline check CI runs, in one command: `just check`, the script-permission and skills checks, the three validators, `check-diagrams`, and `build-site.cs`, which stages into `artifacts/site/`. `check-diagrams` redraws the diagrams in place and fails until you commit any SVG it changes. Two checks are left to CI: the link check, because lychee is a separate binary and depends on third-party hosts, and the Zensical build, because it needs Python and the website repository.
 
 Four helper files support the scripts:
 

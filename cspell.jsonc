@@ -1,5 +1,5 @@
 {
-  // Spell checking for this repository. Run via `npm run spell` or `npm run check`,
+  // Spell checking for this repository. Run via `just spell` or `just check`,
   // which use the version pinned in package.json. Editors with a cspell extension
   // read this file too, so the editor and CI flag the same words.
   "version": "0.2",

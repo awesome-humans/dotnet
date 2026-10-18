@@ -6,7 +6,7 @@
 # and configuration that this repository actually contains. Keep the two separate:
 # editing this file changes how we work, editing the template changes our advice.
 #
-# Values here match what `npm run format` (prettier) produces for the files it owns
+# Values here match what `just format` (prettier) produces for the files it owns
 # (Markdown, JSON, JSONC and YAML), so the editor and the formatter don't undo
 # each other on save. No formatter covers the C# and TOML settings below, so
 # this file is the only thing that enforces them.
@@ -52,6 +52,10 @@ indent_size = 4
 # failures and holds the repository to the bar it publishes to consumers.
 [scripts/*.cs]
 dotnet_analyzer_diagnostic.severity = warning
+
+# The justfile: `just --fmt` indents recipe bodies by four spaces.
+[justfile]
+indent_size = 4
 
 # Verbatim third-party text: the Apache 2.0 licence is reproduced exactly as
 # published, indentation included. Never reformat it.

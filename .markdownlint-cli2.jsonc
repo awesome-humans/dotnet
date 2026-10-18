@@ -1,5 +1,5 @@
 {
-  // Markdown linting for this repository. Run via `npm run check`, which uses the
+  // Markdown linting for this repository. Run via `just lint` or `just check`, which use the
   // versions pinned in package.json — never `npx markdownlint-cli2` (see AGENTS.md).
   // Formatting is prettier's job (--prose-wrap preserve); this file only turns
   // off the rules that conflict with that or misfire on our content.
@@ -18,7 +18,7 @@
   "globs": ["**/*.md"],
   // .claude/skills is a local symlink to skills/ (see AGENTS.md: Skills), and
   // markdownlint follows symlinks, so linting it reports every finding twice.
-  // artifacts/site holds the pages `npm run verify` stages, generated from files
+  // artifacts/site holds the pages `just verify` stages, generated from files
   // already linted at source.
   "ignores": ["node_modules", ".claude", "artifacts"],
 }
