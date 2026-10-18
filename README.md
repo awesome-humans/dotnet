@@ -170,7 +170,7 @@ Run them from the repository root through their [`justfile`](justfile) recipes, 
 just validate-metadata
 ```
 
-`just verify` runs everything CI checks locally, in one command: `just check`, the script-permission and skills checks, the three validators, `export-diagrams.cs`, and `build-site.cs`, which stages into `artifacts/site/`. It redraws the diagrams in place, so commit any SVG it changes. The Zensical build is left to CI, because it needs Python and the website repository.
+`just verify` runs every offline check CI runs, in one command: `just check`, the script-permission and skills checks, the three validators, `check-diagrams`, and `build-site.cs`, which stages into `artifacts/site/`. `check-diagrams` redraws the diagrams in place and fails until you commit any SVG it changes. Two checks are left to CI: the link check, because lychee is a separate binary and depends on third-party hosts, and the Zensical build, because it needs Python and the website repository.
 
 Four helper files support the scripts:
 

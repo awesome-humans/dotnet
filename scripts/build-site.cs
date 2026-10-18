@@ -28,8 +28,10 @@
 // llms.txt links copies of the opinions and templates with every house block and region
 // removed, and llms-<profile>.txt links copies with only that profile's, under raw/.
 //
-// A .NET 10 file-based app. Run it from the repository root:
+// A .NET 10 file-based app. Run it from the repository root, through its recipe or
+// directly. awesome-humans/website runs it directly, because it doesn't install just:
 //
+//     just build-site <dir>
 //     dotnet run scripts/build-site.cs -- --out <dir>
 //
 // Exit codes: 0 staged, 1 a link or file the site needs could not be resolved, 2 not run

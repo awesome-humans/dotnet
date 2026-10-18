@@ -11,8 +11,10 @@
 // table by skill name.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
-// other checks via #:include. Run it from the repository root:
+// other checks via #:include. Run it from the repository root, through its
+// recipe as CI does, or directly:
 //
+//     just validate-readme-index
 //     dotnet run scripts/validate-readme-index.cs
 //     ./scripts/validate-readme-index.cs      (the shebang above)
 //

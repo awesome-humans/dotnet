@@ -106,5 +106,5 @@ check-diagrams: export-diagrams
 build-site out="artifacts/site":
     dotnet run scripts/build-site.cs -- --out {{ out }}
 
-# Run everything CI checks, and redraw the diagrams in place, so commit any SVG it changes
-verify: check check-script-permissions validate-skills validate-metadata validate-sources validate-readme-index export-diagrams build-site
+# Run every offline check CI runs. It redraws the diagrams, and fails until you commit any SVG it changes
+verify: check check-script-permissions validate-skills validate-metadata validate-sources validate-readme-index check-diagrams build-site

@@ -37,7 +37,7 @@ exclude_path = [
   "templates/artifacts",
   "templates/projects/obj",
   "templates/projects/bin",
-  # Links in the pages `npm run verify` stages into artifacts/site are relative to
+  # Links in the pages `just verify` stages into artifacts/site are relative to
   # the built site, not to the repository, so only awesome-humans/website's strict
   # build can check them.
   "artifacts",

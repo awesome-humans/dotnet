@@ -1,5 +1,5 @@
 # Build artifacts from smoke-testing the example projects in templates/, and the
-# pages `npm run verify` stages with build-site.cs
+# pages `just verify` stages with build-site.cs
 artifacts/
 bin/
 obj/

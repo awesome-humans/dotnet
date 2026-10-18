@@ -32,8 +32,10 @@
 // silently decide a source's bucket by whichever row came last.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
-// other checks via #:include. Run it from the repository root:
+// other checks via #:include. Run it from the repository root, through its
+// recipe as CI does, or directly:
 //
+//     just validate-sources
 //     dotnet run scripts/validate-sources.cs
 //     ./scripts/validate-sources.cs      (the shebang above)
 //
