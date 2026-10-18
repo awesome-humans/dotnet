@@ -67,7 +67,7 @@ An agent that uses the author's credentials posts under the author's account, an
 
 - **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they don't carry `Co-Authored-By` trailers or "Generated with" lines. Neither do commit messages. Agents write most changes here, so a trailer on every commit would tell a reader nothing. This rule overrides any default that an agent harness applies.
 - **The rule covers every commit on the branch.** When GitHub squashes, it appends a `Co-authored-by` line to the merged commit for each co-author trailer, and for each branch commit author other than the merger. The pull request description doesn't change that. So commit under the author's git identity, never one the harness supplies, and leave the trailer out of branch commits too.
-- **Agent attribution in conversation.** End each comment an agent writes on an issue or pull request, including replies in review threads, with a line such as `Written by an agent: <harness>, <model>, running <skill>.` Leave out the skill when there isn't one. A reader, or another agent, then knows a person didn't write it.
+- **Agent attribution in conversation.** End each comment an agent writes on an issue or pull request, including replies in review threads, with an italic line, such as `_Written by an agent: <harness>, <model>, running <skill>._` Leave out the skill when there isn't one. A reader, or another agent, then knows a person didn't write it.
 
 ### CodeRabbit reviews
 
