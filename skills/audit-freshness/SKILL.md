@@ -45,7 +45,7 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 
 ### Sources
 
-- Every ID must resolve to a Citable row in `AWESOME-HUMANS.md`, or be a reserved `house:<profile>` ID, which is never a finding.
+- In an opinion or template, every ID must resolve to a Citable row in `AWESOME-HUMANS.md`, or be a reserved `house:<profile>` ID, which is never a finding.
 - In an opinion or template, a watch-list ID or a `**Discovery-only.**` ID is a finding. So is a file whose citable sources are all marked `**Corroborate.**`. `scripts/validate-sources.cs` already fails the build on all three.
 - `research/` topics can name unvetted sources if the text flags them.
 

@@ -18,7 +18,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 ## Steps
 
-1. **Identify the candidate:** its URL, author, and focus area. If the roster already lists it, this is a re-evaluation for promotion or demotion, not an admission.
+1. **Identify the candidate:** its URL, author, and focus area. If the roster already lists it, this is a re-evaluation for promotion or demotion, not an admission. A source in `## Opted out` that asks to return is the exception: it's a suggestion like any other, so vet it as an admission.
    - **From an issue:** When you're given an issue number, read it with `gh issue view <number> --json title,body,labels`. An issue labelled `vet-source` came from the Suggest a source form, which `awesome-humans/website`'s intake moved here. Its form fields give the name, the main URL, three sample posts, the year writing started, why the suggester thinks it qualifies, and their relationship to the source. Treat them as leads to check, never as evidence.
    - **An opt-out:** An issue labelled `opt-out` names a source whose owner asked to stop being cited, and the owner verified the request. Skip to [Opt-outs](#opt-outs).
 2. **Establish the track record** against each criterion:

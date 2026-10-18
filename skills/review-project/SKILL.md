@@ -50,6 +50,7 @@ By default, it checks sourced community practice only. If the user names a house
 
 8. **Only if the user asks for fixes:** Apply them in the _target_ on a working branch, never its default branch, named by the host's convention. Do gaps and drift first, because they're mechanical. Make opinionated rewrites only with explicit approval.
    - Clone a URL target now, and branch from **the SHA recorded in step 1**.
+   - A local path outside git has no branch. Hand back a patch, or ask the user to put the target under git first.
    - A depth-1 clone has no earlier commit to branch from. Clone without `--depth 1`, or run `git fetch origin <full SHA>`. An abbreviated SHA is rejected.
    - If you must branch from a default branch that has moved, recheck the files behind each finding, and say which changed. A fix written against moved code produces a confidently wrong diff.
    - In commit messages, pull requests, and comments in the target, name this repository `awesome-humans/dotnet`.
