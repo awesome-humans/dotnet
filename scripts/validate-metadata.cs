@@ -11,8 +11,8 @@
 #:property TreatWarningsAsErrors=true
 
 // Verifies that every resource carries the metadata fields AGENTS.md requires
-// (targets, last-reviewed, sources, plus last-used outside research/), that the
-// dates are ISO 8601, and that each sources list is in ordinal order.
+// (targets, last-reviewed, and sources), that the dates are ISO 8601, and that each
+// sources list is in ordinal order.
 //
 // Three resource kinds carry them two ways. opinions/ and research/ use YAML
 // frontmatter; templates/ use a first-line comment header, because an XML or INI file
@@ -39,24 +39,22 @@ if (!Opinions.DirectoryExists)
     return 2;
 }
 
-string[] required = ["targets", "last-reviewed", "last-used", "sources"];
+string[] required = ["targets", "last-reviewed", "sources"];
 
-// A research topic carries no last-used: the only way to consult one is to build on it,
-// which re-verifies it, so its two dates would always move together (research-topic).
-string[] researchRequired = ["targets", "last-reviewed", "sources"];
-
-// ...and two fields it must not carry. A last-used or status key on a research topic is
-// the retired frontmatter shape coming back. A topic on disk is unresolved by
-// definition, and deletion is the only promotion signal (AGENTS.md), so these are
-// rejected rather than ignored.
+// last-used is retired everywhere: whether a resource is still referenced is read from
+// the repository by audit-freshness, not stored. A research topic also must not carry a
+// status: a topic on disk is unresolved by definition, and deletion is the only
+// promotion signal (AGENTS.md). Both are rejected rather than ignored, so the retired
+// shapes can't come back.
+string[] forbidden = ["last-used"];
 string[] researchForbidden = ["last-used", "status"];
 
-string[] dateFields = ["last-reviewed", "last-used"];
+string[] dateFields = ["last-reviewed"];
 
 List<string> errors = [];
 IDeserializer deserializer = new DeserializerBuilder().Build();
 
-List<(string Path, IDictionary? Fields, string? Error, string[] Required, string[] Forbidden)> resources = [];
+List<(string Path, IDictionary? Fields, string? Error, string[] Forbidden)> resources = [];
 
 string[] opinions = Opinions.Names();
 if (opinions.Length == 0)
@@ -67,7 +65,7 @@ if (opinions.Length == 0)
 foreach (string name in opinions)
 {
     string path = Opinions.PathOf(name);
-    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, required, []));
+    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, forbidden));
 }
 
 // research/ is staging, and legitimately empty once every topic has been resolved —
@@ -77,7 +75,7 @@ string[] research = MarkdownIn("research");
 
 foreach (string path in research)
 {
-    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, researchRequired, researchForbidden));
+    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, researchForbidden));
 }
 
 string[] templates = CommentHeader.Files();
@@ -88,10 +86,10 @@ if (templates.Length == 0)
 
 foreach (string path in templates)
 {
-    resources.Add((path, CommentHeader.Read(path, out string? error), error, required, []));
+    resources.Add((path, CommentHeader.Read(path, out string? error), error, forbidden));
 }
 
-foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRequired, string[] fieldsForbidden) in resources)
+foreach ((string path, IDictionary? fields, string? readError, string[] fieldsForbidden) in resources)
 {
     if (fields is null)
     {
@@ -99,7 +97,7 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRe
         continue;
     }
 
-    foreach (string field in fieldsRequired)
+    foreach (string field in required)
     {
         if (!fields.Contains(field) || IsEmpty(fields[field]))
         {
@@ -111,7 +109,7 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRe
     {
         if (fields.Contains(field))
         {
-            errors.Add($"{path}: field '{field}' is not allowed on a research topic");
+            errors.Add($"{path}: field '{field}' is not allowed here");
         }
     }
 

@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-12 | last-used: 2026-08-20 | sources: ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-12 | sources: ms-learn -->
 <!-- A library project inherits everything from Directory.Build.props, so its csproj is nearly empty. -->
 <Project Sdk="Microsoft.NET.Sdk">
 

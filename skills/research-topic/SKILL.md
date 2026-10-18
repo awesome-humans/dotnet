@@ -10,7 +10,7 @@ metadata:
 
 # Research a topic
 
-Answer "What should I know or do about X?" from this repository's opinions first, then its vetted roster. This skill writes two things, both on a research branch: the research topic, and the `last-used` dates of the opinions it read. It changes `opinions/` and `templates/` only through the skills it recommends at the end.
+Answer "What should I know or do about X?" from this repository's opinions first, then its vetted roster. This skill writes one thing, on a research branch: the research topic. It changes `opinions/` and `templates/` only through the skills it recommends at the end.
 
 ## Orchestration
 
@@ -25,8 +25,8 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
    Research a clear request without asking.
 
-2. **Start a worktree** on the branch `research/<topic-slug>`, such as `research/union-types`, following [AGENTS.md](../../AGENTS.md). Create it before the first write, so the topic and the `last-used` updates land together. Use the repository's existing kebab-case name for the topic (`union-types`, not `union-type`), so the branch, topic, and opinions share one search term.
-3. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or carry a "Coming next" note. Skip house blocks unless the user named a house profile. Present that profile's blocks as "its owner's convention, not community consensus". Update `last-used` on every opinion you read.
+2. **Start a worktree** on the branch `research/<topic-slug>`, such as `research/union-types`, following [AGENTS.md](../../AGENTS.md). Create it before the first write. Use the repository's existing kebab-case name for the topic (`union-types`, not `union-type`), so the branch, topic, and opinions share one search term.
+3. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or carry a "Coming next" note. Skip house blocks unless the user named a house profile. Present that profile's blocks as "its owner's convention, not community consensus".
 4. **Sweep the roster in this order:**
    1. **Citable sources,** weighted by how well their Focus column matches. You can quote these.
    2. **Watch-list sources,** for discovery and cross-checking. Label them as watch-list.
@@ -57,7 +57,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 **Save the topic** to `research/<topic-slug>.md`, with the metadata a topic carries ([AGENTS.md: Metadata](../../AGENTS.md#metadata)), unless the user says the question was a one-off.
 
-Commit the topic and its `last-used` updates on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the user doesn't want the topic saved, delete the branch and answer in the conversation.
+Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the user doesn't want the topic saved, delete the branch and answer in the conversation.
 
 **Title the commit and pull request `research: <topic>`,** such as `research: union types`, not `docs: research <topic>`. The separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic researched. `resolve-research` sets the type of the resolution commits.
 

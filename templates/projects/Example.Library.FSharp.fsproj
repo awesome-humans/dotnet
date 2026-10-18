@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-14 | last-used: 2026-08-14 | sources: ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-14 | sources: ms-learn -->
 <!-- F# inherits the same settings from Directory.Build.props. F# compiles files in the order listed below. -->
 <Project Sdk="Microsoft.NET.Sdk">
 

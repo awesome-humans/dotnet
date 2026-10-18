@@ -1,7 +1,6 @@
 ---
 targets: [net10.0]
 last-reviewed: 2026-10-09
-last-used: 2026-10-17
 sources: [andrew-lock, dotnet-blog, house:simon-mckenna, meziantou, ms-learn]
 ---
 

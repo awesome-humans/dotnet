@@ -1,7 +1,6 @@
 ---
 targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-21
-last-used: 2026-09-25
 sources:
   [
     aaron-stannard,
