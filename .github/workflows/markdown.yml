@@ -30,18 +30,25 @@ jobs:
           node-version: "24"
           cache: npm
 
-      # ci install, not npm install: it honours package-lock.json exactly and
-      # fails if the lock and manifest disagree, so CI cannot float a version.
-      - run: npm ci
+      # Pinned to a release at least two weeks old when chosen. The justfile is every entry
+      # point, so the steps below call its recipes, never npm.
+      - uses: taiki-e/install-action@83ac0ad63c0167e6f06796fab0fce28db1bf3db0 # v2.87.22
+        with:
+          tool: just@1.58.0
+
+      # npm ci, not npm install: it honours package-lock.json exactly and fails if the lock
+      # and manifest disagree, so CI can't float a version.
+      - name: Install the prose tools
+        run: just install
 
       - name: Check formatting
-        run: npm run format:check
+        run: just format-check
 
       - name: Lint markdown
-        run: npm run lint
+        run: just lint
 
       - name: Check spelling
-        run: npm run spell
+        run: just spell
 
   links:
     runs-on: ubuntu-latest

@@ -133,7 +133,7 @@ Rules:
 - **Two template files are exempt from the header:** `templates/global.json` and `templates/example.slnf`, because JSON has no comment syntax. What they pin is audited against the latest releases instead. Smoke-testing the example projects leaves build output under `templates/` (`artifacts/`, `bin/`, and `obj/`, all gitignored). That output isn't a resource, and the check skips it.
 - **`skills/` are deliberately exempt.** The [Agent Skills specification](https://agentskills.io/specification) defines their frontmatter, they're procedures and not reference material, and nothing reads a date from them. Use `git log` to see when a skill last changed.
 
-CI runs `dotnet run scripts/validate-metadata.cs` against both syntaxes, and a missing field, a relative date, or an unsorted `sources` list fails the pull request.
+CI runs `just validate-metadata` against both syntaxes, and a missing field, a relative date, or an unsorted `sources` list fails the pull request.
 
 ## Writing style
 
@@ -211,11 +211,11 @@ A literal use isn't an idiom. _Silently_ for a failure that raises no error stay
 - **Use British spelling, except where .NET names the word.** Write _defence_, _modelling_, _catalogue_, _behaviour_, and _colour_. This overrides Google's American spelling and its dictionary, Merriam-Webster.
 - **Use the platform's spelling for a .NET concept,** so prose and identifiers match and a search for one finds the other. `System.Globalization` and `IStringLocalizer` give _globalization_ and _localization_, down to the file name `opinions/globalization.md`. EF Core's materialization gives _materialized_.
 - **Don't extend the exception to words that only share a stem with an API.** "A behaviour change in SQLite" keeps its British spelling, even though MAUI has a `Behavior` type. Never anglicise an API name.
-- **`npm run spell` checks spelling.** For details, see [Formatting and linting](#formatting-and-linting). When it flags a correctly spelled name or term, add the word to `cspell.words.txt` in the same commit. Never add an American spelling there. In Markdown, it skips link text, inline code, and double-quoted text, so a cited title or a quotation keeps its spelling. For a title outside those, such as an italic book title, put `<!-- cspell:ignore <word> -->` above the paragraph.
+- **`just spell` checks spelling.** For details, see [Formatting and linting](#formatting-and-linting). When it flags a correctly spelled name or term, add the word to `cspell.words.txt` in the same commit. Never add an American spelling there. In Markdown, it skips link text, inline code, and double-quoted text, so a cited title or a quotation keeps its spelling. For a title outside those, such as an italic book title, put `<!-- cspell:ignore <word> -->` above the paragraph.
 
 ### Scope of these rules
 
-- **They're review guidance, not a build check.** Whether a contrast is justified can't be decided by counting. Read for these patterns in review, and don't add a check that fails a build over them. Spelling is the exception: a misspelled word is wrong whatever its context, so `npm run spell` fails the build over it.
+- **They're review guidance, not a build check.** Whether a contrast is justified can't be decided by counting. Read for these patterns in review, and don't add a check that fails a build over them. Spelling is the exception: a misspelled word is wrong whatever its context, so `just spell` fails the build over it.
 - **They apply only to prose written here.** A third-party title and its URL keep the author's wording and spelling, so Andrew Lock's "Adding Localisation to an ASP.NET Core application" stays as written. Correcting a source misquotes it, and correcting a URL breaks it.
 - **They don't apply to other people's code.** `review-project` reviews a codebase against `opinions/`. Spelling and wording in someone else's identifiers, comments, or documentation is never a finding.
 
@@ -241,15 +241,15 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
   - This convention outranks the host environment's own. Replace a generated name such as `agent/youthful-wozniak-gm4k7m` before the first push. If a host only pushes under its own prefix, put the convention after it: `agent/harvest/2026-09-14`.
   - Settle the name before you open the pull request. Renaming the head branch of an open pull request on GitHub closes it, and you can't reopen it under the new name.
 - **Directory names:** Name the directory after the branch, with slashes replaced by dashes, so `resolve/globalization` becomes `resolve-globalization/`. Every worktree then sits one level beside the bare `.bare/` directory and tab-completes in one step. This also keeps a nested `research/` directory from appearing next to the repository's own `research/`.
-- **Setup:** A fresh worktree has no gitignored local state. Run `npm install` in it before `npm run check` or `npm run verify`. If your harness needs the skills symlink, re-create it there. For details, see [Skills](#skills).
+- **Setup:** A fresh worktree has no gitignored local state. Run `just install` in it before `just check` or `just verify`. `just verify` also needs skills-ref: install it once with `pip install -r .github/requirements.txt`. If your harness needs the skills symlink, re-create it there. For details, see [Skills](#skills).
 - **Finishing:** When a worktree's pull request merges, **offer to delete the worktree** with `git worktree remove <dir>` and then `git branch -d <branch>`. Ask first: the branch might still hold work that never reached the pull request.
 
 ### Formatting and linting
 
 - Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc`. The configuration uses the defaults minus two rules that conflict with the prose style, and records why.
 - Spelling follows cspell, configured in `cspell.jsonc` with the `en-GB` dictionary, the .NET dictionaries, and the repository's own word list in `cspell.words.txt`. The .NET dictionaries accept American spellings because API names use them, such as `Behavior` and `Color`, so the configuration flags them in Markdown prose. Editors with a cspell extension read the same configuration.
-- Run `npm run format` to format, and `npm run check` to check formatting, lint, and spelling together. All three use the versions pinned in `package.json`. Don't run `npx prettier`, `npx markdownlint-cli2`, or `npx cspell` directly, because they resolve the latest version.
-- Run `npm run verify` before you open a pull request. It runs `npm run check` and the scripts in `scripts/` that CI runs, and redraws the diagrams. See [README.md: Repository scripts](README.md#repository-scripts).
+- Run `just format` to format, and `just check` to check formatting, lint, and spelling together. Each check also has its own recipe: `just format-check`, `just lint`, and `just spell`. The recipes run the scripts in `package.json`, which use the versions pinned there. Don't run `npx prettier`, `npx markdownlint-cli2`, or `npx cspell` directly, because they resolve the latest version.
+- Run `just verify` before you open a pull request. It runs `just check` and every other check that CI runs, and redraws the diagrams. See [README.md: Repository scripts](README.md#repository-scripts).
 - Prettier formats Markdown and the JSON, JSONC, and YAML configuration, and reads `.editorconfig`, so the formatter and your editor agree. `.prettierignore` records two exceptions:
   - `package-lock.json` and `.github/state/dotnet-releases.json` are machine-written. Gating them on formatting would fail a build that nobody can fix by editing.
   - `lychee.toml` isn't formatted. Prettier has no built-in TOML parser, and one hand-written file doesn't justify a third-party plugin.
@@ -257,9 +257,10 @@ Work in a git worktree, with one branch per directory. The local clone is bare, 
 ### Scripts
 
 - CI checks live in `scripts/` as .NET file-based apps. Run them from the repository root with `dotnet run scripts/<name>.cs`. Code that two scripts share goes in a helper file that both `#:include`, not in a copy.
+- The `justfile` is every local and CI entry point. Each check has a recipe of the same name, such as `just validate-metadata`, and CI calls the recipes, never `npm` or `dotnet` directly. `just` with no arguments lists them. The website builds the site with `dotnet run scripts/build-site.cs` and doesn't install `just`, so keep that script runnable on its own.
 - Entry points use kebab-case names because you type them on a command line. Helper files take the name of the type they contain, following C# file-naming convention.
-- Add a check as a script, not as an inline script in a workflow, and hold it to the repository's own opinions: `global.json` pins the SDK, `TreatWarningsAsErrors` is on, the language version is latest, and the `[scripts/*.cs]` block in `.editorconfig` turns the analyzer set into build failures.
-- When you add or rename a script, update the [Repository scripts](README.md#repository-scripts) table and the layout tree.
+- Add a check as a script with a recipe, not as an inline script in a workflow, and hold it to the repository's own opinions: `global.json` pins the SDK, `TreatWarningsAsErrors` is on, the language version is latest, and the `[scripts/*.cs]` block in `.editorconfig` turns the analyzer set into build failures.
+- When you add or rename a script, add or rename its recipe, and update the [Repository scripts](README.md#repository-scripts) table and the layout tree.
 - Renovate bumps `#:package` pins. It reads the directive but only scans `.cs` files under `scripts/`, because `renovate.json` opts that directory into the NuGet manager. A check placed anywhere else wouldn't get bumped.
 
 ### Site

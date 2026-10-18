@@ -53,6 +53,10 @@ indent_size = 4
 [scripts/*.cs]
 dotnet_analyzer_diagnostic.severity = warning
 
+# The justfile: `just --fmt` indents recipe bodies by four spaces.
+[justfile]
+indent_size = 4
+
 # Verbatim third-party text: the Apache 2.0 licence is reproduced exactly as
 # published, indentation included. Never reformat it.
 [LICENSE]
