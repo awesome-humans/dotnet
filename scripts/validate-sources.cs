@@ -223,7 +223,7 @@ if (roster.Count == 0)
     errors.Add($"{RosterPath}: no source rows parsed — roster tables may have changed shape");
 }
 
-// Roster tables are kept alphabetical by id (vet-source, step 5) so a new row lands in
+// Roster tables are kept alphabetical by id (vet-source, step 6) so a new row lands in
 // one predictable place instead of wherever the admitting PR happened to put it. Nothing
 // about a 30-row table makes a misplaced row visible, so it is checked rather than left
 // to review.

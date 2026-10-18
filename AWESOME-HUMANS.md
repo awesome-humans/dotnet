@@ -109,7 +109,7 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 
 ## Opted out
 
-A source moves here when its owner asks to stop being cited. Its row keeps the same five columns, and its section under [Source notes](#source-notes) goes. The ID stays reserved, so a later suggestion of the source is turned away, and `scripts/validate-sources.cs` rejects it in any `sources:` list. Opting back in is a suggestion like any other, and the source leaves this section only on admission. For the policy, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
+A source moves here when its owner asks to stop being cited. Its row keeps the same five columns, and its section under [Source notes](#source-notes) goes. The ID stays reserved, so a later suggestion of the source is turned away, and `scripts/validate-sources.cs` rejects it in any `sources:` list. An opt-out from any awesome-humans ecosystem covers this one too, so `vet-source` reads every other ecosystem's Opted out section before admitting anyone. Opting back in is a suggestion like any other, and the source leaves this section only on admission. For the policy, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
 
 No source has opted out.
 
