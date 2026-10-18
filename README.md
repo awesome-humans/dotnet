@@ -1,8 +1,8 @@
 # Awesome Humans of .NET
 
-An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): distilled, opinionated guidance, thanks to awesome humans. Instead of links, it distils what proven .NET writers recommend into guidance your agent can follow, each opinion citing its sources.
+An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): distilled, opinionated guidance, thanks to awesome humans. Instead of links, it distils what proven .NET writers recommend into guidance your agent can follow, each opinion citing its sources. It documents current best practice in .NET code, and updates it as .NET evolves.
 
-The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET. It documents current best practice in .NET code, and updates it as .NET evolves.
+The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET.
 
 ## Usage
 
