@@ -167,7 +167,7 @@ Four gaps to resolve:
 
 1. **[project-structure.md](../opinions/project-structure.md) states the floor rule but not the exceptions.** It correctly treats the pin as a floor, and says nothing about band support windows, `SdkAnalysisLevel`, or lock files. A short block would cover them.
 2. **[ci.md](../opinions/ci.md) says "`global.json` sets the SDK".** Under `latestFeature`, it sets a floor, and `setup-dotnet` picks the rest on the day it runs. The line needs that precision.
-3. **[audit-freshness](../skills/audit-freshness/SKILL.md) and [verify-project](../skills/verify-project/SKILL.md) both report "a `rollForward` narrower than `latestFeature`".** If the opinion gains a legitimate narrow case, both need the exception, or they'll report a lock-file repository's correct `disable` as a defect.
+3. **[audit-freshness](../skills/audit-freshness/SKILL.md) and [review-project](../skills/review-project/SKILL.md) both report "a `rollForward` narrower than `latestFeature`".** If the opinion gains a legitimate narrow case, both need the exception, or they'll report a lock-file repository's correct `disable` as a defect.
 4. **Aside, outside this topic:** The docs say `global.json` supports JavaScript and C#-style comments. [AGENTS.md](../AGENTS.md) exempts `templates/global.json` from the metadata header "because JSON has no comment syntax", which isn't true of this file. Look at it separately.
 
 **Recommended next step:** `resolve-research`, to add items 1 to 3 to `opinions/project-structure.md` and `opinions/ci.md`.

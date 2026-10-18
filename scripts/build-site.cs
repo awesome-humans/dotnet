@@ -297,7 +297,7 @@ List<string> skillIndex =
     "They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. ",
     "To run one, clone the repository and ask your agent to run the skill by name. ",
     $"If your agent only discovers skills in a directory of its own, see [AGENTS.md: Skills]({Site.GitHub("AGENTS.md", isDirectory: false)}#skills).\n\n",
-    "`verify-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
+    "`review-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
     "The others maintain this repository.\n\n",
     "| Skill | Purpose |\n| --- | --- |\n",
 ];
@@ -363,7 +363,7 @@ string llms = $"""
 
     ## {EcosystemName} skills
 
-    Agent Skills procedures. Run verify-project to check a .NET project against the opinions. The others maintain the repository.
+    Agent Skills procedures. Run review-project to check a .NET project against the opinions. The others maintain the repository.
 
     {skillLinks}
 

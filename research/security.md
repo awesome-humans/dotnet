@@ -32,7 +32,7 @@ sources: [andrew-lock, barry-dorrans, code-with-mukesh, ms-learn]
 
 - **.NET 11 GA, expected November 2026:** The CSRF note in aspnet-core.md becomes the opinion, and the CORS allowed-origins list becomes part of CSRF configuration. The CSP-compliant `Virtualize` component removes the .NET 8 to 10 conflict recorded under security headers. This is for `refresh-dotnet-versions`.
 - **`CheckSdkVulnerabilities`:** `ms-learn` documents the property, and warning NETSDK1239 for an end-of-life SDK. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support), reviewed 2026-05-15) The installed 10.0.400 SDK doesn't reference it, NETSDK1238, or NETSDK1240. Adopt it when an SDK this repository pins carries it.
-- **.NET 8 and 9 end of support, 2026-11-10:** [opinions/security.md](../opinions/security.md) records the date. After it, `verify-project` should report either target framework as a finding.
+- **.NET 8 and 9 end of support, 2026-11-10:** [opinions/security.md](../opinions/security.md) records the date. After it, `review-project` should report either target framework as a finding.
 
 ## A lead for `vet-source`
 

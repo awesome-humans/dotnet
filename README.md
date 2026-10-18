@@ -14,10 +14,10 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 
   The opinions cover conventions, project layout, language usage, and library choices.
 
-- **Check an existing project.** Ask your coding agent to run [`verify-project`](skills/verify-project/SKILL.md):
+- **Check an existing project.** Ask your coding agent to run [`review-project`](skills/review-project/SKILL.md):
 
   ```text
-  Use the verify project skill at awesome-humans.net on <repo>
+  Use the review project skill at awesome-humans.net on <repo>
   ```
 
   To narrow the review, say so in the request, such as "focus on testing".
@@ -125,7 +125,7 @@ The skills split work by cost. Cheaper worker agents run the web searches and so
 
 Every skill except the two report-only ones works on its own branch, and its changes land through a pull request that passes CI and the owner's review. Each `SKILL.md` is canonical over this diagram.
 
-![Maintenance pipeline: each skill from what starts it, through CI and the owner's review, to the roster, research/, or the opinions and templates; audit-freshness and verify-project only report](assets/diagrams/maintenance-pipeline.svg)
+![Maintenance pipeline: each skill from what starts it, through CI and the owner's review, to the roster, research/, or the opinions and templates; audit-freshness and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 
 | Skill                                                                | Purpose                                                                                     |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -133,7 +133,7 @@ Every skill except the two report-only ones works on its own branch, and its cha
 | [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts, and add notable guidance to the opinions    |
 | [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline          |
 | [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                      |
-| [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the opinions and templates, and report deviations         |
+| [`review-project`](skills/review-project/SKILL.md)                   | Check an external project against the opinions and templates, and report deviations         |
 | [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House   |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic from the opinions and vetted sources, and save it with citations      |
 | [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic by weaving it into the opinions and templates, or discard it |
