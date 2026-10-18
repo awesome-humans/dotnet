@@ -60,7 +60,7 @@ By default, it checks sourced community practice only. If the user names a house
 - **You can't push to the target:** Make the branch in the clone, and hand back a diff or patch. Never push to a repository the user doesn't control.
 - **The target pins an older .NET for a stated reason,** such as a deployment constraint in its README: Report the drift as acknowledged, not actionable.
 - **F#-only or mixed solutions:** Review against the F# opinions too. Don't report C#-specific conventions as violations in F# projects.
-- **The user narrows the review,** such as to testing, one opinion, or one project in a solution: Review only that scope, and open the report with what you left out, so nobody reads it as a full review.
+- **The user narrows the review,** such as to testing, one opinion, or one project in a solution, or leaves something out, such as CI: Review only what remains, and open the report with what you left out, so nobody reads it as a full review.
 - **No opinion covers something the target does:** Report it as out of scope, and note it as a possible opinion gap for `harvest-sources`.
 - **The target uses different spelling:** Never a finding. The spelling rule in AGENTS.md covers prose written here, not anyone else's identifiers, comments, or documentation.
 - **The templates and opinions disagree:** That's a bug in this repository. Report it against _this_ repository, and review the target against the opinion text, which takes precedence.
