@@ -36,7 +36,7 @@ When you generate or review .NET code for another project:
 
   The two orders differ: `architecture.md` is titled "Application architecture". When you rename or remove a file, update both places in the same commit. A skill directory and its row in the [Maintenance via skills](README.md#maintenance-via-skills) table follow the same rule. `scripts/validate-readme-index.cs` fails the pull request if an entry is missing, out of order, or points at a file that doesn't exist.
 
-- **Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages and pull request titles.** A pull request squash-merges under its title, so the title becomes the commit subject in `git log`. Use the form `<type>[(scope)]: <description>`, in lowercase and the imperative. The scope is optional, as in `chore(deps)` or `docs(verify-project)`.
+- **Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages and pull request titles.** A pull request squash-merges under its title, so the title becomes the commit subject in `git log`. Use the form `<type>[(scope)]: <description>`, in lowercase and the imperative. The scope is optional, as in `chore(deps)` or `docs(review-project)`.
 
   | Type       | Use for                                                  |
   | ---------- | -------------------------------------------------------- |
@@ -216,12 +216,12 @@ A literal use isn't an idiom. _Silently_ for a failure that raises no error stay
 
 - **They're review guidance, not a build check.** Whether a contrast is justified can't be decided by counting. Read for these patterns in review, and don't add a check that fails a build over them. Spelling is the exception: a misspelled word is wrong whatever its context, so `npm run spell` fails the build over it.
 - **They apply only to prose written here.** A third-party title and its URL keep the author's wording and spelling, so Andrew Lock's "Adding Localisation to an ASP.NET Core application" stays as written. Correcting a source misquotes it, and correcting a URL breaks it.
-- **They don't apply to other people's code.** `verify-project` reviews a codebase against `opinions/`. Spelling and wording in someone else's identifiers, comments, or documentation is never a finding.
+- **They don't apply to other people's code.** `review-project` reviews a codebase against `opinions/`. Spelling and wording in someone else's identifiers, comments, or documentation is never a finding.
 
 ## Writing style for opinions
 
 - **Put the opinion first.** State the recommendation in the first sentence. The rationale follows, and the sources come last.
-- **Make it precise enough to apply mechanically.** An agent should be able to turn an opinion into an edit or a `verify-project` finding without interpreting it. A rule that names no setting, type, or threshold isn't finished.
+- **Make it precise enough to apply mechanically.** An agent should be able to turn an opinion into an edit or a `review-project` finding without interpreting it. A rule that names no setting, type, or threshold isn't finished.
 - **Show code when it's clearer than prose.** Keep examples minimal and idiomatic for the declared `targets`. When an opinion replaces an old idiom, show a before-and-after pair. The same applies to `templates/`: example code files are welcome alongside configuration.
 - **Make code samples compile against the declared `targets`.**
 - **Use a table when the same attributes repeat across items.** Options, versions, or frameworks compared on the same few points read faster as rows than as parallel paragraphs, as in [datetime.md](opinions/datetime.md). Keep the reasoning in sentences: a cell holds a fact, not the argument for it.

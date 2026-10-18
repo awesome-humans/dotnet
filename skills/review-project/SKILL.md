@@ -1,5 +1,5 @@
 ---
-name: verify-project
+name: review-project
 description: Check an external .NET project or solution, given a local path or a repository URL, against this repository's opinions and templates, and report deviations with severity and suggested fixes. Use when asked to verify, audit, review, or grade a .NET codebase against Awesome Humans of .NET conventions, or to check whether a project "does what good looks like".
 license: See repository LICENSE
 compatibility: Requires read access to the target project; git and internet access for URL targets; .NET SDK helpful but optional
@@ -8,7 +8,7 @@ metadata:
   change-flow: report-only
 ---
 
-# Verify project
+# Review project
 
 Compare a target .NET project with this repository's opinions and templates, and report where it deviates. This skill **only reports** unless the user asks for fixes.
 
@@ -40,7 +40,7 @@ Compare a target .NET project with this repository's opinions and templates, and
    - If the violated opinion is marked `**House:**` (see HOUSE-OPINIONS.md), say so, and grade the finding one level lower. The target can reasonably follow the community default instead.
    - End with a short verdict that reads on its own.
 8. **After you present the report, ask in one question whether to save it, and where.** Never save without asking, and never assume a location.
-   - Offer `verify-<target-name>-<YYYY-MM-DD>.md` in the directory where the user ran the skill, or any path they name. `<target-name>` is the target repository or solution, so two same-day reviews don't collide.
+   - Offer `review-<target-name>-<YYYY-MM-DD>.md` in the directory where the user ran the skill, or any path they name. `<target-name>` is the target repository or solution, so two same-day reviews don't collide.
    - Write one Markdown file with the report's content. Head it with the target's name and the SHA or uncommitted-changes note from step 1.
    - If the user declines, write nothing.
 
@@ -54,11 +54,11 @@ Compare a target .NET project with this repository's opinions and templates, and
 
 ## Edge cases
 
-- **The URL is unreachable, private without credentials, or not a git repository:** Say so and stop. Never verify from README text, a package listing, or memory.
+- **The URL is unreachable, private without credentials, or not a git repository:** Say so and stop. Never review from README text, a package listing, or memory.
 - **You can't push to the target:** Make the branch in the clone, and hand back a diff or patch. Never push to a repository the user doesn't control.
 - **The target pins an older .NET for a stated reason,** such as a deployment constraint in its README: Report the drift as acknowledged, not actionable.
-- **F#-only or mixed solutions:** Verify against the F# opinions too. Don't report C#-specific conventions as violations in F# projects.
-- **The user narrows the review,** such as to testing, one opinion, or one project in a solution: Verify only that scope, and open the report with what you left out, so nobody reads it as a full review.
+- **F#-only or mixed solutions:** Review against the F# opinions too. Don't report C#-specific conventions as violations in F# projects.
+- **The user narrows the review,** such as to testing, one opinion, or one project in a solution: Review only that scope, and open the report with what you left out, so nobody reads it as a full review.
 - **No opinion covers something the target does:** Report it as out of scope, and note it as a possible opinion gap for `harvest-sources`.
 - **The target uses different spelling:** Never a finding. The spelling rule in AGENTS.md covers prose written here, not anyone else's identifiers, comments, or documentation.
-- **The templates and opinions disagree:** That's a bug in this repository. Report it against _this_ repository, and verify the target against the opinion text, which takes precedence.
+- **The templates and opinions disagree:** That's a bug in this repository. Report it against _this_ repository, and review the target against the opinion text, which takes precedence.
