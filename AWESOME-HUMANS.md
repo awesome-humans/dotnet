@@ -54,6 +54,8 @@ The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but
 
 Every source here meets all four criteria. The `Since` column shows the length of each record, and any independence concern, conflict of interest, or usage limit is in the source's section under [Source notes](#source-notes).
 
+The table lists 31 sources: 21 people and 10 publications.
+
 | id                   | Kind        | Source                                                                                                                                             | Focus                                                                                                           | Since                                       |
 | -------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
 | `aaron-stannard`     | person      | [Aaron Stannard: Aaronontheweb](https://aaronstannard.com/) and his posts on the [Petabridge blog](https://petabridge.com/blog/)                   | OSS versioning and compatibility, property and performance testing, Akka.NET, checking agent code, agent skills | 2010                                        |
