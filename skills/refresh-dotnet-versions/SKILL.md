@@ -1,6 +1,6 @@
 ---
 name: refresh-dotnet-versions
-description: Detect new .NET, C#, and F# releases and update all opinions and templates in this repository to target them, including the central NuGet package pins in templates/Directory.Packages.props. Use when a new .NET SDK/runtime, C# language version, or F# version has shipped, when a pinned package has a newer stable release, or when asked to check whether the repository targets the latest released versions.
+description: Detect new .NET, C#, and F# releases and update all opinions and templates in this repository to target them, including the central NuGet package pins in templates/Directory.Packages.props and the GitHub Actions pins in opinion code blocks. Use when a new .NET SDK/runtime, C# language version, or F# version has shipped, when a pinned package or action has a newer stable release, or when asked to check whether the repository targets the latest released versions.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -10,7 +10,7 @@ metadata:
 
 # Refresh .NET versions
 
-Move every resource to the **latest released** (GA) versions of .NET, C#, and F#, and every package pin in `templates/Directory.Packages.props` to its **latest stable** version.
+Move every resource to the **latest released** (GA) versions of .NET, C#, and F#, and every package pin in `templates/Directory.Packages.props` and every action pin in an `opinions/` code block to its **latest stable** version.
 
 ## Trigger
 
@@ -22,7 +22,7 @@ The `.github/workflows/dotnet-release-watch.yml` workflow checks the official re
 
 ## Orchestration
 
-As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, delegate the web lookups to worker agents: the version checks in step 1, the nuget.org lookups in step 4b, and the "What's new" reading in step 5. Only the editor decides what changes, and edits `opinions/` and `templates/`.
+As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, delegate the web lookups to worker agents: the version checks in step 1, the nuget.org lookups in step 4b, the action release lookups in step 4c, and the "What's new" reading in step 5. Only the editor decides what changes, and edits `opinions/` and `templates/`.
 
 ## Steps
 
@@ -32,10 +32,10 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - F#: <https://learn.microsoft.com/dotnet/fsharp/whats-new/>.
    - Use GA releases only. A preview or release candidate can appear in a "coming next" note, never as the target.
 2. **Compare with the current targets:** the `targets:` metadata in `opinions/`, the version pins in `templates/`, and the root `global.json`. The template pins are the `global.json` SDK version, `<TargetFramework>` in project files, and `<LangVersion>` if it's pinned.
-   - If everything matches, the framework part has nothing to do. Say so, and **still run step 4b**, because package pins drift on their own schedule. Check step 4a for a band the repository now needs.
+   - If everything matches, the framework part has nothing to do. Say so, and **still run steps 4b and 4c**, because package and action pins drift on their own schedule. Check step 4a for a band the repository now needs.
    - Report "up to date" and stop only when those checks find nothing too.
 3. **Start a worktree** on the branch `refresh/dotnet-<version>`, following the rules in [AGENTS.md](../../AGENTS.md).
-4. **Update the template files** under `templates/`: the TFMs in the example projects, and anything else pinned to a version. Then update the two pins that drift independently of a .NET release:
+4. **Update the template files** under `templates/`: the TFMs in the example projects, and anything else pinned to a version. Then update the three kinds of pin that drift independently of a .NET release:
    - **4a. The SDK minimum in both `global.json` files.** Leave `sdk.version` alone unless the repository needs something from a newer feature band.
      - The value is a minimum. With `"rollForward": "latestFeature"`, it accepts that version or any later band and patch on the machine, so new bands arrive without an edit.
      - Raising the minimum only narrows who can build. Pinning a patch, such as `10.0.412` instead of `10.0.400`, fails contributors one servicing release behind.
@@ -47,6 +47,12 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
      - Take the **latest stable** version. Never take a prerelease, or a version whose TFM support falls below `targets:`.
      - Before you take a new major version, read its release notes. A major version that changes an idiom an opinion teaches is a content change: handle it in step 5.
      - Set the `Versions verified against nuget.org … on <date>` comment to the run date **whether or not any version changed**. It's the file's only freshness record.
+   - **4c. The action pins in `opinions/` code blocks.** Find every `uses: <owner>/<repo>@<sha> # <version>` line in a fenced code block under `opinions/`, such as the worked example in `opinions/ci.md`.
+     - Renovate doesn't update a SHA inside Markdown, and a pinned SHA never reports that it's out of date. Readers copy these examples, so this step is the only thing that keeps them current.
+     - Look up the action's latest stable release with `gh release view --repo <owner>/<repo> --json tagName`, then resolve the tag to its commit with `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha`. Don't take the SHA of an annotated tag object: `uses:` needs the commit.
+     - Replace the SHA, and set the trailing comment to the release's full version, such as `# v7.0.2`.
+     - When an action also runs in this repository's own workflows, as `actions/checkout` and `actions/setup-dotnet` do, match the pin in `.github/workflows/`. Renovate keeps those current, and the opinion says the repository runs them, so the two must agree.
+     - Before you take a new major version, read its release notes. An input, output, or default that the example relies on might have changed. Fix the example in the same edit, and say what changed in the pull request.
 
 5. **Update each opinion** under `opinions/`:
    - Read the release's "What's new" pages from the first-party sources, `dotnet-blog` and `ms-learn`. Read feature deep dives from the rest of the citable roster, such as `andrew-lock`'s "Exploring .NET" series.
@@ -60,7 +66,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - Without an SDK, flag the samples as unverified in the pull request.
 7. **If the source roster changed, record it** in the `AWESOME-HUMANS.md` decision log. Otherwise, summarise the run in the pull request.
 8. **Open a pull request** to the default branch, filling in the [`version-refresh.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/version-refresh.md) template, as [AGENTS.md](../../AGENTS.md) describes. It lists:
-   - The versions before and after: the framework, the SDK band, and each package pin that changed.
+   - The versions before and after: the framework, the SDK band, each package pin, and each action pin that changed.
    - The opinions that changed, and the ones verified as unchanged.
    - Whether the samples built and tested.
    - Anything left as a TODO.
