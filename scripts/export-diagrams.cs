@@ -173,7 +173,7 @@ internal static class Pipeline
         {
             ("roster", "store", ["AWESOME-HUMANS.md"], "the roster"),
             ("research", "store", ["research/"], "staged, unresolved"),
-            ("opinions", "store", ["opinions/", "templates/"], "what good looks like"),
+            ("opinions", "store", ["opinions/", "templates/"], "distilled guidance"),
             ("report", "ext", ["a report"], "never saved here"),
         })
         {
