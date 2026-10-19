@@ -56,8 +56,11 @@ check-script-permissions:
 validate-skills:
     #!/usr/bin/env bash
     set -euo pipefail
+    # An unmatched glob would otherwise loop once over the literal pattern, so the
+    # empty-directory check below could never fire.
+    shopt -s nullglob
     if ! command -v agentskills > /dev/null; then
-        echo "agentskills isn't installed: run pip install -r .github/requirements.txt" >&2
+        echo "agentskills isn't installed: run uv tool install skills-ref --with-requirements .github/requirements.txt" >&2
         exit 1
     fi
     status=0
@@ -104,7 +107,7 @@ check-diagrams: export-diagrams
 
 # Stage the /dotnet/ pages of awesome-humans.net in <out>/dotnet/
 build-site out="artifacts/site":
-    dotnet run scripts/build-site.cs -- --out {{ out }}
+    dotnet run scripts/build-site.cs -- --out "{{ out }}"
 
 # Run every offline check CI runs. It redraws the diagrams, and fails until you commit any SVG it changes
 verify: check check-script-permissions validate-skills validate-metadata validate-sources validate-readme-index check-diagrams build-site
