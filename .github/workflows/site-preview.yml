@@ -18,14 +18,14 @@ concurrency:
 
 jobs:
   build:
-    uses: awesome-humans/website/.github/workflows/build.yml@da7c16e0a7d84560db688191f10fed57ae0f16d2 # main
+    uses: awesome-humans/website/.github/workflows/build.yml@3046693fe3cfc56cdfb00fcd1c6bf5683f7ad21b # main
     with:
       ecosystem: dotnet
       ref: ${{ github.event.pull_request.head.sha }}
 
   deploy:
     needs: build
-    uses: awesome-humans/website/.github/workflows/deploy.yml@da7c16e0a7d84560db688191f10fed57ae0f16d2 # main
+    uses: awesome-humans/website/.github/workflows/deploy.yml@3046693fe3cfc56cdfb00fcd1c6bf5683f7ad21b # main
     with:
       preview-alias: pr-dotnet-${{ github.event.pull_request.number }}
     secrets: inherit
