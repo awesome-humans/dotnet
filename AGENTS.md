@@ -25,8 +25,8 @@ When you generate or review .NET code for another project:
 
 ## Maintaining this repository
 
-- **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: a house profile's preference from experience, such as the repository owner's, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. It sits in a house block beside the sourced text and cites `house:<profile>`, and [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of its format, its marking, how it relates to the sourced text, and contributor adoption. Work from that section, not a paraphrase.
-- **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never carries one. For the definition, see [AWESOME-HUMANS.md: Admission criteria](AWESOME-HUMANS.md#admission-criteria).
+- **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: a house profile's preference from experience, such as the repository owner's, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. It sits in a house block beside the sourced text and cites `house:<profile>`, and [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) is the canonical definition of its format, its marking, how it relates to the sourced text, and contributor adoption. Work from that section, not a paraphrase.
+- **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never carries one. For the definition, see [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references).
 - **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "coming next" note, but never make it the opinion.
 - **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content sweep (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
 - **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on why it lost.
@@ -130,87 +130,12 @@ CI runs `just validate-metadata` against both syntaxes, and a missing field, a r
 
 ## Writing style
 
-These rules cover all prose in this repository: opinions, research topics, skills, template comments, and root documents such as this one. They also cover commit messages, pull request titles and descriptions, and the comments an agent posts on issues and pull requests. [Writing style for opinions](#writing-style-for-opinions) adds rules for opinions only.
-
-The voice follows the [Google developer documentation style guide](https://developers.google.com/style): conversational but direct, plain, and easy to scan. Start with its [highlights](https://developers.google.com/style/highlights). The rules below adapt it to this repository. When a question comes up, use [Google's own order of precedence](https://developers.google.com/style#how-to-use):
-
-1. The rules in this section and in [Writing style for opinions](#writing-style-for-opinions).
-2. The Google developer documentation style guide.
-3. For a technical term that neither settles, the [Microsoft Writing Style Guide](https://learn.microsoft.com/style-guide/welcome/), which Google names as its technical reference and which Microsoft Learn's .NET docs follow.
-
-Apart from spelling, which [Spelling](#spelling) covers, this repository departs from Google's guide in two places:
-
-- **Previews:** Google says not to pre-announce. An opinion can still carry a clearly marked "coming next" note about a .NET preview, as [Maintaining this repository](#maintaining-this-repository) allows.
-- **Dates:** Write dates as ISO 8601 (`2026-10-13`), as [Metadata](#metadata) requires. Google accepts any unambiguous format.
-
-### Voice
+Follow [awesome-humans/website: Writing style](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md), the shared rules for all prose in every awesome-humans repository, and read it before you write. It covers opinions, research topics, skills, template comments, root documents such as this one, commit messages, pull request titles and descriptions, and the comments an agent posts on issues and pull requests. This repository adds two rules, and [Writing style for opinions](#writing-style-for-opinions) adds more for opinions only:
 
 - **Write for a working .NET developer.** Assume they know C#, the BCL, and the SDK. Don't explain what dependency injection or a `Task` is.
-- **Address the reader as "you", and use the imperative for instructions.** Write "Set `<Nullable>` to `enable`", not "The developer should set `<Nullable>`" or "One might enable nullable".
-- **Use active voice and present tense.** Write "The analyzer reports `CA1307`", not "`CA1307` will be reported by the analyzer".
-- **Use common contractions.** _It's_, _don't_, _isn't_, _can't_, and _you're_ read naturally. Prefer the negative contractions: a reader scanning the page can miss _not_, but rarely misreads _don't_. Avoid rare ones, such as _it'll_ or _should've_.
-- **Use plain words.** Write _use_, not _utilize_; _about_, not _with regard to_; _for example_, not _e.g._; _that is_, not _i.e._ Use _can_ for ability and _might_ for possibility. Reserve _must_ for a hard requirement.
-- **Drop filler from instructions.** Don't write _please_, _simply_, _easy_, _quickly_, or _let's_, and don't open with a placeholder such as _please note_ or _at this time_. Avoid exclamation marks.
-- **Write for a global audience.** Avoid figurative language, idioms, and cultural references. They don't translate, and a reader whose first language isn't English can take them literally. [Stock phrases](#stock-phrases) lists the ones that got in.
+- **Use .NET's spelling for a .NET concept.** `System.Globalization` and `IStringLocalizer` give _globalization_ and _localization_, down to the file name `opinions/globalization.md`. EF Core's materialization gives _materialized_. A word that only shares a stem with an API keeps its British spelling: "a behaviour change in SQLite", even though MAUI has a `Behavior` type.
 
-### Content
-
-- **Lead with what matters.** Put the recommendation or the action first in a section, a paragraph, and a sentence. Put the reason after it.
-- **Put a condition before the instruction it limits.** Write "For details, see [testing.md](opinions/testing.md)", not "See [testing.md](opinions/testing.md) for details", and "To publish a package, run `dotnet pack`", not the reverse. A reader the condition excludes can then skip the instruction. The condition is the only thing that goes ahead of the action. The reason still follows it.
-- **Make link text say where the link goes.** Use the target's title, as [Citations and labels](#citations-and-labels) describes. Never use _here_, _this page_, or a bare URL.
-- **Make every sentence carry a fact the reader can act on or check.** Name the exact type, member, property, diagnostic ID, and version (`CA1307`, `<InvariantGlobalization>`, .NET 10) instead of describing it. A measured number beats an adjective: "5.5 ms to 0.826 ms", not "much faster".
-- **Cut what doesn't add a fact.** Delete a sentence that restates the one before it. Delete one that comments on the text instead of the subject, such as "which is worth noticing" or "the part that matters".
-- **Keep sentences short.** Aim for about 20 words. Split any sentence over 35 words at the clause that does separate work.
-- **Keep paragraphs short.** Three or four sentences is plenty. Break up a longer one, or turn it into a list.
-- **Make it scannable.** Use a numbered list for steps that happen in order, a bulleted list for items that don't, and a table when the same attributes repeat across items. Use sentence-style capitalisation for headings, and keep headings short and specific.
-- **Use the serial comma.** Write "opinions, templates, and skills".
-- **Write a range with _to_, not an en dash.** Write "22.2% to 22.3%" and "versions 8 to 10". Use a hyphen only where a compound modifier needs one, as in "a long-running service".
-
-### Rhythm
-
-Agents write most of the prose here, and it goes wrong in rhythm more than vocabulary. The well-known tells (_delve_, _leverage_, _seamless_, _robust_, _comprehensive_, _in today's_, a "here is" lead-in, an "in conclusion" wrap-up) don't appear here, so don't hunt for them. Four patterns are fine occasionally and read as machine-written in bulk:
-
-- **Em dashes.** Use at most one per sentence, and only for a real turn. A colon, a comma, or a full stop usually works better.
-- **"X, not Y" contrasts.** Keep one when the rejected option is the one a reader would otherwise choose: "Pin to commit SHAs, not mutable tags". Cut it when nobody would choose the alternative: "a build artefact, not an afterthought".
-- **Parenthetical asides.** If an aside carries real content, make it a sentence. If it restates the sentence it's attached to, delete it.
-- **Lists of three.** A real list can have any length. Don't pad a list to three items because three sounds complete.
-
-### Stock phrases
-
-A few agent idioms did get in. Replace each with the plain statement it stands for: the failure a check catches, the claim an opinion rests on, or the cost a feature repays.
-
-| Avoid                                              | Write instead                                   |
-| -------------------------------------------------- | ----------------------------------------------- |
-| load-bearing                                       | what depends on it                              |
-| belt and braces                                    | the second check, and what it catches           |
-| earns its keep, earns its place                    | the benefit, measured                           |
-| escape hatch                                       | the setting or API that opts out                |
-| bites                                              | the failure, and when it happens                |
-| for free                                           | without extra code, or what's actually included |
-| reach for                                          | use                                             |
-| worth noting                                       | (delete it, and state the fact)                 |
-| _honest_, _genuinely_, _quietly_ (as intensifiers) | (delete them)                                   |
-
-A literal use isn't an idiom. _Silently_ for a failure that raises no error stays, and so does _drift_ for two copies that diverge.
-
-### Citations and labels
-
-- **House:** Cite as `Source: Title`, never the reverse. The source comes first, whether it's a person or a publication: `[Toub: Performance Improvements in .NET 10]` and `[Microsoft Learn: Native AOT deployment]`, not `[Native AOT deployment: Microsoft Learn]`.
-- **A description-list line uses the same colon:** `**Label:** definition`. Don't use an em dash as the separator.
-- **Leave a source's own title as written.** A colon inside a title stays (`[Avalonia 12: Ready for What's Next]`), and an internal reference keeps its section (`[AGENTS.md: Metadata]`).
-
-### Spelling
-
-- **Use British spelling, except where .NET names the word.** Write _defence_, _modelling_, _catalogue_, _behaviour_, and _colour_. This overrides Google's American spelling and its dictionary, Merriam-Webster.
-- **Use the platform's spelling for a .NET concept,** so prose and identifiers match and a search for one finds the other. `System.Globalization` and `IStringLocalizer` give _globalization_ and _localization_, down to the file name `opinions/globalization.md`. EF Core's materialization gives _materialized_.
-- **Don't extend the exception to words that only share a stem with an API.** "A behaviour change in SQLite" keeps its British spelling, even though MAUI has a `Behavior` type. Never anglicise an API name.
-- **`just spell` checks spelling.** For details, see [Formatting and linting](#formatting-and-linting). When it flags a correctly spelled name or term, add the word to `cspell.words.txt` in the same commit. Never add an American spelling there. In Markdown, it skips link text, inline code, and double-quoted text, so a cited title or a quotation keeps its spelling. For a title outside those, such as an italic book title, put `<!-- cspell:ignore <word> -->` above the paragraph.
-
-### Scope of these rules
-
-- **They're review guidance, not a build check.** Whether a contrast is justified can't be decided by counting. Read for these patterns in review, and don't add a check that fails a build over them. Spelling is the exception: a misspelled word is wrong whatever its context, so `just spell` fails the build over it.
-- **They apply only to prose written here.** A third-party title and its URL keep the author's wording and spelling, so Andrew Lock's "Adding Localisation to an ASP.NET Core application" stays as written. Correcting a source misquotes it, and correcting a URL breaks it.
-- **They don't apply to other people's code.** `review-project` reviews a codebase against `opinions/`. Spelling and wording in someone else's identifiers, comments, or documentation is never a finding.
+The shared page's exception for pre-release features covers the "coming next" note about a .NET preview that [Maintaining this repository](#maintaining-this-repository) allows.
 
 ## Writing style for opinions
 

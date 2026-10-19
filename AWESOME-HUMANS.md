@@ -6,26 +6,11 @@ To propose a source, [suggest it for vetting](https://github.com/awesome-humans/
 
 ## Admission criteria
 
-**Scope: published writing.** A source qualifies on text a reader can check: blog posts, documentation, books, and newsletters. Videos, conference talks, and podcasts are out of scope for now, both as citable material and as evidence of a track record. A source that moves to those formats stops qualifying, and becomes a `vet-source` candidate again if the writing resumes.
+Every awesome-humans ecosystem admits a source by the same rules, in [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md). Read it before you vet a source or cite one. It defines the track record a source needs, the reserved `house:` prefix, the `**Discovery-only.**` and `**Corroborate.**` markings, and the references an opinion can link without vetting. This roster applies the rules for independence this way:
 
-A **source** is the published work of an awesome human: a person or a publication. Admission needs an **established track record**:
-
-1. **Longevity:** At least two years of sustained publishing. A source with less goes on the watch list, however good the writing. The `Since` column shows how far back each record goes.
-2. **Depth:** Original insight, such as internals, measurements, or worked reasoning. Paraphrased release notes don't count. A long-lived source with thin depth is admitted with the `**Corroborate.**` marking, which limits how it's cited.
-3. **Accuracy:** A history of being right, and of publishing corrections when wrong.
-4. **Independence:** The content stands on its merit, not on marketing reach.
-
-Two rules qualify these criteria:
-
-- **An independence concern is a usage limit, not a lower rank.** A concern is live when vendor developer relations or product-team work produces adoption-focused content with little critical distance. The source is still admitted, and its section under `## Source notes` says what a citation can rest on, usually how something works, not whether to adopt it. `avalonia-blog`, `james-montemagno`, and `shay-rojansky` each record one.
-  - Working for a vendor isn't a concern by itself. Depth with critical distance, as from `stephen-toub` or `khalid`, needs no limit.
-  - A concern that no limit could contain leads to a decline or the watch list, as with `duende-blog` and `telerik-blog`.
-- **Dormancy blocks admission, with one exception.** A candidate who hasn't published for over a year goes on the watch list, unless the person's **writing** clearly continues elsewhere, such as official documentation, another publication, or a book. Then the track record follows the person, and the notes record the dormant channel.
-  - Repository activity isn't evidence. Opinions don't cite commits, releases, or issue threads, so a busy GitHub profile beside a silent blog is still dormant.
-  - Documentation written in a repository counts. The test is what was published, not where the commits landed.
-  - The same rule triggers re-evaluation of admitted sources. For details, see `vet-source`.
-
-The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant) tracks candidates that don't qualify yet, and `vet-source` re-evaluates them. The decision log at the end records every admission and demotion.
+- `avalonia-blog`, `james-montemagno`, and `shay-rojansky` each record a usage limit under [Source notes](#source-notes).
+- Vendor work with critical distance needs no limit, as from `stephen-toub` or `khalid`.
+- `duende-blog` and `telerik-blog` are on the [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant), because no limit could contain the concern.
 
 ### How the roster is organised
 
@@ -35,20 +20,6 @@ The [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but
 - **Kind:** `person` or `publication`. A newsletter or link blog that one person writes is still a `publication`. A person's Source link text starts with their name, as in `Andrew Lock: .NET Escapades`, because the site takes the name from it.
 - **Notes:** The evidence behind a row goes in its notes section, in the shape [Source notes](#source-notes) describes, one sentence per line. Rows stay short, and a reworded sentence shows in a diff as that one sentence.
 - **Decision log:** Each entry gives the decision and the fact behind it. The evidence is in the source's notes and the pull request. It's the only table Prettier doesn't align: `<!-- prettier-ignore -->` stops one long Detail cell from realigning every row.
-
-### Reserved IDs, markings, and references
-
-**Reserved prefix: `house:`.** A house profile's opinions use the source ID `house:<profile>`, such as `house:simon-mckenna`, described in [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). A profile's authority is its owner's experience, not a track record, so it skips the admission criteria, and every house opinion is visibly marked instead. [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of the marking, of how a house opinion sits beside the sourced text, and of contributor adoption. A `house:` ID never appears in the roster tables.
-
-**Reserved marking: `**Discovery-only.**`.** Aggregators, such as link roundups, newsletters, and curated lists, are admitted for discovery and never cited. They lead to a primary source, and the opinion cites that. CI rejects the ID of a source whose notes carry this marking in any `sources:` list under `opinions/` or `templates/`. Like `**House:**`, it's a fixed string, so a check can match it exactly.
-
-**Reserved marking: `**Corroborate.**`.** Some sources have a long track record but thin depth: SEO-shaped roundups, course funnels, or release paraphrase with occasional substance. They're admitted and marked. The marking limits how you cite the source, not its standing. An opinion can cite it, but never alone: every claim it supports also needs an unmarked citable source. `scripts/validate-sources.cs` rejects an opinion or template whose citable sources are all marked. Neither `house` nor a Discovery-only ID counts as the unmarked source.
-
-**References: a named package's own material.** When an opinion or template names a package, you can link the project's own material inline as a reference: its documentation site or in-repository docs, release notes and changelogs, issues and pull requests, or nuget.org page. The standard behind a named format or protocol qualifies on the same terms, such as an RFC or the IANA time zone database.
-
-- A reference corroborates a claim and never carries it. It can confirm how something is set up, what it supports, and where it falls short, but the claim still rests on a roster source. A package's own material never decides whether to adopt that package.
-- A reference needs no `vet-source` pass and never appears in `sources:`, so `scripts/validate-sources.cs` doesn't see it.
-- Cite it in the same `Source: Title` form as anything else, as in `[xUnit.net: Testing with Native AOT]`.
 
 ## Citable: quotable in opinions and templates
 

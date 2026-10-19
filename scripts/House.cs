@@ -2,7 +2,7 @@
 // `#:include House.cs`. Not a file-based app itself: it declares no top-level statements.
 //
 // A house opinion belongs to a house profile, and sits beside the sourced text it
-// changes, never inside it (HOUSE-OPINIONS.md: How this works). In an opinion it's a block:
+// changes, never inside it (awesome-humans/website: House opinions). In an opinion it's a block:
 //
 //     /// house | simon-mckenna
 //

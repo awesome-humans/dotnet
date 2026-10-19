@@ -24,7 +24,7 @@
 //
 // A house profile's id, house:<profile>, isn't on the roster. Instead, each one in a file's
 // sources must match a house block in the opinion, or a house region in the template, and
-// every house opinion must sit inside one (HOUSE-OPINIONS.md: How this works).
+// every house opinion must sit inside one (awesome-humans/website: House opinions).
 //
 // It also holds the roster itself to its shape: each table sorted by id, and no id
 // used twice. Both are conventions a reader cannot spot in a 30-row table, and the
@@ -419,7 +419,7 @@ foreach ((string path, List<string> sourceIds) in citing)
 
     // A house profile in the sources and its blocks or regions always appear together, and
     // every house opinion sits inside one, so removing them leaves no house opinion behind
-    // (HOUSE-OPINIONS.md: How this works).
+    // (awesome-humans/website: House opinions).
     string text = File.ReadAllText(path);
     List<House.Span> spans = House.Spans(path, text, errors);
     string kind = path.EndsWith(".md", StringComparison.Ordinal) ? "block" : "region";
