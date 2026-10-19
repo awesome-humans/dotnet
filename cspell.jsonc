@@ -42,7 +42,7 @@
 
   "overrides": [
     {
-      // Skip what AGENTS.md: Scope of these rules keeps as written: link text
+      // Skip what the shared Writing style's Scope of these rules keeps as written: link text
       // (usually a third-party title), inline code (an identifier someone else
       // named), a quotation, and a product name in American spelling.
       "filename": "**/*.md",

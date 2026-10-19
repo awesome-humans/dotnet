@@ -30,7 +30,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - **Depth:** Sample three to five representative posts. Do they offer original insight, such as internals, measurements, or worked reasoning, or do they paraphrase release notes?
    - **Accuracy:** Has the source published corrections? Has it left claims standing that were later shown wrong?
    - **Independence:** Does the content stand on its merit, or on marketing reach? Vendor blogs and personality-driven channels need extra scrutiny.
-4. **Classify the source,** applying the two qualifying rules in [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
+4. **Classify the source,** applying the two qualifying rules in [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#track-record) exactly as written there:
 
    | Evidence                                             | Outcome                                                                 |
    | ---------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -71,6 +71,6 @@ Opting back in is a suggestion like any other. The source leaves `## Opted out` 
 ## Edge cases
 
 - **Institutional sources,** such as Microsoft or JetBrains: Longevity belongs to the publication, not individual authors. When you cite one author, still check their depth.
-- **An author who moved platforms,** for example from a personal blog to an employer's engineering blog to a newsletter: The track record follows the person, so combine their writing across platforms. A move to video, talks, or a podcast leaves the scope ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
+- **An author who moved platforms,** for example from a personal blog to an employer's engineering blog to a newsletter: The track record follows the person, so combine their writing across platforms. A move to video, talks, or a podcast leaves the scope ([awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#track-record)).
 - **A candidate found through one viral post:** Never admit a source on one post. At most, watch-list it.
 - **Conflicts of interest,** where the candidate sells a product the opinions might recommend: You can admit it, but record the conflict in its `## Source notes` section, so opinions that cite it flag it.

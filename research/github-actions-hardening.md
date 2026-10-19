@@ -12,7 +12,7 @@ Lint the workflows in CI, so a regression fails the pull request instead of wait
 
 All three are sound practice, but the roster can't carry them yet.
 No citable source covers credential persistence or secret inheritance, and the one that covers workflow checks recommends a different tool.
-The evidence below is the actions' own documentation, which corroborates a claim and never carries one ([AWESOME-HUMANS.md: Admission criteria](../AWESOME-HUMANS.md#admission-criteria)).
+The evidence below is the actions' own documentation, which corroborates a claim and never carries one ([awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references)).
 To promote any of it, either a roster source has to say it, or the owner has to adopt it as a house opinion.
 
 ## What `opinions/ci.md` already says

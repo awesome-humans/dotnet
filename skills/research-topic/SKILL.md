@@ -33,7 +33,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    3. **Material from outside the roster.** Unvetted sources often cover new topics first, so use them.
       - Flag every such citation as **unvetted**, and keep unvetted claims visibly separate from roster-sourced ones.
       - List promising sources as `vet-source` candidates in the closing section.
-      - A named package's own documentation, release notes, and issues are references, not unvetted sources, so they need no flag ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
+      - A named package's own documentation, release notes, and issues are references, not unvetted sources, so they need no flag ([awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references)).
 
    Research accepts any source. **Promotion is the strict gate,** as [Persistence and lifecycle](#persistence-and-lifecycle) describes.
 
