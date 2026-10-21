@@ -519,12 +519,12 @@ if (errors.Count > 0)
 Console.WriteLine($"Staged to {Path.Combine(docsDirectory, Ecosystem)}/");
 return 0;
 
-// A research topic's sidebar label: its title up to any colon, which names the topic, without
+// A research topic's sidebar label: its title up to any ": ", which names the topic, without
 // the ecosystem the section already sets, such as "in .NET development", or the backticks a
 // label can't render.
 static string NavTitle(string title)
 {
-    string topic = title.Split(':')[0];
+    string topic = title.Split(": ")[0];
     foreach (string context in (string[])[$" in {EcosystemName}", $" for {EcosystemName}"])
     {
         int at = topic.IndexOf(context, StringComparison.Ordinal);
