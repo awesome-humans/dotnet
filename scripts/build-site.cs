@@ -124,6 +124,13 @@ string[] profiles = [.. housed.Values.SelectMany(found => found).Distinct().Orde
         .OrderBy(topic => topic.Item2, StringComparer.OrdinalIgnoreCase),
 ];
 
+// research/index.md would land on the research overview's page.
+if (research.Any(topic => Path.GetFileName(topic.Path) == "index.md"))
+{
+    errors.Add($"{ResearchDirectory}/index.md: the research overview takes this page; rename the topic");
+    research = [.. research.Where(topic => Path.GetFileName(topic.Path) != "index.md")];
+}
+
 string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
 Match[] skills = Site.SkillRow().Matches(readme).ToArray();
 
