@@ -20,7 +20,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
   Use the review-project skill at awesome-humans.net on <repository>
   ```
 
-  To narrow the review, say what to include or leave out, and optionally reference a house opinion:
+  To narrow the review, say what to include or leave out, and optionally name a house profile:
 
   ```text
   Use the review-project skill at awesome-humans.net on <repository>, focus on logging and testing, skip CI, use house profile of simon-mckenna
