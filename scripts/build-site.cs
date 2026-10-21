@@ -9,7 +9,7 @@
 
 // Stages the .NET ecosystem's pages of the awesome-humans.net site, under /dotnet/. They're
 // generated from this repository's own files, so the site never carries a second copy to
-// drift: README.md up to its layout section becomes the overview, opinions/ and skills/ are
+// drift: README.md up to its layout section becomes the overview, opinions/, research/, and skills/ are
 // copied in full, the roster is split into a page per section, and every file under
 // templates/ gets a page showing it. llms.txt points agents at the raw files. Relative links are rewritten to the page they now point at, or to GitHub
 // for a file the site does not carry. The navigation is generated too: the opinions take their titles and order from
@@ -46,6 +46,7 @@ using YamlDotNet.Serialization;
 
 const string TemplatesDirectory = "templates";
 const string SkillsDirectory = "skills";
+const string ResearchDirectory = "research";
 const string Ecosystem = "dotnet";
 const string EcosystemName = ".NET";
 const string SchemaBase = "https://raw.githubusercontent.com/awesome-humans/website/main/schemas";
@@ -114,6 +115,22 @@ foreach (string path in Opinions.Names().Select(Opinions.PathOf).Concat(template
 
 string[] profiles = [.. housed.Values.SelectMany(found => found).Distinct().Order(StringComparer.Ordinal)];
 
+// The unresolved research topics, ordered by title. resolve-research deletes a topic once
+// it's resolved, so every file here is open.
+(string Path, string Title)[] research =
+[
+    .. (Directory.Exists(ResearchDirectory) ? Directory.EnumerateFiles(ResearchDirectory, "*.md") : [])
+        .Select(path => (Site.Normalise(path), Site.Heading().Matches(File.ReadAllText(path)).First(heading => heading.Groups["hashes"].Value.Length == 1).Groups["text"].Value))
+        .OrderBy(topic => topic.Item2, StringComparer.OrdinalIgnoreCase),
+];
+
+// research/index.md would land on the research overview's page.
+if (research.Any(topic => Path.GetFileName(topic.Path) == "index.md"))
+{
+    errors.Add($"{ResearchDirectory}/index.md: the research overview takes this page; rename the topic");
+    research = [.. research.Where(topic => Path.GetFileName(topic.Path) != "index.md")];
+}
+
 string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
 Match[] skills = Site.SkillRow().Matches(readme).ToArray();
 
@@ -126,6 +143,7 @@ Dictionary<string, string> pages = new(StringComparer.Ordinal)
     [TemplatesDirectory] = $"{Ecosystem}/templates/index.md",
     [$"{TemplatesDirectory}/projects"] = $"{Ecosystem}/templates/index.md",
     [SkillsDirectory] = $"{Ecosystem}/skills/index.md",
+    [ResearchDirectory] = $"{Ecosystem}/research/index.md",
 };
 
 foreach (Match skill in skills)
@@ -138,6 +156,11 @@ foreach (Match skill in skills)
 foreach (string name in Opinions.Names())
 {
     pages[Opinions.PathOf(name)] = $"{Ecosystem}/opinions/{name}";
+}
+
+foreach ((string path, _) in research)
+{
+    pages[path] = $"{Ecosystem}/research/{Path.GetFileName(path)}";
 }
 
 foreach (string template in templates)
@@ -248,38 +271,13 @@ foreach ((string page, string text) in rosterText)
 
 Write(pages["HOUSE-OPINIONS.md"], Rewrite("HOUSE-OPINIONS.md", File.ReadAllText("HOUSE-OPINIONS.md")));
 
-// Opinions, each with the design system's OpinionMeta strip under its title, from its
-// frontmatter: a paragraph marked { .ah-meta }, as the staging contract defines. The
-// freshness chip turns stale past audit-freshness's 180-day tolerance, counted from the
-// day the site is staged, which the weekly rebuild keeps current.
+// Opinions, each with its metadata strip and freshness chip, which the weekly rebuild keeps
+// current.
 IDeserializer deserializer = new DeserializerBuilder().Build();
 DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow);
 foreach (string name in Opinions.Names())
 {
-    string path = Opinions.PathOf(name);
-    IDictionary? meta = Frontmatter.Read(deserializer, path, out string? error);
-    if (meta is null)
-    {
-        errors.Add($"{path}: {error}");
-        continue;
-    }
-
-    if (!DateOnly.TryParseExact($"{meta["last-reviewed"]}", "yyyy-MM-dd", out DateOnly reviewed))
-    {
-        errors.Add($"{path}: last-reviewed isn't a YYYY-MM-DD date");
-        continue;
-    }
-
-    string freshness = today.DayNumber - reviewed.DayNumber > OpinionTolerance ? "stale" : "fresh";
-    string line = string.Concat(
-        MetaItem("Targets", string.Join(" ", Site.List(meta["targets"]).Select(target => $"`{target}`"))),
-        MetaItem("Last reviewed", $"{reviewed:yyyy-MM-dd} <span class=\"ah-chip ah-chip--{freshness} ah-chip--dot\">{freshness}</span>"),
-        MetaItem("Sources", string.Join(" ", Site.List(meta["sources"]).Select(id => $"{SourceLink(path, id)}{{ .ah-chip{HouseAttribute(id)} }}"))))
-        + "\n{ .ah-meta }";
-    string text = Rewrite(path, File.ReadAllText(path));
-    int title = text.IndexOf("\n# ", StringComparison.Ordinal);
-    int titleEnd = text.IndexOf('\n', title + 1);
-    Write(pages[path], text[..titleEnd] + "\n\n" + line + text[titleEnd..]);
+    WithMeta(Opinions.PathOf(name), freshness: true, lead: "");
 }
 
 // An index of the opinions, in the order and with the summaries of README.md's Scope list.
@@ -365,6 +363,21 @@ foreach (Match skill in skills)
 }
 
 Write(pages[SkillsDirectory], string.Concat(skillIndex));
+
+// A page per research topic, with the same strip as an opinion but no freshness chip, since
+// a topic is evidence waiting on resolve-research rather than guidance to keep current. An
+// index lists them. llms.txt leaves them out, so agents follow only the opinions.
+foreach ((string path, _) in research)
+{
+    WithMeta(path, freshness: false, lead: "**Unresolved research.** This topic is evidence that `research-topic` gathered, waiting on `resolve-research`. It isn't an opinion, and it can cite unvetted material. Follow the [opinions](../opinions/index.md) instead.\n\n");
+}
+
+Write(
+    pages[ResearchDirectory],
+    "# Research\n\n"
+    + "Topics under research: the evidence `research-topic` gathered, before `resolve-research` decides what becomes an opinion. "
+    + "Resolving a topic deletes it, so every topic here is still open. None of it is guidance yet.\n\n"
+    + (research.Length == 0 ? "No topics are open.\n" : string.Concat(research.Select(topic => $"- [{topic.Title}]({Path.GetFileName(topic.Path)})\n"))));
 
 // Copies of each opinion and template that holds house opinions, for agents: one with every
 // house block or region removed, and one per profile it holds, with only that profile's.
@@ -455,9 +468,6 @@ if (opinionEntries.Count != Opinions.Names().Length)
 NavItem[] ecosystemNav =
 [
     Entry("Overview", pages["README.md"]),
-    Section("Opinions", [Entry("Overview", pages[Opinions.DirectoryName]), .. opinionEntries]),
-    Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
-    Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
     Section("Awesome humans",
     [
         Entry("Overview", pages[RosterPath]),
@@ -465,6 +475,10 @@ NavItem[] ecosystemNav =
         Entry("Watch list", rosterPages["watch-list"]),
         Entry("Decision log", rosterPages["decision-log"]),
     ]),
+    Section("Opinions", [Entry("Overview", pages[Opinions.DirectoryName]), .. opinionEntries]),
+    Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
+    Section("Research", [Entry("Overview", pages[ResearchDirectory]), .. research.Select(topic => Entry(NavTitle(topic.Title), pages[topic.Path]))]),
+    Section("Skills", [Entry("Overview", pages[SkillsDirectory]), .. skills.Select(skill => Entry(skill.Groups["name"].Value, pages[Site.SkillPath(skill.Groups["name"].Value)]))]),
     Entry("House opinions", pages["HOUSE-OPINIONS.md"]),
 ];
 
@@ -512,6 +526,21 @@ if (errors.Count > 0)
 Console.WriteLine($"Staged to {Path.Combine(docsDirectory, Ecosystem)}/");
 return 0;
 
+// A research topic's sidebar label: its title up to any ": ", which names the topic, without
+// the ecosystem the section already sets, such as "in .NET development", or the backticks a
+// label can't render.
+static string NavTitle(string title)
+{
+    string topic = title.Split(": ")[0];
+    foreach (string context in (string[])[$" in {EcosystemName}", $" for {EcosystemName}"])
+    {
+        int at = topic.IndexOf(context, StringComparison.Ordinal);
+        topic = at == -1 ? topic : topic[..at];
+    }
+
+    return topic.Replace("`", "", StringComparison.Ordinal);
+}
+
 // A source id links to its notes section in the roster, or to the citable table when it has
 // nothing to record and so no section, and a house profile links to the house opinions.
 // One labelled group in an opinion's metadata strip. Markdown inside the span still renders.
@@ -536,6 +565,38 @@ static string RawPage(string path, string? profile)
 string RawLink(string path, string? profile) =>
     !housed.TryGetValue(path, out string[]? found) ? Site.Raw(path)
         : $"{SiteUrl}{Ecosystem}/{RawPage(path, profile is not null && found.Contains(profile) ? profile : null)}";
+
+// Writes an opinion or research topic's page, with the design system's OpinionMeta strip
+// under its title, from its frontmatter: a paragraph marked { .ah-meta }, as the staging
+// contract defines, then the lead, if any. The freshness chip turns stale past
+// audit-freshness's 180-day tolerance, counted from the day the site is staged.
+void WithMeta(string path, bool freshness, string lead)
+{
+    IDictionary? meta = Frontmatter.Read(deserializer, path, out string? error);
+    if (meta is null)
+    {
+        errors.Add($"{path}: {error}");
+        return;
+    }
+
+    if (!DateOnly.TryParseExact($"{meta["last-reviewed"]}", "yyyy-MM-dd", out DateOnly reviewed))
+    {
+        errors.Add($"{path}: last-reviewed isn't a YYYY-MM-DD date");
+        return;
+    }
+
+    string state = today.DayNumber - reviewed.DayNumber > OpinionTolerance ? "stale" : "fresh";
+    string chip = freshness ? $" <span class=\"ah-chip ah-chip--{state} ah-chip--dot\">{state}</span>" : "";
+    string line = string.Concat(
+        MetaItem("Targets", string.Join(" ", Site.List(meta["targets"]).Select(target => $"`{target}`"))),
+        MetaItem("Last reviewed", $"{reviewed:yyyy-MM-dd}{chip}"),
+        MetaItem("Sources", string.Join(" ", Site.List(meta["sources"]).Select(id => $"{SourceLink(path, id)}{{ .ah-chip{HouseAttribute(id)} }}"))))
+        + "\n{ .ah-meta }";
+    string text = Rewrite(path, File.ReadAllText(path));
+    int title = text.IndexOf("\n# ", StringComparison.Ordinal);
+    int titleEnd = text.IndexOf('\n', title + 1);
+    Write(pages[path], text[..titleEnd] + "\n\n" + line + (lead.Length == 0 ? "" : "\n\n" + lead.TrimEnd('\n')) + text[titleEnd..]);
+}
 
 string SourceLink(string path, string id)
 {
