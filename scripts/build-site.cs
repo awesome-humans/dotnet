@@ -191,7 +191,7 @@ string[] rosterSections = Site.SplitBefore(roster, "## ");
 Dictionary<string, string> rosterText = new(StringComparer.Ordinal) { [pages[RosterPath]] = rosterSections[0] };
 foreach (string section in rosterSections.Skip(1))
 {
-    if (section.StartsWith("## Admission criteria", StringComparison.Ordinal) || section.StartsWith("## Opted out", StringComparison.Ordinal))
+    if (section.StartsWith("## Admission criteria", StringComparison.Ordinal) || section.StartsWith("## Named references", StringComparison.Ordinal) || section.StartsWith("## Opted out", StringComparison.Ordinal))
     {
         rosterText[pages[RosterPath]] += section;
     }

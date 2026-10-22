@@ -124,7 +124,7 @@ Strongly typed resource classes lost on portability. .NET has no cross-platform 
 
 ### Containers: chiseled and Alpine images drop this data
 
-**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `noble-chiseled` or `alpine` images for size. Those size-optimised images (Alpine, Ubuntu chiseled, and Azure Linux distroless) "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `10.0-alpine-extra` or `10.0-noble-chiseled-extra`, that adds back ICU, tzdata, and `stdc++`. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images))
+**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `noble-chiseled` or `alpine` images for size. Those size-optimised images (Alpine, Ubuntu chiseled, and Azure Linux distroless) "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `10.0-alpine-extra` or `10.0-noble-chiseled-extra`, that adds back ICU, tzdata, and `stdc++`. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images), [dotnet/dotnet-docker: .NET Image Variants](https://github.com/dotnet/dotnet-docker/blob/main/documentation/image-variants.md))
 
 The two missing pieces fail differently:
 
@@ -132,7 +132,7 @@ The two missing pieces fail differently:
   - An app that names a culture throws `CultureNotFoundException` at startup. `PredefinedCulturesOnly` defaults to true here, so the `RequestLocalizationOptions` above fail before the first request.
   - An app that only uses `CurrentCulture` raises no error: it formats and compares as invariant.
   - The setting is an environment variable, so `<InvariantGlobalization>false</InvariantGlobalization>` doesn't undo it. If you install `icu-libs` and `icu-data-full` yourself, clear the variable too.
-  - The `-extra` images don't set the variable. ([Microsoft Learn: Environment variables take precedence in app runtime configuration settings](https://learn.microsoft.com/dotnet/core/compatibility/deployment/9.0/envvar-precedence), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [dotnet-docker: runtime-deps 10.0 Dockerfiles](https://github.com/dotnet/dotnet-docker/tree/main/src/runtime-deps/10.0))
+  - The `-extra` images don't set the variable. ([Microsoft Learn: Environment variables take precedence in app runtime configuration settings](https://learn.microsoft.com/dotnet/core/compatibility/deployment/9.0/envvar-precedence), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [dotnet/dotnet-docker: runtime-deps 10.0 Dockerfiles](https://github.com/dotnet/dotnet-docker/tree/main/src/runtime-deps/10.0))
 - **Without tzdata, `TimeZoneInfo.FindSystemTimeZoneById` throws `TimeZoneNotFoundException`.** Invariant mode doesn't change that. `RUN apk add --no-cache tzdata` fixes it by itself. ([Gordon: TimeZoneNotFoundException in Alpine Based Docker Images](https://www.stevejgordon.co.uk/timezonenotfoundexception-in-alpine-based-docker-images))
 
 ### Localization makes dates look right, not be right

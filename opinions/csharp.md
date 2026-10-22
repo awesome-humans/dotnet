@@ -42,7 +42,7 @@ public static class OrderExtensions
 
 - **Use an extension member for a pure query or transform over a type you don't own.** For a type you own, write an instance method. The exception is a domain entity you keep as plain data, with validation, formatting, and mapping outside it.
 - **Use a property when the member states a fact about the instance.** `IsEmpty` and `WordCount` read naturally as properties and awkwardly as calls.
-- **Convert a method to a property only while you're already changing its callers.** The conversion breaks every call site. ([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [Microsoft Learn: What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [.NET Blog: C# 14 - Exploring extension members](https://devblogs.microsoft.com/dotnet/csharp-exploring-extension-members/), [Microsoft Learn: Extension methods design guidelines](https://learn.microsoft.com/dotnet/standard/design-guidelines/extension-methods))
+- **Convert a method to a property only while you're already changing its callers.** The conversion breaks every call site. ([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [Microsoft Learn: What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [.NET Blog: C# 14 - Exploring extension members](https://devblogs.microsoft.com/dotnet/csharp-exploring-extension-members/), [Microsoft Learn: Extension methods design guidelines](https://learn.microsoft.com/dotnet/standard/design-guidelines/extension-methods), [dotnet/csharplang: Extension members](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extensions.md))
 
 ### The `field` keyword
 
@@ -76,7 +76,7 @@ public class Sensor
 }
 ```
 
-([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/))
+([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [dotnet/csharplang: `field` keyword in properties](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/field-keyword.md))
 
 ### Null-conditional assignment
 
@@ -97,7 +97,7 @@ After:
 customer?.LastSeen = DateTimeOffset.UtcNow;
 ```
 
-([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/))
+([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [dotnet/csharplang: Null-conditional assignment](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/null-conditional-assignment.md))
 
 ### Pattern matching
 

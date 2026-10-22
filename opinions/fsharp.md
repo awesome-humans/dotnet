@@ -64,7 +64,7 @@ let describe payment =
           text.PadLeft w
   ```
 
-- **Write `seq { ... }` explicitly.** F# 10 deprecates a bare brace block as a sequence expression and reports `FS3873: This construct is deprecated. Sequence expressions should be of the form 'seq { ... }'`. The warning is about the missing `seq`, not the contents. A comprehension inside `seq { ... }` is fine with or without `yield`. ([Microsoft Learn: What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
+- **Write `seq { ... }` explicitly.** F# 10 deprecates a bare brace block as a sequence expression and reports `FS3873: This construct is deprecated. Sequence expressions should be of the form 'seq { ... }'`. The warning is about the missing `seq`, not the contents. A comprehension inside `seq { ... }` is fine with or without `yield`. ([Microsoft Learn: What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10), [dotnet/fsharp: FSComp.txt](https://github.com/dotnet/fsharp/blob/d12022d6d0ec9c3355fbb3ae293f67c6babd2c84/src/Compiler/FSComp.txt#L1723), [fsharp/fslang-design: FS-1033 Deprecate places where seq can be omitted](https://github.com/fsharp/fslang-design/blob/main/FSharp-10.0/FS-1033-Deprecate-places-where-seq-can-be-omitted.md))
 
   ```fsharp
   // Before: FS3873
