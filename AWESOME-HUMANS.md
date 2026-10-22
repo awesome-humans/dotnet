@@ -80,7 +80,7 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 
 ## Named references
 
-The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's own repository already qualifies when an opinion names the package, official or not, so it isn't listed here. This roster also names:
+The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's or tool's own repository already qualifies when an opinion names it, official or not, so it isn't listed here. That covers `dotnet/sdk` for the `dotnet` CLI, and `dotnet/dotnet-docker` for the official container images and their tags. This roster also names:
 
 - **[dotnet/csharplang](https://github.com/dotnet/csharplang):** The proposal or design notes for a C# feature an opinion names, for how the feature behaves, not whether to use it.
 - **[fsharp/fslang-design](https://github.com/fsharp/fslang-design):** The RFC for an F# language or FSharp.Core feature an opinion names, for how the feature behaves, not whether to use it.
