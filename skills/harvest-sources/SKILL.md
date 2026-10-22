@@ -19,7 +19,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 ## Steps
 
 1. **Load the roster** from [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md). Only sources in the **Citable** table feed opinions. Use watch-list sources for discovery and cross-checking only: what you find there needs a citable source, or a `vet-source` admission, before it can change an opinion.
-2. **Set the sweep window,** from the most recent harvest entry in the `AWESOME-HUMANS.md` decision log to today. If there's no harvest entry, start from the newest `last-reviewed` date in `opinions/`.
+2. **Set the sweep window,** from the most recent harvest entry in the `AWESOME-HUMANS.md` decision log to today in UTC. If there's no harvest entry, start from the newest `last-reviewed` date in `opinions/`.
 3. **Sweep each source** for posts in the window. A source marked `**Discovery-only.**` only leads to primary posts: follow its links, and never cite it in `sources:`, because CI rejects it.
 4. **Triage each notable post:**
    - **Changes an existing opinion:** It replaces or refines guidance in `opinions/`. Queue an edit.
