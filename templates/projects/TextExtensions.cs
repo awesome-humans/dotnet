@@ -12,6 +12,7 @@ public static class TextExtensions
         /// <summary>A transform that takes an argument, so a method.</summary>
         public string Truncate(int maxLength)
         {
+            ArgumentNullException.ThrowIfNull(text);
             ArgumentOutOfRangeException.ThrowIfNegative(maxLength);
             return text.Length <= maxLength ? text : text[..maxLength];
         }
