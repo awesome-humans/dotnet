@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-15
+last-reviewed: 2026-10-22
 sources:
   [
     andrew-lock,
@@ -18,7 +18,7 @@ Hold tests to the same review bar and conventions as production code.
 
 /// house | simon-mckenna
 
-**House:** Name tests `UnitOfWork_Scenario_ExpectedBehaviour`, and mark each test's Arrange, Act, and Assert sections with comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
+**House:** Name tests `UnitOfWork_Scenario_ExpectedBehaviour`, and mark each test's Arrange, Act, and Assert sections with comments. Leave out the marker for a section with no statements of its own. When the only setup is a literal passed to the call, inline it and mark that line `// Act`. When the call and the check are one expression, such as `Assert.Throws`, mark it `// Act & Assert`. A marker over an empty section labels nothing, and three fixed markers keep the rule checkable. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
 
 ```csharp
 public class BasketTests
@@ -36,6 +36,26 @@ public class BasketTests
 
         // Assert
         Assert.Equal(12.50m, total);
+    }
+
+    [Fact]
+    public void Total_EmptyBasket_IsZero()
+    {
+        // Act
+        var total = new Basket().Total;
+
+        // Assert
+        Assert.Equal(0m, total);
+    }
+
+    [Fact]
+    public void Add_NegativePrice_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var basket = new Basket();
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => basket.Add(-1.00m));
     }
 }
 ```
