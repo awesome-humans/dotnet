@@ -26,7 +26,8 @@ Report what's stale. This skill never edits content. Version drift goes to `refr
 | `research/` topics                                                                | 90 days, then reported for `resolve-research`. For details, see [Research](#research)         |
 | `sources:` IDs                                                                    | For the rules, see [Sources](#sources)                                                        |
 | `**Review by YYYY-MM-DD.**` markings in `opinions/` and `templates/`              | Zero past the date. Report each for drop-or-re-date triage                                    |
-| Inbound references to each `opinions/` and `templates/` file                      | Informational, never a finding. For details, see [References](#references)                    |
+| Inbound links to each `opinions/` and `templates/` file                           | Informational, never a finding. For details, see [Inbound links](#inbound-links)              |
+| References cited in `opinions/` and `templates/`                                  | Zero. For details, see [Cited references](#cited-references)                                  |
 | `templates/` still implement what `opinions/` require                             | Zero. For details, see [Templates](#templates)                                                |
 | `templates/` build and test without errors                                        | Zero. For details, see [Templates](#templates)                                                |
 | Citation and roster URLs resolve                                                  | Zero: a dead link is a content finding. Read the latest `Markdown` workflow run, not each URL |
@@ -50,11 +51,23 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 - In an opinion or template, a watch-list ID or a `**Discovery-only.**` ID is a finding. So is a file whose citable sources are all marked `**Corroborate.**`. `scripts/validate-sources.cs` already fails the build on all three.
 - `research/` topics can name unvetted sources if the text flags them, but never an opted-out one, because its owner asked not to be cited at all. `scripts/validate-sources.cs` doesn't check `research/`, so report an opted-out ID there.
 
-### References
+### Cited references
+
+A reference is a named package's own material, or a repository named under [AWESOME-HUMANS.md: Named references](../../AWESOME-HUMANS.md#named-references), linked inline to corroborate a roster-sourced claim. Report each of these as a finding:
+
+- **A linked issue or pull request has changed state.** The opinion calls it open, or relies on it as a current limitation, and it has closed, merged, or shipped in a release. Send it to `harvest-sources` to update or drop the note.
+- **A reference carries a claim alone.** The sentence or bullet it supports has no roster citation, so the reference is doing a source's job.
+- **A reference is in `sources:`.** References never go there.
+- **A reference points into an archived repository, or anchors a line on a branch.** Link where the content moved, and pin a line anchor to a commit.
+- **A reference to guidance.** Advice, such as a skills repository, needs `vet-source`. It isn't a reference.
+
+To check state, read each linked issue and pull request with `gh` or the web. Report one you couldn't check as "not verified", never as current.
+
+### Inbound links
 
 Count what refers to each opinion and template, by link or by file name, from the repository itself: `skills/`, `AGENTS.md`, `HOUSE-OPINIONS.md`, the other opinions, the template comments, and `research/` topics. Leave out the `README.md` Scope bullets and layout tree, because every opinion appears there.
 
-Report each file with no inbound references as a pruning candidate. Nothing on the web or in another project shows up here, so a file with no references might still be read. Never report it as stale on that count alone.
+Report each file with no inbound links as a pruning candidate. Nothing on the web or in another project shows up here, so a file with no inbound links might still be read. Never report it as stale on that count alone.
 
 ### Templates
 
@@ -63,7 +76,7 @@ Report each file with no inbound references as a pruning candidate. Nothing on t
 
 ## Steps
 
-1. **Collect the metadata** from every file under `opinions/` and `research/`, and from the comment headers in `templates/`: `targets`, `last-reviewed`, and `sources`. Count the inbound references to each opinion and template, as [References](#references) describes.
+1. **Collect the metadata** from every file under `opinions/` and `research/`, and from the comment headers in `templates/`: `targets`, `last-reviewed`, and `sources`. Count the inbound links to each opinion and template, as [Inbound links](#inbound-links) describes. List every reference the opinions and templates cite, and check each, as [Cited references](#cited-references) describes.
 2. **Find the latest released versions** of .NET, C#, and F#, from the same sources as `refresh-dotnet-versions` step 1. Find the latest stable version of every package in `templates/Directory.Packages.props`, with the lookup in `refresh-dotnet-versions` step 4b.
    - Skip SDK band lookups: the `global.json` check reads the pin's shape, not its distance from the newest release.
    - If you're offline, skip the checks you can't run, and say so in the report. Report an unchecked pin as "not verified", never as fresh.

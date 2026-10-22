@@ -78,6 +78,20 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 | `telerik-blog`    | publication | [Telerik Blogs: .NET](https://www.telerik.com/blogs)            | Release summaries                                 | —     |
 | `udi-dahan`       | person      | [Udi Dahan: The Software Simplist](https://udidahan.com/)       | SOA, messaging, service boundaries, domain events | ~2007 |
 
+## Named references
+
+The admission criteria let a roster name more material that qualifies as a reference. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's own repository already qualifies when an opinion names the package, official or not, so it isn't listed here. This roster also names:
+
+- **[dotnet/csharplang](https://github.com/dotnet/csharplang):** The proposal or design notes for a C# feature an opinion names, for how the feature behaves, not whether to use it.
+- **[dotnet/designs](https://github.com/dotnet/designs):** The design document for a .NET platform feature an opinion names.
+- **[dotnet/core](https://github.com/dotnet/core):** Release notes and known issues for a .NET release an opinion targets.
+
+Three rules apply to every reference:
+
+- **Guidance isn't a reference.** A repository that publishes advice, such as `dotnet/skills` or a community skills repository, is a source. Propose it with `vet-source`.
+- **Don't cite an archived repository.** Find where its content moved, such as `dotnet/corefx` to `dotnet/runtime`, or `dotnet/aspire` to `microsoft/aspire`.
+- **Pin a link to a line of code to a commit.** A link to a document can follow the default branch, so the CI link check catches a move. A line anchor on a branch drifts without breaking.
+
 ## Opted out
 
 A source moves here when its owner asks to stop being cited. Its row keeps the same five columns, and its section under [Source notes](#source-notes) goes. The ID stays reserved, so a later suggestion of the source is turned away, and `scripts/validate-sources.cs` rejects it in any `sources:` list. An opt-out from any awesome-humans ecosystem covers this one too, so `vet-source` reads every other ecosystem's Opted out section before admitting anyone. Opting back in is a suggestion like any other, and the source leaves this section only on admission. For the policy, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
@@ -535,3 +549,4 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 | 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline covered. The notes now record the restart, and a token-shape limit on citing his scope-authorization post |
 | 2026-10-17 | Admitted `stephen-cleary` | Writing on async and concurrency since 2008-06-20, with in-post corrections. Latest post 2025-12-04, so re-evaluate from 2026-12-04 if nothing follows (#167) |
 | 2026-10-18 | Replaced the `house` ID with `house:<profile>` | House opinions belong to a house profile, such as `house:simon-mckenna`, and the site shows a profile's only to a reader who chooses it |
+| 2026-10-23 | Named three repositories as references (no roster change) | `dotnet/csharplang`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |

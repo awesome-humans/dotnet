@@ -206,7 +206,7 @@ app.MapGet("/orders/{id:guid}", async (Guid id, AppDbContext db, CancellationTok
 app.MapGet("/events", StreamEvents).DisableRequestTimeout();
 ```
 
-To test a timeout, run without a debugger attached. Timeouts don't fire under one.
+To test a timeout, run without a debugger attached. Timeouts don't fire under one. ([dotnet/aspnetcore: RequestTimeoutsMiddleware.cs](https://github.com/dotnet/aspnetcore/blob/6e62760191a731f63d79b49fad7eda0aaf855cf3/src/Http/Http/src/Timeouts/RequestTimeoutsMiddleware.cs#L31))
 
 ### Rate limiting
 
@@ -268,7 +268,7 @@ Apply a named policy to each endpoint or group with `[EnableCors]`, instead of o
 - `Permissions-Policy`
 - HSTS outside development
 
-For an interactive Blazor circuit, prefer the nonce, and fall back to hashes. ([Bowden: Implement a secure Blazor Web application using OpenID Connect and security headers](https://damienbod.com/2024/04/15/implement-a-secure-blazor-web-application-using-openid-connect-and-security-headers/), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/))
+For an interactive Blazor circuit, prefer the nonce, and fall back to hashes. ([Bowden: Implement a secure Blazor Web application using OpenID Connect and security headers](https://damienbod.com/2024/04/15/implement-a-secure-blazor-web-application-using-openid-connect-and-security-headers/), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/), [NetEscapades.AspNetCore.SecurityHeaders: README](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders#readme))
 
 ```csharp
 app.UseSecurityHeaders(new HeaderPolicyCollection()
