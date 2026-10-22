@@ -30,6 +30,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 - **Restrict what a package can run, not only which version restores.** A `PackageReference` can bring MSBuild props and targets, analyzers, and source generators. All of them run during restore, design-time build, and compile. A version pin decides which code you get, not whether it runs. List only the asset types a package needs:
   - Use `IncludeAssets="compile;runtime"` for a library you only call.
   - Use `PrivateAssets="all"` on build-only tooling, so it never flows to your consumers.
+  - Under Central Package Management, set both on the `PackageReference`, never the `PackageVersion`. A `PackageVersion` holds a package ID and version. For tooling that every project uses, add a `GlobalPackageReference` to `Directory.Packages.props` instead, which gets `PrivateAssets="All"` implicitly. NuGet 7.9 fixed a bug in which `dotnet add package` wrote `PrivateAssets` to the `PackageVersion` item. ([Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management#global-package-references), [Microsoft Learn: NuGet 7.9 Release Notes](https://learn.microsoft.com/nuget/release-notes/nuget-7.9))
 
   Packages that are mostly build logic need these loosened. Re-test after you tighten them. ([Meziantou: Limit what NuGet packages can do in your project](https://www.meziantou.net/limit-what-nuget-packages-can-do-in-your-project.htm))
 
