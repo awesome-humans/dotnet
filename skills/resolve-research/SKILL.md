@@ -41,7 +41,7 @@ This is **editor-only work, so don't fan it out**. The research did the sweeping
 - **Only roster-sourced claims are promoted.** This gate lets research cite anyone while opinions cite only the roster.
 - **Promotion deletes the topic in the same pull request.** A promoted topic left on disk is a second, unapproved copy of the opinion, and the deletion is what marks it promoted. `audit-freshness` reports a topic that remains. Git history keeps the record.
 - **Promotion uses `docs:`, and discard uses `research:`.** A promotion edits opinions, like any other opinion change. A discard touches only the staging area. Neither uses the `research: <topic>` form that `research-topic` uses to save a topic.
-- **`last-reviewed` means verified against the sources.** If the research is within the freshness tolerance, its verification holds, and today's date is accurate. If not, verify it again first, as [Edge cases](#edge-cases) describes. Dating stale research records a verification that never happened.
+- **`last-reviewed` means verified against the sources.** If the research is within the freshness tolerance, its verification holds, and today's UTC date is accurate. If not, verify it again first, as [Edge cases](#edge-cases) describes. Dating stale research records a verification that never happened.
 - **Rewrite the topic; don't paste it.** A topic surveys and weighs. An opinion has to be applied mechanically.
 
 ## Edge cases
