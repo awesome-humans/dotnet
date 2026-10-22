@@ -80,17 +80,13 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 
 ## Named references
 
-The admission criteria let a roster name more material that qualifies as a reference. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's own repository already qualifies when an opinion names the package, official or not, so it isn't listed here. This roster also names:
+The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's own repository already qualifies when an opinion names the package, official or not, so it isn't listed here. This roster also names:
 
 - **[dotnet/csharplang](https://github.com/dotnet/csharplang):** The proposal or design notes for a C# feature an opinion names, for how the feature behaves, not whether to use it.
 - **[dotnet/designs](https://github.com/dotnet/designs):** The design document for a .NET platform feature an opinion names.
 - **[dotnet/core](https://github.com/dotnet/core):** Release notes and known issues for a .NET release an opinion targets.
 
-Three rules apply to every reference:
-
-- **Guidance isn't a reference.** A repository that publishes advice, such as `dotnet/skills` or a community skills repository, is a source. Propose it with `vet-source`.
-- **Don't cite an archived repository.** Find where its content moved, such as `dotnet/corefx` to `dotnet/runtime`, or `dotnet/aspire` to `microsoft/aspire`.
-- **Pin a link to a line of code to a commit.** A link to a document can follow the default branch, so the CI link check catches a move. A line anchor on a branch drifts without breaking.
+A guidance repository, such as `dotnet/skills`, is a source, not a reference, so propose it with `vet-source`. An archived repository's content has moved, such as `dotnet/aspire` to `microsoft/aspire`, so cite where it went.
 
 ## Opted out
 
