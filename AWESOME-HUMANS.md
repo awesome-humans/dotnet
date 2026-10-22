@@ -83,6 +83,7 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's own repository already qualifies when an opinion names the package, official or not, so it isn't listed here. This roster also names:
 
 - **[dotnet/csharplang](https://github.com/dotnet/csharplang):** The proposal or design notes for a C# feature an opinion names, for how the feature behaves, not whether to use it.
+- **[fsharp/fslang-design](https://github.com/fsharp/fslang-design):** The RFC for an F# language or FSharp.Core feature an opinion names, for how the feature behaves, not whether to use it.
 - **[dotnet/designs](https://github.com/dotnet/designs):** The design document for a .NET platform feature an opinion names.
 - **[dotnet/core](https://github.com/dotnet/core):** Release notes and known issues for a .NET release an opinion targets.
 
@@ -545,4 +546,4 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 | 2026-10-09 | Re-evaluated `khalid` (no tier change) | His personal blog resumed on 2026-10-05 after a gap from 2025-04-22, which the Duende byline covered. The notes now record the restart, and a token-shape limit on citing his scope-authorization post |
 | 2026-10-17 | Admitted `stephen-cleary` | Writing on async and concurrency since 2008-06-20, with in-post corrections. Latest post 2025-12-04, so re-evaluate from 2026-12-04 if nothing follows (#167) |
 | 2026-10-18 | Replaced the `house` ID with `house:<profile>` | House opinions belong to a house profile, such as `house:simon-mckenna`, and the site shows a profile's only to a reader who chooses it |
-| 2026-10-23 | Named three repositories as references (no roster change) | `dotnet/csharplang`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |
+| 2026-10-23 | Named four repositories as references (no roster change) | `dotnet/csharplang`, `fsharp/fslang-design`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |
