@@ -65,18 +65,20 @@ The table lists 31 sources: 21 people and 10 publications.
 
 A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:` list, however good the back catalogue. Use these sources for discovery and cross-checking: follow a claim you find here to a citable source, and cite that. `vet-source` re-evaluates them when a blocker might have cleared.
 
-| id                | Kind        | Source                                                          | Focus                                             | Since |
-| ----------------- | ----------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |
-| `barry-dorrans`   | person      | [Barry Dorrans: idunno.org](https://idunno.org/)                | .NET security, CVE triage, supply chain           | 2025  |
-| `chris-sainty`    | person      | [Chris Sainty](https://chrissainty.com/)                        | Blazor components, routing, auth                  | 2018  |
-| `duende-blog`     | publication | [Duende Software blog](https://duendesoftware.com/blog)         | IdentityServer, BFF, OpenID Connect and SAML      | 2020  |
-| `mikesdotnetting` | person      | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/) | ASP.NET web dev, Razor Pages                      | 2007  |
-| `morning-brew`    | publication | [The Morning Brew](https://blog.cwa.me.uk/)                     | Daily .NET link aggregation                       | 2008  |
-| `nick-polyak`     | person      | [Nick Polyak (Dev.to)](https://dev.to/npolyak)                  | Avalonia/WPF/XAML architecture, reactive patterns | 2008  |
-| `scott-brady`     | person      | [Scott Brady](https://www.scottbrady.io/)                       | OAuth, OpenID Connect, identity, cryptography     | —     |
-| `syncfusion-blog` | publication | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)           | Release summaries, performance roundups           | —     |
-| `telerik-blog`    | publication | [Telerik Blogs: .NET](https://www.telerik.com/blogs)            | Release summaries                                 | —     |
-| `udi-dahan`       | person      | [Udi Dahan: The Software Simplist](https://udidahan.com/)       | SOA, messaging, service boundaries, domain events | ~2007 |
+| id                 | Kind        | Source                                                                 | Focus                                                        | Since |
+| ------------------ | ----------- | ---------------------------------------------------------------------- | ------------------------------------------------------------ | ----- |
+| `barry-dorrans`    | person      | [Barry Dorrans: idunno.org](https://idunno.org/)                       | .NET security, CVE triage, supply chain                      | 2025  |
+| `chris-sainty`     | person      | [Chris Sainty](https://chrissainty.com/)                               | Blazor components, routing, auth                             | 2018  |
+| `duende-blog`      | publication | [Duende Software blog](https://duendesoftware.com/blog)                | IdentityServer, BFF, OpenID Connect and SAML                 | 2020  |
+| `mikesdotnetting`  | person      | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/)        | ASP.NET web dev, Razor Pages                                 | 2007  |
+| `morning-brew`     | publication | [The Morning Brew](https://blog.cwa.me.uk/)                            | Daily .NET link aggregation                                  | 2008  |
+| `ms-aspire-skills` | publication | [Microsoft: Aspire skills](https://github.com/microsoft/aspire-skills) | Agent skills for Aspire AppHosts, monitoring, and migration  | 2026  |
+| `ms-dotnet-skills` | publication | [.NET team: dotnet/skills](https://github.com/dotnet/skills)           | Agent skills for .NET, C#, MSBuild, testing, and diagnostics | 2026  |
+| `nick-polyak`      | person      | [Nick Polyak (Dev.to)](https://dev.to/npolyak)                         | Avalonia/WPF/XAML architecture, reactive patterns            | 2008  |
+| `scott-brady`      | person      | [Scott Brady](https://www.scottbrady.io/)                              | OAuth, OpenID Connect, identity, cryptography                | —     |
+| `syncfusion-blog`  | publication | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)                  | Release summaries, performance roundups                      | —     |
+| `telerik-blog`     | publication | [Telerik Blogs: .NET](https://www.telerik.com/blogs)                   | Release summaries                                            | —     |
+| `udi-dahan`        | person      | [Udi Dahan: The Software Simplist](https://udidahan.com/)              | SOA, messaging, service boundaries, domain events            | ~2007 |
 
 ## Named references
 
@@ -358,6 +360,27 @@ Blocked on dormancy: demoted from citable on 2026-08-18.
 The last issue, #3995 on 2024-08-02, announced a summer break, and publication never resumed. The site is up, and the RSS feed ends there.
 The 2008 to 2024 archive stays usable for discovery.
 
+### `ms-aspire-skills`: Watch list
+
+Blocked on longevity: the official Aspire skill pack is under a year old.
+
+- **Longevity:** Created 2026-05-08, with v0.0.1 on 2026-05-27 and v0.0.4 on 2026-10-15, so two years clear from 2028-05.
+- **Depth:** 15 skills, with an `evals/` suite that grades skill routing and edits against no-edit fixtures.
+- **Accuracy:** The changelog records corrections, such as v0.0.2's corrected monitoring guidance for `WithBrowserLogs()`.
+- **Independence:** Microsoft's guidance for its own product, so it never decides whether to adopt Aspire. Aspire's own documentation and `microsoft/aspire` stay references for how it behaves.
+- **Use:** Discovery and cross-checking, on the usual terms.
+
+### `ms-dotnet-skills`: Watch list
+
+Blocked on longevity, with an independence concern to settle at re-evaluation.
+
+- **Scope:** The .NET team's skill pack, not `Aaronontheweb/dotnet-skills`, which `aaron-stannard` covers. The [.NET Blog announcement](https://devblogs.microsoft.com/dotnet/extend-your-coding-agent-with-dotnet-skills/) is citable as `dotnet-blog`.
+- **Longevity:** Created 2026-02-03, with v1.0.0 on 2026-04-21, so two years clear from 2028-02.
+- **Depth:** 114 skills across 51 plugins as of 2026-10-23, each scored against a no-skill baseline, with `eng/evaluation` and a nightly skill validator.
+- **Accuracy:** Corrections land often: 30 of the 100 latest commits are fixes. `research/ai-usage.md` found two MSBuild skills with xUnit `2.7.0` and `2.9.0` samples on 2026-09-25.
+- **Independence:** Its only test-authoring skill is `writing-mstest-tests`, and it migrates xUnit and NUnit to MSTest, Microsoft's own framework, against `testing.md`'s xUnit v3 choice. It also ships `migrate-xunit-to-xunit-v3`. Check at re-evaluation whether a usage limit contains this.
+- **Use:** Discovery and cross-checking, on the usual terms.
+
 ### `ms-learn`: Citable
 
 The "What's new" and "Breaking changes" pages for each release.
@@ -547,3 +570,5 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 | 2026-10-17 | Admitted `stephen-cleary` | Writing on async and concurrency since 2008-06-20, with in-post corrections. Latest post 2025-12-04, so re-evaluate from 2026-12-04 if nothing follows (#167) |
 | 2026-10-18 | Replaced the `house` ID with `house:<profile>` | House opinions belong to a house profile, such as `house:simon-mckenna`, and the site shows a profile's only to a reader who chooses it |
 | 2026-10-23 | Named four repositories as references (no roster change) | `dotnet/csharplang`, `fsharp/fslang-design`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |
+| 2026-10-23 | Watch-listed `ms-aspire-skills` | Microsoft's Aspire skill pack, first published 2026-05-08, so short of two years. Re-evaluate from 2028-05 |
+| 2026-10-23 | Watch-listed `ms-dotnet-skills` | The .NET team's skill pack, first published 2026-02-03, so short of two years. Re-evaluate from 2028-02, and check its MSTest steer then |
