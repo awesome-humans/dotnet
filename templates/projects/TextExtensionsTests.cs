@@ -16,11 +16,8 @@ public class TextExtensionsTests
     [Fact]
     public void Truncate_TextLongerThanMaxLength_KeepsFirstMaxLengthCharacters()
     {
-        // Arrange
-        var text = "Hello, world";
-
         // Act
-        var truncated = text.Truncate(5);
+        var truncated = "Hello, world".Truncate(5);
 
         // Assert
         Assert.Equal("Hello", truncated);
