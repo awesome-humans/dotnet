@@ -135,6 +135,30 @@ int[] merged = [.. first, .. second];
 
 The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`. ([Microsoft Learn: Collection expressions](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions))
 
+### Records
+
+**Keep a record to the data it's constructed from: no derived state, and no collection members.** The generated members behave as the syntax suggests only when every property is a constructor parameter stored unchanged. Catch these two cases in review:
+
+- **A property initialized from a parameter goes stale under `with`.** `with` doesn't re-run the constructor. It lowers to roughly `var copy = original.<Clone>$(); copy.Value = 3;`, and the copy constructor copies every field _before_ the assignments run. A value computed at construction keeps its old value while its source parameter changes. ([Skeet: Unexpected inconsistency in records](https://codeblog.jonskeet.uk/2025/07/19/unexpected-inconsistency-in-records/), [Skeet: Records and the `with` operator, redux](https://codeblog.jonskeet.uk/2025/07/29/records-and-the-with-operator-redux/))
+
+  ```csharp
+  // Wrong: Even is computed once, at construction
+  public sealed record Number(int Value)
+  {
+      public bool Even { get; } = (Value & 1) == 0;
+  }
+
+  var n3 = new Number(2) with { Value = 3 };  // Number { Value = 3, Even = True }
+
+  // Right: derive on read, so `with` cannot desynchronize it
+  public sealed record Number(int Value)
+  {
+      public bool Even => (Value & 1) == 0;
+  }
+  ```
+
+- **A collection member breaks value equality.** The generated `Equals` compares members with `EqualityComparer<T>.Default`. `ImmutableList<T>` and the other immutable collections don't override `Equals`, so they compare by reference, and two records with identical contents aren't equal. Use a collection member only when you want reference equality, such as instances shared within one object graph. Otherwise, keep the collection outside the record, or document that equality means identity. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
+
 ### Nullable reference types
 
 **Enable nullable reference types in every project, and make nullable warnings errors.** Set `<Nullable>enable</Nullable>` and `<WarningsAsErrors>nullable</WarningsAsErrors>` in `Directory.Build.props`.
@@ -159,30 +183,6 @@ The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`
 - **Meziantou.Analyzer:** Adds correctness rules the SDK lacks, such as culture-sensitive string operations, `CancellationToken` forwarding, and async mistakes. Add other analyzers alongside it for rules it doesn't cover. Skip StyleCop if `dotnet format` already enforces your formatting.
 
 Fix each diagnostic, or suppress it with a written justification. Never lower severity across the board. ([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm), [Meziantou: Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
-
-### Records
-
-**Keep a record to the data it's constructed from: no derived state, and no collection members.** The generated members behave as the syntax suggests only when every property is a constructor parameter stored unchanged. Catch these two cases in review:
-
-- **A property initialized from a parameter goes stale under `with`.** `with` doesn't re-run the constructor. It lowers to roughly `var copy = original.<Clone>$(); copy.Value = 3;`, and the copy constructor copies every field _before_ the assignments run. A value computed at construction keeps its old value while its source parameter changes. ([Skeet: Unexpected inconsistency in records](https://codeblog.jonskeet.uk/2025/07/19/unexpected-inconsistency-in-records/), [Skeet: Records and the `with` operator, redux](https://codeblog.jonskeet.uk/2025/07/29/records-and-the-with-operator-redux/))
-
-  ```csharp
-  // Wrong: Even is computed once, at construction
-  public sealed record Number(int Value)
-  {
-      public bool Even { get; } = (Value & 1) == 0;
-  }
-
-  var n3 = new Number(2) with { Value = 3 };  // Number { Value = 3, Even = True }
-
-  // Right: derive on read, so `with` cannot desynchronize it
-  public sealed record Number(int Value)
-  {
-      public bool Even => (Value & 1) == 0;
-  }
-  ```
-
-- **A collection member breaks value equality.** The generated `Equals` compares members with `EqualityComparer<T>.Default`. `ImmutableList<T>` and the other immutable collections don't override `Equals`, so they compare by reference, and two records with identical contents aren't equal. Use a collection member only when you want reference equality, such as instances shared within one object graph. Otherwise, keep the collection outside the record, or document that equality means identity. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
 
 ### Smaller opinions
 
