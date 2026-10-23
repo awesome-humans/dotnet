@@ -59,6 +59,9 @@ jobs:
       - name: Verify README indexes every opinion and skill
         run: just validate-readme-index
 
+      - name: Verify template package entries are sorted
+        run: just validate-template-order
+
       # The SVGs are committed so the README renders them, which leaves them free to
       # drift from the script that draws them. Redraw and fail on any difference,
       # including a diagram the script draws that was never committed.
