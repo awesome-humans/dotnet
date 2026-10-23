@@ -59,9 +59,9 @@ internal static class Pipeline
     private const string Title = "Maintenance pipeline";
 
     private const string Description =
-        "Swimlane diagram of how this repository maintains itself: vet-source, research-topic, resolve-research, harvest-sources, refresh-dotnet-versions " +
-        "and weave-house-opinion each work on their own branch, pass CI and the owner's review, and land in the roster, research/ or the opinions and templates; " +
-        "audit-freshness and review-project only report. Their findings, the release watch and the harvest reminder start the next run.";
+        "Swimlane diagram of how this repository maintains itself: vet-source, research-topic, resolve-research, harvest-sources, refresh-dotnet-versions, " +
+        "and weave-house-opinion each work on their own branch, pass the CI checks, get an agent review, pass the owner's review, and land in the roster, research, or the opinions and templates; " +
+        "audit-freshness and review-project only report. Their findings, the release watch, and the harvest reminder start the next run.";
 
     private static readonly (string Key, string Name)[] Lanes =
     [
@@ -152,8 +152,8 @@ internal static class Pipeline
             {
                 s.Add(Svg.Arrow(XSkill + WSkill, cy, XAgentGate - 2, cy));
                 s.Add(Svg.Rect(XAgentGate, cy - GateHalf, WAgentGate, GateHalf * 2, 6, "check"));
-                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy - 3, "CI: metadata,", "check-t", "middle"));
-                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy + 13, "sources, links", "check-t", "middle"));
+                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy - 3, "CI checks,", "check-t", "middle"));
+                s.Add(Svg.Text(XAgentGate + (WAgentGate / 2), cy + 13, "agent review", "check-t", "middle"));
                 s.Add(Svg.Arrow(XAgentGate + WAgentGate, cy, XHumanGate - GateHalf - 2, cy));
 
                 // The human gate is a diamond the height of the agent gate's box.
