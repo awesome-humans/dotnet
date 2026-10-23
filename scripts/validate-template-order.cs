@@ -65,7 +65,10 @@ foreach (string path in templates)
             string[] names =
             [
                 .. group.Elements(item)
-                    .Select(element => (string?)element.Attribute("Include") ?? ""),
+                    // NuGet accepts Update in place of Include, as on a PackageVersion
+                    // override, and both name the package.
+                    .Select(element =>
+                        (string?)element.Attribute("Include") ?? (string?)element.Attribute("Update") ?? ""),
             ];
             if (names.Length < 2)
             {
