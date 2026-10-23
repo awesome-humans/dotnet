@@ -6,10 +6,10 @@ public static class TextExtensions
 {
     extension(string text)
     {
-        /// <summary>A fact about the instance, so a property.</summary>
+        /// <summary>States a fact about the instance, which makes it a property.</summary>
         public bool IsBlank => string.IsNullOrWhiteSpace(text);
 
-        /// <summary>A transform that takes an argument, so a method.</summary>
+        /// <summary>Transforms the text using an argument, which makes it a method.</summary>
         public string Truncate(int maxLength)
         {
             ArgumentNullException.ThrowIfNull(text);
