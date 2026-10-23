@@ -89,6 +89,10 @@ validate-sources:
 validate-readme-index:
     dotnet run scripts/validate-readme-index.cs
 
+# Check that each template's package entries are sorted within their ItemGroup
+validate-template-order:
+    dotnet run scripts/validate-template-order.cs
+
 # Draw the SVG diagrams in assets/diagrams/
 export-diagrams:
     dotnet run scripts/export-diagrams.cs
@@ -110,4 +114,4 @@ build-site out="artifacts/site":
     dotnet run scripts/build-site.cs -- --out "{{ out }}"
 
 # Run every offline check CI runs. It redraws the diagrams, and fails until you commit any SVG it changes
-verify: check check-script-permissions validate-skills validate-metadata validate-sources validate-readme-index check-diagrams build-site
+verify: check check-script-permissions validate-skills validate-metadata validate-sources validate-readme-index validate-template-order check-diagrams build-site

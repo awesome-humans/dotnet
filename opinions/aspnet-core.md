@@ -33,23 +33,70 @@ An image keeps the runtime it was built with until you rebuild it. For how often
 
 **Let the layer that terminates TLS own HTTPS redirection and HSTS.** If the proxy redirects to HTTPS, "there's no need to use HTTPS redirection middleware", so drop `UseHttpsRedirection()`, and leave the HSTS header to the proxy too. Don't call `UseHsts()` in development, because "the HSTS settings are highly cacheable by browsers". ([Microsoft Learn: Enforce HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl))
 
-### Caching with `HybridCache`
+### Request timeouts
 
-**Use `HybridCache` instead of writing cache-aside code over `IMemoryCache` or `IDistributedCache`.** `GetOrCreateAsync()` gives you stampede protection, an in-memory L1 over a distributed L2, and tag-based invalidation. It ships in the `Microsoft.Extensions.Caching.Hybrid` package.
+**Give every endpoint a timeout, and pass the cancellation token to the work it starts.** ASP.NET Core sets no request timeout by default. A stalled query keeps using resources after the response stops being useful, and the proxy in front of your app decides when to give up and what the client sees.
+
+- `AddRequestTimeouts` only registers the services. Set the limit with a named policy, or with `WithRequestTimeout` on the endpoint.
+- The middleware cancels `HttpContext.RequestAborted` and waits. A handler that ignores the token runs to completion and returns 200. A 504 means the cancellation reached the middleware, not that the database stopped.
+- Give reads and exports separate policies instead of one global value.
+- Exclude streaming responses with `DisableRequestTimeout()`. After a response starts, the middleware can't replace it with a 504. ([Microsoft Learn: Request timeouts middleware](https://learn.microsoft.com/aspnet/core/performance/timeouts), [Jovanović: Your ASP.NET Core endpoints don't have a timeout](https://www.milanjovanovic.tech/blog/your-aspnetcore-endpoints-dont-have-a-timeout))
 
 ```csharp
-builder.Services.AddHybridCache();
+builder.Services.AddRequestTimeouts(options =>
+{
+    options.AddPolicy("api-read", TimeSpan.FromSeconds(3));
+    options.AddPolicy("report-export", TimeSpan.FromSeconds(30));
+});
+
+app.UseRequestTimeouts();
+
+// The token reaches EF Core, so the timeout stops the query.
+app.MapGet("/orders/{id:guid}", async (Guid id, AppDbContext db, CancellationToken cancellationToken) =>
+        await db.Orders.AsNoTracking().SingleOrDefaultAsync(o => o.Id == id, cancellationToken))
+    .WithRequestTimeout("api-read");
+
+app.MapGet("/events", StreamEvents).DisableRequestTimeout();
 ```
+
+To test a timeout, run without a debugger attached. Timeouts don't fire under one. ([dotnet/aspnetcore: RequestTimeoutsMiddleware.cs](https://github.com/dotnet/aspnetcore/blob/6e62760191a731f63d79b49fad7eda0aaf855cf3/src/Http/Http/src/Timeouts/RequestTimeoutsMiddleware.cs#L31))
+
+### Rate limiting
+
+**Put named `Microsoft.AspNetCore.RateLimiting` policies on public endpoints, and reject with 429.** The default rejection status is 503, so set `RejectionStatusCode`. ([Microsoft Learn: RateLimiterOptions.RejectionStatusCode](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.ratelimiting.ratelimiteroptions.rejectionstatuscode))
+
+- Partition by a stable identity, such as the authenticated user or the API key tier. Never partition by a value the client controls, such as a spoofable IP header.
+- To partition anonymous traffic, use `HttpContext.Connection.RemoteIpAddress`, not `X-Forwarded-For`. The client controls the header but not the connection address. The forwarded-headers handling in [Hosting and deployment](#hosting-and-deployment) decides which address that property reports.
+- Bound the number of partitions, because every distinct key allocates its own limiter. ([Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
+- Use the concurrency limiter on expensive endpoints, where in-flight work is the limit that matters.
 
 ```csharp
-app.MapGet("/api/orders/{id}", async (string id, HybridCache cache, CancellationToken ct) =>
-    await cache.GetOrCreateAsync(
-        $"order:{id}",
-        async token => await LoadOrderAsync(id, token),
-        cancellationToken: ct));
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddFixedWindowLimiter("api", limiter =>
+    {
+        limiter.PermitLimit = 100;
+        limiter.Window = TimeSpan.FromMinutes(1);
+    });
+});
+
+var app = builder.Build();
+app.UseRateLimiter();
+
+app.MapGet("/api/orders", () => Results.Ok()).RequireRateLimiting("api");
 ```
 
-Concurrent callers for the same key share one factory call. A distributed backend, such as Redis or Postgres, plugs in through your existing `IDistributedCache` registration, and the call sites don't change. ([.NET Blog: Hello HybridCache! Streamlining Cache Management for ASP.NET Core Applications](https://devblogs.microsoft.com/dotnet/hybrid-cache-is-now-ga/), [.NET Blog: High-Performance Distributed Caching with .NET and Postgres on Azure](https://devblogs.microsoft.com/dotnet/high-performance-distributed-caching-dotnet-postgres-azure/))
+Each node enforces its own limits, so this controls fairness and abuse, not DDoS. Put DDoS protection at the edge, in a WAF or CDN. Load-test your limits before you ship them. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit))
+
+### Observability: propagate trace context across async boundaries
+
+**When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only synchronous HTTP calls. Message queues, background jobs, outbox tables, and scheduled work need it done by hand.
+
+1. Serialize `Activity.Current`'s context with `Propagators.DefaultTextMapPropagator`, and store it with the message.
+2. In the consumer, start the new activity with the extracted `ActivityContext` as its parent. When many messages feed one operation, attach each context as an `ActivityLink` instead.
+
+Don't propagate `Baggage` by default. It inflates every payload and leaks whatever an upstream service put in it. ([Meziantou: Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm))
 
 ### Request validation
 
@@ -100,13 +147,31 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 **Generate typed clients with Kiota from your OpenAPI document at build time, instead of hand-writing `HttpClient` wrappers.** The client is rebuilt from the contract on every build, so it can't drift from it. ([Meziantou: Kiota client at build time](https://www.meziantou.net/generate-a-kiota-client-at-build-time-from-an-asp-net-core-openapi-file.htm))
 
-### HTTP caching defaults
-
-**Send `Cache-Control: no-cache, no-store, must-revalidate` from APIs by default, and opt individual endpoints into caching.** A cacheable default leads to stale data and cache poisoning. ([Meziantou: Disable HTTP caching by default](https://www.meziantou.net/disable-http-caching-by-default-in-asp-net-core-apis.htm))
-
 ### Server push
 
 **Use Server-Sent Events (`TypedResults.ServerSentEvents`) for one-way server push.** ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+
+### Caching with `HybridCache`
+
+**Use `HybridCache` instead of writing cache-aside code over `IMemoryCache` or `IDistributedCache`.** `GetOrCreateAsync()` gives you stampede protection, an in-memory L1 over a distributed L2, and tag-based invalidation. It ships in the `Microsoft.Extensions.Caching.Hybrid` package.
+
+```csharp
+builder.Services.AddHybridCache();
+```
+
+```csharp
+app.MapGet("/api/orders/{id}", async (string id, HybridCache cache, CancellationToken ct) =>
+    await cache.GetOrCreateAsync(
+        $"order:{id}",
+        async token => await LoadOrderAsync(id, token),
+        cancellationToken: ct));
+```
+
+Concurrent callers for the same key share one factory call. A distributed backend, such as Redis or Postgres, plugs in through your existing `IDistributedCache` registration, and the call sites don't change. ([.NET Blog: Hello HybridCache! Streamlining Cache Management for ASP.NET Core Applications](https://devblogs.microsoft.com/dotnet/hybrid-cache-is-now-ga/), [.NET Blog: High-Performance Distributed Caching with .NET and Postgres on Azure](https://devblogs.microsoft.com/dotnet/high-performance-distributed-caching-dotnet-postgres-azure/))
+
+### HTTP caching defaults
+
+**Send `Cache-Control: no-cache, no-store, must-revalidate` from APIs by default, and opt individual endpoints into caching.** A cacheable default leads to stale data and cache poisoning. ([Meziantou: Disable HTTP caching by default](https://www.meziantou.net/disable-http-caching-by-default-in-asp-net-core-apis.htm))
 
 ### Authentication: passkeys first
 
@@ -179,71 +244,6 @@ builder.Services.AddDataProtection()
 Make both calls. When you name a location, "the data protection system deregisters the default key encryption at rest mechanism, so keys are no longer encrypted at rest". Redis "doesn't persist data by default when restarting", so a Redis restart gives the app new keys and invalidates everything the old ones protected. ([Microsoft Learn: Key storage providers in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/data-protection/implementation/key-storage-providers))
 
 Encryption at rest "doesn't prevent cyberattackers from creating new keys", so lock down the store's permissions as carefully as you encrypt it. Share one ring between applications behind a single proxy only when you configure it on purpose. ([Abuhakmeh: Data Protection for ASP.NET Core Developers](https://duendesoftware.com/blog/20250313-data-protection-aspnetcore-duende-identityserver))
-
-### Request timeouts
-
-**Give every endpoint a timeout, and pass the cancellation token to the work it starts.** ASP.NET Core sets no request timeout by default. A stalled query keeps using resources after the response stops being useful, and the proxy in front of your app decides when to give up and what the client sees.
-
-- `AddRequestTimeouts` only registers the services. Set the limit with a named policy, or with `WithRequestTimeout` on the endpoint.
-- The middleware cancels `HttpContext.RequestAborted` and waits. A handler that ignores the token runs to completion and returns 200. A 504 means the cancellation reached the middleware, not that the database stopped.
-- Give reads and exports separate policies instead of one global value.
-- Exclude streaming responses with `DisableRequestTimeout()`. After a response starts, the middleware can't replace it with a 504. ([Microsoft Learn: Request timeouts middleware](https://learn.microsoft.com/aspnet/core/performance/timeouts), [Jovanović: Your ASP.NET Core endpoints don't have a timeout](https://www.milanjovanovic.tech/blog/your-aspnetcore-endpoints-dont-have-a-timeout))
-
-```csharp
-builder.Services.AddRequestTimeouts(options =>
-{
-    options.AddPolicy("api-read", TimeSpan.FromSeconds(3));
-    options.AddPolicy("report-export", TimeSpan.FromSeconds(30));
-});
-
-app.UseRequestTimeouts();
-
-// The token reaches EF Core, so the timeout stops the query.
-app.MapGet("/orders/{id:guid}", async (Guid id, AppDbContext db, CancellationToken cancellationToken) =>
-        await db.Orders.AsNoTracking().SingleOrDefaultAsync(o => o.Id == id, cancellationToken))
-    .WithRequestTimeout("api-read");
-
-app.MapGet("/events", StreamEvents).DisableRequestTimeout();
-```
-
-To test a timeout, run without a debugger attached. Timeouts don't fire under one. ([dotnet/aspnetcore: RequestTimeoutsMiddleware.cs](https://github.com/dotnet/aspnetcore/blob/6e62760191a731f63d79b49fad7eda0aaf855cf3/src/Http/Http/src/Timeouts/RequestTimeoutsMiddleware.cs#L31))
-
-### Rate limiting
-
-**Put named `Microsoft.AspNetCore.RateLimiting` policies on public endpoints, and reject with 429.** The default rejection status is 503, so set `RejectionStatusCode`. ([Microsoft Learn: RateLimiterOptions.RejectionStatusCode](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.ratelimiting.ratelimiteroptions.rejectionstatuscode))
-
-- Partition by a stable identity, such as the authenticated user or the API key tier. Never partition by a value the client controls, such as a spoofable IP header.
-- To partition anonymous traffic, use `HttpContext.Connection.RemoteIpAddress`, not `X-Forwarded-For`. The client controls the header but not the connection address. The forwarded-headers handling in [Hosting and deployment](#hosting-and-deployment) decides which address that property reports.
-- Bound the number of partitions, because every distinct key allocates its own limiter. ([Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
-- Use the concurrency limiter on expensive endpoints, where in-flight work is the limit that matters.
-
-```csharp
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    options.AddFixedWindowLimiter("api", limiter =>
-    {
-        limiter.PermitLimit = 100;
-        limiter.Window = TimeSpan.FromMinutes(1);
-    });
-});
-
-var app = builder.Build();
-app.UseRateLimiter();
-
-app.MapGet("/api/orders", () => Results.Ok()).RequireRateLimiting("api");
-```
-
-Each node enforces its own limits, so this controls fairness and abuse, not DDoS. Put DDoS protection at the edge, in a WAF or CDN. Load-test your limits before you ship them. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit))
-
-### Observability: propagate trace context across async boundaries
-
-**When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only synchronous HTTP calls. Message queues, background jobs, outbox tables, and scheduled work need it done by hand.
-
-1. Serialize `Activity.Current`'s context with `Propagators.DefaultTextMapPropagator`, and store it with the message.
-2. In the consumer, start the new activity with the extracted `ActivityContext` as its parent. When many messages feed one operation, attach each context as an `ActivityLink` instead.
-
-Don't propagate `Baggage` by default. It inflates every payload and leaks whatever an upstream service put in it. ([Meziantou: Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm))
 
 ### CSRF defence in depth
 

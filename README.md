@@ -111,7 +111,8 @@ House opinions are preferences from experience rather than from a vetted source.
 │   ├── export-diagrams.cs
 │   ├── validate-metadata.cs
 │   ├── validate-readme-index.cs
-│   └── validate-sources.cs
+│   ├── validate-sources.cs
+│   └── validate-template-order.cs
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props
@@ -160,13 +161,14 @@ A scheduled GitHub Action, [`.github/workflows/dotnet-release-watch.yml`](.githu
 
 [`scripts/`](scripts) holds the pull request checks as .NET 10 file-based apps, with no project file and no build step. Each declares its dependencies with `#:package` and pulls in shared code with `#:include`.
 
-| Script                                                         | Checks                                                                                                                                                                                                                                                                                                                                    |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/`, and `templates/` has `targets`, `last-reviewed`, and `sources`, with ISO 8601 dates and a sorted `sources` list, and no retired `last-used` field                                                                                                                                          |
-| [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source ID in `opinions/` and `templates/` exists in the AWESOME-HUMANS.md roster and is citable. Each `house:<profile>` ID has a house block or region of that profile, and every house opinion sits inside one. The roster tables and notes sections are sorted by ID, no ID appears twice, and every notes section matches a row  |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README lists every opinion and skill, and lists nothing that doesn't exist. Scope is sorted by title, and the layout tree by file name                                                                                                                                                                                               |
-| [`export-diagrams.cs`](scripts/export-diagrams.cs)             | Draws the SVG diagrams in `assets/diagrams/`. It doesn't check anything, but CI reruns it and fails if the committed SVGs differ from its output                                                                                                                                                                                          |
-| [`build-site.cs`](scripts/build-site.cs)                       | Stages the `/dotnet/` pages of awesome-humans.net in `<dir>/dotnet/`, given `-- --out <dir>`, to the [awesome-humans/website staging contract](https://github.com/awesome-humans/website#staging-contract). The `Site preview` workflow then builds the whole site with Zensical in strict mode, which fails on any broken link or anchor |
+| Script                                                             | Checks                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`validate-metadata.cs`](scripts/validate-metadata.cs)             | Every resource under `opinions/`, `research/`, and `templates/` has `targets`, `last-reviewed`, and `sources`, with ISO 8601 dates and a sorted `sources` list, and no retired `last-used` field                                                                                                                                          |
+| [`validate-sources.cs`](scripts/validate-sources.cs)               | Every source ID in `opinions/` and `templates/` exists in the AWESOME-HUMANS.md roster and is citable. Each `house:<profile>` ID has a house block or region of that profile, and every house opinion sits inside one. The roster tables and notes sections are sorted by ID, no ID appears twice, and every notes section matches a row  |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)     | This README lists every opinion and skill, and lists nothing that doesn't exist. Scope is sorted by title, and the layout tree by file name                                                                                                                                                                                               |
+| [`validate-template-order.cs`](scripts/validate-template-order.cs) | Every `PackageVersion` and `PackageReference` list in an MSBuild template is sorted by name, ignoring case, within its `ItemGroup`                                                                                                                                                                                                        |
+| [`export-diagrams.cs`](scripts/export-diagrams.cs)                 | Draws the SVG diagrams in `assets/diagrams/`. It doesn't check anything, but CI reruns it and fails if the committed SVGs differ from its output                                                                                                                                                                                          |
+| [`build-site.cs`](scripts/build-site.cs)                           | Stages the `/dotnet/` pages of awesome-humans.net in `<dir>/dotnet/`, given `-- --out <dir>`, to the [awesome-humans/website staging contract](https://github.com/awesome-humans/website#staging-contract). The `Site preview` workflow then builds the whole site with Zensical in strict mode, which fails on any broken link or anchor |
 
 Run them from the repository root through their [`justfile`](justfile) recipes, as CI does. Each recipe has the script's name, and `just` with no arguments lists them:
 
@@ -174,7 +176,7 @@ Run them from the repository root through their [`justfile`](justfile) recipes, 
 just validate-metadata
 ```
 
-`just verify` runs every offline check CI runs, in one command: `just check`, the script-permission and skills checks, the three validators, `check-diagrams`, and `build-site.cs`, which stages into `artifacts/site/`. `check-diagrams` redraws the diagrams in place and fails until you commit any SVG it changes. Two checks are left to CI: the link check, because lychee is a separate binary and depends on third-party hosts, and the Zensical build, because it needs Python and the website repository.
+`just verify` runs every offline check CI runs, in one command: `just check`, the script-permission and skills checks, the four validators, `check-diagrams`, and `build-site.cs`, which stages into `artifacts/site/`. `check-diagrams` redraws the diagrams in place and fails until you commit any SVG it changes. Two checks are left to CI: the link check, because lychee is a separate binary and depends on third-party hosts, and the Zensical build, because it needs Python and the website repository.
 
 Four helper files support the scripts:
 
