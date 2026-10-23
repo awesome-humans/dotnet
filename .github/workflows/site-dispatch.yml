@@ -5,8 +5,8 @@ name: Site dispatch
 # website fetches every ecosystem at main itself.
 #
 # It sends the dispatch as the organisation's awesome-humans-app, with a short-lived token
-# limited to the website repository. The APP_ID variable and APP_PRIVATE_KEY secret are
-# set on the organisation.
+# limited to the website repository. The APP_CLIENT_ID variable and APP_PRIVATE_KEY
+# secret are set on the organisation.
 on:
   push:
     branches: [main]
@@ -18,13 +18,11 @@ jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
-      # app-id is deprecated in v3 in favour of client-id. Switch when the organisation
-      # has an APP_CLIENT_ID variable.
       - name: Mint an app token for website
         id: token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: awesome-humans
           repositories: website
