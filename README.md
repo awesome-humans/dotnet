@@ -129,9 +129,9 @@ Agent skills maintain the repository. They follow the [Agent Skills specificatio
 
 The skills split work by cost. Cheaper worker agents run the web searches and source sweeps in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
-Every skill except the two report-only ones works on its own branch, and its changes land through a pull request that passes CI and the owner's review. Each `SKILL.md` is canonical over this diagram.
+Every skill except the two report-only ones works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the owner's review. Each `SKILL.md` is canonical over this diagram.
 
-![Maintenance pipeline: each skill from what starts it, through CI and the owner's review, to the roster, research/, or the opinions and templates; audit-freshness and review-project only report](assets/diagrams/maintenance-pipeline.svg)
+![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the owner's review, to the roster, research, or the opinions and templates; audit-freshness and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 
 | Skill                                                                | Purpose                                                                                     |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
