@@ -401,7 +401,7 @@ foreach (string path in served)
     foreach (string? profile in housed.GetValueOrDefault(path, []).Prepend(null))
     {
         string copy = housed.ContainsKey(path) ? House.ForProfile(path, text, profile) : text;
-        copy = path.StartsWith($"{SkillsDirectory}/", StringComparison.Ordinal) ? WithRepositoryNote(copy) : copy;
+        copy = path.StartsWith($"{SkillsDirectory}/", StringComparison.Ordinal) ? WithRepositoryNote(path, copy) : copy;
         Write($"{Ecosystem}/{RawPage(path, profile)}", path.EndsWith(".md", StringComparison.Ordinal) ? AbsoluteLinks(path, copy, profile) : copy);
     }
 }
@@ -409,9 +409,18 @@ foreach (string path in served)
 // A skill says "this repository" and uses paths such as templates/, which an agent that read
 // it through llms.txt has no checkout to resolve. So its copy names the repository after the
 // frontmatter, which the Agent Skills specification needs first, and says where a path leads.
-string WithRepositoryNote(string skill)
+// The text is normalised to LF first, because a Windows checkout can make it CRLF.
+string WithRepositoryNote(string path, string skill)
 {
-    int end = skill.IndexOf("\n---\n", 4, StringComparison.Ordinal) + "\n---\n".Length;
+    skill = skill.ReplaceLineEndings("\n");
+    int close = skill.StartsWith("---\n", StringComparison.Ordinal) ? skill.IndexOf("\n---\n", 3, StringComparison.Ordinal) : -1;
+    if (close == -1)
+    {
+        errors.Add($"{path}: no frontmatter to place the repository note after");
+        return skill;
+    }
+
+    int end = close + "\n---\n".Length;
     string note = $"""
 
         **Reading this without a checkout?** "This repository" in this skill means [`{Site.Repository}`](https://github.com/{Site.Repository}). A path such as `opinions/` or `templates/Directory.Build.props` is relative to its root. Read an opinion, template, skill, or the roster from its raw copy at `{SiteUrl}{Ecosystem}/raw/none/<path>`, with `.txt` added to a Markdown file's name and a template's leading dot dropped. For a house profile, follow the links in its `llms-<profile>.txt` instead. Any other file is at `{Site.Raw("<path>")}`. A skill that changes the repository needs a checkout.
