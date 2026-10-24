@@ -25,8 +25,9 @@
 // House opinions stay in the pages as house blocks, and the site shows a profile's only to a
 // reader who chooses it. A template with house regions shows its default copy, with each
 // profile's copy in a house block below it. Agents get the same choice as files:
-// llms.txt links copies of the opinions and templates with every house block and region
-// removed, and llms-<profile>.txt links copies with only that profile's, under raw/.
+// llms.txt links copies of the opinions, templates, skills, and roster under raw/, with
+// every house block and region removed, and llms-<profile>.txt links copies with only that
+// profile's. Every link is to the site, so an agent needs only the host it already reached.
 //
 // A .NET 10 file-based app. Run it from the repository root, through its recipe or
 // directly. awesome-humans/website runs it directly, because it doesn't install just:
@@ -181,6 +182,17 @@ foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
 // the anchor its heading had, and javascripts/open-details.js opens them when linked to.
 const string RosterPath = "AWESOME-HUMANS.md";
 string roster = File.ReadAllText(RosterPath).ReplaceLineEndings("\n");
+
+// Every file llms.txt links. Each gets a raw copy on the site, so an agent reads them all
+// from the host it already reached, instead of skipping the ones on a host it can't.
+HashSet<string> served =
+[
+    .. Opinions.Names().Select(Opinions.PathOf),
+    .. templates,
+    .. skills.Select(skill => Site.SkillPath(skill.Groups["name"].Value)),
+    RosterPath,
+    "HOUSE-OPINIONS.md",
+];
 Dictionary<string, string> rosterPages = new(StringComparer.Ordinal)
 {
     ["citable"] = $"{Ecosystem}/awesome-humans/citable.md",
@@ -379,15 +391,17 @@ Write(
     + "Resolving a topic deletes it, so every topic here is still open. None of it is guidance yet.\n\n"
     + (research.Length == 0 ? "No topics are open.\n" : string.Concat(research.Select(topic => $"- [{topic.Title}]({Path.GetFileName(topic.Path)})\n"))));
 
-// Copies of each opinion and template that holds house opinions, for agents: one with every
-// house block or region removed, and one per profile it holds, with only that profile's.
-// An opinion's copy ends in .md.txt, because the site renders every .md file as a page.
-foreach ((string path, string[] found) in housed)
+// Copies of every file llms.txt links, for agents. A file that holds house opinions gets one
+// with every house block or region removed, and one per profile it holds, with only that
+// profile's. Any other file gets the one copy, under raw/none/. A Markdown file's copy ends
+// in .md.txt, because the site renders every .md file as a page.
+foreach (string path in served)
 {
     string text = File.ReadAllText(path);
-    foreach (string? profile in found.Prepend(null))
+    foreach (string? profile in housed.GetValueOrDefault(path, []).Prepend(null))
     {
-        Write($"{Ecosystem}/{RawPage(path, profile)}", House.ForProfile(path, text, profile));
+        string copy = housed.ContainsKey(path) ? House.ForProfile(path, text, profile) : text;
+        Write($"{Ecosystem}/{RawPage(path, profile)}", path.EndsWith(".md", StringComparison.Ordinal) ? AbsoluteLinks(path, copy, profile) : copy);
     }
 }
 
@@ -399,7 +413,7 @@ foreach ((string path, string[] found) in housed)
 // result is normalised to LF like every file the script reads.
 const string LlmsSummary = "Opinionated best practices for building with .NET, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.";
 string skillLinks = string.Join("\n", skills.Select(skill =>
-    $"- [{skill.Groups["name"].Value}]({Site.Raw(Site.SkillPath(skill.Groups["name"].Value))}): {skill.Groups["purpose"].Value}"));
+    $"- [{skill.Groups["name"].Value}]({RawLink(Site.SkillPath(skill.Groups["name"].Value), null)}): {skill.Groups["purpose"].Value}"));
 
 foreach (string? profile in profiles.Prepend(null))
 {
@@ -442,8 +456,8 @@ foreach (string? profile in profiles.Prepend(null))
 
         ## Optional
 
-        - [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria
-        - [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the house profiles, and the record of every house opinion woven in
+        - [Awesome humans]({RawLink(RosterPath, profile)}): the vetted sources the opinions cite, and the admission criteria
+        - [House opinions]({RawLink("HOUSE-OPINIONS.md", profile)}): the house profiles, and the record of every house opinion woven in
 
         """;
     Write($"{Ecosystem}/{(profile is null ? "llms.txt" : $"llms-{profile}.txt")}", llms.ReplaceLineEndings("\n"));
@@ -551,20 +565,57 @@ static string MetaItem(string label, string values) =>
 static string HouseAttribute(string id) =>
     House.ProfileOf(id) is string profile ? $" data-house=\"{profile}\"" : "";
 
-// Where an opinion or template's copy for a profile lands under dotnet/, for a file that holds
-// house opinions. Zensical skips dotfiles, so a template's leading dot is dropped, as on its page.
+// Where a file's raw copy for a profile lands under dotnet/, or its default copy with null.
+// Zensical skips dotfiles, so a template's leading dot is dropped, as on its page.
 static string RawPage(string path, string? profile)
 {
     string name = path.EndsWith(".md", StringComparison.Ordinal) ? path + ".txt" : path.Replace("/.", "/", StringComparison.Ordinal);
     return $"raw/{profile ?? NoProfile}/{name}";
 }
 
-// The raw file an agent reads for a profile, or for the default with null. A file without
-// house opinions is the same for everyone, so it's GitHub's raw copy. A file with them is
-// this profile's copy, or the default copy when none of its house opinions are this profile's.
+// The raw file an agent reads for a profile, or for the default with null. A file with house
+// opinions is this profile's copy, or the default copy when none of its house opinions are
+// this profile's. Any other file llms.txt links is the same for everyone, so it's the default
+// copy. A file the site doesn't copy is GitHub's raw copy.
 string RawLink(string path, string? profile) =>
-    !housed.TryGetValue(path, out string[]? found) ? Site.Raw(path)
-        : $"{SiteUrl}{Ecosystem}/{RawPage(path, profile is not null && found.Contains(profile) ? profile : null)}";
+    !served.Contains(path) ? Site.Raw(path)
+        : $"{SiteUrl}{Ecosystem}/{RawPage(path, profile is not null && housed.GetValueOrDefault(path, []).Contains(profile) ? profile : null)}";
+
+// A raw copy is served from dotnet/raw/<profile>/, where a relative link to another file in
+// the repository leads nowhere, so each one becomes absolute: the file's raw copy, as RawLink
+// gives it, or the GitHub tree for a directory. Fenced code blocks are left alone.
+string AbsoluteLinks(string source, string text, string? profile)
+{
+    bool fenced = false;
+    IEnumerable<string> lines = text.ReplaceLineEndings("\n").Split('\n').Select(line =>
+    {
+        if (line.TrimStart().StartsWith("```", StringComparison.Ordinal))
+        {
+            fenced = !fenced;
+        }
+
+        if (fenced)
+        {
+            return line;
+        }
+
+        return Site.MarkdownLink().Replace(line, match =>
+        {
+            string target = match.Groups["target"].Value;
+            if (target.Contains("://", StringComparison.Ordinal) || target.StartsWith("mailto:", StringComparison.Ordinal) || target.StartsWith('#'))
+            {
+                return match.Value;
+            }
+
+            int hash = target.IndexOf('#');
+            string path = hash == -1 ? target : target[..hash];
+            string anchor = hash == -1 ? "" : target[hash..];
+            string resolved = Site.Normalise(Path.GetRelativePath(".", Path.Combine(Path.GetDirectoryName(source) ?? "", path))).TrimEnd('/');
+            return $"]({(Directory.Exists(resolved) ? Site.GitHub(resolved, isDirectory: true) : RawLink(resolved, profile))}{anchor})";
+        });
+    });
+    return string.Join("\n", lines);
+}
 
 // Writes an opinion or research topic's page, with the design system's OpinionMeta strip
 // under its title, from its frontmatter: a paragraph marked { .ah-meta }, as the staging
