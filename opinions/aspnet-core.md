@@ -65,10 +65,10 @@ To test a timeout, run without a debugger attached. Timeouts don't fire under on
 
 **Put named `Microsoft.AspNetCore.RateLimiting` policies on public endpoints, and reject with 429.** The default rejection status is 503, so set `RejectionStatusCode`. ([Microsoft Learn: RateLimiterOptions.RejectionStatusCode](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.ratelimiting.ratelimiteroptions.rejectionstatuscode))
 
-- Partition by a stable identity, such as the authenticated user or the API key tier. Never partition by a value the client controls, such as a spoofable IP header.
-- To partition anonymous traffic, use `HttpContext.Connection.RemoteIpAddress`, not `X-Forwarded-For`. The client controls the header but not the connection address. The forwarded-headers handling in [Hosting and deployment](#hosting-and-deployment) decides which address that property reports.
-- Bound the number of partitions, because every distinct key allocates its own limiter. ([Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
-- Use the concurrency limiter on expensive endpoints, where in-flight work is the limit that matters.
+- Partition by a stable identity, such as the authenticated user or the API key tier. Never partition by a value the client controls, such as a spoofable IP header: "If you create partitions by using user input, your app becomes vulnerable to Denial of Service (DoS) attacks". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#testing-endpoints-with-rate-limiting))
+- To partition anonymous traffic, use `HttpContext.Connection.RemoteIpAddress`, never the raw `X-Forwarded-For` header. The forwarded headers middleware from [Hosting and deployment](#hosting-and-deployment) sets that property from the header, and accepts it only from a proxy in `KnownProxies` or a known network, because otherwise "IP spoofing attacks are possible". ([Microsoft Learn: Configure ASP.NET Core to work with proxy servers and load balancers](https://learn.microsoft.com/aspnet/core/host-and-deploy/proxy-load-balancer))
+- Bound the number of partitions, because "Each distinct key creates and caches its own limiter". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#chain-limiters-in-a-named-policy), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
+- Use the concurrency limiter on expensive endpoints, such as uploads and report generation, where in-flight work is the limit that matters. It "doesn't cap the number of requests in a time period", so it doesn't replace a time-based limiter on a public endpoint. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#rate-limiter-algorithms), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
 
 ```csharp
 builder.Services.AddRateLimiter(options =>
@@ -91,12 +91,12 @@ Each node enforces its own limits, so this controls fairness and abuse, not DDoS
 
 ### Observability: propagate trace context across async boundaries
 
-**When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only synchronous HTTP calls. Message queues, background jobs, outbox tables, and scheduled work need it done by hand.
+**When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only HTTP: ASP.NET Core reads the trace context from incoming requests, and `HttpClient` writes it on outgoing ones, "with no special coding by the app developer". ([Microsoft Learn: Distributed tracing concepts](https://learn.microsoft.com/dotnet/core/diagnostics/distributed-tracing-concepts#coordinate-across-process-boundaries)) Message queues, background jobs, outbox tables, and scheduled work need it done by hand.
 
-1. Serialize `Activity.Current`'s context with `Propagators.DefaultTextMapPropagator`, and store it with the message.
-2. In the consumer, start the new activity with the extracted `ActivityContext` as its parent. When many messages feed one operation, attach each context as an `ActivityLink` instead.
+1. Inject `new PropagationContext(Activity.Current?.Context ?? default, default)` with `Propagators.DefaultTextMapPropagator`, and store the result with the message. With no current activity, the default context injects nothing instead of throwing. The empty `Baggage` keeps it to the trace context.
+2. In the consumer, extract it with the same propagator, and start the new `ActivityKind.Consumer` activity with the extracted `ActivityContext` as its parent. When many messages feed one operation, attach each context as an `ActivityLink` instead.
 
-Don't propagate `Baggage` by default. It inflates every payload and leaks whatever an upstream service put in it. ([Meziantou: Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm))
+Propagate only the trace context. Never put `Baggage` on a message: it inflates every payload, and it "can expose sensitive information" that an upstream service put in it. "In most cases, propagating just the trace context is sufficient." ([Meziantou: Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm), for the procedure and `Baggage`)
 
 ### Request validation
 
