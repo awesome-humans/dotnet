@@ -10,7 +10,7 @@ Every awesome-humans ecosystem admits a source by the same rules, in [awesome-hu
 
 - `avalonia-blog`, `james-montemagno`, and `shay-rojansky` each record a usage limit under [Source notes](#source-notes).
 - Vendor work with critical distance needs no limit, as from `stephen-toub` or `khalid`.
-- `duende-blog` and `telerik-blog` are on the [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant), because their bylines vary, and a usage limit can't fix independence that changes with the author.
+- `duende-blog` and `telerik-blog` are on the [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant) because their bylines vary and a usage limit can't address independence that changes with the author.
 
 ### How the roster is organised
 
