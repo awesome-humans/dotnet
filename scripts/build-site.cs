@@ -455,7 +455,7 @@ foreach (string? profile in profiles.Prepend(null))
         ? ""
         : "\n## House profiles\n\n"
             + "Follow a profile only when the user chooses one, by reading its file instead of this one.\n\n"
-            + string.Concat(profiles.Select(other => $"- [{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt): the {other} house profile's {EcosystemName} opinions\n"));
+            + string.Concat(profiles.Select(other => $"- [{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt): these opinions and templates, with that profile's house opinions\n"));
 
     string llms = $"""
         # Awesome Humans of {EcosystemName}{(profile is null ? "" : $", with the {profile} house profile")}
