@@ -446,12 +446,16 @@ foreach (string? profile in profiles.Prepend(null))
     string templateLinks = string.Join("\n", templates.Select(template =>
         $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({RawLink(template, profile)})"));
     string house = profile is null
-        ? $"These files carry no house opinions. For a house profile's, read its llms-<profile>.txt beside this file instead: {string.Join(", ", profiles.Select(other => $"[{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt)"))}."
+        ? "These files carry no house opinions."
         : $"These files carry the {profile} house profile's opinions. Each is a block that opens with `/// house | {profile}`, starts with `**House:**`, and closes with `///`, or a template region between `house:{profile} begin` and `house:{profile} end` comments. A house opinion is its owner's preference from experience, not sourced community practice. Where it conflicts with the sourced text beside it, follow the house opinion. For the default, which carries no house opinions, read [llms.txt]({SiteUrl}{Ecosystem}/llms.txt).";
-    if (profile is null && profiles.Length == 0)
-    {
-        house = "These files carry no house opinions.";
-    }
+
+    // The default lists each profile's file as a link of its own, because a fetch tool that
+    // summarises a page paraphrases prose and drops the URLs in it.
+    string profileLinks = profile is not null || profiles.Length == 0
+        ? ""
+        : "\n## House profiles\n\n"
+            + "Follow a profile only when the user chooses one, by reading its file instead of this one.\n\n"
+            + string.Concat(profiles.Select(other => $"- [{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt): the {other} house profile's {EcosystemName} opinions\n"));
 
     string llms = $"""
         # Awesome Humans of {EcosystemName}{(profile is null ? "" : $", with the {profile} house profile")}
@@ -484,7 +488,7 @@ foreach (string? profile in profiles.Prepend(null))
         - [House opinions]({RawLink("HOUSE-OPINIONS.md", profile)}): the house profiles, and the record of every house opinion woven in
 
         """;
-    Write($"{Ecosystem}/{(profile is null ? "llms.txt" : $"llms-{profile}.txt")}", llms.ReplaceLineEndings("\n"));
+    Write($"{Ecosystem}/{(profile is null ? "llms.txt" : $"llms-{profile}.txt")}", (llms + profileLinks).ReplaceLineEndings("\n"));
 }
 
 // The navigation. This ecosystem's section goes to nav.json, with its paths relative to
