@@ -1,6 +1,6 @@
-<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-10-19 | sources: dotnet-blog, meziantou, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-10-27 | sources: dotnet-blog, meziantou, ms-learn -->
 <!-- Central Package Management: every PackageReference in the repository takes its version from here. -->
-<!-- Versions verified against nuget.org (latest stable) on 2026-10-19. Refresh them with the refresh-dotnet-versions skill. -->
+<!-- Versions verified against nuget.org (latest stable) on 2026-10-27. Refresh them with the refresh-dotnet-versions skill. -->
 <Project>
 
   <PropertyGroup>
@@ -13,11 +13,11 @@
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
     <PackageVersion Include="Asp.Versioning.OpenApi" Version="10.2.3" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="10.11.0" />
-    <PackageVersion Include="Microsoft.Extensions.Validation" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Validation" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup Label="Analyzers">
-    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.312" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.317" />
   </ItemGroup>
 
   <!-- No Microsoft.Testing.Platform entry: xunit.v3 brings its own compatible version.
@@ -25,13 +25,13 @@
        with a TypeLoadException (opinions/testing.md). The risk is higher since xunit.v3
        4.0.0, which dropped MTP v1 and defaults to v2. -->
   <ItemGroup Label="Testing">
-    <PackageVersion Include="bunit" Version="2.11.3" />
-    <PackageVersion Include="Meziantou.Framework.SnapshotTesting" Version="3.1.14" />
+    <PackageVersion Include="bunit" Version="2.13.3" />
+    <PackageVersion Include="Meziantou.Framework.SnapshotTesting" Version="3.1.16" />
     <!-- WebApplicationFactory<T> for integration tests, and FakeTimeProvider for
          deterministic time. opinions/testing.md requires both. Without a pin here, a consumer
          who follows the opinion gets NU1010 on restore, because CPM leaves the
          PackageReference with no version. -->
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.11.0" />
     <PackageVersion Include="xunit.v3" Version="4.0.2" />
     <!-- A Native AOT test lane references xunit.v3.aot.mtp-v2 in place of xunit.v3
