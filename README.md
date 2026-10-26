@@ -32,7 +32,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
   Use the research-topic skill at awesome-humans.net/dotnet/llms.txt to research union types coming in C#
   ```
 
-- **Read the opinions and templates.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, with the rationale and sources behind it, and the [`templates/`](templates) encode them.
+- **Read the opinions and templates.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, with the rationale and sources behind it, and the [`templates/`](templates) encode those opinions.
 
 ## Scope
 
