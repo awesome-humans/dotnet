@@ -4,28 +4,28 @@
       "channel": "10.0",
       "release-type": "lts",
       "support-phase": "active",
-      "latest-release": "10.0.13",
-      "latest-release-date": "2026-10-13",
-      "latest-runtime": "10.0.13",
-      "latest-sdk": "10.0.402"
+      "latest-release": "10.0.14",
+      "latest-release-date": "2026-10-25",
+      "latest-runtime": "10.0.14",
+      "latest-sdk": "10.0.403"
     },
     {
       "channel": "9.0",
       "release-type": "sts",
       "support-phase": "maintenance",
-      "latest-release": "9.0.21",
-      "latest-release-date": "2026-10-13",
-      "latest-runtime": "9.0.21",
-      "latest-sdk": "9.0.319"
+      "latest-release": "9.0.22",
+      "latest-release-date": "2026-10-25",
+      "latest-runtime": "9.0.22",
+      "latest-sdk": "9.0.320"
     },
     {
       "channel": "8.0",
       "release-type": "lts",
       "support-phase": "maintenance",
-      "latest-release": "8.0.32",
-      "latest-release-date": "2026-10-13",
-      "latest-runtime": "8.0.32",
-      "latest-sdk": "8.0.426"
+      "latest-release": "8.0.33",
+      "latest-release-date": "2026-10-25",
+      "latest-runtime": "8.0.33",
+      "latest-sdk": "8.0.427"
     }
   ]
 }
