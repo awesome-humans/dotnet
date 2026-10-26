@@ -39,10 +39,11 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 5. **Write the research topic:**
    - Put the recommendation or current state in the opening sentences, and the detail after.
-   - Cite a source ID for every claim. Note a source's standing when it limits the claim, such as `**Corroborate.**` or a limit in its notes. Date anything time-sensitive.
+   - Cite a source ID for every claim. Note a source's standing when it limits the claim, such as `**Corroborate.**` or a limit in its notes. Date anything time-sensitive. Mark a claim that rests only on a reference, or on your own reading, as unsupported, so `resolve-research` doesn't promote it.
    - **Label preview features as the freshness policy requires:** "in preview as of `<date>`, not yet an opinion". Keep them separate from GA guidance.
    - Where sources disagree, say so, and weigh them. Don't blur them into a vague middle.
    - **Compile every code sample** against the declared `targets` before you save the topic, as [AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions) asks of an opinion. Under the sample, record the SDK, the package versions, and the date you compiled it, and mark a fragment that can't compile alone as one. CI doesn't compile research, so a sample you didn't build reaches `resolve-research` unchecked.
+   - **Check every package the topic recommends for security advisories** at the version it names: run `dotnet list package --vulnerable` in the project you compiled the samples in, or look the package up in the [GitHub Advisory Database](https://github.com/advisories). Record the date, and say so in the topic if an advisory is open.
 6. **Answer follow-up questions** from what you've gathered. Sweep again, in the same order, only when a question goes beyond it.
 7. **Close the loop.** End with what the research revealed about the repository, and recommend the matching skill. Never run it unprompted.
 
