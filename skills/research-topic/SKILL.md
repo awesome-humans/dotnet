@@ -12,6 +12,10 @@ metadata:
 
 Answer "What should I know or do about X?" from this repository's opinions first, then its vetted roster. This skill writes one thing, on a research branch: the research topic. It changes `opinions/` and `templates/` only through the skills it recommends at the end.
 
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root. Without a checkout, read a file at `https://raw.githubusercontent.com/awesome-humans/dotnet/main/<path>`, and find the opinions and templates in [llms.txt](https://awesome-humans.net/dotnet/llms.txt).
+
+**Outside a checkout of this repository, answer in the conversation.** A reader might run this skill from their own project, or with no checkout at all. Then skip the worktree in step 2 and [Persistence and lifecycle](#persistence-and-lifecycle): write no file, and open no pull request. In step 7, recommend no skill. Tell the reader what the research revealed about the repository, and that they can raise it in an [issue](https://github.com/awesome-humans/dotnet/issues).
+
 ## Orchestration
 
 As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, fan the per-source reading out to worker agents. Only the editor weighs conflicting sources, writes the research topic, and answers follow-up questions.
