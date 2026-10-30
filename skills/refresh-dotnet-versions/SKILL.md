@@ -60,7 +60,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - When a feature needs a new opinion, create a stub with a `TODO` and a source link, and add its `README.md` Scope bullet and Repository layout entry, which CI enforces.
    - Update `targets:` and `last-reviewed:` on every file you change **or verify as unchanged**.
    - **Never remove or weaken a house block or region** ([awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works)). If a release makes one obsolete, note inside the block that the release supersedes it, and keep the marking. A template must still build with its house regions removed.
-6. **If a .NET SDK is available, verify the code samples** against the new targets. Assemble a scratch project from `templates/`, and run **`dotnet build` and `dotnet test`**.
+6. **If a .NET SDK is available, verify the code samples** against the new targets. Assemble a scratch project from `templates/`, and run **`dotnet build`, `dotnet test`, and `dotnet format --verify-no-changes`**.
    - `dotnet run` calls the test project's entry point directly and skips the SDK's runner selection. It can pass where `dotnet test` fails, and `dotnet test` is what `templates/`, `opinions/ci.md`, and `audit-freshness` use.
    - Treat "0 tests ran, exit code 0" as a failure. It's what a test project reports after losing its runner configuration.
    - Without an SDK, flag the samples as unverified in the pull request.

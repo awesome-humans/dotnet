@@ -29,7 +29,7 @@ Report what's stale. This skill never edits content. Version drift goes to `refr
 | Inbound links to each `opinions/` and `templates/` file                           | Informational, never a finding. For details, see [Inbound links](#inbound-links)              |
 | References cited in `opinions/` and `templates/`                                  | Zero. For details, see [Cited references](#cited-references)                                  |
 | `templates/` still implement what `opinions/` require                             | Zero. For details, see [Templates](#templates)                                                |
-| `templates/` build and test without errors                                        | Zero. For details, see [Templates](#templates)                                                |
+| `templates/` build, test, and pass `dotnet format` without errors                 | Zero. For details, see [Templates](#templates)                                                |
 | Citation and roster URLs resolve                                                  | Zero: a dead link is a content finding. Read the latest `Markdown` workflow run, not each URL |
 
 ### SDK pins
@@ -72,7 +72,7 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
 ### Templates
 
 - **Templates match the opinions.** If an opinion names a property, package, or setting, and its template leaves it out, that's a finding. People copy `templates/`, so a gap ships the advice without the setting.
-- **Templates build and test.** Assemble the example projects into the layout `example.slnx` describes, and run `dotnet build` and `dotnet test`. Analyzer and package compatibility failures show up only this way.
+- **Templates build, test, and pass the format check.** Assemble the example projects into the layout `example.slnx` describes, and run `dotnet build`, `dotnet test`, and `dotnet format --verify-no-changes`. Analyzer and package compatibility failures show up only this way. Run the format check too, because [opinions/ci.md](../../opinions/ci.md) prescribes it as a CI step, and it reports style rules that the build lets through at `suggestion` severity, such as IDE0008. `dotnet format` skips F# projects and says so; that line isn't a failure.
 
 ## Steps
 

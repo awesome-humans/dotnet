@@ -134,9 +134,9 @@ Agent skills maintain the repository. They follow the [Agent Skills specificatio
 
 The skills split work by cost. Cheaper worker agents run the web searches and source sweeps in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
-Every skill except the two report-only ones works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the owner's review. Each `SKILL.md` is canonical over this diagram.
+Every skill except the three report-only ones works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the owner's review. Each `SKILL.md` is canonical over this diagram.
 
-![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the owner's review, to the roster, research, or the opinions and templates; audit-freshness and review-project only report](assets/diagrams/maintenance-pipeline.svg)
+![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the owner's review, to the roster, research, or the opinions and templates; audit-freshness, review-opinions, and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 
 | Skill                                                                | Purpose                                                                                     |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -145,6 +145,7 @@ Every skill except the two report-only ones works on its own branch, and its cha
 | [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET, C#, and F# releases, and update all opinions and templates to target them  |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic from the opinions and vetted sources, and save it with citations      |
 | [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic by weaving it into the opinions and templates, or discard it |
+| [`review-opinions`](skills/review-opinions/SKILL.md)                 | Check that the opinions and templates agree with their cited sources and with each other    |
 | [`review-project`](skills/review-project/SKILL.md)                   | Check an external project against the opinions and templates, and report deviations         |
 | [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline          |
 | [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a house profile's opinion into the opinions and templates, visibly marked as House    |
