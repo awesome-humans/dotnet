@@ -74,7 +74,7 @@ An agent that uses the author's credentials posts under the author's account, an
 [CodeRabbit](https://coderabbit.ai) reviews pull requests here, using the organisation's central configuration in [awesome-humans/coderabbit](https://github.com/awesome-humans/coderabbit/blob/main/.coderabbit.yaml). It reads this file as its guidelines.
 
 - **Check that the review started.** CodeRabbit reviews a new pull request on its own, and each push after that. If its status comment says it skipped or paused the review of a person's pull request, comment `@coderabbitai review`.
-- **Renovate's pull requests aren't reviewed.** The central configuration skips them, and a requested review fails too because CodeRabbit gives a bot no review seat on the open-source plan. Don't ask for one. The owner merges a Renovate pull request, or asks an agent to, once every other check passes.
+- **Renovate's pull requests aren't reviewed.** The central configuration skips them, and a requested review fails too because CodeRabbit gives a bot no review seat on the open-source plan. Don't ask for one. Once every other check passes, the owner merges a Renovate pull request, or asks an agent to.
 - **Its findings are advisory.** CodeRabbit never blocks a merge, and the owner's review stays the gate. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
 
 ## Metadata
