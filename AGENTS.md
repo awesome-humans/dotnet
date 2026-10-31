@@ -75,7 +75,7 @@ The agent reviewer (currently CodeRabbit) reviews every pull request here, guide
 
 - **Check that the review started.** The agent reviewer reviews a new pull request on its own, and each push after that. If CodeRabbit's status comment says it skipped or paused the review of a person's pull request, comment `@coderabbitai review`.
 - **Renovate's pull requests aren't reviewed.** The central configuration skips them, and a requested review fails too because CodeRabbit gives a bot no review seat on the open-source plan. Don't ask for one. Once every other check passes, the owner merges a Renovate pull request, or asks an agent to.
-- **Its findings are advisory.** The agent reviewer never blocks a merge, and the owner's review stays the gate. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
+- **Its findings are advisory.** The agent reviewer never blocks a merge: the owner reviews and merges every pull request. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
 
 ## Metadata
 
