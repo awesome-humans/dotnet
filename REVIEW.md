@@ -11,6 +11,7 @@ Reserve Important for these. Everything else is Nit at most.
 - **An unsourced claim.** A new or changed recommendation in `opinions/` or `templates/` that no ID in the file's `sources` carries, or that relies on a link used as a reference to carry it. Quote the claim and name the source IDs the file lists.
 - **A misquoted source.** The text says a roster source recommends something that the cited page doesn't say. Quote the sentence from the source, with its link, or don't report it.
 - **Guidance from an unvetted source,** folded in instead of proposed through `vet-source`.
+- **A rule changed inside a research pull request.** A pull request that adds or changes a topic in `research/`, and also changes a rule that research applies, in `AGENTS.md`, `AWESOME-HUMANS.md`, or a `SKILL.md`. The rule needs its own pull request, so every open topic can be checked against it.
 - **A house opinion out of place.** A `**House:**` rule outside a `/// house | <profile>` block or a `house:<profile>` region, sourced text edited or deleted to make room for a house opinion, or a block whose profile isn't in `sources`.
 - **A downgrade.** An example, template pin, or `targets:` value that moves to an older TFM, SDK, or language version without saying why, or a preview feature presented as the opinion instead of a "coming next" note.
 - **An example that can't build.** A code block or template that wouldn't compile against the declared `targets`, with `TreatWarningsAsErrors` on. Cite the line and the diagnostic ID you expect, such as `CS0246`.
