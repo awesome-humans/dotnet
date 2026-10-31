@@ -32,7 +32,7 @@ builder.Configuration.AddAzureKeyVault(
         new AzureCliCredential()));
 ```
 
-([Bowden: Using ASP.NET Core with Azure Key Vault](https://damienbod.com/2024/12/02/using-asp-net-core-with-azure-key-vault/), and for the obsolete constructor, [Azure.Identity: CHANGELOG, 1.18.0-beta.1](https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/identity/Azure.Identity/CHANGELOG.md#1180-beta1-2025-11-14))
+([Bowden: Using ASP.NET Core with Azure Key Vault](https://damienbod.com/2024/12/02/using-asp-net-core-with-azure-key-vault/); for the explicit system-assigned id, [Microsoft Learn: Authenticate Azure-hosted .NET apps to Azure resources using a system-assigned managed identity](https://learn.microsoft.com/dotnet/azure/sdk/authentication/system-assigned-managed-identity); and for the obsolete constructor, [Azure.Identity: CHANGELOG, 1.18.0-beta.1](https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/identity/Azure.Identity/CHANGELOG.md#1180-beta1-2025-11-14))
 
 A secret can also leave the process through a log or a diagnostic dump, so review what the app writes. ([Meziantou: Prevent accidental disclosure of configuration secrets](https://www.meziantou.net/prevent-accidental-disclosure-of-configuration-secrets.htm)) In .NET 10, EF Core redacts inlined constants from the SQL it logs. ([.NET Team: Announcing .NET 10](https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/)) For the logging rules, see [logging.md](logging.md).
 
