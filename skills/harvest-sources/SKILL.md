@@ -14,7 +14,7 @@ Collect what the vetted sources have published since the last sweep, and update 
 
 ## Orchestration
 
-As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, fan the per-source sweeps in step 3 out to worker agents. Only the editor triages their findings and edits `opinions/` and `templates/`.
+As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, fan the per-source sweeps in step 3, and the citation checks in step 6, out to worker agents. Only the editor triages their findings and edits `opinions/` and `templates/`.
 
 ## Steps
 
@@ -31,8 +31,13 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - Add the post's source ID to the opinion's `sources:`, and update `last-reviewed:`.
    - **Add a reference where it confirms a specific behaviour.** When an edit says how a named package behaves, link the package's own material beside the roster citation: its documentation, release notes, an issue, a test, or a line of source. A repository named under [AWESOME-HUMANS.md: Named references](../../AWESOME-HUMANS.md#named-references) qualifies too. Look for it in the `dotnet`, `microsoft`, and `fsharp` organisations on GitHub, and let the [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) decide what qualifies. Read it first, and link it only if it says what the claim says. It never goes in `sources:`, and never replaces the roster citation. Pin a link to a line of code to a commit.
    - **Check a contradiction against the package's own material.** When a post contradicts an opinion about how something behaves, read the package's documentation, tests, or source before you choose. If they settle it, correct the opinion, cite a roster source that agrees, and link the evidence in the pull request.
-6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: the date, the window, and what changed, as briefly as the existing entries. Per-source findings go in the pull request, not the table.
-7. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.
+6. **For the claims this harvest added or changed, check their citations** with steps 2 to 4 of [`review-opinions`](../review-opinions/SKILL.md). Include each changed claim's citations even when their own lines didn't change, such as a citation on the line after the claim it supports. You extract the pairs and triage the results, and worker agents check the pages. Act on each category from its step 4 before you go on:
+   - **Contradicted** or **Unsupported:** Fix the claim or its citation, or drop the edit.
+   - **Drifted:** Update the quote to match the page.
+   - **Missing source:** Drop the claim, and propose the source with `vet-source`. Never merge it unsourced.
+   - **Not verified:** List the page and the reason in the pull request.
+7. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: the date, the window, and what changed, as briefly as the existing entries. Per-source findings go in the pull request, not the table.
+8. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.
    - If an open `Harvest due: <Month> <Year>` issue asked for this sweep, end the pull request description with a `Closes: #<number>` trailer.
    - The `Harvest reminder` workflow opens that issue on the 1st of each month, and skips the month while an issue with that title is open. An issue left open blocks the next reminder.
    - If another pull request replaces this one, copy the `Closes:` trailer to it. The reference doesn't carry over.
