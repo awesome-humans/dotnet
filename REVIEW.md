@@ -1,6 +1,6 @@
 # Review instructions
 
-These instructions tune automated pull request review in this repository. The agent reviewer (currently CodeRabbit) reads them, and so can any other agent asked to review a pull request here. They add to [AGENTS.md](AGENTS.md), which stays the source of every rule.
+These instructions tune automated pull request review in this repository. The agent reviewer (currently CodeRabbit) reads them, and so can any other agent asked to review a pull request here. They add review-specific guidance, such as what each severity means, to [AGENTS.md](AGENTS.md), which stays the source of every other rule.
 
 This repository is mostly prose. A finding matters when it would put a wrong or unsourced recommendation in front of a reader, or break a check or a skill that keeps the content current.
 

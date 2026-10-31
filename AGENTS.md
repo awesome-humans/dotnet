@@ -71,11 +71,11 @@ An agent that uses the author's credentials posts under the author's account, an
 
 ### Agent reviews
 
-The agent reviewer (currently CodeRabbit) reviews every pull request here, guided by [REVIEW.md](REVIEW.md), which sets what each finding's severity means. CodeRabbit uses the organisation's central configuration in [awesome-humans/coderabbit](https://github.com/awesome-humans/coderabbit/blob/main/.coderabbit.yaml).
+The agent reviewer (currently CodeRabbit) reviews every pull request here except Renovate's, guided by [REVIEW.md](REVIEW.md), which sets what each finding's severity means. CodeRabbit uses the organisation's central configuration in [awesome-humans/coderabbit](https://github.com/awesome-humans/coderabbit/blob/main/.coderabbit.yaml).
 
 - **Check that the review started.** The agent reviewer reviews a new pull request on its own, and each push after that. If CodeRabbit's status comment says it skipped or paused the review of a person's pull request, comment `@coderabbitai review`.
 - **Renovate's pull requests aren't reviewed.** The central configuration skips them, and a requested review fails too because CodeRabbit gives a bot no review seat on the open-source plan. Don't ask for one. Once every other check passes, the owner merges a Renovate pull request, or asks an agent to.
-- **Its findings are advisory.** The agent reviewer never blocks a merge: the owner reviews and merges every pull request. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
+- **Its findings are advisory.** The agent reviewer never blocks a merge: the owner decides what merges. Still, answer every finding: fix it, or reply with the reason you didn't. End the reply with the agent attribution line, and don't resolve a thread without doing one or the other.
 
 ## Metadata
 
