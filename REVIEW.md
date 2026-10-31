@@ -32,7 +32,7 @@ Report at most five Nits per review, the ones a reader would notice first. Writi
 
 ## Always check
 
-- A change to an opinion updates every template that encodes it in the same pull request, and the reverse.
+- An opinion and every template that encodes it change in the same pull request.
 - `last-reviewed` changes only where the content was checked against its sources in the same pull request.
 - A transition note opens with `**Review by YYYY-MM-DD.**`, and the date is in the future.
 - An opinion gives one recommendation. A second option gets at most one line on why it lost.
