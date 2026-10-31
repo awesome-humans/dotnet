@@ -23,9 +23,9 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 3. **Sweep each source** for posts in the window. A source marked `**Discovery-only.**` only leads to primary posts: follow its links, and never cite it in `sources:`, because CI rejects it.
 4. **Triage each notable post:**
    - **Changes an existing opinion:** It replaces or refines guidance in `opinions/`. Queue an edit.
-   - **Suggests a new opinion:** It's a recurring theme with no home yet. First check `research/` and the open pull requests on `research/` branches. If a research topic covers the subject, add the post to that topic instead of a stub:
-     - **A topic in `research/`:** Add the post's point to the topic, and its source ID to the topic's `sources:`, in the harvest pull request. Leave the topic's `last-reviewed:` as it is, because the rest of the topic wasn't checked.
-     - **A topic in an open research pull request:** Comment the post's link on that pull request, so it's folded in before the topic merges. Never push to another skill's branch.
+   - **Suggests a new opinion:** It's a recurring theme that no opinion covers yet. First check `research/` and the open pull requests on `research/` branches. If a research topic covers the subject, add the post to that topic instead of a stub:
+     - **A topic in `research/`:** Add the post's point to the topic, and its source ID to the topic's `sources:`, in the harvest pull request. Leave the topic's `last-reviewed:` as it is because the rest of the topic wasn't checked.
+     - **A topic in an open research pull request:** Comment the post's link on that pull request, so the topic can include it before it merges. Never push to another skill's branch.
 
      Otherwise, create a stub opinion with metadata, the source link, and a `TODO`. In the same commit, add it to `README.md` as a Scope bullet and a Repository layout entry, or CI fails the pull request.
 
