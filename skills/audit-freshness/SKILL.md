@@ -72,7 +72,7 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
 ### Templates
 
 - **Templates match the opinions.** If an opinion names a property, package, or setting, and its template leaves it out, that's a finding. People copy `templates/`, so a gap ships the advice without the setting.
-- **Templates build, test, and pass the format check.** Assemble the example projects into the layout `example.slnx` describes, and run `dotnet build`, `dotnet test`, and `dotnet format --verify-no-changes`. Analyzer and package compatibility failures show up only this way. Run the format check too, because [opinions/ci.md](../../opinions/ci.md) prescribes it as a CI step, and it reports style rules that the build lets through at `suggestion` severity, such as IDE0008. `dotnet format` skips F# projects and says so; that line isn't a failure.
+- **Templates build, test, and pass the format check.** Assemble the example projects into the layout `example.slnx` describes, and run `dotnet build`, `dotnet test`, and `dotnet format --verify-no-changes`. Analyzer and package compatibility failures show up only this way. Run the format check too: [opinions/ci.md](../../opinions/ci.md) prescribes it as a CI step, and it reports style rules that the build lets through at `suggestion` severity, such as IDE0008. `dotnet format` skips F# projects and says so; that line isn't a failure.
 
 ## Steps
 
