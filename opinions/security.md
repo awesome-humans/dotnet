@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-25
+last-reviewed: 2026-10-31
 sources:
   [andrew-lock, damien-bowden, dotnet-blog, meziantou, ms-learn, steve-gordon]
 ---
@@ -24,7 +24,7 @@ This file covers the security rules outside the HTTP pipeline: secrets, deserial
 // The managed identity works in the deployed app and the second credential is the
 // developer's own sign-in, so one code path covers both. Pass the id explicitly:
 // the parameterless ManagedIdentityCredential constructor is obsolete as of
-// Azure.Identity 1.21.0, and CS0618 is an error under TreatWarningsAsErrors.
+// Azure.Identity 1.18.0, and CS0618 is an error under TreatWarningsAsErrors.
 builder.Configuration.AddAzureKeyVault(
     new Uri($"https://{builder.Configuration["VaultName"]}.vault.azure.net/"),
     new ChainedTokenCredential(
@@ -32,7 +32,7 @@ builder.Configuration.AddAzureKeyVault(
         new AzureCliCredential()));
 ```
 
-([Bowden: Using ASP.NET Core with Azure Key Vault](https://damienbod.com/2024/12/02/using-asp-net-core-with-azure-key-vault/))
+([Bowden: Using ASP.NET Core with Azure Key Vault](https://damienbod.com/2024/12/02/using-asp-net-core-with-azure-key-vault/), and for the obsolete constructor, [Azure.Identity: CHANGELOG, 1.18.0-beta.1](https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/identity/Azure.Identity/CHANGELOG.md#1180-beta1-2025-11-14))
 
 A secret can also leave the process through a log or a diagnostic dump, so review what the app writes. ([Meziantou: Prevent accidental disclosure of configuration secrets](https://www.meziantou.net/prevent-accidental-disclosure-of-configuration-secrets.htm)) In .NET 10, EF Core redacts inlined constants from the SQL it logs. ([.NET Team: Announcing .NET 10](https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/)) For the logging rules, see [logging.md](logging.md).
 
@@ -46,13 +46,15 @@ The flaw is type information in the payload, not the binary encoding: "Any deser
 
 **Choose the algorithm from the platform's recommended set, and never implement a primitive yourself.** The set below is Microsoft's. ([Microsoft Learn: .NET cryptography model](https://learn.microsoft.com/dotnet/standard/security/cryptography-model)) That page was last reviewed in 2021 and doesn't cover AES-GCM or password parameters, so the rules for those two cite their own current sources.
 
-| Purpose                       | API                                                          |
-| ----------------------------- | ------------------------------------------------------------ |
-| Symmetric encryption          | `Aes`, or `AesGcm` where the ciphertext needs authenticating |
-| Integrity                     | `HMACSHA256` or `HMACSHA512`                                 |
-| Signatures                    | `ECDsa` or `RSA`                                             |
-| Random values                 | `RandomNumberGenerator`                                      |
-| Password-based key derivation | `Rfc2898DeriveBytes.Pbkdf2`                                  |
+| Purpose                       | API                                                                                                             |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Symmetric encryption          | `AesGcm`. `Aes` in CBC mode only for a format that requires it, with an HMAC that you verify before you decrypt |
+| Integrity                     | `HMACSHA256` or `HMACSHA512`                                                                                    |
+| Signatures                    | `ECDsa` or `RSA`                                                                                                |
+| Random values                 | `RandomNumberGenerator`                                                                                         |
+| Password-based key derivation | `Rfc2898DeriveBytes.Pbkdf2`                                                                                     |
+
+**Encrypt with `AesGcm`, an authenticated mode, by default.** Padded CBC leaks plaintext to an attacker who can tell a padding failure from a successful decryption: "to use padded CBC block ciphers safely, you must combine them with an HMAC (or another data integrity check) that you validate using a constant time comparison before trying to decrypt the data". The alternative is to "change the cipher mode to an authenticated encryption (AE) mode such as GCM or CCM". ([Microsoft Learn: Timing vulnerabilities with CBC-mode symmetric decryption using padding](https://learn.microsoft.com/dotnet/standard/security/vulnerabilities-cbc-mode))
 
 **Use each GCM nonce once.** Generate it for each operation from `RandomNumberGenerator`, and store it beside the ciphertext. Never derive it from a counter you might reset. "There is, over time, a very small chance of generating the same nonce, which can render AES-GCM insecure". ([Gordon: Encrypting Properties with System.Text.Json and a TypeInfoResolver Modifier (Part 2)](https://www.stevejgordon.co.uk/encrypting-properties-with-system-text-json-and-a-typeinforesolver-modifier-part-2)) Rotate a key once it has encrypted enough data to make a 12-byte nonce collision plausible.
 
@@ -79,13 +81,13 @@ To derive a key from a password outside Identity, call `Rfc2898DeriveBytes.Pbkdf
 
 **Use `MLKem` and `MLDsa`, and check `IsSupported` at every call site.** The algorithms come from the operating system, not the runtime. Linux needs OpenSSL 3.5 or later, and Apple platforms, Android, and the browser have none of them. ([Microsoft Learn: Cross-platform cryptography in .NET](https://learn.microsoft.com/dotnet/standard/security/cross-platform-cryptography))
 
-Both classes shipped without `[Experimental]`, but four export and import members keep it under diagnostic `SYSLIB5006`. So code that moves a key out of the process still opts into an experimental API. Windows support arrived with the same release, and the Learn compatibility table doesn't reflect it yet. ([Barton: Post-Quantum Cryptography in .NET](https://devblogs.microsoft.com/dotnet/post-quantum-cryptography-in-dotnet/))
+Both classes shipped without `[Experimental]`, but four export and import members keep it under diagnostic `SYSLIB5006`. So code that moves a key out of the process still opts into an experimental API. Windows support arrived with the same release, and the Learn compatibility table doesn't reflect it yet. `SlhDsa` and `CompositeMLDsa` ship with `[Experimental]` on the classes themselves, so they stay out of the GA set. ([Barton: Post-Quantum Cryptography in .NET](https://devblogs.microsoft.com/dotnet/post-quantum-cryptography-in-dotnet/))
 
 ### Servicing: take the monthly patch
 
 **Rebuild and redeploy after every Patch Tuesday, whether or not your code changed.** Security fixes ship on "always the second Tuesday of the month". The platform's instruction is to "Regularly install servicing updates to ensure that your apps are in a secure and supported state". ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support)) A container image keeps the runtime it was built with until something rebuilds it. ([aspnet-core.md: Hosting and deployment](aspnet-core.md#hosting-and-deployment))
 
-CVE-2025-55315 shows what a slow cadence costs. It's a request-smuggling flaw in ASP.NET Core that "received Microsoft's highest-ever CVSS score of 9.9". An attacker could "Login as a different user", "Make an internal request (SSRF)", or "Bypass CSRF checks". ([Lock: Understanding the worst .NET vulnerability ever: request smuggling and CVE-2025-55315](https://andrewlock.net/understanding-the-worst-dotnet-vulnerability-request-smuggling-and-cve-2025-55315/)) The fix shipped on a Tuesday. Your pipeline decides when it reaches production.
+CVE-2025-55315 shows what a slow cadence costs. It's a request-smuggling flaw in ASP.NET Core, and Microsoft gave it "a CVSS score of 9.9, their highest ever". An attacker could "Login as a different user", "Make an internal request (SSRF)", or "Bypass CSRF checks". ([Lock: Understanding the worst .NET vulnerability ever: request smuggling and CVE-2025-55315](https://andrewlock.net/understanding-the-worst-dotnet-vulnerability-request-smuggling-and-cve-2025-55315/)) The fix shipped on a Tuesday. Your pipeline decides when it reaches production.
 
 **Target a supported framework.** .NET 8 and .NET 9 both reach end of support on 2026-11-10. After that date, a project on either gets no more patches. ([Damkewala: .NET STS releases supported for 24 months](https://devblogs.microsoft.com/dotnet/dotnet-sts-releases-supported-for-24-months/)) `net10.0` is supported until November 2028.
 
@@ -99,6 +101,6 @@ CVE-2025-55315 shows what a slow cadence costs. It's a request-smuggling flaw in
 - Certificate-validation alerts on Linux
 - Channel binding validation on Unix
 
-`SlhDsa` and `CompositeMLDsa` ship as `[Experimental]`, so they stay out of the GA set. ([Barton: Post-Quantum Cryptography in .NET](https://devblogs.microsoft.com/dotnet/post-quantum-cryptography-in-dotnet/))
+([Microsoft Learn: What's new in .NET 11](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-11/overview))
 
 C# 16 previews a redesign of `unsafe` as a compiler-enforced contract between callers and API authors, targeted for production use in .NET 12. ([Lander: Improving C# Memory Safety](https://devblogs.microsoft.com/dotnet/improving-csharp-memory-safety/))

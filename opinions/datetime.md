@@ -1,7 +1,8 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-02
-sources: [andrew-lock, dotnet-blog, jon-skeet, meziantou, ms-learn]
+last-reviewed: 2026-10-31
+sources:
+  [andrew-lock, dotnet-blog, jon-skeet, meziantou, ms-learn, shay-rojansky]
 ---
 
 # Dates, times, and time zones
@@ -33,7 +34,7 @@ The documentation adds two caveats:
 
 Don't assume:
 
-- That offsets are whole hours. Newfoundland is UTC−3:30.
+- That offsets are whole hours. Newfoundland Daylight Time is UTC−2:30.
 - That DST shifts by an hour. Lord Howe Island shifts by 30 minutes.
 - That one country agrees on DST. Its zones can differ.
 - That an abbreviation names one zone. "BST" matches three.
@@ -53,15 +54,15 @@ UtcStart:      2022-07-10T07:00:00Z    ← derived; recomputed when tzdb updates
 TimeZoneRules: 2019a                   ← optional, for resumable re-derivation
 ```
 
-The same applies to recurring events: "10 AM in New York every week" is a rule, not a series of instants. ([Meziantou: 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
+The same applies to any future meeting: "If you want to schedule a meeting at 10 AM in New York next year, do not convert to UTC and store it." ([Meziantou: 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
 
 - **Re-derive the UTC column when you update the base image.** IANA publishes several tzdb releases a year, sometimes days before they take effect.
 - **Store IANA IDs, not Windows IDs.** .NET converts between them, but Windows IDs tie your data to one platform.
 
-Provider behaviour ([Microsoft Learn: EF Core](https://learn.microsoft.com/ef/core/)):
+Provider behaviour:
 
-- EF Core 8 and later map `DateOnly` to SQL Server `date` and `TimeOnly` to `time`, and scaffolding generates them instead of `DateTime` and `TimeSpan`. ([.NET Blog: EF Core 8 Preview 1: Raw, lazy, and on-time](https://devblogs.microsoft.com/dotnet/announcing-ef8-preview-1/))
-- SQL Server has a `datetimeoffset` column type, and PostgreSQL doesn't. A `DateTimeOffset` property isn't portable across providers.
+- EF Core 8 and later map `DateOnly` to SQL Server `date` and `TimeOnly` to `time`. ([.NET Blog: EF Core 8 Preview 1: Raw, lazy, and on-time](https://devblogs.microsoft.com/dotnet/announcing-ef8-preview-1/))
+- SQL Server has a `datetimeoffset` column type, and PostgreSQL doesn't: its `timestamptz` "does not, in fact, store a time zone in the database, but rather a UTC timestamp". A `DateTimeOffset` property isn't portable across providers. ([Rojansky: PostgreSQL/.NET timestamp mapping](https://www.roji.org/postgresql-dotnet-timestamp-mapping))
 - `Microsoft.Data.Sqlite` 10.0 converts `DateTimeOffset` to UTC before writing it to a REAL column. If you target SQLite, check this behaviour change. ([Microsoft Learn: EF Core 10 breaking changes](https://learn.microsoft.com/ef/core/what-is-new/ef-core-10.0/breaking-changes))
 - `System.Text.Json` round-trips `DateOnly` and `TimeOnly` since .NET 7, and writes `DateTimeOffset` as ISO 8601 with the offset. Minimal API bodies need no custom converters. A wire format without the offset hands the ambiguity to the client. ([Microsoft Learn: DateTime and DateTimeOffset support in System.Text.Json](https://learn.microsoft.com/dotnet/standard/datetime/system-text-json-support))
 
@@ -106,7 +107,7 @@ Two template files enforce this together. [templates/Directory.Build.props](../t
 
 ## Testing time
 
-**Use `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing`.** Set a start instant, and move time with `Advance(TimeSpan)`. Its timers fire as time moves, so you can test retry, backoff, and scheduling without `Thread.Sleep`. A single large `Advance` fires every due callback at once, at the end. If a test checks how callbacks interleave, advance in small steps. ([Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/))
+**Use `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing`.** Set a start instant, and move time with `Advance(TimeSpan)`. Its timers fire as time moves, so you can test retry, backoff, and scheduling without `Thread.Sleep`. A single large `Advance` fires every due callback at once, at the end. If a test checks how callbacks interleave, advance in small steps. ([Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/), and for when callbacks fire, [dotnet/extensions: FakeTimeProvider.cs](https://github.com/dotnet/extensions/blob/4332a6910796b2496f9cc35c06fa362671ee1b2f/src/Libraries/Microsoft.Extensions.TimeProvider.Testing/FakeTimeProvider.cs#L124))
 
 Don't construct it either of these ways:
 
@@ -126,7 +127,7 @@ For date-sensitive logic, test these instants:
 
 - **Get the user's zone from the browser, not the server.** In interactive server Blazor, register a scoped `TimeProvider` per circuit, filled through JavaScript interop. For the pattern, see [ui-frameworks.md](ui-frameworks.md#blazor).
 - **Run hosts in UTC, and convert at the edges.** Give each scheduled job an explicit zone. Local time repeats an hour when DST ends and skips one when it starts, so a job set to server-local time in that hour runs twice or not at all. ([Microsoft Learn: How to resolve ambiguous times](https://learn.microsoft.com/dotnet/standard/datetime/resolve-ambiguous-times), [Microsoft Learn: TimeZoneInfo.IsInvalidTime](https://learn.microsoft.com/dotnet/api/system.timezoneinfo.isinvalidtime))
-- **Include tzdata and ICU in container images.** Without them, no zone conversion works. For image tags, invariant mode, failure modes, and display formatting, see [globalization.md](globalization.md#containers-chiseled-and-alpine-images-drop-this-data).
+- **Include tzdata in container images, and ICU if you convert between IANA and Windows zone IDs.** Zone conversion needs only tzdata. The ID conversions need ICU, and so does any culture other than the invariant one. For image tags, invariant mode, failure modes, and display formatting, see [globalization.md](globalization.md#containers-chiseled-and-alpine-images-drop-this-data).
 
 ## Smaller traps
 

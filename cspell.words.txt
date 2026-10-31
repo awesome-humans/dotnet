@@ -51,6 +51,7 @@ Haack's
 headerless
 Henriksen
 hideable
+HMAC
 HSTS
 Icaza's
 Iddict
