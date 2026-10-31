@@ -14,4 +14,4 @@ permissions:
 
 jobs:
   attribution:
-    uses: awesome-humans/.github/.github/workflows/attribution.yml@2c3d97ec1bc30f224592127ac5eb59d0b001559a # main
+    uses: awesome-humans/.github/.github/workflows/attribution.yml@13d31c3514bb9d36647e2cdcead4bf62390d0bf9 # main
