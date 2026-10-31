@@ -1,6 +1,6 @@
 # Review instructions
 
-These instructions tune automated pull request review in this repository: Claude Code Review reads this file from `main`, and CodeRabbit reads it as a guideline. They add to [AGENTS.md](AGENTS.md), which stays the source of every rule. A change to this file takes effect once it merges.
+These instructions tune automated pull request review in this repository. They're for any agent or tool that reviews a pull request here, and nothing in them assumes a specific one. They add to [AGENTS.md](AGENTS.md), which stays the source of every rule. A change to this file takes effect once it merges.
 
 This repository is mostly prose. A finding matters when it would put a wrong or unsourced recommendation in front of a reader, or break a check or a skill that keeps the content current.
 
