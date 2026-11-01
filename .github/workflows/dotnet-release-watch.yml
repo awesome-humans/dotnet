@@ -1,11 +1,10 @@
-# Watches the official .NET releases index for new GA releases (runtime, ASP.NET Core,
-# SDK — they ship together per channel) and opens a pull request when the known state
-# changes.
+# Watches the official .NET releases index for new GA releases, and opens a pull
+# request when the known state changes. The runtime, ASP.NET Core, and the SDK ship
+# together per channel.
 #
 # The PR is a TRIGGER, not the update: it refreshes only .github/state/dotnet-releases.json.
-# Folding the release into opinions/ and templates/ is done by running the
-# skills/refresh-dotnet-versions skill against the PR's branch (manually or, later, by a
-# follow-on automation).
+# To fold the release into opinions/ and templates/, run the refresh-dotnet-versions
+# skill against the PR's branch.
 #
 # Note: for the create-pull-request step to work, the repository setting
 # "Allow GitHub Actions to create and approve pull requests" must be enabled
@@ -33,9 +32,9 @@ jobs:
 
       # pipefail is set explicitly: the default shell for an unqualified `run` is
       # `bash -e`, which reports only the LAST command in a pipeline. Without it a failed
-      # fetch leaves jq reading empty stdin, which it turns into no output and exit 0 —
-      # a truncated snapshot that the diff below reads as "every channel removed", and a
-      # trigger PR that deletes the state file instead of updating it.
+      # fetch leaves jq reading empty stdin, which it turns into no output and exit 0.
+      # The diff below would read that truncated snapshot as "every channel removed",
+      # and open a trigger PR that deletes the state file instead of updating it.
       - name: Snapshot GA release state
         run: |
           set -euo pipefail

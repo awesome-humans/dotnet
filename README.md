@@ -1,6 +1,6 @@
 # Awesome Humans of .NET
 
-An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): distilled, opinionated guidance, thanks to awesome humans. Instead of links, it distils what vetted .NET writers recommend into guidance your agent can follow, each opinion citing its sources. It documents current best practice in .NET code, and updates it as .NET evolves.
+An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): distilled, opinionated guidance, thanks to awesome humans. Instead of links, it gives your agent guidance from vetted .NET writers, and each opinion cites its sources. It documents current best practice in .NET code, and updates it as .NET evolves.
 
 The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET.
 
@@ -23,7 +23,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
   To narrow the review, say what to include or leave out, and optionally name a house profile:
 
   ```text
-  Use the review-project skill at awesome-humans.net/dotnet/llms.txt on <repository>, focus on logging and testing, skip CI, use house profile of simon-mckenna
+  Use the review-project skill at awesome-humans.net/dotnet/llms.txt on <repository>, focus on logging and testing, skip CI, use the simon-mckenna house profile
   ```
 
 - **Research a topic.** Ask your coding agent to run [`research-topic`](skills/research-topic/SKILL.md), which answers from the opinions and the vetted sources, citing each claim:
@@ -32,7 +32,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
   Use the research-topic skill at awesome-humans.net/dotnet/llms.txt to research union types coming in C#
   ```
 
-- **Read the opinions and templates.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, with the rationale and sources behind it, and the [`templates/`](templates) encode those opinions.
+- **Read the opinions and templates.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, rationale, and sources, and the [`templates/`](templates) encode them.
 
 ## Scope
 
@@ -79,7 +79,7 @@ Any other limit, such as a concern about independence or an outdated back catalo
 
 ## House opinions
 
-House opinions are preferences from experience rather than from a vetted source. Each belongs to a house profile, named for the person or organisation that owns it, such as the owner's, `simon-mckenna`. On awesome-humans.net, every page shows sourced community practice only, until you choose a profile in the header. Agents read `llms-<profile>.txt` instead of `llms.txt`. In this repository, each house opinion is a marked block beside the sourced text it changes, and [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) defines the format and records each one. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
+House opinions are preferences from experience rather than from a vetted source. Each belongs to a house profile, named for the person or organisation that owns it, such as `simon-mckenna`. On awesome-humans.net, every page shows sourced community practice only, until you choose a profile in the header. Agents read `llms-<profile>.txt` instead of `llms.txt`. In this repository, each house opinion is a marked block beside the sourced text it changes, and [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) defines the format and records each one. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
 
 ## Repository layout
 
@@ -200,6 +200,6 @@ One check runs in Python: the Agent Skills specification validator, which is pub
 
 Agents build and maintain this project, so the [usual disclaimers](https://awesome-humans.net/credits/#disclaimer) apply, but it wouldn't exist without the people whose writing it draws on. Every opinion cites their work. Thank you to all of these awesome humans, and to everyone who supports them.
 
-## License
+## Licence
 
-See [LICENSE](LICENSE).
+[Apache License 2.0](LICENSE).

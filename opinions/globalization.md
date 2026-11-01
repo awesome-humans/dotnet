@@ -116,7 +116,7 @@ Strongly typed resource classes lost on portability. .NET has no cross-platform 
 
 ([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
 
-### Client-side: ship the globalization data the app can actually reach
+### Client-side: ship the globalization data the app can reach
 
 - **Blazor WebAssembly loads only the app's own culture data by default.** If users can switch culture at run time, set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>`.
   - Time zone data is trimmed separately, with `<InvariantTimezone>true</InvariantTimezone>`. Delete `<BlazorEnableTimeZoneSupport>`, which it replaces.
