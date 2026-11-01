@@ -30,7 +30,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - .NET: <https://dotnet.microsoft.com/download/dotnet> and the release announcement on the [.NET Blog](https://devblogs.microsoft.com/dotnet/).
    - C#: <https://learn.microsoft.com/dotnet/csharp/whats-new/>.
    - F#: <https://learn.microsoft.com/dotnet/fsharp/whats-new/>.
-   - Use GA releases only. A preview or release candidate can appear in a "coming next" note, never as the target.
+   - Use GA releases only. A preview or release candidate can appear in a "Coming next" note, never as the target.
 2. **Compare with the current targets:** the `targets:` metadata in `opinions/`, the version pins in `templates/`, and the root `global.json`. The template pins are the `global.json` SDK version, `<TargetFramework>` in project files, and `<LangVersion>` if it's pinned.
    - If everything matches, the framework part has nothing to do. Say so, and **still run steps 4b and 4c**, because package and action pins drift on their own schedule. Check step 4a for a band the repository now needs.
    - Report "up to date" and stop only when those checks find nothing too.

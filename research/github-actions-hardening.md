@@ -120,7 +120,7 @@ Four gaps to resolve:
 1. **[ci.md](../opinions/ci.md) has no rule on credential persistence or secret inheritance,** and its sample workflow omits `persist-credentials: false`. No roster source carries either rule. Adopting them as house opinions, through `weave-house-opinion`, is the route that exists today. awesome-humans/website already follows both.
 2. **ci.md doesn't recommend checking workflows automatically.** The citable source names Scorecard. actionlint and zizmor are the pull request gates, but no roster source names them. This is also a house opinion, or it waits for a source.
 3. **The workflow fixes in the table are a `ci:` change to this repository,** not an opinion change. They can go ahead now, whatever happens to items 1 and 2, as website's did.
-4. **Two later notes for ci.md:** the v7 `pull_request_target` block belongs beside the script-injection rule once a roster source covers it, and workflow lockfiles belong in a "coming next" note until they reach GA.
+4. **Two later notes for ci.md:** the v7 `pull_request_target` block belongs beside the script-injection rule once a roster source covers it, and workflow lockfiles belong in a "Coming next" note until they reach GA.
 
 **Recommended next step:** `weave-house-opinion` for items 1 and 2, if the owner adopts them. Then `resolve-research` to promote the house opinions into ci.md, fix its sample workflow, and discard the rest.
 

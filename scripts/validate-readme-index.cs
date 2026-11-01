@@ -212,8 +212,8 @@ static string? Section(string text, string heading)
 {
     // Every level-2 heading in one pass: the one whose text matches starts the
     // section, and the heading after it ends it. Matching headings generically
-    // keeps the pattern constant, so it can be source-generated — interpolating
-    // the wanted heading into the pattern could not (SYSLIB1045).
+    // keeps the pattern constant, so it can be source-generated. Interpolating
+    // the wanted heading into the pattern couldn't be (SYSLIB1045).
     MatchCollection headings = Patterns.SectionHeading().Matches(text);
 
     for (int index = 0; index < headings.Count; index++)

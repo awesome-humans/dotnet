@@ -1,6 +1,6 @@
 ---
 name: vet-source
-description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it, or move it to Opted out. Use when proposing a new source, when an issue labelled vet-source or opt-out arrives, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
+description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it, or move it to Opted out. Use when proposing a new source, when an issue labelled vet-source or opt-out arrives, when a watch-list source might be ready for promotion, or when an admitted source has gone quiet or declined in quality.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -24,7 +24,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 2. **Check every ecosystem's opt-outs first.** An opt-out from one ecosystem covers all of them, so read the `## Opted out` section of every other ecosystem's `AWESOME-HUMANS.md` before you gather any evidence.
    - List the ecosystem repositories with `gh repo list awesome-humans`, and read each roster with `gh api repos/awesome-humans/<repository>/contents/AWESOME-HUMANS.md -H 'Accept: application/vnd.github.raw'`. Today that's `awesome-humans/rust`.
    - **A candidate listed there is declined without vetting.** Never re-run the criteria on it: its owner asked not to be cited. Add no roster row and no source notes. Skip to step 6.3, and log the decline with a link to the other roster's entry, in a pull request that holds only the log entry.
-   - **If this roster lists the source too,** don't log a decline. Follow [Opt-outs](#opt-outs) for it here, and link the other roster's entry where step 3 links the `awesome-humans/website` issue.
+   - **If this roster lists the source too,** don't log a decline. Follow [Opt-outs](#opt-outs) for it here, and link the other roster's entry where [Opt-outs](#opt-outs) step 3 links the `awesome-humans/website` issue.
 3. **Establish the track record** against each criterion:
    - **Longevity:** Find the earliest verifiable publication, from archives, post history, or the Wayback Machine. Admission needs two years of sustained output, and less means the watch list, whatever the quality. Record the exact start year in the roster's `Since` column.
    - **Depth:** Sample three to five representative posts. Do they offer original insight, such as internals, measurements, or worked reasoning, or do they paraphrase release notes?
@@ -35,7 +35,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    | Evidence                                             | Outcome                                                                 |
    | ---------------------------------------------------- | ----------------------------------------------------------------------- |
    | All four criteria met, over two years or more        | **Admit** to the **Citable** table                                      |
-   | A live independence concern                          | **Admit,** with a usage limit in the notes                              |
+   | An independence concern                              | **Admit,** with a usage limit in the notes                              |
    | Publishing stopped over a year ago                   | **Watch list,** unless the writing continues elsewhere                  |
    | Strong on depth and accuracy, but short on longevity | **Watch list,** with the blocker recorded                               |
    | An aggregator, such as a link roundup or newsletter  | **Admit,** marked `**Discovery-only.**`. It never appears in `sources:` |
