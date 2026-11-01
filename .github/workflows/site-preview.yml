@@ -18,14 +18,17 @@ concurrency:
 
 jobs:
   build:
-    uses: awesome-humans/website/.github/workflows/build.yml@a1811a86820031f08ce6cd686db2ca6d4e8384b9 # main
+    uses: awesome-humans/website/.github/workflows/build.yml@7c23e312a17a079ae28d8b2dee2b79374932b45b # main
     with:
       ecosystem: dotnet
       ref: ${{ github.event.pull_request.head.sha }}
 
   deploy:
     needs: build
-    uses: awesome-humans/website/.github/workflows/deploy.yml@a1811a86820031f08ce6cd686db2ca6d4e8384b9 # main
+    uses: awesome-humans/website/.github/workflows/deploy.yml@7c23e312a17a079ae28d8b2dee2b79374932b45b # main
     with:
       preview-alias: pr-dotnet-${{ github.event.pull_request.number }}
-    secrets: inherit
+    # Only the two secrets deploy.yml declares, not every secret this repository holds.
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

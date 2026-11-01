@@ -15,16 +15,17 @@ install:
 format:
     npm run format
 
-# Check formatting, Markdown lint, and spelling together
+# Check formatting, lint, and spelling together
 check: format-check lint spell
 
 # Check that Prettier leaves Markdown, JSON, JSONC, and YAML unchanged
 format-check:
     npm run format:check
 
-# Lint Markdown with markdownlint
+# Lint Markdown with markdownlint, and audit the workflows with zizmor (needs uv)
 lint:
     npm run lint
+    uvx --with-requirements .github/requirements.txt zizmor .github/workflows
 
 # Check spelling with cspell
 spell:
