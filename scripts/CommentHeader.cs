@@ -1,5 +1,5 @@
-// Shared by the checks that read the one-line headers on templates/ files — pulled in
-// with `#:include CommentHeader.cs`. Not a file-based app itself: it declares no top-level
+// Shared by the checks that read the one-line headers on templates/ files, through
+// `#:include CommentHeader.cs`. Not a file-based app itself: it declares no top-level
 // statements, and the YamlDotNet reference it compiles beside is declared by the script
 // including it.
 //
@@ -34,9 +34,9 @@ internal static class CommentHeader
         }
 
         // Smoke-testing the example projects (audit-freshness, refresh-dotnet-versions) leaves
-        // gitignored build output under templates/ — generated files, not resources. Skipping the
-        // same directories .gitignore does keeps a post-build working tree and a fresh checkout
-        // passing identically; CI is not the only place these checks run.
+        // gitignored build output under templates/: generated files, not resources. Skipping the
+        // directories .gitignore skips keeps a post-build working tree passing exactly as a fresh
+        // checkout does, because CI isn't the only place these checks run.
         string[] buildOutput = ["artifacts", "bin", "obj"];
 
         // JSON carries no comment syntax, so templates/global.json and the .slnf filter cannot hold
@@ -60,7 +60,7 @@ internal static class CommentHeader
 
     /// <summary>
     /// Parses a template file's first-line comment header. Returns the fields, or null with
-    /// <paramref name="error"/> set to the reason — deliberately the same shape as
+    /// <paramref name="error"/> set to the reason, in the same shape as
     /// <see cref="Frontmatter.Read"/>, so one required-field check covers both syntaxes and
     /// the two report identical wording. The returned mapping is keyed ordinally.
     /// </summary>

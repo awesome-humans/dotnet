@@ -1,4 +1,4 @@
-// Shared by the checks in this directory — pulled in with `#:include Opinions.cs`.
+// Shared by the checks in this directory, through `#:include Opinions.cs`.
 // Not a file-based app itself: it declares no top-level statements, so `dotnet run`
 // on this file does nothing useful. It carries no `#:package` directive either,
 // because a `#:include`d file contributes source, and dependencies stay declared by

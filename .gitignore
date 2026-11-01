@@ -5,8 +5,8 @@ bin/
 obj/
 
 # A repo-local SDK from an sdk.paths trial (`dotnet-install --install-dir
-# .dotnet`). A build prerequisite rather than build output, so the SDK's own
-# gitignore template never covers it — see opinions/project-structure.md.
+# .dotnet`). It's a build prerequisite, not build output, so the SDK's own
+# gitignore template doesn't cover it. See opinions/project-structure.md.
 .dotnet/
 
 # IDE and OS noise
@@ -15,7 +15,7 @@ obj/
 *.user
 .DS_Store
 
-# Markdown tooling (package.json) — devDependencies only, not shipped
+# Markdown tooling (package.json): devDependencies only, not shipped
 node_modules/
 
 # Local harness skill discovery: a symlink to skills/ for a harness that only

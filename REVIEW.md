@@ -13,12 +13,12 @@ Reserve Important for these. Everything else is Nit at most.
 - **Guidance from an unvetted source,** folded in instead of proposed through `vet-source`.
 - **A rule changed inside a research pull request.** A pull request that adds or changes a topic in `research/` and also changes a rule in `AGENTS.md`, `AWESOME-HUMANS.md`, or a `SKILL.md` that research applies. The rule needs its own pull request, so every open topic can be checked against it.
 - **A house opinion out of place.** A `**House:**` rule outside a `/// house | <profile>` block or a `house:<profile>` region, sourced text edited or deleted to make room for a house opinion, or a block whose profile isn't in `sources`.
-- **A downgrade.** An example, template pin, or `targets:` value that moves to an older TFM, SDK, or language version without saying why, or a preview feature presented as the opinion instead of a "coming next" note.
+- **A downgrade.** An example, template pin, or `targets:` value that moves to an older TFM, SDK, or language version without saying why, or a preview feature presented as the opinion instead of a "Coming next" note.
 - **An example that can't build.** A code block or template that wouldn't compile against the declared `targets`, with `TreatWarningsAsErrors` on. Cite the line and the diagnostic ID you expect, such as `CS0246`.
 - **A broken skill.** A `SKILL.md` step that names a recipe, script, template, branch prefix, or file that doesn't exist, or that contradicts `AGENTS.md`.
 - **A wrong check.** In `scripts/`, a check that passes on input it should reject, logic copied between scripts instead of shared through an `#:include` helper, or a script that no longer runs on its own with `dotnet run`. `build-site.cs` is the one the website runs that way.
 - **An unsafe workflow.** A `pull_request_target` job that checks out or runs the pull request's code, a secret passed to a step that doesn't need it, or an action pinned to a tag instead of a commit SHA.
-- **A loosened review.** A change to `REVIEW.md` or `AGENTS.md` that drops an Important item, raises the nit cap, or skips a path or a class of finding, without saying why. The agent reviewer can read both files from the pull request itself, so the change would soften its own review.
+- **A loosened review.** A change to `REVIEW.md` or `AGENTS.md` that drops an Important item, raises the nit cap, or skips a path or a class of finding, without saying why. The agent reviewer reads both files from the pull request's own branch, so such a change softens its own review.
 
 ## Cap the nits
 
@@ -41,4 +41,4 @@ Report at most five Nits per review, the ones a reader would notice first. Writi
 
 ## Evidence
 
-Cite `file:line` for every finding about this repository's behaviour, not an inference from a name. A finding about what a source says quotes the source.
+Cite `file:line` for every finding about this repository's behaviour. Don't infer behaviour from a name. A finding about what a source says quotes the source.

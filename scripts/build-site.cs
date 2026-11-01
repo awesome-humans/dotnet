@@ -78,7 +78,7 @@ if (!Opinions.DirectoryExists)
 
 List<string> errors = [];
 
-// Other ecosystems may already have staged beside this one, so only this ecosystem's
+// Other ecosystems might already have staged beside this one, so only this ecosystem's
 // directory is cleared.
 string cleared = Path.Combine(docsDirectory, Ecosystem);
 if (Directory.Exists(cleared))
