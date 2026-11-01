@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       # Pinned to a release at least two weeks old when chosen. The justfile is every entry
       # point, so the steps below call its recipes, never dotnet or the scripts directly.
