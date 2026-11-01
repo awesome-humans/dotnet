@@ -36,7 +36,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    | ---------------------------------------------------- | ----------------------------------------------------------------------- |
    | All four criteria met, over two years or more        | **Admit** to the **Citable** table                                      |
    | An independence concern                              | **Admit,** with a usage limit in the notes                              |
-   | Publishing stopped over a year ago                   | **Watch list,** unless the writing continues elsewhere                  |
+   | Publishing stopped over a year ago                   | **Watch list,** unless the writing clearly continues elsewhere          |
    | Strong on depth and accuracy, but short on longevity | **Watch list,** with the blocker recorded                               |
    | An aggregator, such as a link roundup or newsletter  | **Admit,** marked `**Discovery-only.**`. It never appears in `sources:` |
    | Thin on depth, but sound on the other three criteria | **Admit,** marked `**Corroborate.**`                                    |
