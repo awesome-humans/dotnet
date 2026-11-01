@@ -2,9 +2,9 @@
 # request when the known state changes. The runtime, ASP.NET Core, and the SDK ship
 # together per channel.
 #
-# The PR is a TRIGGER, not the update: it refreshes only .github/state/dotnet-releases.json.
-# To fold the release into opinions/ and templates/, run the refresh-dotnet-versions
-# skill against the PR's branch.
+# The pull request is a TRIGGER, not the update: it refreshes only
+# .github/state/dotnet-releases.json. To fold the release into opinions/ and templates/,
+# run the refresh-dotnet-versions skill against the pull request's branch.
 #
 # Note: for the create-pull-request step to work, the repository setting
 # "Allow GitHub Actions to create and approve pull requests" must be enabled
@@ -34,7 +34,7 @@ jobs:
       # `bash -e`, which reports only the LAST command in a pipeline. Without it a failed
       # fetch leaves jq reading empty stdin, which it turns into no output and exit 0.
       # The diff below would read that truncated snapshot as "every channel removed",
-      # and open a trigger PR that deletes the state file instead of updating it.
+      # and open a trigger pull request that deletes the state file instead of updating it.
       - name: Snapshot GA release state
         run: |
           set -euo pipefail
@@ -54,7 +54,8 @@ jobs:
 
           # Guard against a fetch that succeeds but returns something unexpected:
           # replace the checked-in file only once the new one parses and carries channels.
-          # An empty or unparseable snapshot fails the run loudly instead of opening a PR.
+          # An empty or unparseable snapshot fails the run loudly instead of opening a pull
+          # request.
           channels="$(jq '.channels | length' "$snapshot" 2>/dev/null || echo 0)"
           case "$channels" in
             0 | '' | *[!0-9]*)
