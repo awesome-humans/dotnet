@@ -61,7 +61,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 ## Persistence and lifecycle
 
-**Save the topic** to `research/<topic-slug>.md`, with the metadata a topic carries ([AGENTS.md: Metadata](../../AGENTS.md#metadata)), unless the user says the question was a one-off.
+**Save the topic** to `research/<topic-slug>.md`, with the metadata [AGENTS.md: Metadata](../../AGENTS.md#metadata) defines, unless the user says the question was a one-off.
 
 Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the user doesn't want the topic saved, delete the branch and answer in the conversation.
 

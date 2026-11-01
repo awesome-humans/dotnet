@@ -23,7 +23,7 @@ This is **editor-only work, so don't fan it out**. The research did the sweeping
    - Resolve on a new branch and pull request, never on the research branch.
    - The topic's closing section is the promotion plan. It names the target files, and usually the sections. Verify it before you follow it.
 2. **Decide whether to promote or discard.** Ask only if the topic doesn't settle it. **Discard is a normal outcome.** A topic that found "the repository already answers this" confirmed the opinions are complete.
-3. **Check every claim the recommendation rests on against the roster:**
+3. **Check every claim behind the recommendation against the roster:**
    - **Citable roster IDs:** You can promote these claims. Add the IDs to the target's `sources:`.
    - **Watch-list, unvetted, or non-roster sources:** You can't promote these claims as written. Drop the claim, back it with a roster source, or hold it until `vet-source` admits the source. **Never reword an unvetted claim to hide where it came from.**
    - **References:** A named package's own documentation, release notes, issues, and pull requests, or the standard behind a named format. They promote as inline links supporting a roster-sourced claim. They never go in `sources:`, never support a claim alone, and don't belong on the roster ([awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references)).
