@@ -42,5 +42,5 @@ exclude_path = [
   "artifacts",
 ]
 
-# Example URLs that are illustrative and not meant to resolve.
+# Example URLs, which are placeholders, not real links.
 exclude = ["^https://example\\."]
