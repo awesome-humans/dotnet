@@ -2,8 +2,8 @@ name: Attribution
 
 # Fails a pull request whose title, description, or commits carry agent attribution,
 # using the organisation's shared check in awesome-humans/.github. pull_request_target
-# runs the base branch's copy of this file, so a pull request can't edit the check
-# it's held to. The shared job never checks out or runs the pull request's code.
+# runs this file from the base branch, so a pull request can't change the check
+# that runs on it.
 on:
   pull_request_target: # zizmor: ignore[dangerous-triggers] the job never checks out the pull request
     types: [opened, edited, reopened, synchronize]

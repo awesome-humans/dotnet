@@ -1,6 +1,6 @@
 # Review instructions
 
-These instructions tune automated pull request review in this repository. The agent reviewer (currently CodeRabbit) reads them, and so can any other agent asked to review a pull request here. They add review-specific guidance, such as what each severity means, to [AGENTS.md](AGENTS.md), which stays the source of every other rule.
+These instructions guide automated pull request reviews in this repository. The agent reviewer (currently CodeRabbit) reads them, and so can any other agent asked to review a pull request here. They add review-specific guidance, such as what each severity means, to [AGENTS.md](AGENTS.md), which stays the source of every other rule.
 
 This repository is mostly prose. A finding matters when it would put a wrong or unsourced recommendation in front of a reader, or break a check or a skill that keeps the content current.
 
@@ -18,7 +18,7 @@ Reserve Important for these. Everything else is Nit at most.
 - **A broken skill.** A `SKILL.md` step that names a recipe, script, template, branch prefix, or file that doesn't exist, or that contradicts `AGENTS.md`.
 - **A wrong check.** In `scripts/`, a check that passes on input it should reject, logic copied between scripts instead of shared through an `#:include` helper, or a script that no longer runs on its own with `dotnet run`. `build-site.cs` is the one the website runs that way.
 - **An unsafe workflow.** A `pull_request_target` job that checks out or runs the pull request's code, a secret passed to a step that doesn't need it, or an action pinned to a tag instead of a commit SHA.
-- **A loosened review.** A change to `REVIEW.md` or `AGENTS.md` that drops an Important item, raises the nit cap, or skips a path or a class of finding, without saying why. The agent reviewer reads both files from the pull request's own branch, so such a change softens its own review.
+- **Weaker review rules.** A change to `REVIEW.md` or `AGENTS.md` that drops an Important item, raises the nit cap, or skips a path or a class of finding, without saying why. The agent reviewer reads both files from the pull request's own branch, so such a change softens its own review.
 
 ## Cap the nits
 
