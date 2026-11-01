@@ -3,14 +3,14 @@ name: Markdown
 on:
   pull_request:
   # A pull request can only restore caches saved on its own ref or on main, so
-  # without a run on main after each merge, every PR restores the cache from the
-  # last weekly run and discards it as older than --max-cache-age.
+  # without a run on main after each merge, every pull request restores the cache
+  # from the last weekly run and discards it as older than --max-cache-age.
   push:
     branches: [main]
   workflow_dispatch:
   schedule:
     # Weekly, Mondays 06:00 UTC. The link check runs on a schedule, not only on
-    # PRs, because links break even when the repository doesn't change.
+    # pull requests, because links break even when the repository doesn't change.
     - cron: "0 6 * * 1"
 
 permissions:
@@ -18,8 +18,9 @@ permissions:
 
 jobs:
   format-and-lint:
-    # Formatting, structure, and spelling are deterministic and offline, so they gate PRs.
-    # On a push to main they would only repeat what the merged PR already passed.
+    # Formatting, structure, and spelling are deterministic and offline, so they gate pull
+    # requests. On a push to main they would only repeat what the merged pull request
+    # already passed.
     if: github.event_name != 'schedule' && github.event_name != 'push'
     runs-on: ubuntu-latest
     steps:
@@ -60,10 +61,10 @@ jobs:
 
   links:
     runs-on: ubuntu-latest
-    # Blocking everywhere, PRs included: the citations in opinions/ and the
-    # roster are the substance of this repository, so a dead link is a content
+    # Blocking everywhere, pull requests included: the citations in opinions/ and
+    # the roster are the substance of this repository, so a dead link is a content
     # defect that shouldn't merge. A third-party host that's down fails an
-    # otherwise good PR. lychee.toml keeps that rare with retries, a browser
+    # otherwise good pull request. lychee.toml keeps that rare with retries, a browser
     # user agent, and 403 and 429 accepted. Re-run the job once the host
     # recovers, instead of merging past it.
     # audit-freshness reads this workflow's result as its link-health signal.

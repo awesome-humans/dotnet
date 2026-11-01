@@ -28,7 +28,7 @@ jobs:
     uses: awesome-humans/website/.github/workflows/deploy.yml@7060a983f66061107384b0b84c41852cc7c8cd94 # main
     with:
       preview-alias: pr-dotnet-${{ github.event.pull_request.number }}
-    # Only the two secrets deploy.yml declares, not every secret this repository holds.
+    # Pass only the secrets deploy.yml needs, not `secrets: inherit`.
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
