@@ -43,11 +43,9 @@ Use one structured pipeline, exported over OTLP. Treat logs and traces as one te
       .CreateLogger();
   ```
 
-  **With the default pipeline, run a collector on localhost, and let it own the durable queue.** `AddOtlpExporter` batches in memory with no disk queue, so a failed export or a killed process loses what was in flight. An export to the loopback address succeeds while the backend is down. Configure retry and disk buffering in the collector, not the app.
+  **With the default pipeline, run a collector on localhost, and let it own the durable queue.** `AddOtlpExporter` batches in memory with no disk queue, so a failed export or a killed process loses what was in flight. An export to the loopback address succeeds while the backend is down. Configure retry and disk buffering in the collector, not the app. ([Microsoft Learn: .NET observability with OpenTelemetry](https://learn.microsoft.com/dotnet/core/diagnostics/observability-with-otel))
 
   Otherwise, use Serilog with the chain above. Skipping both is acceptable when the logs are for diagnostics, not an audit trail, and someone decided that on purpose.
-
-  ([Microsoft Learn: .NET observability with OpenTelemetry](https://learn.microsoft.com/dotnet/core/diagnostics/observability-with-otel))
 
 ## Levels
 

@@ -70,7 +70,7 @@ Use one solution format and Central Package Management, and pin versions at the 
   - It's been GA since .NET 8, and it's still opt-in in the .NET 10 SDK. [templates/Directory.Build.props](../templates/Directory.Build.props) opts in.
   - MSBuild reads the property before it evaluates the project, so set it only in `Directory.Build.props` or on the command line. In a project file, it fails the build with `NETSDK1199`.
   - For a single-TFM project, the last folder is the lowercase configuration, with no TFM: `artifacts/bin/App/release`. Update hard-coded `bin/<Config>/<tfm>` paths in Dockerfiles, CI steps, and scripts in the same commit.
-  - `dotnet new gitignore` already ignores `artifacts/`.
+  - `dotnet new gitignore` already ignores `artifacts/`. ([dotnet/sdk: Gitignore template](https://github.com/dotnet/sdk/blob/main/template_feed/Microsoft.DotNet.Common.ItemTemplates/content/Gitignore/.gitignore))
 
   ([Microsoft Learn: Artifacts output layout](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output), [.NET Blog: Announcing .NET 8 Preview 3](https://devblogs.microsoft.com/dotnet/announcing-dotnet-8-preview-3/))
 

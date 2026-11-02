@@ -115,10 +115,8 @@ Two template files enforce this together. [templates/Directory.Build.props](../t
 
 Don't construct it either of these ways:
 
-- **The parameterless constructor** starts at midnight on 2000-01-01 UTC, a date the test never states. Pass the start explicitly, even when the test passes at any instant.
+- **The parameterless constructor** starts at midnight on 2000-01-01 UTC, a date the test never states. Pass the start explicitly, even when the test passes at any instant. ([Microsoft Learn: FakeTimeProvider constructors](https://learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor))
 - **`DateTimeOffset.UtcNow` as the start** brings back the real clock. The test's dates change on every run, and whether it crosses a DST or month boundary is luck. For the one-clock rule, see [testing.md](testing.md#deterministic-time).
-
-([Microsoft Learn: FakeTimeProvider constructors](https://learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor))
 
 For date-sensitive logic, test these instants:
 
