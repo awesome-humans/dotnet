@@ -47,7 +47,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - **Label preview features as the freshness policy requires:** "in preview as of `<date>`, not yet an opinion". Keep them separate from GA guidance.
    - Where sources disagree, say so, and weigh them. Don't blur them into a vague middle.
    - **Compile every code sample** against the declared `targets` before you save the topic, as [AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions) asks of an opinion. Under the sample, record the SDK, the package versions, and the date you compiled it. For a fragment that can't compile alone, compile the smallest complete example that hosts it, and say so. CI doesn't compile research, so a sample you didn't build reaches `resolve-research` unchecked.
-   - **Check every package the topic recommends for security advisories** at the version it names: run `dotnet list package --vulnerable` in the project you compiled the samples in, or look the package up in the [GitHub Advisory Database](https://github.com/advisories). Record the date, and say so in the topic if an advisory is open.
+   - **Check every package the topic recommends for security advisories** at the version it names. Run `dotnet list package --vulnerable` in the project you compiled the samples in, or look the package up in the [GitHub Advisory Database](https://github.com/advisories). Record the date, and if an advisory is open, say so in the topic.
 6. **Answer follow-up questions** from what you've gathered. Sweep again, in the same order, only when a question goes beyond it.
 7. **Close the loop.** End with what the research revealed about the repository, and recommend the matching skill. Never run it unprompted.
 
@@ -61,13 +61,13 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 ## Persistence and lifecycle
 
-**Save the topic** to `research/<topic-slug>.md`, with the metadata a topic carries ([AGENTS.md: Metadata](../../AGENTS.md#metadata)), unless the user says the question was a one-off.
+**Save the topic** to `research/<topic-slug>.md`, with the metadata [AGENTS.md: Metadata](../../AGENTS.md#metadata) defines, unless the user says the question was a one-off.
 
 Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the user doesn't want the topic saved, delete the branch and answer in the conversation.
 
 **Title the commit and pull request `research: <topic>`,** such as `research: union types`, not `docs: research <topic>`. The separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic researched. `resolve-research` sets the type of the resolution commits.
 
-Every saved topic is eventually promoted or discarded by `resolve-research`, and both end with the file deleted, so a topic on disk is unresolved. `audit-freshness` reports a topic past its tolerance.
+`resolve-research` eventually promotes or discards every saved topic, and both end with the file deleted, so a topic on disk is unresolved. `audit-freshness` reports a topic past its tolerance.
 
 ## Edge cases
 

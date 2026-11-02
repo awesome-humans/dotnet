@@ -68,9 +68,8 @@ foreach (string name in opinions)
     resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, forbidden));
 }
 
-// research/ is staging, and legitimately empty once every topic has been resolved —
-// resolve-research deletes the file it finishes with. So an empty or absent directory
-// is not a finding.
+// research/ is staging, and empty once every topic is resolved, because resolve-research
+// deletes the file it finishes with. An empty or absent directory isn't a finding.
 string[] research = MarkdownIn("research");
 
 foreach (string path in research)
@@ -115,9 +114,9 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsFo
 
     foreach (string field in dateFields)
     {
-        // YamlDotNet may hand back an already-parsed date for an unquoted YAML scalar;
-        // a comment header always arrives as text. Only text needs the format check —
-        // a value YAML read as a date is one that was written as one.
+        // YamlDotNet might hand back an already-parsed date for an unquoted YAML scalar,
+        // but a comment header always arrives as text. Only text needs the format check:
+        // a value YAML read as a date was written as one.
         if (fields.Contains(field) && fields[field] is string text && !IsIsoDate(text))
         {
             errors.Add($"{path}: '{field}' is '{text}', not an ISO 8601 date (YYYY-MM-DD)");

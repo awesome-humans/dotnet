@@ -6,7 +6,7 @@ This repository defines opinionated best practices for building with .NET. This 
 
 - **The source of truth for "what good looks like" in .NET.** Each topic has one file under `opinions/`, and [README.md: Scope](README.md#scope) indexes them.
 - **Copy-paste-ready template files** under `templates/` that encode those opinions.
-- **Kept current.** Every resource records when it was last reviewed. The skills under `skills/` keep the content current.
+- **Skills that keep it current,** under `skills/`. Every resource records when it was last reviewed.
 
 The repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills specification](https://agentskills.io/specification), and nothing here assumes a specific agent.
 
@@ -27,7 +27,7 @@ When you generate or review .NET code for another project:
 
 - **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: a house profile's preference from experience, such as the repository owner's, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. It sits in a house block beside the sourced text and cites `house:<profile>`, and [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) is the canonical definition of its format, its marking, how it relates to the sourced text, and contributor adoption. Work from that section, not a paraphrase.
 - **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never carries one. For the definition, see [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references).
-- **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "coming next" note, but never make it the opinion.
+- **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "Coming next" note, but never make it the opinion.
 - **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content sweep (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
 - **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on why it lost.
 - **List every new file under `opinions/` in `README.md`, in two places:**
@@ -49,7 +49,7 @@ When you generate or review .NET code for another project:
 
   A skill that sets its own title says so in its `SKILL.md`, as `research-topic` and `resolve-research` do.
 
-- **Fill in the pull request template a skill names.** The templates are the organisation's, in [awesome-humans/.github: `PULL_REQUEST_TEMPLATE/`](https://github.com/awesome-humans/.github/tree/main/PULL_REQUEST_TEMPLATE), and each skill's "Open a pull request" step names its own. Fill in every section, and pass the result to `gh pr create --body-file`. A section that doesn't apply says "Doesn't apply" and why, instead of being deleted. The description becomes the squash commit's message, so write it as [Writing style: Commit messages and pull requests](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#commit-messages-and-pull-requests) describes: delete the template's guidance comment, leave out tables, checkboxes, and inline links, and end with a `Closes: #<number>` or `Refs: #<number>` trailer for each related issue, written as `awesome-humans/<repository>#<number>` when the issue is in another repository. A person opening a pull request in the browser gets the default template, which links the others.
+- **Fill in the pull request template a skill names.** The templates are the organisation's, in [awesome-humans/.github: `PULL_REQUEST_TEMPLATE/`](https://github.com/awesome-humans/.github/tree/main/PULL_REQUEST_TEMPLATE), and each skill's "Open a pull request" step names its own. Fill in every section, and pass the result to `gh pr create --body-file`. If a section doesn't apply, write "Doesn't apply" and the reason, instead of deleting it. The description becomes the commit message, so follow [Writing style: Commit messages and pull requests](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#commit-messages-and-pull-requests). Delete the template's guidance comment, and leave out tables, checkboxes, and inline links. End with a `Closes: #<number>` or `Refs: #<number>` trailer for each related issue, written as `awesome-humans/<repository>#<number>` for an issue in another repository. A person opening a pull request in the browser gets the default template, which links the others.
 
 - **Update a diagram in the same commit as the skill or lifecycle it shows.** `README.md` has diagrams of the maintenance pipeline and of the research and source-admission lifecycles. They're for orientation only, and the prose here and in the `SKILL.md` files stays canonical. `scripts/export-diagrams.cs` draws them as SVG into `assets/diagrams/`. To change one, edit the data at the top of the diagram's class, rerun the script, and commit both. Never edit an SVG by hand: CI reruns the script and fails on any difference.
 
@@ -136,7 +136,7 @@ Follow [awesome-humans/website: Writing style](https://github.com/awesome-humans
 - **Write for a working .NET developer.** Assume they know C#, the BCL, and the SDK. Don't explain what dependency injection or a `Task` is.
 - **Use .NET's spelling for a .NET concept.** `System.Globalization` and `IStringLocalizer` give _globalization_ and _localization_, down to the file name `opinions/globalization.md`. EF Core's materialization gives _materialized_. A word that only shares a stem with an API keeps its British spelling: "a behaviour change in SQLite", even though MAUI has a `Behavior` type.
 
-The shared page's exception for pre-release features covers the "coming next" note about a .NET preview that [Maintaining this repository](#maintaining-this-repository) allows.
+The shared page's exception for pre-release features covers the "Coming next" note about a .NET preview that [Maintaining this repository](#maintaining-this-repository) allows.
 
 ## Writing style for opinions
 

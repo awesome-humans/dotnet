@@ -22,7 +22,7 @@ _Nothing waiting._
 
 ## Woven
 
-These four were first woven by rewriting the sourced text, as rule 4 then required. On 2026-10-18, each became a house block or region beside the sourced text, as [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) now describes.
+The first four were woven by rewriting the sourced text, as rule 4 then required. On 2026-10-18, each became a house block or region beside the sourced text, as [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) now describes.
 
 | Date       | Profile         | Opinion                                                                                                                 | Woven into                                                                                                                                                           | Provenance |
 | ---------- | --------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |

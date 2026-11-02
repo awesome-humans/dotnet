@@ -28,7 +28,7 @@
 //
 // It also holds the roster itself to its shape: each table sorted by id, and no id
 // used twice. Both are conventions a reader cannot spot in a 30-row table, and the
-// second is worse than untidy — the parse below is keyed by id, so a duplicate would
+// second is worse than untidy: the parse below is keyed by id, so a duplicate would
 // silently decide a source's bucket by whichever row came last.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
@@ -311,7 +311,7 @@ foreach (string name in Opinions.Names())
     string path = Opinions.PathOf(name);
 
     // A file with no frontmatter, or unreadable frontmatter, is reported in detail by
-    // validate-metadata.cs — this check stays quiet about it.
+    // validate-metadata.cs, so this check skips it.
     if (Frontmatter.Read(deserializer, path, out _) is not IDictionary frontmatter)
     {
         continue;

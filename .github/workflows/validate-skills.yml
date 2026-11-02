@@ -43,8 +43,8 @@ jobs:
       - name: Install skills-ref
         run: pip install -r .github/requirements.txt
 
-      # global.json decides the SDK, per opinions/ci.md — CI must not float a version
-      # the repository did not choose.
+      # global.json sets the minimum SDK and how far it rolls forward, per
+      # opinions/ci.md.
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           global-json-file: global.json

@@ -1,4 +1,4 @@
-// Shared by the checks and the site build that read house opinions — pulled in with
+// Shared by the checks and the site build that read house opinions, through
 // `#:include House.cs`. Not a file-based app itself: it declares no top-level statements.
 //
 // A house opinion belongs to a house profile, and sits beside the sourced text it

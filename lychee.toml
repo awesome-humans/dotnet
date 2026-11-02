@@ -1,6 +1,6 @@
 # Link checking for this repository.
 #
-# lychee is a Rust binary, not an npm package — `npx lychee` installs an
+# lychee is a Rust binary, not an npm package: `npx lychee` installs an
 # unrelated 2013 database ORM of the same name. Run it locally with Docker:
 #
 #   docker run --rm -v "$PWD":/input:ro -w /input lycheeverse/lychee:latest \
@@ -10,7 +10,7 @@
 #
 # The citations in opinions/ and the roster in AWESOME-HUMANS.md are the
 # substance of this repository, so a dead link is a content defect, not a
-# formatting nit. Microsoft Learn reorganises URLs regularly and blogs migrate;
+# formatting nit. Microsoft Learn reorganises URLs and blogs migrate, so
 # audit-freshness treats a failure here as a staleness finding.
 
 # Throttle requests: this checks a few hundred third-party hosts.
@@ -24,14 +24,13 @@ max_retries = 3
 user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/awesome-humans/dotnet)"
 
 # 429 is rate limiting, not a broken link. 403 is usually bot protection on
-# hosts that a human browser reaches fine — checked manually when it appears.
+# hosts that a browser reaches. Check it manually when it appears.
 accept = ["200", "203", "206", "403", "429"]
 
-# templates/artifacts/ is build output from smoke-testing the templates —
-# Directory.Build.props sets UseArtifactsOutput, so obj/, bin/ and generated
-# files all land there. package-lock.json needs no entry: lychee
-# extracts no URLs from it (verified by passing the file explicitly — zero
-# registry links found).
+# templates/artifacts/ is build output from smoke-testing the templates:
+# Directory.Build.props sets UseArtifactsOutput, so obj/, bin/, and generated
+# files all land there. package-lock.json needs no entry, because lychee
+# extracts no URLs from it. Passing the file explicitly finds no registry links.
 exclude_path = [
   "node_modules",
   "templates/artifacts",
@@ -43,5 +42,5 @@ exclude_path = [
   "artifacts",
 ]
 
-# Example URLs that are illustrative and not meant to resolve.
+# Example URLs, which are placeholders, not real links.
 exclude = ["^https://example\\."]
