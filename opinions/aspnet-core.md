@@ -40,7 +40,9 @@ An image keeps the runtime it was built with until you rebuild it. For how often
 - `AddRequestTimeouts` only registers the services. Set the limit with a named policy, or with `WithRequestTimeout` on the endpoint.
 - The middleware cancels `HttpContext.RequestAborted` and waits. A handler that ignores the token runs to completion and returns 200. A 504 means the cancellation reached the middleware, not that the database stopped.
 - Give reads and exports separate policies instead of one global value.
-- Exclude streaming responses with `DisableRequestTimeout()`. After a response starts, the middleware can't replace it with a 504. ([Microsoft Learn: Request timeouts middleware](https://learn.microsoft.com/aspnet/core/performance/timeouts), [Jovanović: Your ASP.NET Core endpoints don't have a timeout](https://www.milanjovanovic.tech/blog/your-aspnetcore-endpoints-dont-have-a-timeout))
+- Exclude streaming responses with `DisableRequestTimeout()`. After a response starts, the middleware can't replace it with a 504.
+
+([Microsoft Learn: Request timeouts middleware](https://learn.microsoft.com/aspnet/core/performance/timeouts), [Jovanović: Your ASP.NET Core endpoints don't have a timeout](https://www.milanjovanovic.tech/blog/your-aspnetcore-endpoints-dont-have-a-timeout))
 
 ```csharp
 builder.Services.AddRequestTimeouts(options =>
@@ -115,7 +117,9 @@ record CreateOrder(
     [property: Range(1, 100)] int Quantity);
 ```
 
-Validation applies to every endpoint. To exclude one, call `.DisableValidation()` on it. ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+Validation applies to every endpoint. To exclude one, call `.DisableValidation()` on it.
+
+([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 
 ### OpenAPI and API versioning
 
@@ -167,7 +171,9 @@ app.MapGet("/api/orders/{id}", async (string id, HybridCache cache, Cancellation
         cancellationToken: ct));
 ```
 
-Concurrent callers for the same key share one factory call. A distributed backend, such as Redis or Postgres, plugs in through your existing `IDistributedCache` registration, and the call sites don't change. ([.NET Blog: Hello HybridCache! Streamlining Cache Management for ASP.NET Core Applications](https://devblogs.microsoft.com/dotnet/hybrid-cache-is-now-ga/), [.NET Blog: High-Performance Distributed Caching with .NET and Postgres on Azure](https://devblogs.microsoft.com/dotnet/high-performance-distributed-caching-dotnet-postgres-azure/))
+Concurrent callers for the same key share one factory call. A distributed backend, such as Redis or Postgres, plugs in through your existing `IDistributedCache` registration, and the call sites don't change.
+
+([.NET Blog: Hello HybridCache! Streamlining Cache Management for ASP.NET Core Applications](https://devblogs.microsoft.com/dotnet/hybrid-cache-is-now-ga/), [.NET Blog: High-Performance Distributed Caching with .NET and Postgres on Azure](https://devblogs.microsoft.com/dotnet/high-performance-distributed-caching-dotnet-postgres-azure/))
 
 ### HTTP caching defaults
 
@@ -184,7 +190,9 @@ Concurrent callers for the same key share one factory call. A distributed backen
 - Take the credential type from your own sign-in path.
 - Reissue the claim. You can't change the existing claims collection, so sign the user out and back in with `SignInWithClaimsAsync()`.
 
-Drop this note when a shipped release fixes the issue. ([Bowden: Set the amr claim when using passkeys authentication in ASP.NET Core](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/))
+Drop this note when a shipped release fixes the issue.
+
+([Bowden: Set the amr claim when using passkeys authentication in ASP.NET Core](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/))
 
 ### Authorization by default
 
@@ -268,7 +276,9 @@ Apply a named policy to each endpoint or group with `[EnableCors]`, instead of o
 - `Permissions-Policy`
 - HSTS outside development
 
-For an interactive Blazor circuit, prefer the nonce, and fall back to hashes. ([Bowden: Implement a secure Blazor Web application using OpenID Connect and security headers](https://damienbod.com/2024/04/15/implement-a-secure-blazor-web-application-using-openid-connect-and-security-headers/), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/), [NetEscapades.AspNetCore.SecurityHeaders: README](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders#readme))
+For an interactive Blazor circuit, prefer the nonce, and fall back to hashes.
+
+([Bowden: Implement a secure Blazor Web application using OpenID Connect and security headers](https://damienbod.com/2024/04/15/implement-a-secure-blazor-web-application-using-openid-connect-and-security-headers/), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/), [NetEscapades.AspNetCore.SecurityHeaders: README](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders#readme))
 
 ```csharp
 app.UseSecurityHeaders(new HeaderPolicyCollection()
@@ -310,6 +320,8 @@ app.MapGet("/redirect", (string url) =>
 
 - MVC and Razor Pages still validate tokens: "There's basically no simple way today to opt into _only_ using the new approach."
 - A cross-origin request is rejected unless its origin is in the CORS allowed-origins list.
-- A request that carries no browser signals passes through. ([Lock: Automatic CSRF protection based on Fetch Metadata headers](https://andrewlock.net/exploring-the-dotnet-11-preview-6-automatic-csrf-protection-based-on-fetch-metadata-http-headers/))
+- A request that carries no browser signals passes through.
+
+([Lock: Automatic CSRF protection based on Fetch Metadata headers](https://andrewlock.net/exploring-the-dotnet-11-preview-6-automatic-csrf-protection-based-on-fetch-metadata-http-headers/))
 
 The rejection breaks one identity flow. A SPA that exchanges an authorization code at the token endpoint sends a cross-origin POST: "It's cross-origin. It's a POST. It will be rejected." It isn't settled yet whether a provider callback that uses `response_mode=form_post` counts as legitimate. ([Abuhakmeh: Understanding .NET 11 Automatic CSRF Protection](https://duendesoftware.com/blog/20260901-understanding-dotnet-11-automatic-csrf-protection)) A same-origin BFF, as [Browser clients](#browser-clients-cookies-with-a-bff-holding-the-tokens) recommends, never sends that request from the browser.

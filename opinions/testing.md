@@ -104,7 +104,9 @@ public class BasketTests
 - **If the app ships with Native AOT, add a native test run beside the managed suite.** Run the managed suite on every change for fast feedback. For the native run, publish one representative C# test project with `<PublishAot>true</PublishAot>`, and run the executable. Trimming and reflection-free serialization change behaviour that a managed run can't see.
   - `System.Text.Json` usually fails first, with `InvalidOperationException`, because reflection-based serialization is off. Fix it with a `[JsonSerializable]` context in the app, not in the test.
   - The native project references `xunit.v3.aot.mtp-v2` instead of `xunit.v3`. The AOT package replaces the reflection-based one, so it can't share a project with the managed suite.
-  - Keep F# test projects in the managed run. NUnit doesn't support Native AOT. ([xUnit.net: Testing with Native AOT](https://xunit.net/docs/getting-started/v3/native-aot), [.NET Blog: Test what you ship: MSTest and Native AOT](https://devblogs.microsoft.com/dotnet/mstest-source-generation/), [Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
+  - Keep F# test projects in the managed run. NUnit doesn't support Native AOT.
+
+  ([xUnit.net: Testing with Native AOT](https://xunit.net/docs/getting-started/v3/native-aot), [.NET Blog: Test what you ship: MSTest and Native AOT](https://devblogs.microsoft.com/dotnet/mstest-source-generation/), [Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
 
 ## Integration testing
 

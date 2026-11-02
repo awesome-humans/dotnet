@@ -39,7 +39,9 @@ Don't assume:
 - That one country agrees on DST. Its zones can differ.
 - That an abbreviation names one zone. "BST" matches three.
 
-Anything less than an IANA ID loses information. ([Meziantou: 43 Misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
+Anything less than an IANA ID loses information.
+
+([Meziantou: 43 Misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
 
 ## Persistence: split by kind of data, not by layer
 
@@ -83,7 +85,9 @@ The cost is an adapter at every boundary the BCL types cross natively: `NodaTime
 - `GetUtcNow()` and `GetLocalNow()`, which return `DateTimeOffset`.
 - `GetTimestamp()` and `GetElapsedTime()` for measurement.
 - `CreateTimer(...)`.
-- `LocalTimeZone`, so one process can serve users in different zones. ([Microsoft Learn: What is TimeProvider?](https://learn.microsoft.com/dotnet/standard/datetime/timeprovider-overview))
+- `LocalTimeZone`, so one process can serve users in different zones.
+
+([Microsoft Learn: What is TimeProvider?](https://learn.microsoft.com/dotnet/standard/datetime/timeprovider-overview))
 
 ```csharp
 // Register once; TimeProvider.System is the production implementation.
@@ -111,8 +115,8 @@ Two template files enforce this together. [templates/Directory.Build.props](../t
 
 Don't construct it either of these ways:
 
-- **The parameterless constructor** starts at midnight on 2000-01-01 UTC, a date the test never states. Pass the start explicitly, even when the test passes at any instant.
-- **`DateTimeOffset.UtcNow` as the start** brings back the real clock. The test's dates change on every run, and whether it crosses a DST or month boundary is luck. ([Microsoft Learn: FakeTimeProvider constructors](https://learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor)) For the one-clock rule, see [testing.md](testing.md#deterministic-time).
+- **The parameterless constructor** starts at midnight on 2000-01-01 UTC, a date the test never states. Pass the start explicitly, even when the test passes at any instant. ([Microsoft Learn: FakeTimeProvider constructors](https://learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor))
+- **`DateTimeOffset.UtcNow` as the start** brings back the real clock. The test's dates change on every run, and whether it crosses a DST or month boundary is luck. For the one-clock rule, see [testing.md](testing.md#deterministic-time).
 
 For date-sensitive logic, test these instants:
 
@@ -121,7 +125,9 @@ For date-sensitive logic, test these instants:
 - A leap day.
 - A year boundary where the calendar year and the ISO week year differ: 2022-01-02 is in week 52 of 2021.
 
-([Meziantou: 43 Misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) For the test framework stack, see [testing.md](testing.md).
+([Meziantou: 43 Misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
+
+For the test framework stack, see [testing.md](testing.md).
 
 ## UI and hosts
 

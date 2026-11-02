@@ -30,14 +30,20 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 - **Read WebAssembly `HttpClient` responses asynchronously.** In .NET 10, response streaming is on by default, which is a breaking change. `response.Content.ReadAsStreamAsync()` returns a `BrowserHttpReadStream` instead of a `MemoryStream`, and it rejects synchronous calls such as `Stream.Read(Span<byte>)`. Fix the call site and keep the default, because streaming keeps large responses off the heap. If a dependency you don't own makes the synchronous call, opt out:
   - Per request, with `requestMessage.SetBrowserResponseStreamingEnabled(false)`.
   - Per project, with `<WasmEnableStreamingResponse>false</WasmEnableStreamingResponse>`.
-  - With an environment variable. ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), last updated 2026-08-31)
+  - With an environment variable.
+
+  ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), last updated 2026-08-31)
+
 - **If users can switch culture at run time, set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>`.** A WebAssembly app otherwise loads only its own culture's data. Remove `<BlazorEnableTimeZoneSupport>`, which is superseded. For details, see [globalization.md](globalization.md).
 
 ### Component testing
 
 - **Unit-test components with bUnit, and keep Playwright for end-to-end tests.** Microsoft has no component testing framework of its own, and Microsoft Learn recommends bUnit, which renders components in-process without a browser.
   - Assert with `MarkupMatches`, never string equality on markup. It compares HTML semantically, so whitespace and attribute order don't fail the test.
-  - Test behaviour that depends on real JavaScript interop or DOM changes end to end with Playwright. A faked `IJSRuntime` proves nothing about it. ([Microsoft Learn: Test components in ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/test))
+  - Test behaviour that depends on real JavaScript interop or DOM changes end to end with Playwright. A faked `IJSRuntime` proves nothing about it.
+
+  ([Microsoft Learn: Test components in ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/test))
+
 - **Use bUnit 2.x with xUnit v3,** the stack in [testing.md](testing.md). In 2.x, the test class inherits `BunitContext` and renders with `Render<T>()`. ([bUnit: Writing tests](https://bunit.dev/docs/getting-started/writing-tests.html))
 
   <!-- Verified: compiles and passes on net10.0 / bunit 2.9.0 / xunit.v3 4.0.0 (2026-08-18) -->
@@ -129,7 +135,10 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 - **Avalonia's XAML hot reload is GA since 2026-09-02, and it's paid.** `AvaloniaUI.DiagnosticsSupport.HotReload` runs on Windows, macOS, Linux, iOS, and Android.
   - `dotnet watch` drives it through the same .NET Hot Reload mechanism as MAUI.
   - It patches changed elements in place, so view state survives the edit.
-  - It needs an `AvaloniaUILicenseKey` and a Plus, Pro, or Enterprise subscription. ([Avalonia: Hot Reload for Avalonia](https://avaloniaui.net/blog/hot-reload-ga))
+  - It needs an `AvaloniaUILicenseKey` and a Plus, Pro, or Enterprise subscription.
+
+  ([Avalonia: Hot Reload for Avalonia](https://avaloniaui.net/blog/hot-reload-ga))
+
 - **Don't build on Impeller yet.** Avalonia and Google's Flutter team are building an experimental GPU-first Impeller renderer for .NET. A maintainer paused the work on 2026-03-09 to ship v12, and no restart had been announced by 2026-09-24. Stay on the default Skia renderer. ([Avalonia: Avalonia Partnering with Google's Flutter Team to Bring Impeller Rendering to .NET](https://avaloniaui.net/blog/avalonia-partners-with-google-s-flutter-t-eam-to-bring-impeller-rendering-to-net); [Avalonia: Impeller rendering subsystem, discussion #20838](https://github.com/AvaloniaUI/Avalonia/discussions/20838))
 
 ## Source redundancy
