@@ -30,8 +30,8 @@ Use one structured pipeline, exported over OTLP. Treat logs and traces as one te
 - **Control tracing cost in the `ActivityListener.Sample` callback, not with a sink filter.** Sampling runs when the activity is created. The listener can decline it, create an ID-only activity that still propagates context, or record it fully. A recorded activity costs about a microsecond, and one declined at sampling costs under 100 ns. Dropping spans at the exporter pays the full cost first, and breaks trace trees, because children don't know their parent was dropped. ([Microsoft Learn: Distributed tracing concepts](https://learn.microsoft.com/dotnet/core/diagnostics/distributed-tracing-concepts), [Blumhardt: .NET's `ActivityListener` sampling API](https://nblumhardt.com/2024/10/activity-listener-sampling/))
 
 - **Export over OTLP to a collector, and keep vendor SDKs out of application code.** The default pipeline is `Microsoft.Extensions.Logging` with the OpenTelemetry exporter. With one wire format, the backend is a deployment choice, not a code dependency.
-  - Choose Serilog for message-template logging and its sinks. `SerilogTracing` then sends `Activity` spans through the same pipeline, so traces and logs share enrichers and sinks.
-  - Serilog isn't the default because it adds a second configuration surface beside `ILogger`'s. ([Blumhardt: SerilogTracing](https://nblumhardt.com/2024/01/serilog-tracing/))
+  - Choose Serilog for message-template logging and its sinks. `SerilogTracing` then sends `Activity` spans through the same pipeline, so traces and logs share enrichers and sinks. ([Blumhardt: SerilogTracing](https://nblumhardt.com/2024/01/serilog-tracing/))
+  - Serilog isn't the default because it adds a second configuration surface beside `ILogger`'s.
 
 - **Give the log pipeline a durable local fallback, and expect it to lag.** A network collector goes down eventually, and that's when you need the logs. Chain a rolling file behind the network sink. Network sinks retry with backoff before they report failure, so the file usually starts receiving events about ten minutes into an outage. To change that, set `BatchingOptions.RetryTimeLimit`. ([Blumhardt: Serilog fallback sinks](https://nblumhardt.com/2024/10/fallback-logging/), [Blumhardt: Visualizing the Serilog 4.1 batch retry algorithm](https://nblumhardt.com/2024/10/retry-time-limit/))
 
@@ -45,7 +45,9 @@ Use one structured pipeline, exported over OTLP. Treat logs and traces as one te
 
   **With the default pipeline, run a collector on localhost, and let it own the durable queue.** `AddOtlpExporter` batches in memory with no disk queue, so a failed export or a killed process loses what was in flight. An export to the loopback address succeeds while the backend is down. Configure retry and disk buffering in the collector, not the app.
 
-  Otherwise, use Serilog with the chain above. Skipping both is acceptable when the logs are for diagnostics, not an audit trail, and someone decided that on purpose. ([Microsoft Learn: .NET observability with OpenTelemetry](https://learn.microsoft.com/dotnet/core/diagnostics/observability-with-otel))
+  Otherwise, use Serilog with the chain above. Skipping both is acceptable when the logs are for diagnostics, not an audit trail, and someone decided that on purpose.
+
+  ([Microsoft Learn: .NET observability with OpenTelemetry](https://learn.microsoft.com/dotnet/core/diagnostics/observability-with-otel))
 
 ## Levels
 

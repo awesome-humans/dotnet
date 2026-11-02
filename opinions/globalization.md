@@ -112,13 +112,18 @@ In production, four details decide whether it works:
 Strongly typed resource classes lost on portability. .NET has no cross-platform generator for them: on net10.0, `<GenerateSource>true</GenerateSource>` on an `EmbeddedResource` builds cleanly and generates nothing.
 
 - The designer needs Visual Studio and a checked-in `.Designer.cs` file.
-- `Microsoft.CodeAnalysis.ResxSourceGenerator` works cross-platform, and dotnet/runtime uses it, but it's still prerelease only. Revisit this when a stable version ships. ([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
+- `Microsoft.CodeAnalysis.ResxSourceGenerator` works cross-platform, and dotnet/runtime uses it, but it's still prerelease only. Revisit this when a stable version ships.
+
+([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
 
 ### Client-side: ship the globalization data the app can actually reach
 
 - **Blazor WebAssembly loads only the app's own culture data by default.** If users can switch culture at run time, set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>`.
   - Time zone data is trimmed separately, with `<InvariantTimezone>true</InvariantTimezone>`. Delete `<BlazorEnableTimeZoneSupport>`, which it replaces.
-  - In .NET 10, standalone WebAssembly apps also load data for `CultureInfo.DefaultThreadCurrentUICulture`. .NET 9 and earlier used only `DefaultThreadCurrentCulture`. ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0))
+  - In .NET 10, standalone WebAssembly apps also load data for `CultureInfo.DefaultThreadCurrentUICulture`. .NET 9 and earlier used only `DefaultThreadCurrentCulture`.
+
+  ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0))
+
 - **.NET MAUI has no localization abstraction.** It uses `.resx` files per culture and `CultureInfo.DefaultThreadCurrentUICulture`, with nothing like `RequestLocalization`. To switch culture at run time, re-resolve bindings yourself. ([Microsoft Learn: .NET MAUI localization](https://learn.microsoft.com/dotnet/maui/fundamentals/localization?view=net-maui-10.0))
 - **Avalonia reads `.resx` in XAML with `{x:Static}` against a generated resources class.** Switching language without a restart needs a custom markup extension, and the community packages that provide one aren't vetted. The cited source is Avalonia's own documentation, so trust it for how this works, not for whether to use it. The caveat in [ui-frameworks.md](ui-frameworks.md) applies. ([Avalonia Docs: Localizing using ResX](https://docs.avaloniaui.net/docs/app-development/localizing))
 
@@ -132,7 +137,10 @@ The two missing pieces fail differently:
   - An app that names a culture throws `CultureNotFoundException` at startup. `PredefinedCulturesOnly` defaults to true here, so the `RequestLocalizationOptions` above fail before the first request.
   - An app that only uses `CurrentCulture` raises no error: it formats and compares as invariant.
   - The setting is an environment variable, so `<InvariantGlobalization>false</InvariantGlobalization>` doesn't undo it. If you install `icu-libs` and `icu-data-full` yourself, clear the variable too.
-  - The `-extra` images don't set the variable. ([Microsoft Learn: Environment variables take precedence in app runtime configuration settings](https://learn.microsoft.com/dotnet/core/compatibility/deployment/9.0/envvar-precedence), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [dotnet/dotnet-docker: runtime-deps 10.0 Dockerfiles](https://github.com/dotnet/dotnet-docker/tree/main/src/runtime-deps/10.0))
+  - The `-extra` images don't set the variable.
+
+  ([Microsoft Learn: Environment variables take precedence in app runtime configuration settings](https://learn.microsoft.com/dotnet/core/compatibility/deployment/9.0/envvar-precedence), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [dotnet/dotnet-docker: runtime-deps 10.0 Dockerfiles](https://github.com/dotnet/dotnet-docker/tree/main/src/runtime-deps/10.0))
+
 - **Without tzdata, `TimeZoneInfo.FindSystemTimeZoneById` throws `TimeZoneNotFoundException`.** Invariant mode doesn't change that. `RUN apk add --no-cache tzdata` fixes it by itself. ([Gordon: TimeZoneNotFoundException in Alpine Based Docker Images](https://www.stevejgordon.co.uk/timezonenotfoundexception-in-alpine-based-docker-images))
 
 ### Localization makes dates look right, not be right

@@ -25,7 +25,9 @@ Use one solution format and Central Package Management, and pin versions at the 
   - Paths resolve relative to `global.json`, so this works from any subdirectory.
   - `errorMessage` replaces the bare version error for a contributor who has neither SDK.
   - Only SDK commands, such as `dotnet build` and `dotnet run`, read `paths`. The apphost and `dotnet app.dll` ignore it.
-  - The folder holds a full SDK of several hundred megabytes, so never commit it. ([Versluis: Test .NET MAUI Preview SDKs Locally with global.json sdk.paths](https://blog.verslu.is/maui/test-dotnet-maui-preview-sdk-locally/), [Microsoft Learn: test prerelease SDKs locally](https://learn.microsoft.com/dotnet/core/tools/test-prerelease-sdk-locally))
+  - The folder holds a full SDK of several hundred megabytes, so never commit it.
+
+  ([Versluis: Test .NET MAUI Preview SDKs Locally with global.json sdk.paths](https://blog.verslu.is/maui/test-dotnet-maui-preview-sdk-locally/), [Microsoft Learn: test prerelease SDKs locally](https://learn.microsoft.com/dotnet/core/tools/test-prerelease-sdk-locally))
 
   ```json
   {
@@ -68,7 +70,10 @@ Use one solution format and Central Package Management, and pin versions at the 
   - It's been GA since .NET 8, and it's still opt-in in the .NET 10 SDK. [templates/Directory.Build.props](../templates/Directory.Build.props) opts in.
   - MSBuild reads the property before it evaluates the project, so set it only in `Directory.Build.props` or on the command line. In a project file, it fails the build with `NETSDK1199`.
   - For a single-TFM project, the last folder is the lowercase configuration, with no TFM: `artifacts/bin/App/release`. Update hard-coded `bin/<Config>/<tfm>` paths in Dockerfiles, CI steps, and scripts in the same commit.
-  - `dotnet new gitignore` already ignores `artifacts/`. ([Microsoft Learn: Artifacts output layout](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output), [.NET Blog: Announcing .NET 8 Preview 3](https://devblogs.microsoft.com/dotnet/announcing-dotnet-8-preview-3/))
+  - `dotnet new gitignore` already ignores `artifacts/`.
+
+  ([Microsoft Learn: Artifacts output layout](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output), [.NET Blog: Announcing .NET 8 Preview 3](https://devblogs.microsoft.com/dotnet/announcing-dotnet-8-preview-3/))
+
 - **Keep `global.json`, `Directory.Build.props`, `Directory.Packages.props`, and `.editorconfig` at the repository root.** MSBuild searches up from each project for the nearest `Directory.Build.props`, and Central Package Management finds `Directory.Packages.props` the same way, so every project inherits them. ([Microsoft Learn: Customize the build by folder](https://learn.microsoft.com/visualstudio/msbuild/customize-by-directory), [Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management))
 - **Put test projects beside the code they test, never inside it.** `tests/Example.Library.Tests` mirrors `src/Example.Library`, named `<Project>.Tests`. For what goes in them, see [testing.md](testing.md).
 - **Inside a project, group by feature, not by pattern.** For modules and vertical slices, see [architecture.md](architecture.md).

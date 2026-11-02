@@ -39,6 +39,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 6. **For the claims this harvest added or changed, check their citations** with steps 2 to 4 of [`review-opinions`](../review-opinions/SKILL.md). Include each changed claim's citations even when their own lines didn't change, such as a citation on the line after the claim it supports. You extract the pairs and triage the results, and worker agents check the pages. Act on each category from its step 4 before you go on:
    - **Contradicted** or **Unsupported:** Fix the claim or its citation, or drop the edit.
    - **Drifted:** Update the quote to match the page.
+   - **Misplaced citation:** Move the citation to a line of its own after the block it covers.
    - **Missing source:** Drop the claim, and propose the source with `vet-source`. Never merge it unsourced.
    - **Not verified:** List the page and the reason in the pull request.
 7. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: the date, the window, and what changed, as briefly as the existing entries. Per-source findings go in the pull request, not the table.

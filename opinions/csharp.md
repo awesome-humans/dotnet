@@ -42,7 +42,9 @@ public static class OrderExtensions
 
 - **Use an extension member for a pure query or transform over a type you don't own.** For a type you own, write an instance method. The exception is a domain entity you keep as plain data, with validation, formatting, and mapping outside it.
 - **Use a property when the member states a fact about the instance.** `IsEmpty` and `WordCount` read naturally as properties and awkwardly as calls.
-- **Convert a method to a property only while you're already changing its callers.** The conversion breaks every call site. ([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [Microsoft Learn: What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [.NET Blog: C# 14 - Exploring extension members](https://devblogs.microsoft.com/dotnet/csharp-exploring-extension-members/), [Microsoft Learn: Extension methods design guidelines](https://learn.microsoft.com/dotnet/standard/design-guidelines/extension-methods), [dotnet/csharplang: Extension members](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extensions.md))
+- **Convert a method to a property only while you're already changing its callers.** The conversion breaks every call site.
+
+([.NET Blog: Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [Microsoft Learn: What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [.NET Blog: C# 14 - Exploring extension members](https://devblogs.microsoft.com/dotnet/csharp-exploring-extension-members/), [Microsoft Learn: Extension methods design guidelines](https://learn.microsoft.com/dotnet/standard/design-guidelines/extension-methods), [dotnet/csharplang: Extension members](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-14.0/extensions.md))
 
 ### The `field` keyword
 
@@ -113,7 +115,9 @@ public static decimal DiscountFor(Customer customer) => customer switch
 };
 ```
 
-Arms match from top to bottom, so put the most specific first. Keep a two-way `if` as an `if`. ([Microsoft Learn: Pattern matching](https://learn.microsoft.com/dotnet/csharp/fundamentals/functional/pattern-matching))
+Arms match from top to bottom, so put the most specific first. Keep a two-way `if` as an `if`.
+
+([Microsoft Learn: Pattern matching](https://learn.microsoft.com/dotnet/csharp/fundamentals/functional/pattern-matching))
 
 ### Collection expressions
 
@@ -133,7 +137,9 @@ List<int> ids = [1, 2, 3];
 int[] merged = [.. first, .. second];
 ```
 
-The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`. ([Microsoft Learn: Collection expressions](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions))
+The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`.
+
+([Microsoft Learn: Collection expressions](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions))
 
 ### Records
 
@@ -165,7 +171,9 @@ The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`
 
 - Never use `#nullable disable` in new code.
 - Use the null-forgiving operator `!` only where flow analysis can't see the value, such as a property a serializer or test setup fills in. Justify every `!` in review.
-- Keep `ArgumentNullException.ThrowIfNull` at public API boundaries. Annotations exist only at compile time, so they don't stop unannotated or reflection-based callers. ([Microsoft Learn: Nullable reference types](https://learn.microsoft.com/dotnet/csharp/nullable-references))
+- Keep `ArgumentNullException.ThrowIfNull` at public API boundaries. Annotations exist only at compile time, so they don't stop unannotated or reflection-based callers.
+
+([Microsoft Learn: Nullable reference types](https://learn.microsoft.com/dotnet/csharp/nullable-references))
 
 ### Analyzers
 
@@ -182,7 +190,9 @@ The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`
 - **`EnforceCodeStyleInBuild`:** Reports `.editorconfig` style rules (`IDExxxx`) in the build, not only in the IDE, so CI and editors agree.
 - **Meziantou.Analyzer:** Adds correctness rules the SDK lacks, such as culture-sensitive string operations, `CancellationToken` forwarding, and async mistakes. Add other analyzers alongside it for rules it doesn't cover. Skip StyleCop if `dotnet format` already enforces your formatting.
 
-Fix each diagnostic, or suppress it with a written justification. Never lower severity across the board. ([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm), [Meziantou: Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
+Fix each diagnostic, or suppress it with a written justification. Never lower severity across the board.
+
+([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm), [Meziantou: Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
 
 ### Smaller opinions
 
