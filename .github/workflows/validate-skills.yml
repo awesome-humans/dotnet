@@ -27,7 +27,7 @@ jobs:
 
       # Pinned to a release at least two weeks old when chosen. The justfile is every entry
       # point, so the steps below call its recipes, never dotnet or the scripts directly.
-      - uses: taiki-e/install-action@1919c4a95903d2c33e4a221102edca87309fc14b # v2.89.0
+      - uses: taiki-e/install-action@b80e2bb2635f28eb98b9fce1e2f0887e1535c6b2 # v2.90.0
         with:
           tool: just@1.58.0
 
@@ -45,7 +45,7 @@ jobs:
 
       # global.json decides the SDK, per opinions/ci.md — CI must not float a version
       # the repository did not choose.
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
           global-json-file: global.json
 
