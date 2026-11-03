@@ -97,8 +97,6 @@ This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifac
 - If your CI host can't present an OIDC token, use a scoped API key stored as a repository secret, and name an owner to rotate it. nuget.org caps a new key at 30 days. ([.NET Team: Strengthening NuGet Supply Chain Security: Reducing API Key Lifetime](https://devblogs.microsoft.com/dotnet/strengthening-nuget-supply-chain-security-reducing-api-key-lifetime/))
 - Author-sign only if your organisation already runs certificate infrastructure. nuget.org repository-signs every package it serves, and most consumers never verify an author signature. ([Microsoft Learn: Sign a NuGet package](https://learn.microsoft.com/nuget/create-packages/sign-a-package))
 
-**Review by 2026-11-01.** Every nuget.org API key created before 2026-08-17 expires on 2026-11-01. After that date, every key is on the 30-day cap, and you can drop this note.
-
 To protect consumers, pin: locked restore, a pinned SDK, and SHA-pinned actions.
 
 Don't add a signer allow list (`signatureValidationMode` set to `require`, with `trustedSigners` in `nuget.config`) unless you can maintain it. Each certificate rotation fails installs with `NU3034` until you add the new SHA-256 fingerprint beside the old ones. Microsoft rotated its author-signing certificate from 2026-09-23. ([.NET Blog: Microsoft is updating its author-signing certificate starting September 23, 2026](https://devblogs.microsoft.com/dotnet/microsoft-author-signing-certificate-update-2026/))
