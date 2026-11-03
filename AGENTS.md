@@ -147,7 +147,7 @@ The shared page's exception for pre-release features covers the "coming next" no
 - **Use a table when the same attributes repeat across items.** Options, versions, or frameworks compared on the same few points read faster as rows than as parallel paragraphs, as in [datetime.md](opinions/datetime.md). Keep the reasoning in sentences: a cell holds a fact, not the argument for it.
 - **Group sections by topic, and add a new one to its group.** Don't sort them alphabetically or append them to the end of the page. In `templates/`, sort `PackageVersion` and `PackageReference` entries by name, ignoring case, within their `ItemGroup`, and `just validate-template-order` checks it. For the rule, see [awesome-humans/website: Writing style: Order](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#order).
 - **Keep one topic per file under `opinions/`.** Keep each file under about 300 lines, and split it when it grows past that.
-- **Give transition guidance an expiry date.** A note that matters only while the ecosystem changes, such as a migration off a retired tool, opens with `**Review by YYYY-MM-DD.**` and says what ends it. `audit-freshness` reports a marking whose date has passed. Either drop the note, or check that it still applies and re-date it. Never delete the marking alone.
+- **Give transition guidance an expiry date,** such as for a migration off a retired tool, with the `Review by` marking that [awesome-humans/website: Writing style: Content](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#content) defines. `audit-freshness` reports a marking whose date has passed.
 
 ## Workflow
 
