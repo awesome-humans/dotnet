@@ -44,8 +44,4 @@ exclude_path = [
 ]
 
 # Example URLs that are illustrative and not meant to resolve.
-#
-# event-driven.io, the oskar-dudycz roster source, has been missing from DNS
-# since 2026-11-02. Review by 2026-12-01: remove the entry if the domain is back.
-# Otherwise, replace its links and review the source's place on the roster.
-exclude = ["^https://example\\.", "^https://event-driven\\.io/"]
+exclude = ["^https://example\\."]
