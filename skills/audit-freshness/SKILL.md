@@ -82,7 +82,7 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
    - If you're offline, skip the checks you can't run, and say so in the report. Report an unchecked pin as "not verified", never as fresh.
 3. **Evaluate each resource** against the tolerances. Missing or malformed metadata is a high-severity finding.
 
-   Then find every `Review by` marking, as [awesome-humans/website: Writing style: Content](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#content) defines it, with `git grep -nE 'Review by [0-9]{4}-[0-9]{2}-[0-9]{2}'`. It searches every tracked file, so it also finds a marking in a root document, a research topic, or a configuration comment. Skip a line that only mentions a marking in another file.
+   Then find every `Review by` marking, as [awesome-humans/website: Writing style: Content](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#content) defines it, with `git grep -nE 'Review by [0-9]{4}-[0-9]{2}-[0-9]{2}'`. It searches every tracked file, so it also finds a marking in a root document, a research topic, or a configuration comment. Skip a line that only quotes or mentions a marking, because it sets no deadline of its own.
 
 4. **Check the roster.** Flag sources in `AWESOME-HUMANS.md` with no _published writing_ in over a year for `vet-source` re-evaluation. Repository activity doesn't count, because opinions don't cite it.
 5. **Write the report,** most stale first:
