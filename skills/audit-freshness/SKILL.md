@@ -25,7 +25,7 @@ Report what's stale. This skill never edits content. Version drift goes to `refr
 | The `Versions verified against nuget.org … on <date>` comment in the same file    | 90 days, because the pins change faster than the prose                                        |
 | `research/` topics                                                                | 90 days, then reported for `resolve-research`. For details, see [Research](#research)         |
 | `sources:` IDs                                                                    | For the rules, see [Sources](#sources)                                                        |
-| `**Review by YYYY-MM-DD.**` markings in `opinions/` and `templates/`              | Zero past the date. Report each for drop-or-re-date triage                                    |
+| `Review by YYYY-MM-DD` markings in every tracked file                             | Zero past the date. Report each for drop-or-re-date triage                                    |
 | Inbound links to each `opinions/` and `templates/` file                           | Informational, never a finding. For details, see [Inbound links](#inbound-links)              |
 | References cited in `opinions/` and `templates/`                                  | Zero. For details, see [Cited references](#cited-references)                                  |
 | `templates/` still implement what `opinions/` require                             | Zero. For details, see [Templates](#templates)                                                |
@@ -80,7 +80,10 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
 2. **Find the latest released versions** of .NET, C#, and F#, from the same sources as `refresh-dotnet-versions` step 1. Find the latest stable version of every package in `templates/Directory.Packages.props`, with the lookup in `refresh-dotnet-versions` step 4b.
    - Skip SDK band lookups: the `global.json` check reads the pin's shape, not its distance from the newest release.
    - If you're offline, skip the checks you can't run, and say so in the report. Report an unchecked pin as "not verified", never as fresh.
-3. **Evaluate each resource** against the tolerances, including any `**Review by YYYY-MM-DD.**` marking in its body ([AGENTS.md: Writing style for opinions](../../AGENTS.md#writing-style-for-opinions)). Missing or malformed metadata is a high-severity finding.
+3. **Evaluate each resource** against the tolerances. Missing or malformed metadata is a high-severity finding.
+
+   Then find every `Review by` marking, as [awesome-humans/website: Writing style: Content](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#content) defines it, with `git grep -nE 'Review by [0-9]{4}-[0-9]{2}-[0-9]{2}'`. It searches every tracked file, so it also finds a marking in a root document, a research topic, or a configuration comment. Skip a line that only quotes or mentions a marking, because it sets no deadline of its own.
+
 4. **Check the roster.** Flag sources in `AWESOME-HUMANS.md` with no _published writing_ in over a year for `vet-source` re-evaluation. Repository activity doesn't count, because opinions don't cite it.
 5. **Write the report,** most stale first:
    - For each resource: the path, the findings, the days over tolerance, and the skill that fixes it.
