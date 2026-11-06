@@ -1,5 +1,5 @@
 # The Python tools: skills-ref for just validate-skills, and zizmor for just lint.
-# Pinned so a new release arrives as a reviewed Renovate PR, not a silent change
-# to what passes on the next push.
+# Pinned, so a new release arrives in a Renovate pull request for review, instead of
+# changing what CI accepts without anyone noticing.
 skills-ref==0.1.1
 zizmor==1.31.1
