@@ -20,8 +20,9 @@ jobs:
           set -eu
           title="Harvest due: $(date -u '+%B %Y')"
 
-          # List first, so a failed gh call stops the job under set -e. Piped straight into
-          # grep, its failure was masked by the || true, and the job opened a duplicate.
+          # Capture gh's output in a variable, not a pipe, so set -e stops the job if gh fails.
+          # In a pipe into grep, the || true would hide that failure, the count would read 0,
+          # and the job would open a duplicate issue.
           titles=$(gh issue list --state open --search "in:title \"$title\"" --json title --jq '.[].title')
           existing=$(printf '%s\n' "$titles" | grep -Fxc "$title" || true)
           if [ "${existing:-0}" -gt 0 ]; then
@@ -31,11 +32,11 @@ jobs:
 
           url="https://github.com/${GH_REPO}/blob/main"
           body=$(cat <<EOF
-          It is time for the monthly source harvest.
+          The monthly source harvest is due.
 
-          Run the [\`harvest-sources\` skill](${url}/skills/harvest-sources/SKILL.md) to sweep the vetted sources in AWESOME-HUMANS.md for new posts and fold notable guidance into the opinion files.
+          Run the [\`harvest-sources\` skill](${url}/skills/harvest-sources/SKILL.md). It checks each source in AWESOME-HUMANS.md for posts since the last harvest, and folds new guidance into the opinions.
 
-          The date of the last harvest is recorded in the decision log in [AWESOME-HUMANS.md](${url}/AWESOME-HUMANS.md).
+          The decision log in [AWESOME-HUMANS.md](${url}/AWESOME-HUMANS.md) records the date of the last harvest.
           EOF
           )
 

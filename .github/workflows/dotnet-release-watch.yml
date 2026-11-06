@@ -100,4 +100,4 @@ jobs:
             ${{ steps.diff.outputs.summary }}
             ```
 
-            **This PR is a trigger, not the update.** It only refreshes `.github/state/dotnet-releases.json`. To fold the release into the opinions and templates, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill against this branch, then merge both together.
+            **This pull request doesn't update the opinions or templates.** It only refreshes `.github/state/dotnet-releases.json`. To bring them up to date, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill on this branch, and merge its changes with the snapshot in this pull request.

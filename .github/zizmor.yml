@@ -3,7 +3,8 @@
 rules:
   ref-version-mismatch:
     ignore:
-      # Both uses: pin website's main, which moves several times a day, and Renovate
-      # bumps the digest weekly. Between bumps the # main comment always lags, so
-      # the check would fail every pull request for a change outside it.
+      # site-preview.yml pins website's workflows to a commit on main, commented # main.
+      # Renovate bumps the pin weekly, but main moves several times a day, so the pin is
+      # rarely main's head, and the check would fail every pull request over a change
+      # made in website.
       - site-preview.yml
