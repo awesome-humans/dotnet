@@ -27,19 +27,19 @@ Target ASP.NET Core 10, and use minimal APIs for new HTTP APIs.
 
 Container publish builds an OCI image from MSBuild properties such as `ContainerRepository` and `ContainerRegistry`. The base image stays patched with the SDK, and you don't need a Docker daemon to produce a tarball for a scanner. Write a Dockerfile only when you need custom image layers, because a hand-written one drifts from the SDK's. ([Microsoft Learn: When to use a reverse proxy with Kestrel](https://learn.microsoft.com/aspnet/core/fundamentals/servers/kestrel/when-to-use-a-reverse-proxy), [Microsoft Learn: Containerize an app with dotnet publish](https://learn.microsoft.com/dotnet/core/containers/sdk-publish))
 
+An image keeps the runtime it was built with, so rebuild it after every Patch Tuesday, as [security.md: Servicing](security.md#servicing-take-the-monthly-patch) says.
+
 **Never set `ContainerUser` to `root`.** The Microsoft runtime images run as the rootless `app` user on Linux. As root, "if an attacker manages to compromise your container, they'll be able to do pretty much anything in the container". ([Microsoft Learn: Containerize a .NET app reference](https://learn.microsoft.com/dotnet/core/containers/publish-configuration), [Lock: Updates to Docker images in .NET 8](https://andrewlock.net/exploring-the-dotnet-8-preview-updates-to-docker-images-in-dotnet-8/))
 
-An image keeps the runtime it was built with until you rebuild it. For how often to rebuild, see [security.md: Servicing](security.md#servicing-take-the-monthly-patch).
-
-**Let the layer that terminates TLS own HTTPS redirection and HSTS.** If the proxy redirects to HTTPS, "there's no need to use HTTPS redirection middleware", so drop `UseHttpsRedirection()`, and leave the HSTS header to the proxy too. Don't call `UseHsts()` in development, because "the HSTS settings are highly cacheable by browsers". ([Microsoft Learn: Enforce HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl))
+**Redirect to HTTPS and send HSTS wherever TLS terminates.** If the proxy redirects to HTTPS, "there's no need to use HTTPS redirection middleware", so drop `UseHttpsRedirection()`, and leave the HSTS header to the proxy too. Don't call `UseHsts()` in development, because "the HSTS settings are highly cacheable by browsers". ([Microsoft Learn: Enforce HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl))
 
 ### Request timeouts
 
-**Give every endpoint a timeout, and pass the cancellation token to the work it starts.** ASP.NET Core sets no request timeout by default. A stalled query keeps using resources after the response stops being useful, and the proxy in front of your app decides when to give up and what the client sees.
+**Give every endpoint a timeout, and pass the request's `CancellationToken` to every async call the handler makes.** ASP.NET Core sets no request timeout by default. Without one, a stalled query keeps running after the client has stopped waiting, and whatever sits in front of the app, a proxy or the client itself, decides when to give up and what the client sees.
 
 - `AddRequestTimeouts` only registers the services. Set the limit with a named policy, or with `WithRequestTimeout` on the endpoint.
-- The middleware cancels `HttpContext.RequestAborted` and waits. A handler that ignores the token runs to completion and returns 200. A 504 means the cancellation reached the middleware, not that the database stopped.
-- Give reads and exports separate policies instead of one global value.
+- On timeout, the middleware cancels `HttpContext.RequestAborted` but doesn't stop the handler. A handler that ignores the token runs to completion and returns 200. A 504 only means the handler threw on cancellation, not that the database stopped the query.
+- Size each policy to its endpoints instead of setting one global value. A 3-second API read and a 30-second report export, as in the sample below, need separate policies.
 - Exclude streaming responses with `DisableRequestTimeout()`. After a response starts, the middleware can't replace it with a 504.
 
 ([Microsoft Learn: Request timeouts middleware](https://learn.microsoft.com/aspnet/core/performance/timeouts), [Jovanović: Your ASP.NET Core endpoints don't have a timeout](https://www.milanjovanovic.tech/blog/your-aspnetcore-endpoints-dont-have-a-timeout))
@@ -61,7 +61,7 @@ app.MapGet("/orders/{id:guid}", async (Guid id, AppDbContext db, CancellationTok
 app.MapGet("/events", StreamEvents).DisableRequestTimeout();
 ```
 
-To test a timeout, run without a debugger attached. Timeouts don't fire under one. ([dotnet/aspnetcore: RequestTimeoutsMiddleware.cs](https://github.com/dotnet/aspnetcore/blob/6e62760191a731f63d79b49fad7eda0aaf855cf3/src/Http/Http/src/Timeouts/RequestTimeoutsMiddleware.cs#L31))
+Timeouts don't fire while a debugger is attached, so test them without one. ([dotnet/aspnetcore: RequestTimeoutsMiddleware.cs](https://github.com/dotnet/aspnetcore/blob/6e62760191a731f63d79b49fad7eda0aaf855cf3/src/Http/Http/src/Timeouts/RequestTimeoutsMiddleware.cs#L31))
 
 ### Rate limiting
 
@@ -70,7 +70,7 @@ To test a timeout, run without a debugger attached. Timeouts don't fire under on
 - Partition by a stable identity, such as the authenticated user or the API key tier. Never partition by a value the client controls, such as a spoofable IP header: "If you create partitions by using user input, your app becomes vulnerable to Denial of Service (DoS) attacks". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#testing-endpoints-with-rate-limiting))
 - To partition anonymous traffic, use `HttpContext.Connection.RemoteIpAddress`, never the raw `X-Forwarded-For` header. The forwarded headers middleware from [Hosting and deployment](#hosting-and-deployment) sets that property from the header, and accepts it only from a proxy in `KnownProxies` or a known network, because otherwise "IP spoofing attacks are possible". ([Microsoft Learn: Configure ASP.NET Core to work with proxy servers and load balancers](https://learn.microsoft.com/aspnet/core/host-and-deploy/proxy-load-balancer))
 - Bound the number of partitions, because "Each distinct key creates and caches its own limiter". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#chain-limiters-in-a-named-policy), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
-- Use the concurrency limiter on expensive endpoints, such as uploads and report generation, where in-flight work is the limit that matters. It "doesn't cap the number of requests in a time period", so it doesn't replace a time-based limiter on a public endpoint. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#rate-limiter-algorithms), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
+- Use the concurrency limiter on expensive endpoints, such as uploads and report generation, to cap how many run at once. It "doesn't cap the number of requests in a time period", so it doesn't replace a time-based limiter on a public endpoint. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#rate-limiter-algorithms), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
 
 ```csharp
 builder.Services.AddRateLimiter(options =>
@@ -89,14 +89,32 @@ app.UseRateLimiter();
 app.MapGet("/api/orders", () => Results.Ok()).RequireRateLimiting("api");
 ```
 
-Each node enforces its own limits, so this controls fairness and abuse, not DDoS. Put DDoS protection at the edge, in a WAF or CDN. Load-test your limits before you ship them. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit))
+The limiters keep their counts in memory, so each app instance enforces its own limits. That makes rate limiting a guard against unfair use and abuse, not DDoS. Put DDoS protection in front of the app, in a WAF or CDN. Load-test your limits before you ship them. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit))
 
 ### Observability: propagate trace context across async boundaries
 
-**When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only HTTP: ASP.NET Core reads the trace context from incoming requests, and `HttpClient` writes it on outgoing ones, "with no special coding by the app developer". ([Microsoft Learn: Distributed tracing concepts](https://learn.microsoft.com/dotnet/core/diagnostics/distributed-tracing-concepts#coordinate-across-process-boundaries)) Message queues, background jobs, outbox tables, and scheduled work need it done by hand.
+**When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only HTTP: ASP.NET Core reads the trace context from incoming requests, and `HttpClient` writes it on outgoing ones, "with no special coding by the app developer". ([Microsoft Learn: Distributed tracing concepts](https://learn.microsoft.com/dotnet/core/diagnostics/distributed-tracing-concepts#coordinate-across-process-boundaries)) Message queues, background jobs, outbox tables, and scheduled work lose the context unless you inject it into the message and extract it in the consumer:
 
-1. Inject `new PropagationContext(Activity.Current?.Context ?? default, default)` with `Propagators.DefaultTextMapPropagator`, and store the result with the message. With no current activity, the default context injects nothing instead of throwing. The empty `Baggage` keeps it to the trace context.
-2. In the consumer, extract it with the same propagator, and start the new `ActivityKind.Consumer` activity with the extracted `ActivityContext` as its parent. When many messages feed one operation, attach each context as an `ActivityLink` instead.
+```csharp
+var propagator = Propagators.DefaultTextMapPropagator;
+
+// Producer: write the trace context into the message headers.
+propagator.Inject(
+    new PropagationContext(Activity.Current?.Context ?? default, default),
+    message.Headers,
+    (headers, key, value) => headers[key] = value);
+
+// Consumer: read it back, and parent the new activity on it.
+var parent = propagator.Extract(
+    default,
+    message.Headers,
+    (headers, key) => headers.TryGetValue(key, out var value) ? [value] : []);
+
+using var activity = source.StartActivity(
+    "orders process", ActivityKind.Consumer, parent.ActivityContext);
+```
+
+With no current activity, the `default` context injects nothing instead of throwing. When many messages feed one operation, attach each extracted context to the new activity as an `ActivityLink` instead of a parent.
 
 Propagate only the trace context. Never put `Baggage` on a message: it inflates every payload, and it "can expose sensitive information" that an upstream service put in it. "In most cases, propagating just the trace context is sufficient." ([Meziantou: Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm), for the procedure and `Baggage`)
 
@@ -106,11 +124,9 @@ Propagate only the trace context. Never put `Baggage` on a message: it inflates 
 
 ```csharp
 builder.Services.AddValidation();
-```
 
-```csharp
 app.MapPost("/api/orders", (CreateOrder order) =>
-    TypedResults.Created($"/api/orders/1", order));
+    TypedResults.Created("/api/orders/1", order));
 
 record CreateOrder(
     [property: Required] string Sku,
@@ -127,8 +143,8 @@ Validation applies to every endpoint. To exclude one, call `.DisableValidation()
 
 - To also write the document to disk during `dotnet build`, add `Microsoft.Extensions.ApiDescription.Server`. Do this when a build step consumes the file, such as the Kiota client in [Typed clients](#typed-clients). Set `<OpenApiDocumentsDirectory>` to choose where the file goes. The build runs the app's entry point against a mock server, so guard startup code that needs live infrastructure.
 - Set `<GenerateDocumentationFile>true</GenerateDocumentationFile>`, so the source generator copies your XML doc comments into the document.
-- Use named methods as handlers. A lambda's doc comments don't reach the document.
-- Version APIs with `Asp.Versioning` v10 (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Call `WithDocumentPerVersion()` to get one document per version:
+- Use named methods as handlers, because the generator reads doc comments only from methods, not from lambdas.
+- Version APIs with `Asp.Versioning` (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Call `WithDocumentPerVersion()` to get one document per version:
 
 ```csharp
 builder.Services.AddOpenApi();
@@ -161,9 +177,7 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 ```csharp
 builder.Services.AddHybridCache();
-```
 
-```csharp
 app.MapGet("/api/orders/{id}", async (string id, HybridCache cache, CancellationToken ct) =>
     await cache.GetOrCreateAsync(
         $"order:{id}",
