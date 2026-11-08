@@ -137,6 +137,23 @@ Validation applies to every endpoint. To exclude one, call `.DisableValidation()
 
 ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 
+### Error responses
+
+**Return every API error as problem details: call `AddProblemDetails()`, then `UseExceptionHandler()` and `UseStatusCodePages()` first in the pipeline.** The exception handler then writes problem details for an unhandled exception. The status code pages middleware writes them for any 400 to 599 response that has no body yet, including a routing 404. A client parses one error shape instead of guessing per endpoint.
+
+```csharp
+builder.Services.AddProblemDetails();
+
+var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+```
+
+The middleware writes problem details only when the request's `Accept` header allows JSON: `application/json`, `application/problem+json`, or a wildcard. A client that asks only for another type, such as `text/html`, doesn't get them.
+
+([Microsoft Learn: Handle errors in ASP.NET Core APIs](https://learn.microsoft.com/aspnet/core/fundamentals/error-handling-api))
+
 ### OpenAPI and API versioning
 
 **Generate the OpenAPI document with `Microsoft.AspNetCore.OpenApi`.** It produces OpenAPI 3.1 on .NET 10, and the Web API template already references and calls it. It generates the document at run time, and `MapOpenApi()` serves it at `/openapi/{documentName}.json`.
@@ -197,7 +214,7 @@ Concurrent callers for the same key share one factory call. A distributed backen
 
 **Sign users in with ASP.NET Core Identity's built-in passkey (WebAuthn and FIDO2) support, not passwords or a third-party FIDO library.** In .NET 10, Identity and the Blazor Web App template include passkey management and sign-in. Passkeys resist phishing, leave no server-side secret to leak, and add no dependency. Don't offer a password as the backup method in a new app. For recovery, use an external provider or recovery codes. ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Microsoft Learn: Passkeys in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/authentication/passkeys/))
 
-**Return 401 or 403 from API endpoints, never a sign-in redirect.** In ASP.NET Core 10, the cookie handler skips the redirect for endpoints with `IApiEndpointMetadata`, which `[ApiController]` endpoints, minimal APIs that read or write JSON, `TypedResults` returns, and SignalR get automatically. Any other endpoint, such as a minimal API that returns plain text, still redirects. ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+**Return 401 or 403 from API endpoints, never a sign-in redirect.** In ASP.NET Core 10, the cookie handler returns the status code instead of redirecting when an endpoint carries `IApiEndpointMetadata`. Four kinds of endpoint get it automatically: `[ApiController]` actions, minimal APIs that read or write JSON, endpoints that return `TypedResults`, and SignalR hubs. Make every API endpoint one of these. A minimal API that returns plain text still redirects. The change covers only the cookie handler: in a custom handler, return 401 from the challenge action and 403 from the forbid action for API endpoints. ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Microsoft Learn: Overview of ASP.NET Core Authentication](https://learn.microsoft.com/aspnet/core/security/authentication/))
 
 **Review by 2027-03-31.** Don't trust the `amr` claim after a passkey sign-in. .NET 10 sets it to `pwd` instead of `pop`, the proof-of-possession value that OpenID Connect EAP ACR Values 1.0 defines. Bowden reports that this "is not implemented correctly in ASP.NET Core (.NET 10)", and it's filed as [dotnet/aspnetcore#64881](https://github.com/dotnet/aspnetcore/issues/64881), which is still open. Authorization that reads `amr` for a step-up or multi-factor decision misjudges a passkey. Do one of these instead:
 
