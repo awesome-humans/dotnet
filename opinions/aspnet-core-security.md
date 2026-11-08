@@ -132,6 +132,13 @@ For an interactive Blazor circuit, prefer the nonce, and fall back to hashes.
 app.UseSecurityHeaders(new HeaderPolicyCollection()
     .AddDefaultSecurityHeaders()
     .AddCrossOriginOpenerPolicy(policy => policy.SameOrigin())
+    .AddPermissionsPolicy(policy =>
+    {
+        policy.AddDefaultSecureDirectives();
+        // The secure defaults block WebAuthn, which passkeys need.
+        policy.AddPublickeyCredentialsGet().Self();
+        policy.AddPublickeyCredentialsCreate().Self();
+    })
     .AddContentSecurityPolicy(csp =>
     {
         csp.AddDefaultSrc().Self();
@@ -139,6 +146,12 @@ app.UseSecurityHeaders(new HeaderPolicyCollection()
         csp.AddObjectSrc().None();
         csp.AddFrameAncestors().None();
     }));
+```
+
+`AddDefaultSecurityHeaders()` doesn't send `Permissions-Policy`, so add it, and allow the two `publickey-credentials` features that the secure defaults turn off. In a WebAssembly render mode, add `.WasmUnsafeEval()` to `script-src`, or the browser won't run the .NET runtime. Blazor's `ImportMap` renders an inline script, so give it the request's nonce. ([NetEscapades.AspNetCore.SecurityHeaders: README](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders#readme), [Microsoft Learn: Enforce a Content Security Policy for ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/security/content-security-policy), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/))
+
+```razor
+<ImportMap AdditionalAttributes="@(new Dictionary<string, object> { ["nonce"] = HttpContext?.GetNonce() ?? "" })" />
 ```
 
 Razor encodes output "sourced from variables, unless you work to prevent this behavior". Never pass untrusted input to `HtmlString`, because that "exposes an XSS vulnerability". ([Microsoft Learn: Prevent Cross-Site Scripting (XSS) in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/cross-site-scripting))
@@ -163,7 +176,9 @@ app.MapGet("/redirect", (string url) =>
 .NET 11 previews add automatic CSRF protection based on Fetch Metadata headers. It's on by default for apps built with `WebApplicationBuilder`, and it removes the need for `UseAntiforgery()` in minimal APIs and Blazor SSR.
 
 - MVC and Razor Pages still validate tokens: "There's basically no simple way today to opt into _only_ using the new approach."
-- A cross-origin request is rejected unless its origin is in the CORS allowed-origins list.
+- Only unsafe methods are checked. `GET`, `HEAD`, `OPTIONS`, `TRACE`, and `QUERY` pass.
+- A cross-origin request is denied unless its origin is in the endpoint's CORS allowed-origins list. A policy that allows any origin doesn't count.
+- The middleware decides for every endpoint, but only a component that reads form data enforces the decision: MVC, a minimal API that binds a form, or Blazor SSR. An endpoint that reads JSON isn't blocked.
 - A request that carries no browser signals passes through.
 
 ([Lock: Automatic CSRF protection based on Fetch Metadata headers](https://andrewlock.net/exploring-the-dotnet-11-preview-6-automatic-csrf-protection-based-on-fetch-metadata-http-headers/))
