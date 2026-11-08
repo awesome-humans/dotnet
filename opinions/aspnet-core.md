@@ -151,6 +151,8 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 ```
 
+Neither middleware replaces a body that a handler already wrote. So return a handler's own errors as `TypedResults.Problem()` or `TypedResults.ValidationProblem()`, not as `TypedResults.BadRequest(new { error = "..." })`.
+
 The middleware writes problem details only when the request's `Accept` header allows JSON: `application/json`, `application/problem+json`, or a wildcard. A client that asks only for another type, such as `text/html`, doesn't get them.
 
 ([Microsoft Learn: Handle errors in ASP.NET Core APIs](https://learn.microsoft.com/aspnet/core/fundamentals/error-handling-api))
