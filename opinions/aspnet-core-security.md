@@ -85,7 +85,7 @@ Blazor's documented BFF pattern has the same shape. It proxies API calls "with t
 
 ### The Data Protection key ring outlives the container
 
-**If you run more than one instance, or a container that restarts, persist the key ring to shared storage and protect it at rest. Configure both explicitly.** The ring encrypts authentication cookies and antiforgery tokens. If it doesn't survive a restart, every user is signed out. If replicas don't share it, they can't read each other's cookies. In a container, keep the keys in "A folder that's a Docker volume that persists beyond the container's lifetime... or An external provider, such as Azure Blob Storage... or Redis". ([Microsoft Learn: Configure ASP.NET Core Data Protection](https://learn.microsoft.com/aspnet/core/security/data-protection/configuration/overview))
+**If you run more than one instance, or a container that restarts, persist the key ring to shared storage and protect it at rest. Configure both explicitly.** The ring encrypts authentication cookies and antiforgery tokens. If it doesn't survive a restart, every user is signed out. If replicas don't share it, they can't read each other's cookies. In a container, keep the keys in a Docker volume that outlives the container, or in an external store such as Azure Blob Storage. ([Microsoft Learn: Configure ASP.NET Core Data Protection](https://learn.microsoft.com/aspnet/core/security/data-protection/configuration/overview))
 
 ```csharp
 // Azure.Extensions.AspNetCore.DataProtection.Blobs and .Keys; both extension
@@ -95,9 +95,11 @@ builder.Services.AddDataProtection()
     .ProtectKeysWithAzureKeyVault(keyIdentifier, credential);
 ```
 
-Make both calls. When you name a location, "the data protection system deregisters the default key encryption at rest mechanism, so keys are no longer encrypted at rest". Redis "doesn't persist data by default when restarting", so a Redis restart gives the app new keys and invalidates everything the old ones protected. ([Microsoft Learn: Key storage providers in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/data-protection/implementation/key-storage-providers))
+Make both calls. When you name a location, "the data protection system deregisters the default key encryption at rest mechanism, so keys are no longer encrypted at rest". Don't use Redis unless you've turned on its persistence. It "doesn't persist data by default when restarting", so a restart gives the app new keys and invalidates everything the old ones protected. ([Microsoft Learn: Key storage providers in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/data-protection/implementation/key-storage-providers))
 
-Encryption at rest "doesn't prevent cyberattackers from creating new keys", so lock down the store's permissions as carefully as you encrypt it. Share one ring between applications behind a single proxy only when you configure it on purpose. ([Abuhakmeh: Data Protection for ASP.NET Core Developers](https://duendesoftware.com/blog/20250313-data-protection-aspnetcore-duende-identityserver))
+Encryption at rest "doesn't prevent cyberattackers from creating new keys", so lock down the store's permissions as carefully as you encrypt it. ([Abuhakmeh: Data Protection for ASP.NET Core Developers](https://duendesoftware.com/blog/20250313-data-protection-aspnetcore-duende-identityserver))
+
+**Give each app its own key store, and call `SetApplicationName` with a fixed name.** By default, apps that share a store are isolated only by their content root path, and in a container "the app always has the same path and, therefore, the same application discriminator". Even with different names, apps on one store aren't isolated: "a compromise of one is functionally equivalent to a compromise of both". To share sign-in cookies between apps behind one proxy, point them at the same store and give each the same `SetApplicationName` value. ([Microsoft Learn: Configure ASP.NET Core Data Protection](https://learn.microsoft.com/aspnet/core/security/data-protection/configuration/overview))
 
 ### CSRF defence in depth
 
@@ -166,4 +168,4 @@ app.MapGet("/redirect", (string url) =>
 
 ([Lock: Automatic CSRF protection based on Fetch Metadata headers](https://andrewlock.net/exploring-the-dotnet-11-preview-6-automatic-csrf-protection-based-on-fetch-metadata-http-headers/))
 
-The rejection breaks one identity flow. A SPA that exchanges an authorization code at the token endpoint sends a cross-origin POST: "It's cross-origin. It's a POST. It will be rejected." It isn't settled yet whether a provider callback that uses `response_mode=form_post` counts as legitimate. ([Abuhakmeh: Understanding .NET 11 Automatic CSRF Protection](https://duendesoftware.com/blog/20260901-understanding-dotnet-11-automatic-csrf-protection)) A same-origin BFF, as [Browser clients](#browser-clients-cookies-with-a-bff-holding-the-tokens) recommends, never sends that request from the browser.
+This breaks one OAuth flow if your identity provider runs on .NET 11. A SPA exchanges its authorization code by posting to the provider's token endpoint from its own origin, and the provider's check rejects that request: "It's cross-origin. It's a POST. It will be rejected." A second case is still open. With `response_mode=form_post`, the provider posts back to your app's `/signin-oidc` from its own domain, and it's not yet known whether the check lets that through. ([Abuhakmeh: Understanding .NET 11 Automatic CSRF Protection](https://duendesoftware.com/blog/20260901-understanding-dotnet-11-automatic-csrf-protection)) A same-origin BFF, as [Browser clients](#browser-clients-cookies-with-a-bff-holding-the-tokens) recommends, makes the token request from the server, so the browser never sends it.
