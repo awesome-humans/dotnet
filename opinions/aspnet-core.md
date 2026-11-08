@@ -49,6 +49,7 @@ builder.Services.AddRequestTimeouts(options =>
     options.AddPolicy("report-export", TimeSpan.FromSeconds(30));
 });
 
+var app = builder.Build();
 app.UseRequestTimeouts();
 
 // The token reaches EF Core, so the timeout stops the query.
@@ -123,6 +124,8 @@ Propagate only the trace context. Never put `Baggage` on a message: it inflates 
 ```csharp
 builder.Services.AddValidation();
 
+var app = builder.Build();
+
 app.MapPost("/api/orders", (CreateOrder order) =>
     TypedResults.Created("/api/orders/1", order));
 
@@ -159,7 +162,7 @@ The middleware writes problem details only when the request's `Accept` header al
 - To also write the document to disk during `dotnet build`, add `Microsoft.Extensions.ApiDescription.Server`. Do this when a build step consumes the file, such as the Kiota client in [Typed clients](#typed-clients). Set `<OpenApiDocumentsDirectory>` to choose where the file goes. The build runs the app's entry point against a mock server, so guard startup code that needs live infrastructure.
 - Set `<GenerateDocumentationFile>true</GenerateDocumentationFile>`, so the source generator copies your XML doc comments into the document.
 - Use named methods as handlers, because the generator reads doc comments only from methods, not from lambdas.
-- Version APIs with `Asp.Versioning` (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Call `WithDocumentPerVersion()` to get one document per version:
+- Version APIs with `Asp.Versioning` 10 or later (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Call `WithDocumentPerVersion()` to get one document per version:
 
 ```csharp
 builder.Services.AddOpenApi();
@@ -192,6 +195,8 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 ```csharp
 builder.Services.AddHybridCache();
+
+var app = builder.Build();
 
 app.MapGet("/api/orders/{id}", async (string id, HybridCache cache, CancellationToken ct) =>
     await cache.GetOrCreateAsync(
