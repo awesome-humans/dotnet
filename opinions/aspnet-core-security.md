@@ -17,7 +17,7 @@ sources:
 This file covers security in the HTTP pipeline: authentication, authorization, browser sessions, tokens, the Data Protection key ring, CSRF, CORS, security headers, and open redirects.
 
 - For hosting, request validation, error responses, and the rest of ASP.NET Core, see [aspnet-core.md](aspnet-core.md).
-- For secrets, deserialization, cryptography, and servicing, see [security.md](security.md).
+- For secrets, deserialization, cryptography, and servicing cadence, see [security.md](security.md).
 
 ## Opinions
 
@@ -44,16 +44,20 @@ Drop this note when a shipped release fixes the issue.
 builder.Services.AddAuthorizationBuilder()
     .SetFallbackPolicy(new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
-        .Build());
+        .Build())
+    .AddPolicy("Admin", policy => policy.RequireRole("admin"));
+
+app.MapDelete("/orders/{id}", (int id) => TypedResults.NoContent())
+    .RequireAuthorization("Admin");
 ```
 
-Mark public endpoints with `[AllowAnonymous]`, or call `.AllowAnonymous()` on a minimal API endpoint or group. Give an endpoint that needs more a stricter named policy.
+Mark public endpoints with `[AllowAnonymous]`, or call `.AllowAnonymous()` on a minimal API endpoint or group. Give an endpoint that needs more than a signed-in user, such as a role or a claim, its own named policy. Register the policy with `AddPolicy`, and apply it with `[Authorize("<policy>")]` or `.RequireAuthorization("<policy>")`. ([Microsoft Learn: Policy-based authorization in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/authorization/policies))
 
 ### Browser clients: cookies, with a BFF holding the tokens
 
 **Authenticate a browser app with a cookie. A SPA or Blazor WebAssembly client calls its APIs through a backend for frontend (BFF) that keeps the tokens on the server.** Microsoft Learn recommends cookies for browser apps "because, by default, the browser automatically handles them without exposing them to JavaScript", and reserves tokens for clients that can't use cookies. ([Microsoft Learn: Use Identity to secure a Web API backend for SPAs](https://learn.microsoft.com/aspnet/core/security/authentication/identity-api-authorization))
 
-The difference is what one XSS bug exposes. Any injected script can read a token in `localStorage`. ([Jovanović: JWT Authentication in ASP.NET Core](https://milanjovanovic.tech/blog/jwt-authentication-aspnetcore)) By contrast, "`HttpOnly` cookies cannot be read by JavaScript, so even a successful XSS attack cannot exfiltrate the user's access or refresh token". ([Abuhakmeh: The Cookie Apocalypse Already Happened](https://duendesoftware.com/blog/20260414-the-cookie-apocalypse-already-happened)) Bowden states the client-side rule: "No authentication security logic should be implemented in a client application running in the browser". ([Bowden: Implement BFF using Auth0, Angular and ASP.NET Core](https://damienbod.com/2026/08/10/implement-bff-using-auth0-angular-and-asp-net-core/))
+The reason is XSS. A token in `localStorage` is readable by any script an attacker injects. ([Jovanović: JWT Authentication in ASP.NET Core](https://milanjovanovic.tech/blog/jwt-authentication-aspnetcore)) By contrast, "`HttpOnly` cookies cannot be read by JavaScript, so even a successful XSS attack cannot exfiltrate the user's access or refresh token". ([Abuhakmeh: The Cookie Apocalypse Already Happened](https://duendesoftware.com/blog/20260414-the-cookie-apocalypse-already-happened)) Bowden states the client-side rule: "No authentication security logic should be implemented in a client application running in the browser". ([Bowden: Implement BFF using Auth0, Angular and ASP.NET Core](https://damienbod.com/2026/08/10/implement-bff-using-auth0-angular-and-asp-net-core/))
 
 Set it up in three parts:
 
@@ -69,11 +73,11 @@ Blazor's documented BFF pattern has the same shape. It proxies API calls "with t
 
 **Get tokens from an identity provider, validate the issuer, audience, lifetime, and signing key, and keep permissions out of the token.** Hand identity to "a battle-tested identity provider" instead of issuing your own JWTs, which would make your service responsible for key management and revocation. ([Jovanović: Integrate Keycloak with ASP.NET Core Using OAuth 2.0](https://milanjovanovic.tech/blog/integrate-keycloak-with-aspnetcore-using-oauth-2))
 
-- **Resolve permissions on the server** with `IClaimsTransformation`, and keep tokens small. A permission in a token outlives its revocation: "A revoked permission keeps working until the token expires, which I reproduced as a 201 that should have been a 403". ([Jovanović: Building Secure APIs with Role-Based Access Control in ASP.NET Core](https://milanjovanovic.tech/blog/building-secure-apis-with-role-based-access-control-in-aspnetcore), [Mukesh: Permission-Based Authorization in ASP.NET Core](https://codewithmukesh.com/blog/permission-based-authorization-in-aspnet-core/))
+- **Resolve permissions on the server** with `IClaimsTransformation`, and keep tokens small. A revoked permission in a token "keeps working until the token expires", so a request that should get a 403 gets a 201. ([Jovanović: Building Secure APIs with Role-Based Access Control in ASP.NET Core](https://milanjovanovic.tech/blog/building-secure-apis-with-role-based-access-control-in-aspnetcore), [Mukesh: Permission-Based Authorization in ASP.NET Core](https://codewithmukesh.com/blog/permission-based-authorization-in-aspnet-core/))
 - **Keep access-token lifetimes short,** because you can't revoke a JWT after you issue it. ([Mukesh: JWT Authentication in ASP.NET Core](https://codewithmukesh.com/blog/jwt-authentication-in-aspnet-core/))
 - **Rotate refresh tokens on every use:** issue a new one, and revoke the old one. ([Jovanović: JWT Authentication in ASP.NET Core](https://milanjovanovic.tech/blog/jwt-authentication-aspnetcore))
 
-**Bind each token to its client, and authenticate the client with a key instead of a secret.** Anyone who holds a bearer token can use it. Each of these needs support from your identity provider, so check what it implements before you design around them:
+**Bind each token to its client, and authenticate the client with a key instead of a secret.** Anyone who holds a bearer token can use it. Use the three OAuth extensions below. Each one works only if your identity provider supports it, so check which of them it implements before you design around them:
 
 - **DPoP:** OAuth DPoP binds the token to a key that the client proves it holds. "The access tokens should only be used for what the access tokens are intended for. OAuth DPoP helps force this." ([Bowden: Securing APIs using ASP.NET Core and OAuth 2.0 DPoP](https://damienbod.com/2023/08/14/securing-apis-using-asp-net-core-and-oauth-2-0-dpop/))
 - **Pushed authorization requests (PAR):** Set `PushedAuthorizationBehavior.Require`, available since .NET 9, to move the authorization request parameters out of the browser redirect. ([Bowden: Implement ASP.NET Core OpenID Connect OAuth PAR client with Keycloak using .NET Aspire](https://damienbod.com/2024/09/02/implement-asp-net-core-openid-connect-oauth-par-client-with-keycloak-using-net-aspire/))
