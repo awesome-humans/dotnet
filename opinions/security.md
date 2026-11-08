@@ -74,7 +74,7 @@ static byte[] Encrypt(byte[] key, byte[] plaintext)
 }
 ```
 
-**Let ASP.NET Core Identity hash passwords.** Its `PasswordHasher` runs PBKDF2, and the `IterationCount` "Default is 100,000". ([Microsoft Learn: PasswordHasherOptions.IterationCount](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.identity.passwordhasheroptions.iterationcount)) That's an order of magnitude above what a hand-rolled derivation usually gets. Under the passkeys-first opinion in [aspnet-core.md](aspnet-core-security.md#authentication-passkeys-first), most new apps never hash a password at all.
+**Let ASP.NET Core Identity hash passwords.** Its `PasswordHasher` runs PBKDF2, and the `IterationCount` "Default is 100,000". ([Microsoft Learn: PasswordHasherOptions.IterationCount](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.identity.passwordhasheroptions.iterationcount)) That's an order of magnitude above what a hand-rolled derivation usually gets. Under the passkeys-first opinion in [aspnet-core-security.md](aspnet-core-security.md#authentication-passkeys-first), most new apps never hash a password at all.
 
 To derive a key from a password outside Identity, call `Rfc2898DeriveBytes.Pbkdf2` with a salt of at least 8 bytes from `RandomNumberGenerator`. ([Bowden: Creating hashes in .NET](https://damienbod.com/2024/07/01/creating-hashes-in-net/)) Bowden's 2024 figure of "more than 10000 iterations" is a floor, not a target. No current source states a figure for .NET 10, so justify the count for each application. Argon2id lost because the BCL doesn't ship it.
 
