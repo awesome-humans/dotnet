@@ -39,7 +39,8 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 [`opinions/`](opinions) holds one file per topic:
 
 - **[Application architecture](opinions/architecture.md):** modular monoliths, vertical slices, and when layering is worth its cost
-- **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, authentication, OpenAPI, and performance
+- **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, request validation, error responses, OpenAPI, and performance
+- **[ASP.NET Core security](opinions/aspnet-core-security.md):** authentication, authorization, browser sessions and BFF, tokens, CSRF, CORS, and security headers
 - **[C#](opinions/csharp.md):** the latest released language version and idiomatic use of its features
 - **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain security
 - **[Data access](opinions/data-access.md):** EF Core defaults, set-based operations, and when to drop to SQL
@@ -92,6 +93,7 @@ House opinions are preferences from experience rather than from a vetted source.
 ├── justfile                  ← every local and CI entry point: run `just` to list them
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
 │   ├── architecture.md
+│   ├── aspnet-core-security.md
 │   ├── aspnet-core.md
 │   ├── ci.md
 │   ├── csharp.md

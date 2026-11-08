@@ -9,7 +9,8 @@ sources:
 
 This file covers the security rules outside the HTTP pipeline: secrets, deserialization, cryptography, and servicing cadence.
 
-- For authorization defaults, cookies and BFF, tokens, the Data Protection key ring, CORS, HTTPS, security headers, and open redirects, see [aspnet-core.md](aspnet-core.md).
+- For authentication, authorization defaults, cookies and BFF, tokens, the Data Protection key ring, CSRF, CORS, security headers, and open redirects, see [aspnet-core-security.md](aspnet-core-security.md).
+- For HTTPS and the rest of hosting, see [aspnet-core.md](aspnet-core.md).
 - For supply-chain rules, see [ci.md](ci.md).
 - For parameterised SQL, see [data-access.md](data-access.md).
 
