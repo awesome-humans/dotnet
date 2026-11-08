@@ -10,7 +10,7 @@
     "check": "npm run format:check && npm run lint && npm run spell"
   },
   "devDependencies": {
-    "cspell": "10.4.0",
+    "cspell": "10.4.1",
     "markdownlint-cli2": "0.24.0",
     "prettier": "3.9.10"
   },
