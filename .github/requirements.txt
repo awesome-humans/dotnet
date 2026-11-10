@@ -2,4 +2,4 @@
 # Pinned so a new release arrives as a reviewed Renovate PR, not a silent change
 # to what passes on the next push.
 skills-ref==0.1.1
-zizmor==1.31.1
+zizmor==1.32.0
