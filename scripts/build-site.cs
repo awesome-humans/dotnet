@@ -435,7 +435,7 @@ string WithRepositoryNote(string path, string skill)
 // it. It carries no house opinions, and llms-<profile>.txt carries one profile's. The raw
 // string takes this file's line endings, which a Windows checkout can make CRLF, so the
 // result is normalised to LF like every file the script reads.
-const string LlmsSummary = "Opinionated best practices for building with .NET, distilled from the published writing of people and publications with a proven, multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.";
+const string LlmsSummary = "Opinionated best practices for building with .NET, distilled from the published writing of vetted people and publications with a multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.";
 string skillLinks = string.Join("\n", skills.Select(skill =>
     $"- [{skill.Groups["name"].Value}]({RawLink(Site.SkillPath(skill.Groups["name"].Value), null)}): {skill.Groups["purpose"].Value}"));
 
