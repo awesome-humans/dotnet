@@ -45,7 +45,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    The table decides whether a source is citable. A marking or a usage limit says what a citation can rest on.
 
 5. **For a re-evaluation,** promote a watch-list source whose blocker has cleared. Demote or annotate an admitted source that has published nothing in over a year, or whose quality has dropped.
-   - A source that slips gets either a tighter usage limit in its notes, or the watch list.
+   - A source whose quality drops gets either a tighter usage limit in its notes, or the watch list.
    - A demoted source keeps its row, with a note. **Moving a source to the watch list revokes citation, back catalogue included,** and `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:`.
    - So a demotion is finished only when no opinion cites the source. In the same pull request, re-source each affected claim from a citable source, or drop it. To keep the back catalogue citable, annotate the row instead of demoting it.
 6. **Edit in a worktree** on the branch `vet/<source-id>`, or a slug for a multi-source pass, as [AGENTS.md](../../AGENTS.md) describes:

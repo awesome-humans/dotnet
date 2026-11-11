@@ -16,8 +16,8 @@
 //
 // Three resource kinds carry them two ways. opinions/ and research/ use YAML
 // frontmatter; templates/ use a first-line comment header, because an XML or INI file
-// cannot open with a `---` block and stay valid for the tools that read it. One
-// required set spans both syntaxes, so they cannot drift apart.
+// can't open with a `---` block and stay valid for the tools that read it. One
+// required set spans both syntaxes, so they can't drift apart.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root, through its
@@ -35,7 +35,7 @@ using YamlDotNet.Serialization;
 
 if (!Opinions.DirectoryExists)
 {
-    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here — run this script from the repository root.");
+    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here: run this script from the repository root.");
     return 2;
 }
 
@@ -108,7 +108,7 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsFo
     {
         if (fields.Contains(field))
         {
-            errors.Add($"{path}: field '{field}' is not allowed here");
+            errors.Add($"{path}: field '{field}' isn't allowed here");
         }
     }
 
@@ -131,7 +131,7 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsFo
         string[] sorted = [.. ids.Order(StringComparer.Ordinal)];
         if (!ids.SequenceEqual(sorted, StringComparer.Ordinal))
         {
-            errors.Add($"{path}: 'sources' is not sorted; expected [{string.Join(", ", sorted)}]");
+            errors.Add($"{path}: 'sources' isn't sorted; expected [{string.Join(", ", sorted)}]");
         }
     }
 }

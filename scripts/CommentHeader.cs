@@ -3,7 +3,7 @@
 // statements, and the YamlDotNet reference it compiles beside is declared by the script
 // including it.
 //
-// Templates cannot carry YAML frontmatter: they are XML, INI, JSON and source files that
+// Templates can't carry YAML frontmatter: they're XML, INI, JSON and source files that
 // have to stay valid for the tools that read them, and a `---` block would break every
 // one. The same metadata goes in a comment on the first line instead, and this parses it:
 //
@@ -39,7 +39,7 @@ internal static class CommentHeader
         // checkout does, because CI isn't the only place these checks run.
         string[] buildOutput = ["artifacts", "bin", "obj"];
 
-        // JSON carries no comment syntax, so templates/global.json and the .slnf filter cannot hold
+        // JSON carries no comment syntax, so templates/global.json and the .slnf filter can't hold
         // a header at all. Exactly those two are exempt, the same list AGENTS.md documents, so a
         // headerless JSON file added anywhere else under templates/ fails loudly rather than
         // silently escaping validation. What the two pin is audited against the latest releases
@@ -96,7 +96,7 @@ internal static class CommentHeader
 
         if (!body.StartsWith(Marker, StringComparison.Ordinal))
         {
-            error = $"header does not open with '{Marker}'";
+            error = $"header doesn't open with '{Marker}'";
             return null;
         }
 
@@ -112,7 +112,7 @@ internal static class CommentHeader
             int colon = segment.IndexOf(':');
             if (colon == -1)
             {
-                error = $"header segment '{segment}' is not 'key: value'";
+                error = $"header segment '{segment}' isn't 'key: value'";
                 return null;
             }
 

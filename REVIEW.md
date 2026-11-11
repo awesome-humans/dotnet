@@ -24,7 +24,7 @@ Reserve Important for these. Everything else is Nit at most.
 
 Report at most five Nits per review, the ones a reader would notice first. Writing-style findings, from `AGENTS.md: Writing style` and the shared page it links, are Nit at most.
 
-## Do not report
+## Don't report
 
 - Anything CI already enforces: Prettier, markdownlint, cspell, analyzer warnings in `scripts/`, `just validate-metadata`, `just validate-sources`, `just validate-readme-index`, `just validate-skills`, redrawn diagrams, links, and the site's strict build.
 - Generated files: `package-lock.json`, `packages.lock.json`, `.github/state/`, `assets/diagrams/`, and `artifacts/`.

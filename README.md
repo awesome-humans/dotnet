@@ -1,6 +1,6 @@
 # Awesome Humans of .NET
 
-An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): distilled, opinionated guidance, thanks to awesome humans. Instead of links, it gives your agent guidance from vetted .NET writers, and each opinion cites its sources. It documents current best practice in .NET code, and updates it as .NET evolves.
+An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): opinionated guidance for your coding agent, distilled from the writing of awesome humans. Instead of a list of links, it gives one recommendation per question, and each opinion cites its sources. It documents current best practice in .NET code, and changes as .NET evolves.
 
 The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET.
 
@@ -42,16 +42,16 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 - **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, request validation, error responses, OpenAPI, and performance
 - **[ASP.NET Core security](opinions/aspnet-core-security.md):** authentication, authorization, browser sessions and BFF, tokens, CSRF, CORS, and security headers
 - **[C#](opinions/csharp.md):** the latest released language version and idiomatic use of its features
-- **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain security
-- **[Data access](opinions/data-access.md):** EF Core defaults, set-based operations, and when to drop to SQL
-- **[Dates, times & time zones](opinions/datetime.md):** choosing a type, UTC versus local storage, `TimeProvider`, and testing time
+- **[CI & automation](opinions/ci.md):** supply-chain security, pipeline stages, package signing, and dependency updates
+- **[Data access](opinions/data-access.md):** EF Core set-based writes, date and time mapping, PostgreSQL indexes, raw SQL, and tenant isolation with row-level security
+- **[Dates, times, and time zones](opinions/datetime.md):** choosing a type, UTC versus local storage, `TimeProvider`, and testing time
 - **[F#](opinions/fsharp.md):** domain modelling, mixed C# and F# solutions, and testing
 - **[Globalization & localization](opinions/globalization.md):** culture versus ordinal comparison, ICU and invariant mode, `IStringLocalizer`, and the data that containers drop
 - **[Logging & tracing](opinions/logging.md):** structured logging, source-generated log messages, and OpenTelemetry over OTLP
-- **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, and source generators
-- **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>` and memory, async code, and the GC
+- **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, SDK pinning, Central Package Management, repository layout, `.editorconfig`, and containers
+- **[Runtime & performance](opinions/runtime-performance.md):** measuring first, immutable collections, async code, `Span<T>` and pooling, the GC, and Native AOT
 - **[Security](opinions/security.md):** secrets, deserialization, cryptography, and servicing cadence
-- **[Testing](opinions/testing.md):** choosing a framework, integration tests, deterministic time, and coverage
+- **[Testing](opinions/testing.md):** choosing a framework, integration tests, deterministic time, coverage, and proving that a test can fail
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor and WebAssembly, .NET MAUI, and cross-platform desktop with Avalonia
 - **Libraries:** what to use and what to avoid, covered in the files above
 
@@ -80,7 +80,9 @@ Any other limit, such as a concern about independence or an outdated back catalo
 
 ## House opinions
 
-House opinions are preferences from experience rather than from a vetted source. Each belongs to a house profile, named for the person or organisation that owns it, such as `simon-mckenna`. On awesome-humans.net, every page shows sourced community practice only, until you choose a profile in the header. Agents read `llms-<profile>.txt` instead of `llms.txt`. In this repository, each house opinion is a marked block beside the sourced text it changes, and [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) defines the format and records each one. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
+A house opinion is a preference from experience, not from a vetted source. Each belongs to a house profile, named for the person or organisation that owns it, such as `simon-mckenna`. On awesome-humans.net, every page shows only sourced community practice until you choose a profile in the header. An agent that follows a profile reads `llms-<profile>.txt` instead of `llms.txt`.
+
+In this repository, each house opinion is a marked block beside the sourced text it changes, and [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) defines the format and records each one. Other contributors can propose sourced or experience-based opinions through the organisation's [opinion pull request template](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md).
 
 ## Repository layout
 
@@ -134,7 +136,7 @@ House opinions are preferences from experience rather than from a vetted source.
 
 Agent skills maintain the repository. They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md` file.
 
-The skills split work by cost. Cheaper worker agents run the web searches and source sweeps in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
+The skills split work by cost. Lower-cost worker agents run the web searches and source sweeps in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
 Every skill except the three report-only ones works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the owner's review. Each `SKILL.md` is canonical over this diagram.
 
@@ -200,7 +202,7 @@ One check runs in Python: the Agent Skills specification validator, which is pub
 
 ## Acknowledgement
 
-Agents build and maintain this project, so the [usual disclaimers](https://awesome-humans.net/credits/#disclaimer) apply, but it wouldn't exist without the people whose writing it draws on. Every opinion cites their work. Thank you to all of these awesome humans, and to everyone who supports them.
+Agents build and maintain this project, so the [usual disclaimers](https://awesome-humans.net/credits/#disclaimer) apply. It wouldn't exist without the people whose writing it draws on, and every opinion cites their work. Thank you to all of these awesome humans, and to everyone who supports them.
 
 ## Licence
 

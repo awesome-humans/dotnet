@@ -12,7 +12,7 @@
 // drift: README.md up to its layout section becomes the overview, opinions/, research/, and skills/ are
 // copied in full, the roster is split into a page per section, and every file under
 // templates/ gets a page showing it. llms.txt points agents at the raw files. Relative links are rewritten to the page they now point at, or to GitHub
-// for a file the site does not carry. The navigation is generated too: the opinions take their titles and order from
+// for a file the site doesn't carry. The navigation is generated too: the opinions take their titles and order from
 // README.md's Scope list, and the skills theirs from its Maintenance via skills table, which
 // validate-readme-index.cs already holds to the opinions and skills directories.
 //
@@ -351,7 +351,7 @@ foreach (Match skill in skills)
     string path = Site.SkillPath(name);
     if (!File.Exists(path))
     {
-        errors.Add($"README.md: the skills table lists {name}, but {path} does not exist");
+        errors.Add($"README.md: the skills table lists {name}, but {path} doesn't exist");
         continue;
     }
 
@@ -761,7 +761,7 @@ string Target(string source, string from, string target, bool anchorsToGitHub)
         return Site.GitHub(resolved, Directory.Exists(resolved)) + anchor;
     }
 
-    errors.Add($"{source}: link to {target} resolves to {resolved}, which does not exist");
+    errors.Add($"{source}: link to {target} resolves to {resolved}, which doesn't exist");
     return target;
 }
 

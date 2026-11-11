@@ -59,7 +59,7 @@ jobs:
           channels="$(jq '.channels | length' "$snapshot" 2>/dev/null || echo 0)"
           case "$channels" in
             0 | '' | *[!0-9]*)
-              echo "Release index fetch produced no usable channel count (got '$channels') — leaving the snapshot untouched." >&2
+              echo "Release index fetch produced no usable channel count (got '$channels'). Leaving the snapshot untouched." >&2
               exit 1
               ;;
           esac

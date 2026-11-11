@@ -29,7 +29,7 @@ using System.Xml.Linq;
 if (!Directory.Exists(CommentHeader.TemplatesDirectory))
 {
     Console.Error.WriteLine(
-        $"No {CommentHeader.TemplatesDirectory}/ directory here — run this script from the repository root.");
+        $"No {CommentHeader.TemplatesDirectory}/ directory here: run this script from the repository root.");
     return 2;
 }
 
@@ -82,7 +82,7 @@ foreach (string path in templates)
                 int line = ((IXmlLineInfo)group).LineNumber;
                 string label = (string?)group.Attribute("Label") is string text ? $" '{text}'" : "";
                 errors.Add(
-                    $"{path}:{line}: the {item} entries in ItemGroup{label} are not sorted; "
+                    $"{path}:{line}: the {item} entries in ItemGroup{label} aren't sorted; "
                     + $"expected {string.Join(", ", sorted)}");
             }
         }

@@ -93,7 +93,7 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
 ## Edge cases
 
 - **A repository with no opinions yet:** Report that there's nothing to check. Don't pass.
-- **House content** (`house:<profile>` in `sources:`, and that profile's house blocks or regions; see HOUSE-OPINIONS.md): The reserved ID is never an unknown-source finding, and never suggest removing it. `scripts/validate-sources.cs` fails a build where the ID and its blocks don't appear together, or `**House:**` sits outside a block. Review a house block's age with its file, and never count it as stale sourced text.
+- **House content,** which is `house:<profile>` in `sources:` and that profile's house blocks or regions, as HOUSE-OPINIONS.md describes: The reserved ID is never an unknown-source finding, and never suggest removing it. `scripts/validate-sources.cs` fails a build where the ID and its blocks don't appear together, or `**House:**` sits outside a block. Review a house block's age with its file, and never count it as stale sourced text.
 - **Files that can't carry a comment header:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
   - `.slnx` is XML and carries a header, so it isn't exempt.
   - `scripts/validate-metadata.cs` enforces this two-file list in CI, so any other headerless JSON under `templates/` fails there.

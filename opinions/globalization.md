@@ -15,11 +15,11 @@ sources:
 
 # Globalization & localization
 
-The mechanism is settled: `.resx` resources behind `IStringLocalizer<T>`, culture selection through request localization middleware, and ICU for culture data on every platform. The trouble comes from three defaults:
+Localize with `.resx` resources behind `IStringLocalizer<T>`, select the culture with the request localization middleware, and use ICU (International Components for Unicode) for culture data on every platform. The bugs come from three defaults:
 
-- Culture leaks into machine-facing strings.
-- Invariant mode arrives with a template, not by choice.
-- Container images ship without the data the runtime needs.
+- Format, parse, and compare calls use the current culture, even for text that a machine reads.
+- A project template turns on invariant mode before anyone decides whether the app should use it.
+- Size-optimised container images leave out the ICU and time zone data the runtime needs.
 
 ## Opinions
 
@@ -42,9 +42,9 @@ if (string.Equals(header, "application/json", StringComparison.InvariantCultureI
 if (string.Equals(header, "application/json", StringComparison.OrdinalIgnoreCase))
 ```
 
-The analyzers find the call sites:
+The .NET SDK's code analysis rules report the calls to fix:
 
-| Rule           | Finds                                  |
+| Rule           | Reports                                |
 | -------------- | -------------------------------------- |
 | CA1304, CA1305 | Formatting without a culture           |
 | CA1309         | `InvariantCulture` comparison          |
@@ -60,9 +60,9 @@ With `TreatWarningsAsErrors` on, a missing `StringComparison` fails the build. M
 
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
 
-**Decide on invariant mode by itself, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU and use built-in invariant data. That saves size and startup time for a service with no localized output. It's a mistake when it arrives with an unrelated decision.
+**Make invariant mode its own decision, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU and use built-in invariant data. That saves size and startup time for a service with no localized output. It's a mistake when nobody chose it, and it usually arrives with an unrelated decision.
 
-On SDK 10.0.400, `dotnet new webapi` doesn't set it, but `dotnet new webapiaot` does, next to `<PublishAot>true</PublishAot>`. So it usually arrives when someone adopts Native AOT, as described in [runtime-performance.md](runtime-performance.md). It then changes every `ToString` and `Compare` call in the app.
+On SDK 10.0.400, `dotnet new webapi` doesn't set it, but `dotnet new webapiaot` does, next to `<PublishAot>true</PublishAot>`. So the property comes in when someone adopts Native AOT, as described in [runtime-performance.md](runtime-performance.md). It then changes what every `ToString` and `Compare` call in the app does.
 
 Turning it on costs you:
 
@@ -80,7 +80,7 @@ Turning it on costs you:
 - **`DOTNET_ICU_VERSION_OVERRIDE`** pins a system ICU version on Linux. Before .NET 10, it was `CLR_ICU_VERSION_OVERRIDE`. It works only on Microsoft-built .NET, not distribution builds. ([Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **`System.Globalization.UseNls`** reverts to Windows NLS. Use it only for bug compatibility with a legacy app: you lose the IANA and Windows time zone ID conversions. Since .NET 9, the environment variable overrides the `runtimeconfig.json` value. Before .NET 9, it was the other way round.
 
-([Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization))
+([Microsoft Learn: Globalization and ICU](https://learn.microsoft.com/dotnet/core/extensions/globalization-icu), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization))
 
 ### ASP.NET Core: register localization, then drive culture from a cookie
 
@@ -101,7 +101,7 @@ In production, four details decide whether it works:
 - **`SupportedCultures` and `SupportedUICultures` are independent.** `CurrentCulture` controls number, date, and currency formatting, and sorting. `CurrentUICulture` controls which `.resx` file `ResourceManager` resolves. English text with German number formatting is a valid configuration. ([Microsoft Learn: Globalization and localization in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/localization?view=aspnetcore-10.0))
 - **Providers run in order: query string, cookie, then `Accept-Language`. The first match wins.** Use the cookie in production, and the query string for debugging. `Accept-Language` reflects the user's OS, not their choice, so give users a way to set their culture. ([Lock: Adding Localisation to an ASP.NET Core application](https://andrewlock.net/adding-localisation-to-an-asp-net-core-application/))
 - **Order the middleware.** Call `UseRequestLocalization` before anything that reads the culture. If you use `RouteDataRequestCultureProvider`, call it _after_ routing. ([Microsoft Learn: Globalization and localization in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/localization?view=aspnetcore-10.0))
-- **Fallback works per resource and ends at the default file:** `Welcome.fr-CA.resx`, then `Welcome.fr.resx`, then `Welcome.resx`. To show the key for a missing translation instead of English, don't ship a default `.resx` file.
+- **Fallback works per resource and ends at the default file:** `Welcome.fr-CA.resx`, then `Welcome.fr.resx`, then `Welcome.resx`. To show the key for a missing translation instead of the default language's text, don't ship a default `.resx` file.
 
 **If `RootNamespace` and `AssemblyName` differ, resource lookup fails completely.** A project directory named `my-project-name` causes this. Fix it with `[assembly: RootNamespace]` and `[assembly: ResourceLocation]`, not by renaming resources. ([Microsoft Learn: Globalization and localization in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/localization?view=aspnetcore-10.0))
 
@@ -147,7 +147,7 @@ The two missing pieces fail differently:
 
 **Store instants as UTC, store the user's IANA time zone ID instead of a fixed offset, and convert at the edge.** For storage and type guidance, including when a future local event should _not_ become UTC, see [datetime.md](datetime.md). A local date and time can occur twice or not at all, and correct formatting can't fix a value that was ambiguous before it was formatted. Noda Time separates `Instant`, `LocalDateTime`, and `ZonedDateTime` for this reason. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
-`TimeZoneInfo.TryConvertIanaIdToWindowsId` converts between the two ID families only outside invariant and NLS modes. So this storage choice, invariant mode, and the ICU choice are one decision.
+`TimeZoneInfo.TryConvertIanaIdToWindowsId` and `TryConvertWindowsIdToIanaId` work only outside invariant and NLS modes. So decide on this storage choice, invariant mode, and ICU together.
 
 ## Coming next (preview, not yet the opinion)
 

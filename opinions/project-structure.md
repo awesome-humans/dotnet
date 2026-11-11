@@ -41,7 +41,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 
   `dotnet new gitignore` doesn't ignore `.dotnet/`, because it covers build output and a local SDK is a build _prerequisite_. `dotnet/runtime`, `dotnet/aspnetcore`, `dotnet/sdk`, and `dotnet/maui` each add the rule by hand. When you adopt `sdk.paths`, add `.dotnet/` to the repository-specific block of `.gitignore` described below.
 
-- **Use Central Package Management (`Directory.Packages.props`), even in a single-project repository.** It applies to every `PackageReference`-based project, and per-project versions drift apart once a second project arrives. On .NET 10 and later, NU1510 flags direct references that package pruning can remove. Start from [templates/Directory.Packages.props](../templates/Directory.Packages.props), which enables `CentralPackageTransitivePinningEnabled`. ([Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management), [Microsoft Learn: NU1510](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1510), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
+- **Use Central Package Management (`Directory.Packages.props`), even in a single-project repository.** It applies to every `PackageReference`-based project. Versions set per project drift apart once a second project arrives. On .NET 10 and later, NU1510 flags direct references that package pruning can remove. Start from [templates/Directory.Packages.props](../templates/Directory.Packages.props), which enables `CentralPackageTransitivePinningEnabled`. ([Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management), [Microsoft Learn: NU1510](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1510), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Put shared build settings in `Directory.Build.props`:** the TFM, `LangVersion` set to latest, nullable enabled, analyzers on, and warnings as errors. Copy [templates/Directory.Build.props](../templates/Directory.Build.props). Project files are then nearly empty, as in [templates/projects/](../templates/projects/).
 
 /// house | simon-mckenna
@@ -50,8 +50,8 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 ///
 
-- **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
-- **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
+- **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
+- **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
 - **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 10 is an LTS release, supported until November 2028. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support))
 
 ## Repository layout
@@ -67,7 +67,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 - **Set `<UseArtifactsOutput>true</UseArtifactsOutput>` in the root `Directory.Build.props`.** All build output goes under one `artifacts/<type>/<project>/<pivot>` root, instead of `bin/` and `obj/` in each project.
   - The types are `bin`, `obj`, `publish`, and `package`. `package` has no project folder, so `.nupkg` files go to `artifacts/package/<configuration>`.
   - Tools and CI steps can rely on the layout. The per-project layout "can change drastically via relatively simple MSBuild changes".
-  - It's been GA since .NET 8, and it's still opt-in in the .NET 10 SDK. [templates/Directory.Build.props](../templates/Directory.Build.props) opts in.
+  - It has been GA since .NET 8, and it's still opt-in in the .NET 10 SDK. [templates/Directory.Build.props](../templates/Directory.Build.props) opts in.
   - MSBuild reads the property before it evaluates the project, so set it only in `Directory.Build.props` or on the command line. In a project file, it fails the build with `NETSDK1199`.
   - For a single-TFM project, the last folder is the lowercase configuration, with no TFM: `artifacts/bin/App/release`. Update hard-coded `bin/<Config>/<tfm>` paths in Dockerfiles, CI steps, and scripts in the same commit.
   - `dotnet new gitignore` already ignores `artifacts/`. ([dotnet/sdk: Gitignore template](https://github.com/dotnet/sdk/blob/main/template_feed/Microsoft.DotNet.Common.ItemTemplates/content/Gitignore/.gitignore))
@@ -83,7 +83,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 ## .editorconfig
 
 - **Give every repository a root `.editorconfig`, copied from [templates/.editorconfig](../templates/.editorconfig).** Remove a rule only after you've decided you disagree with it. The file sets file-scoped namespaces, expression-bodied members where they fit on one line, collection expressions, auto-implemented properties (IDE0032), and standard .NET naming, with analyzer diagnostics at `warning` by default.
-- **Let the build enforce style.** `.editorconfig` severities fail the build only because [templates/Directory.Build.props](../templates/Directory.Build.props) sets `EnforceCodeStyleInBuild` and `TreatWarningsAsErrors`. Without both files, the style file is documentation.
+- **Let the build enforce style.** `.editorconfig` severities fail the build only because [templates/Directory.Build.props](../templates/Directory.Build.props) sets `EnforceCodeStyleInBuild` and `TreatWarningsAsErrors`. Without both files, nothing enforces the style rules.
 - **Use one `.editorconfig` at the root, not one per project.** Add a nested file only for a real exception, such as relaxed documentation comment rules under `tests/`. Put only the differences in it: when both files set a key, the deeper file wins. ([Microsoft Learn: Configuration files for code analysis rules](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/configuration-files))
 
 ## Containers

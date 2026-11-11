@@ -18,11 +18,11 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
   - Start its sources with `<clear/>`, so no inherited source survives.
   - Leave no package pattern unmapped.
 
-  Mapping filters restore and nothing else: `dotnet package add` still reaches any configured source. ([Microsoft Learn: Package Source Mapping](https://learn.microsoft.com/nuget/consume-packages/package-source-mapping)) A repository that restores only from nuget.org gains little, because nuget.org never replaces a published version.
+  Mapping filters restore and nothing else: `dotnet package add` still reaches any configured source. ([Microsoft Learn: Package Source Mapping](https://learn.microsoft.com/nuget/consume-packages/package-source-mapping)) A repository that restores only from nuget.org gains little: with one source, a same-named package has no second feed to come from.
 
 - **Treat vulnerability warnings as build errors everywhere.** NuGet Audit runs during restore, and "`NuGetAuditMode` defaults to `all` when a project targets `net10.0` or higher", so it checks the whole graph. ([Microsoft Learn: Auditing package dependencies for security vulnerabilities](https://learn.microsoft.com/nuget/concepts/auditing-packages)) `TreatWarningsAsErrors`, which [templates/Directory.Build.props](../templates/Directory.Build.props) sets, turns NU1901 to NU1904 into errors. Restore then fails on the day an advisory lands, even if nobody changed the graph. That's intended: triaging the advisory is the first step in servicing the branch.
   - To suppress one advisory, add `NuGetAuditSuppress` with its URL, and a comment that gives the reason. ([Microsoft Learn: Excluding advisories](https://learn.microsoft.com/nuget/concepts/auditing-packages#excluding-advisories))
-  - Never use the documented shortcut, `<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>`. It turns the rule off for the warnings where a silent downgrade costs most. ([Microsoft Learn: NuGet Warnings NU1901, NU1902, NU1903, NU1904](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1901-nu1904))
+  - Never use the documented shortcut, `<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>`. It turns the vulnerability errors back into warnings, which are the warnings that cost most to ignore. ([Microsoft Learn: NuGet Warnings NU1901, NU1902, NU1903, NU1904](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1901-nu1904))
   - Never turn the audit off in the pipeline alone, which the documentation also offers.
 
   .NET 10 prunes platform-provided packages from the graph before the audit, so the report is shorter: "Projects with these defaults have 70% fewer transitive vulnerability reports compared to projects using the previous defaults". ([Kolev: NuGet Package Pruning: Cleaner Dependencies and Actionable Vulnerability Reports](https://devblogs.microsoft.com/dotnet/nuget-package-pruning-in-dotnet-10/))
@@ -32,7 +32,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
   - Use `PrivateAssets="all"` on build-only tooling, so it never flows to your consumers.
   - Under Central Package Management, set both on the `PackageReference`, never the `PackageVersion`. A `PackageVersion` holds a package ID and version. For tooling that every project uses, add a `GlobalPackageReference` to `Directory.Packages.props` instead, which gets `PrivateAssets="All"` implicitly. NuGet 7.9 fixed a bug in which `dotnet add package` wrote `PrivateAssets` to the `PackageVersion` item. ([Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management#global-package-references), [Microsoft Learn: NuGet 7.9 Release Notes](https://learn.microsoft.com/nuget/release-notes/nuget-7.9))
 
-  Packages that are mostly build logic need these loosened. Re-test after you tighten them. ([Meziantou: Limit what NuGet packages can do in your project](https://www.meziantou.net/limit-what-nuget-packages-can-do-in-your-project.htm))
+  A package that's mostly build logic needs more asset types than these, so rebuild and re-test after you tighten a reference. ([Meziantou: Limit what NuGet packages can do in your project](https://www.meziantou.net/limit-what-nuget-packages-can-do-in-your-project.htm))
 
 /// house | simon-mckenna
 
@@ -42,9 +42,9 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
 ## Pipeline shape
 
-**Run four stages in order: restore, build, test, and publish. Each stage skips the work of the one before it.** Pass `--no-restore` to build, and `--no-build` to test and publish. Each stage then uses the previous stage's output instead of rebuilding with different flags.
+**Run four stages in order: restore, build, test, and publish. Each stage reuses the output of the one before it.** Pass `--no-restore` to build, and `--no-build` to test and publish, so no stage rebuilds with different flags.
 
-Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Release` for current target frameworks, but `dotnet build` and `dotnet test` default to `Debug`. A `--no-build` stage with a different configuration looks for output that doesn't exist. The example uses GitHub Actions, but the stages work on any CI platform. ([Microsoft Learn: dotnet publish](https://learn.microsoft.com/dotnet/core/tools/dotnet-publish), [Microsoft Learn: dotnet test](https://learn.microsoft.com/dotnet/core/tools/dotnet-test))
+Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Release` for current target frameworks, but `dotnet build` and `dotnet test` default to `Debug`. A `--no-build` stage with a different configuration looks for output that doesn't exist. ([Microsoft Learn: dotnet publish](https://learn.microsoft.com/dotnet/core/tools/dotnet-publish), [Microsoft Learn: dotnet test](https://learn.microsoft.com/dotnet/core/tools/dotnet-test))
 
 1. **Restore.** If the repository commits `packages.lock.json` (`RestorePackagesWithLockFile=true`), pass `--locked-mode`, so a stale lock file fails the build. Without a lock file, the flag fails every restore with `NU1004`. The templates pin packages with Central Package Management in [templates/Directory.Packages.props](../templates/Directory.Packages.props), and [templates/Directory.Build.props](../templates/Directory.Build.props) turns lock files off, so the example restores without it.
 2. **Build.** Build once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`. The property covers compiler and analyzer diagnostics. The switch also fails on MSBuild warnings, such as MSB3277 assembly version conflicts.
@@ -56,6 +56,8 @@ Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Re
 4. **Publish or pack.** Pass `--no-build`, and upload the output as the one artifact that deploy and release consume. Never rebuild for deployment.
    - Don't pass `--output`. With the artifacts layout from [templates/Directory.Build.props](../templates/Directory.Build.props), a single-TFM publish without a RID goes to `artifacts/publish/<Project>/release`. Otherwise, the last folder gets a `_<tfm>` or `_<rid>` suffix. Pack output goes to `artifacts/package/<configuration>`, with no project folder. For details, see [project-structure.md](project-structure.md). ([Microsoft Learn: Artifacts output layout](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output))
    - Keep test projects out of the deploy artifact with `<IsPublishable>false</IsPublishable>`, as [templates/projects/Example.Library.Tests.csproj](../templates/projects/Example.Library.Tests.csproj) does. Without it, a solution-level publish writes the test host, and another copy of every referenced library, into `artifacts/publish`.
+
+The example uses GitHub Actions, but the stages work on any CI platform:
 
 ```yaml
 # Least privilege: unless the repository says otherwise, the default token can
@@ -97,7 +99,7 @@ This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifac
 - If your CI host can't present an OIDC token, use a scoped API key stored as a repository secret, and name an owner to rotate it. nuget.org caps a new key at 30 days. ([.NET Team: Strengthening NuGet Supply Chain Security: Reducing API Key Lifetime](https://devblogs.microsoft.com/dotnet/strengthening-nuget-supply-chain-security-reducing-api-key-lifetime/))
 - Author-sign only if your organisation already runs certificate infrastructure. nuget.org repository-signs every package it serves, and most consumers never verify an author signature. ([Microsoft Learn: Sign a NuGet package](https://learn.microsoft.com/nuget/create-packages/sign-a-package))
 
-To protect consumers, pin: locked restore, a pinned SDK, and SHA-pinned actions.
+Pinning protects consumers more than a signature does: locked restore, a pinned SDK, and SHA-pinned actions decide what goes into the package.
 
 Don't add a signer allow list (`signatureValidationMode` set to `require`, with `trustedSigners` in `nuget.config`) unless you can maintain it. Each certificate rotation fails installs with `NU3034` until you add the new SHA-256 fingerprint beside the old ones. Microsoft rotated its author-signing certificate from 2026-09-23. ([.NET Blog: Microsoft is updating its author-signing certificate starting September 23, 2026](https://devblogs.microsoft.com/dotnet/microsoft-author-signing-certificate-update-2026/))
 

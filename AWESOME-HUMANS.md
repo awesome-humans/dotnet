@@ -187,7 +187,7 @@ The ASP.NET Core category of `dotnet-blog`: the same publisher and editorial sta
 A product-team blog, release-driven and close to marketing: cite it and the docs for how something works, not whether to adopt it.
 
 - **Scope:** Widened on 2026-08-20 to the project's own documentation, which explains mechanism the blog doesn't, under the same limit.
-- **Longevity:** About four years, which clears the bar.
+- **Longevity:** About four years, which is over the two-year minimum.
 - **Independence:** The concern stands however long the record grows.
 
 ### `awesome-avalonia`: Citable, **Discovery-only.**
@@ -266,7 +266,7 @@ Blocked on independence, not longevity, and on five unvetted bylines.
 
 - **Scope:** Dominick Baier's personal blog is a separate channel, dormant since 2024-10-01.
   It's named, not linked, because the host no longer completes a TLS handshake, so a link would fail the link check.
-- **Longevity:** Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so six years would clear the bar.
+- **Longevity:** Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so six years would be over the two-year minimum.
 - **Authorship:** Several authors, so independence and quality vary by byline, the same blocker as `telerik-blog` and `syncfusion-blog`, not the `avalonia-blog` limit.
   Where one of the five has a track record, vet that person. `khalid` is vetted, and his posts here are citable under his own ID, with the limit recorded there.
 - **Independence:** All four posts read in full for this pass end at the paid product in the post's own category, with no caveat against it.

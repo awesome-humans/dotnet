@@ -55,7 +55,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
      - Before you take a new major version, read its release notes. An input, output, or default that the example relies on might have changed. Fix the example in the same edit, and say what changed in the pull request.
 
 5. **Update each opinion** under `opinions/`:
-   - Read the release's "What's new" pages from the first-party sources, `dotnet-blog` and `ms-learn`. Read feature deep dives from the rest of the citable roster, such as `andrew-lock`'s "Exploring .NET" series.
+   - Read the release's "What's new" pages from the first-party sources, `dotnet-blog` and `ms-learn`. Read detailed posts on each feature from the rest of the citable roster, such as `andrew-lock`'s "Exploring .NET" series.
    - Add a new language or runtime feature where it changes an opinion, for example a new syntax that replaces an old idiom.
    - When a feature needs a new opinion, create a stub with a `TODO` and a source link, and add its `README.md` Scope bullet and Repository layout entry, which CI enforces.
    - Update `targets:` and `last-reviewed:` on every file you change **or verify as unchanged**.

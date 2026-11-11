@@ -40,14 +40,14 @@ internal static class Frontmatter
         {
             // The parser's line numbers are relative to the frontmatter body, which
             // starts on line 2 of the file, so offset them to point at the real line.
-            error = $"frontmatter is not valid YAML: {exception.Message} "
+            error = $"frontmatter isn't valid YAML: {exception.Message} "
                 + $"(line {exception.Start.Line + 1}, column {exception.Start.Column})";
             return null;
         }
 
         if (parsed is not IDictionary mapping)
         {
-            error = "frontmatter is not a YAML mapping";
+            error = "frontmatter isn't a YAML mapping";
             return null;
         }
 

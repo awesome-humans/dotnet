@@ -12,7 +12,7 @@ metadata:
 
 Compare a target .NET project with this repository's opinions and templates, and report where it deviates. This skill **only reports** unless the user asks for fixes.
 
-By default, it checks sourced community practice only. If the user names a house profile, such as `simon-mckenna`, it checks that profile's house opinions too ([HOUSE-OPINIONS.md](../../HOUSE-OPINIONS.md)).
+By default, it checks sourced community practice only. If the user names a house profile, such as `simon-mckenna`, it checks that profile's house opinions too. For the profiles, see [HOUSE-OPINIONS.md](../../HOUSE-OPINIONS.md).
 
 ## Steps
 
@@ -22,7 +22,7 @@ By default, it checks sourced community practice only. If the user names a house
    - **Record the house profile,** or that there's none. Without one, skip every house block in `opinions/`, and diff against each template with its house regions removed. With one, keep that profile's blocks and regions, and skip the others.
    - **Record what you read:**
      - For a URL, the branch and commit SHA. Without the SHA, nobody can reproduce the review, and step 8 branches from it.
-     - For a local git worktree, the SHA. If the tree has uncommitted changes, note that the findings describe the working tree, not the commit.
+     - For a local git worktree, the SHA. If the tree has uncommitted changes, say that the findings describe the working tree, not the commit.
      - For a local path outside git, say so, and let the file paths stand as the record.
 2. **Inventory the target:** solution files (`.slnx`, `.sln`, or `.slnf`), project files, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `.editorconfig`, test projects, and the mix of C# and F#.
 3. **Compare structure and tooling** with `templates/`:
@@ -37,7 +37,7 @@ By default, it checks sourced community practice only. If the user names a house
      - **Violation:** Contradicts an opinion. Cite the opinion file.
      - **Drift:** Older versions.
      - **Gap:** Missing scaffolding.
-     - **Observation:** A local choice worth a look.
+     - **Observation:** A local choice that no opinion covers.
    - For each finding, give the path in the target, what the opinion says, and a one-line fix, ideally "copy `templates/<file>` and trim".
    - If the violated opinion is a house block of the chosen profile, say so, and grade the finding one level lower. The target can reasonably follow the sourced text instead.
    - End with a short verdict that reads on its own.
@@ -52,7 +52,7 @@ By default, it checks sourced community practice only. If the user names a house
    - Clone a URL target now, and branch from **the SHA recorded in step 1**.
    - A local path outside git has no branch. Hand back a patch, or ask the user to put the target under git first.
    - A depth-1 clone has no earlier commit to branch from. Clone without `--depth 1`, or run `git fetch origin <full SHA>`. An abbreviated SHA is rejected.
-   - If you must branch from a default branch that has moved, recheck the files behind each finding, and say which changed. A fix written against moved code produces a confidently wrong diff.
+   - If you must branch from a default branch that has moved, recheck the files behind each finding, and say which changed. A fix written against code that has since changed can apply cleanly and still be wrong.
    - In commit messages, pull requests, and comments in the target, name this repository `awesome-humans/dotnet`.
 
 ## Edge cases

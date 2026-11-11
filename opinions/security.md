@@ -18,7 +18,7 @@ This file covers the security rules outside the HTTP pipeline: secrets, deserial
 
 ### Secrets
 
-**Use the Secret Manager in development and a managed identity to a vault in production. Never put a secret in `appsettings*.json`.** The Secret Manager "doesn't encrypt the stored secrets and shouldn't be treated as a trusted store. It's for development purposes only". Production secrets "should be accessed through a controlled means like Azure Key Vault". ([Microsoft Learn: Safe storage of app secrets in development in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/app-secrets)) A managed identity removes the last secret from the deployment, because you don't store a vault credential either.
+**Use the Secret Manager in development and a managed identity to a vault in production. Never put a secret in `appsettings*.json`.** The Secret Manager "doesn't encrypt the stored secrets and shouldn't be treated as a trusted store. It's for development purposes only". Production secrets "should be accessed through a controlled means like Azure Key Vault". ([Microsoft Learn: Safe storage of app secrets in development in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/app-secrets)) With a managed identity, the deployment holds no secret at all, because the app needs no stored credential to reach the vault.
 
 ```csharp
 // Azure.Extensions.AspNetCore.Configuration.Secrets + Azure.Identity.
@@ -41,7 +41,7 @@ A secret can also leave the process through a log or a diagnostic dump, so revie
 
 **Never reference the `System.Runtime.Serialization.Formatters` compatibility package, and never deserialize untrusted input with a format that names its own types.** "Starting in .NET 9, the in-box BinaryFormatter implementation throws exceptions on use, even with the settings that previously enabled its use." ([Microsoft Learn: BinaryFormatter disabled across all project types](https://learn.microsoft.com/dotnet/core/compatibility/serialization/9.0/binaryformatter-removal)) The compatibility package brings that behaviour back, and the vulnerability with it.
 
-The flaw is type information in the payload, not the binary encoding: "Any deserializer, binary or text, that allows its input to carry information about the objects to be created is a security problem waiting to happen." ([Landwerth: BinaryFormatter removed from .NET 9](https://devblogs.microsoft.com/dotnet/binaryformatter-removed-from-dotnet-9/)) Keep `System.Text.Json` on its default contract-based binding. Never let a converter or a polymorphic setting take a type name from the caller. A crafted payload that reaches a type-naming deserializer is remote code execution. For an end-to-end demonstration, see [Meziantou: Deserialization can be dangerous](https://www.meziantou.net/deserialization-can-be-dangerous.htm).
+The flaw is type information in the payload, not the binary encoding: "Any deserializer, binary or text, that allows its input to carry information about the objects to be created is a security problem waiting to happen." ([Landwerth: BinaryFormatter removed from .NET 9](https://devblogs.microsoft.com/dotnet/binaryformatter-removed-from-dotnet-9/)) Keep `System.Text.Json` on its default contract-based binding. Never let a converter or a polymorphic setting take a type name from the caller. A crafted payload that reaches a type-naming deserializer can run the attacker's code. For an end-to-end demonstration, see [Meziantou: Deserialization can be dangerous](https://www.meziantou.net/deserialization-can-be-dangerous.htm).
 
 ### Cryptography: stay on the GA algorithm set
 
@@ -74,7 +74,7 @@ static byte[] Encrypt(byte[] key, byte[] plaintext)
 }
 ```
 
-**Let ASP.NET Core Identity hash passwords.** Its `PasswordHasher` runs PBKDF2, and the `IterationCount` "Default is 100,000". ([Microsoft Learn: PasswordHasherOptions.IterationCount](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.identity.passwordhasheroptions.iterationcount)) That's an order of magnitude above what a hand-rolled derivation usually gets. Under the passkeys-first opinion in [aspnet-core-security.md](aspnet-core-security.md#authentication-passkeys-first), most new apps never hash a password at all.
+**Let ASP.NET Core Identity hash passwords.** Its `PasswordHasher` runs PBKDF2, and the `IterationCount` "Default is 100,000". ([Microsoft Learn: PasswordHasherOptions.IterationCount](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.identity.passwordhasheroptions.iterationcount)) That's ten times the 10,000-iteration floor that Bowden gives below. Under the passkeys-first opinion in [aspnet-core-security.md](aspnet-core-security.md#authentication-passkeys-first), most new apps never hash a password at all.
 
 To derive a key from a password outside Identity, call `Rfc2898DeriveBytes.Pbkdf2` with a salt of at least 8 bytes from `RandomNumberGenerator`. ([Bowden: Creating hashes in .NET](https://damienbod.com/2024/07/01/creating-hashes-in-net/)) Bowden's 2024 figure of "more than 10000 iterations" is a floor, not a target. No current source states a figure for .NET 10, so justify the count for each application. Argon2id lost because the BCL doesn't ship it.
 
@@ -88,9 +88,9 @@ Both classes shipped without `[Experimental]`, but four export and import member
 
 **Rebuild and redeploy after every Patch Tuesday, whether or not your code changed.** Security fixes ship on "always the second Tuesday of the month". The platform's instruction is to "Regularly install servicing updates to ensure that your apps are in a secure and supported state". ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support)) A container image keeps the runtime it was built with until something rebuilds it. ([aspnet-core.md: Hosting and deployment](aspnet-core.md#hosting-and-deployment))
 
-CVE-2025-55315 shows what a slow cadence costs. It's a request-smuggling flaw in ASP.NET Core, and Microsoft gave it "a CVSS score of 9.9, their highest ever". An attacker could "Login as a different user", "Make an internal request (SSRF)", or "Bypass CSRF checks". ([Lock: Understanding the worst .NET vulnerability ever: request smuggling and CVE-2025-55315](https://andrewlock.net/understanding-the-worst-dotnet-vulnerability-request-smuggling-and-cve-2025-55315/)) The fix shipped on a Tuesday. Your pipeline decides when it reaches production.
+CVE-2025-55315 shows what a slow cadence costs. It's a request-smuggling flaw in ASP.NET Core, and Microsoft gave it "a CVSS score of 9.9, their highest ever". An attacker could "Login as a different user", "Make an internal request (SSRF)", or "Bypass CSRF checks". ([Lock: Understanding the worst .NET vulnerability ever: request smuggling and CVE-2025-55315](https://andrewlock.net/understanding-the-worst-dotnet-vulnerability-request-smuggling-and-cve-2025-55315/)) The fix shipped on a Patch Tuesday, and it reaches production only when your pipeline rebuilds and redeploys.
 
-**Target a supported framework.** .NET 8 and .NET 9 both reach end of support on 2026-11-10. After that date, a project on either gets no more patches. ([Damkewala: .NET STS releases supported for 24 months](https://devblogs.microsoft.com/dotnet/dotnet-sts-releases-supported-for-24-months/)) `net10.0` is supported until November 2028.
+**Target a supported framework.** .NET 8 and .NET 9 both reached end of support on 2026-11-10, so a project on either gets no more patches. ([Damkewala: .NET STS releases supported for 24 months](https://devblogs.microsoft.com/dotnet/dotnet-sts-releases-supported-for-24-months/)) `net10.0` is supported until November 2028.
 
 ## Coming next (preview, not yet the opinion)
 

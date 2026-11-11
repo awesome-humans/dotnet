@@ -29,7 +29,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
      Otherwise, create a stub opinion with metadata, the source link, and a `TODO`. In the same commit, add it to `README.md` as a Scope bullet and a Repository layout entry, or CI fails the pull request.
 
-   - **Noise:** Release chatter, marketing, or a one-off tip that doesn't generalise. Skip it.
+   - **Noise:** Release news, marketing, or a one-off tip that doesn't generalise. Skip it.
 5. **Edit in a worktree** on the branch `harvest/<YYYY-MM-DD>`, dated the day the sweep window ends, as [AGENTS.md](../../AGENTS.md) describes:
    - Keep one recommendation per opinion. If a post contradicts the current opinion, choose the position with the stronger sources or evidence, and note the change in one line.
    - **Never remove, weaken, or unmark a house block or region** ([awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works)). Update the sourced text beside it as usual. When a source now agrees with a house opinion, add the citation inside its block.
@@ -51,7 +51,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 ## Edge cases
 
 - **Vetted sources disagree:** Present both positions in the pull request, and choose one for the opinion, with the reason. Never leave a menu in the opinion.
-- **A source has gone quiet, or its quality has dropped:** Note it in the pull request, and propose demotion through `vet-source`. Don't edit the roster directly.
+- **A source has stopped publishing, or its quality has dropped:** Note it in the pull request, and propose demotion through `vet-source`. Don't edit the roster directly.
 - **Preview content:** It can go in a "Coming next" note, never in the opinion itself.
 - **A linked issue has closed:** If an opinion links an issue or pull request as an open limitation, and it has closed or shipped in a release, update or drop the note in the same sweep. `audit-freshness` reports these.
 - **Nothing notable found:** Record the sweep in the decision log anyway, on the default branch or in a small pull request, so the next window starts from the right date. Close the reminder issue either way, or next month's reminder doesn't open.

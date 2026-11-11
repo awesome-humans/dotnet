@@ -38,7 +38,7 @@ No opinion mentions AI, but three already carry most of the guardrails:
 - **[ci.md](../opinions/ci.md)** opens with "Treat supply-chain security as a requirement": SHA-pinned actions, a pinned SDK and packages, and limits on which package assets can run at build time.
 - **House:** Warnings are errors on every machine, and every suppression has an inline comment that says why ([ci.md](../opinions/ci.md)). It's local convention, not community consensus, and it's the rule aimed most directly at an agent that silences a warning to get a green build.
 - **[csharp.md](../opinions/csharp.md)** makes nullable warnings errors, and sets analyzers to `latest-recommended` with `EnforceCodeStyleInBuild`, so the compiler rejects more agent mistakes before review.
-- **[testing.md](../opinions/testing.md)** holds tests to the same review bar as production code, the bar agent-written tests tend to miss.
+- **[testing.md](../opinions/testing.md)** holds tests to the same review standard as production code, which agent-written tests tend to miss.
 
 ## Verification: the build is the reviewer, and agent-written tests aren't evidence
 
@@ -56,7 +56,7 @@ No opinion mentions AI, but three already carry most of the guardrails:
 Stannard found the `.editorconfig` checks "were largely worthless and burned millions of tokens over 1-2 months on trivial issues like whether or not there was an extra line ending in each `.cs` file. I removed that check entirely."
 `csharp.md` recommends `EnforceCodeStyleInBuild`, and `ci.md` runs `dotnet format --verify-no-changes` as a separate step.
 One reconciliation keeps the rule: have the agent run `dotnet format`, which fixes whitespace and style mechanically, before it builds, so it never reasons about a formatting diagnostic.
-Whether that avoids the cost he measured is untested, and adopting it is the owner's call. It's the one place this topic would change an existing opinion instead of adding to one.
+Whether that avoids the cost he measured is untested, and adopting it is the owner's decision. It's the one place this topic would change an existing opinion instead of adding to one.
 
 ## Skill packs: grounding that needs auditing
 
