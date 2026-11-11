@@ -63,9 +63,9 @@ Set it up in three parts:
 
 - **The session cookie:** Use a `__Host-` prefixed cookie marked `HttpOnly` and `Secure`. Add `SameSite=Strict` where the flow allows it, because such cookies "are not sent on cross-site requests". This adds to the [CSRF defence](#csrf-defence-in-depth) below, and doesn't replace it. ([Abuhakmeh: The Cookie Apocalypse Already Happened](https://duendesoftware.com/blog/20260414-the-cookie-apocalypse-already-happened))
 - **One origin:** Put a reverse proxy in front, so the front end and the API share an origin.
-- **A separate downstream token:** The BFF gets its own token for the downstream API, instead of forwarding the browser's. In Bowden's design, "The downstream API does not accept the user delegated access tokens from the UI application". ([Bowden: BFF secured ASP.NET Core application using downstream API and an OAuth client credentials JWT](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/))
+- **A separate downstream token:** The BFF gets its own token for the downstream API, instead of forwarding the browser's. In Bowden's design, "The downstream API does not accept the user delegated access tokens from the UI application". That token identifies the BFF, not the user: "The app-to-app security has nothing to do with the delegated client from the web application". The downstream API can't tell one user from another, so authorise the user in the BFF before it makes the call. ([Bowden: BFF secured ASP.NET Core application using downstream API and an OAuth client credentials JWT](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/))
 
-Blazor's documented BFF pattern has the same shape. It proxies API calls "with the `access_token` stored in the authentication cookie". ([Microsoft Learn: Secure an ASP.NET Core Blazor Web App with OpenID Connect (OIDC)](https://learn.microsoft.com/aspnet/core/blazor/security/blazor-web-app-with-oidc?pivots=bff-pattern))
+Blazor's documented BFF sample differs in two ways, so change both if you start from it. It proxies API calls "with the `access_token` stored in the authentication cookie", which keeps the tokens in the browser's cookie instead of on the server. It also forwards the user's access token to the API, where the BFF should send its own. ([Microsoft Learn: Secure an ASP.NET Core Blazor Web App with OpenID Connect (OIDC)](https://learn.microsoft.com/aspnet/core/blazor/security/blazor-web-app-with-oidc?pivots=bff-pattern))
 
 **Keep session state on the server, and make the cookie a key to it.** Browsers cap a cookie at about 4 KB. Abuhakmeh's fix: "stop storing session data in the cookie entirely... The cookie becomes a thin key that points to the server state rather than containing that state itself". ([Abuhakmeh: ASP.NET Core Cookie Size Limits in Production](https://duendesoftware.com/blog/20260429-aspnet-core-cookie-size-limits))
 
@@ -105,7 +105,7 @@ Encryption at rest "doesn't prevent cyberattackers from creating new keys", so l
 
 **Check Fetch Metadata headers, such as `Sec-Fetch-Site`, alongside token-based antiforgery.** ([Lock: Understanding the Fetch Metadata headers](https://andrewlock.net/understanding-the-fetch-metadata-http-headers-sec-fetch-site-and-friends/))
 
-**If a minimal API endpoint binds a form file, register `UseAntiforgery()`.** Since ASP.NET Core 8, "Minimal API endpoints that bind a parameter from the form via IFormFile or IFormFileCollection require anti-forgery validation". An upload endpoint that worked on .NET 7 returns 400 until you register the middleware and the caller sends the token. ([Microsoft Learn: Minimal APIs antiforgery checks](https://learn.microsoft.com/aspnet/core/breaking-changes/8/antiforgery-checks))
+**If a minimal API endpoint binds a form file, call `AddAntiforgery()` and `UseAntiforgery()`.** Since ASP.NET Core 8, "Minimal API endpoints that bind a parameter from the form via IFormFile or IFormFileCollection require anti-forgery validation". An upload endpoint that worked on .NET 7 returns 400 until you register the middleware and the caller sends the token. `UseAntiforgery()` throws at startup if the antiforgery services aren't registered, so call `builder.Services.AddAntiforgery()` too. ([Microsoft Learn: Minimal APIs antiforgery checks](https://learn.microsoft.com/aspnet/core/breaking-changes/8/antiforgery-checks), [Microsoft Learn: Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/anti-request-forgery#antiforgery-with-minimal-apis))
 
 ### CORS
 
@@ -144,11 +144,12 @@ app.UseSecurityHeaders(new HeaderPolicyCollection()
         csp.AddDefaultSrc().Self();
         csp.AddScriptSrc().Self().WithNonce();
         csp.AddObjectSrc().None();
+        csp.AddFormAction().Self();
         csp.AddFrameAncestors().None();
     }));
 ```
 
-`AddDefaultSecurityHeaders()` doesn't send `Permissions-Policy`, so add it, and allow the two `publickey-credentials` features that the secure defaults turn off. In a WebAssembly render mode, add `.WasmUnsafeEval()` to `script-src`, or the browser won't run the .NET runtime. Blazor's `ImportMap` renders an inline script, so give it the request's nonce. ([NetEscapades.AspNetCore.SecurityHeaders: README](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders#readme), [Microsoft Learn: Enforce a Content Security Policy for ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/security/content-security-policy), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/))
+Your `AddContentSecurityPolicy` call replaces the policy that `AddDefaultSecurityHeaders()` sets, so restate its `form-action 'self'`. `default-src` doesn't cover where a form submits. `AddDefaultSecurityHeaders()` doesn't send `Permissions-Policy`, so add it, and allow the two `publickey-credentials` features that the secure defaults turn off. In a WebAssembly render mode, add `.WasmUnsafeEval()` to `script-src`, or the browser won't run the .NET runtime. Blazor's `ImportMap` renders an inline script, so give it the request's nonce. ([NetEscapades.AspNetCore.SecurityHeaders: README](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders#readme), [Microsoft Learn: Enforce a Content Security Policy for ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/security/content-security-policy), [Bowden: Revisiting using a Content Security Policy (CSP) nonce in Blazor](https://damienbod.com/2025/05/26/revisiting-using-a-content-security-policy-csp-nonce-in-blazor/))
 
 ```razor
 <ImportMap AdditionalAttributes="@(new Dictionary<string, object> { ["nonce"] = HttpContext?.GetNonce() ?? "" })" />
