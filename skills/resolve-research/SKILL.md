@@ -10,7 +10,7 @@ metadata:
 
 # Resolve a research topic
 
-`research/` is a staging area, and this skill empties it. A research topic is evidence gathered at one point in time. Promotion makes it the repository's position. Discard is just as valid: the topic answered a question, and that was its job. Both end with the file deleted, except a partial promotion, which keeps the blocked part on disk. For details, see [Edge cases](#edge-cases).
+`research/` is a staging area, and this skill is how a topic leaves it. A topic is evidence gathered at one point in time, and it leaves in one of two ways. Promotion weaves its recommendation into the opinions and templates, where it becomes the repository's position. Discard is just as valid: the topic answered its question, and that was its job. Either way, the file is deleted. The one exception is a partial promotion, which keeps the blocked part on disk with a note on what it's waiting for. For details, see [Edge cases](#edge-cases).
 
 ## Orchestration
 
