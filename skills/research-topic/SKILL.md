@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim carries its source and that source's standing, labels preview features as the freshness policy requires, and closes with what the research reveals about the repository (a missing opinion, a stale aside, or a feature that reached GA). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
+description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim cites its source and gives that source's standing, labels preview features as the freshness policy requires, and closes with what the research reveals about the repository (a missing opinion, a stale aside, or a feature that reached GA). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
@@ -30,7 +30,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    Research a clear request without asking.
 
 2. **Start a worktree** on the branch `research/<topic-slug>`, such as `research/union-types`, following [AGENTS.md](../../AGENTS.md). Create it before the first write. Use the repository's existing kebab-case name for the topic (`union-types`, not `union-type`), so the branch, topic, and opinions share one search term.
-3. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or carry a "Coming next" note. Skip house blocks unless the user named a house profile. Present that profile's blocks as "its owner's convention, not community consensus".
+3. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or have a "Coming next" note. Skip house blocks unless the user named a house profile. Present that profile's blocks as "its owner's convention, not community consensus".
 4. **Sweep the roster in this order:**
    1. **Citable sources,** weighted by how well their Focus column matches. You can quote these.
    2. **Watch-list sources,** for discovery and cross-checking. Label them as watch-list.
@@ -55,7 +55,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    | --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
    | The topic has no opinion file or coverage                             | `resolve-research`, which decides between an existing file and a new one |
    | A note or opinion is stale: a feature reached GA, or guidance changed | `refresh-dotnet-versions` or `harvest-sources`                           |
-   | A strong source from outside the roster carried the research          | `vet-source`                                                             |
+   | A strong source from outside the roster supported the research        | `vet-source`                                                             |
    | The repository already answers the question fully                     | Say so. `resolve-research` can discard the topic                         |
    | A saved research topic on this subject exists in `research/`          | Build on it, refresh its dates, and report its promote-or-discard status |
 

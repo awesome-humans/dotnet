@@ -1,7 +1,7 @@
 name: Site dispatch
 
 # Notifies awesome-humans/website when main changes, so its Site workflow rebuilds
-# awesome-humans.net with the new /dotnet/ pages. The dispatch carries no content:
+# awesome-humans.net with the new /dotnet/ pages. The dispatch sends no content:
 # website fetches every ecosystem at main itself.
 #
 # It sends the dispatch as the organisation's awesome-humans-app, with a short-lived token

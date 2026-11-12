@@ -46,7 +46,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 8. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.
    - If an open `Harvest due: <Month> <Year>` issue asked for this sweep, end the pull request description with a `Closes: #<number>` trailer.
    - The `Harvest reminder` workflow opens that issue on the 1st of each month, and skips the month while an issue with that title is open. An issue left open blocks the next reminder.
-   - If another pull request replaces this one, copy the `Closes:` trailer to it, because GitHub doesn't carry it over.
+   - If another pull request replaces this one, copy the `Closes:` trailer to it, because GitHub doesn't move it.
 
 ## Edge cases
 

@@ -191,7 +191,7 @@ Four helper files support the scripts:
 
 - [`Opinions.cs`](scripts/Opinions.cs) lists the opinion files.
 - [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter in `opinions/` and `research/` files.
-- [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the `templates/` files that carry a header and parses their first-line comment.
+- [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the `templates/` files that have a header and parses their first-line comment.
 - [`House.cs`](scripts/House.cs) finds the house blocks in `opinions/` and the house regions in `templates/`, and writes a file's copy for one house profile, or for none.
 
 The helpers have no top-level statements, so they don't run alone. Each compiles into the scripts that `#:include` it.

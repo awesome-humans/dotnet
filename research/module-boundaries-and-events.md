@@ -54,7 +54,7 @@ The first pass answered the TODO for the file as a whole. With four more sources
 
 **Corroborated, but more weakly than the first pass recorded, and every source hedges.**
 
-The first pass cited `ms-learn` as "confirmed by a page reviewed as recently as 2026-07-08". That date is wrong. It's the page's `updated_at`, a docset build timestamp. The page's own review date, its `ms.date` field, is 2021-12-12. The text descends from the 2018 e-book, and `ardalis` wrote it; he maintains the Clean Architecture template it links to. [Freshness](#freshness) carries the full correction, which affects every `ms-learn` citation here.
+The first pass cited `ms-learn` as "confirmed by a page reviewed as recently as 2026-07-08". That date is wrong. It's the page's `updated_at`, a docset build timestamp. The page's own review date, its `ms.date` field, is 2021-12-12. The text descends from the 2018 e-book, and `ardalis` wrote it; he maintains the Clean Architecture template it links to. [Freshness](#freshness) has the full correction, which affects every `ms-learn` citation here.
 
 The substance survives the date. `ms-learn` still says to start monolithic and treat separation as a later choice, and names the cost: "If you can't deliver independent feature slices of the application, separating it only adds complexity." ([Microsoft Learn: Common web application architectures](https://learn.microsoft.com/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures), reviewed 2021-12-12)
 
@@ -170,7 +170,7 @@ He doesn't support the repository's headline. His choice is one architecture per
 
 `oskar-dudycz` reaches the same rule from his slice definition: "a slice is more a function than an entity" (2026-08-10).
 
-Verbs over nouns and functions over entities are the same claim. Both sources are marked **Corroborate.**, so together they can't carry the opinion: the roster rule needs an unmarked source beside them, and the second pass recorded this the wrong way round. Item 2 below makes it worse: the two co-maintain Marten, so they're one voice as well as two markings.
+Verbs over nouns and functions over entities are the same claim. Both sources are marked **Corroborate.**, so together they can't support the opinion: the roster rule needs an unmarked source beside them, and the second pass recorded this the wrong way round. Item 2 below makes it worse: the two co-maintain Marten, so they're one voice as well as two markings.
 
 ### Negative result
 
@@ -225,7 +225,7 @@ The same post is the only treatment of event granularity in the sweep, and it an
 
 > Summary Event can be easily mistaken with Event Carried State Transfer or Snapshot, yet they're not the same. Summary Event still gathers business information about the business fact that has happened. We can not only replicate the state (as with Event Carried State Transfer) but also trigger the workflow's next steps.
 
-The framing to carry into an opinion: "Events should be treated as such. Yes, API." A module's external events are its public interface, and change like one. ([Dudycz: Internal and external events, or how to design event-driven API](https://event-driven.io/en/internal_external_events/), 2023-10-15). The post uses C# and Marten, a direct conflict of interest, flagged here and not relied on.
+The framing to take into an opinion: "Events should be treated as such. Yes, API." A module's external events are its public interface, and change like one. ([Dudycz: Internal and external events, or how to design event-driven API](https://event-driven.io/en/internal_external_events/), 2023-10-15). The post uses C# and Marten, a direct conflict of interest, flagged here and not relied on.
 
 `jeremy-miller` never uses "integration events" on his site. He says domain events, cascading messages, or just events, and distinguishes the in-process and forwarded cases by mechanism, not name.
 
@@ -241,7 +241,7 @@ They're reconcilable. Comartin argues against a module telling another module wh
 
 ### Who owns a message, which settles commands versus events
 
-The second pass recorded `derek-comartin` and `oskar-dudycz` disagreeing about commands across boundaries, and noted that both are marked, so neither could carry an opinion. `ardalis` is the third source, and he does more than break the tie: he gives the structural rule each of them applies from one end.
+The second pass recorded `derek-comartin` and `oskar-dudycz` disagreeing about commands across boundaries, and noted that both are marked, so neither could support an opinion. `ardalis` is the third source, and he does more than break the tie: he gives the structural rule each of them applies from one end.
 
 > Command messages involve one handler, many potential senders.
 > Event messages involve one sender, many potential recipients.
@@ -256,9 +256,9 @@ This settles the split. `oskar-dudycz`'s test, that an event with one known cons
 
 ### The limit of the whole approach
 
-`derek-comartin` gives the caveat to carry with any messaging opinion, which every vendor-adjacent source omits: "Event-driven architecture isn't some magical silver bullet that removes coupling; it doesn't." ([Comartin: Event-Driven Architecture lost its way](https://codeopinion.com/event-driven-architecture-lost-its-way/), 2024-03-07). And: "You did not change the amount of complexity in the business process. You moved the complexity somewhere else." ([Comartin: Decoupling in Software Architecture Moves Complexity](https://codeopinion.com/decoupling-in-software-architecture-moves-complexity/), 2026-08-06)
+`derek-comartin` gives the caveat to attach to any messaging opinion, which every vendor-adjacent source omits: "Event-driven architecture isn't some magical silver bullet that removes coupling; it doesn't." ([Comartin: Event-Driven Architecture lost its way](https://codeopinion.com/event-driven-architecture-lost-its-way/), 2024-03-07). And: "You did not change the amount of complexity in the business process. You moved the complexity somewhere else." ([Comartin: Decoupling in Software Architecture Moves Complexity](https://codeopinion.com/decoupling-in-software-architecture-moves-complexity/), 2026-08-06)
 
-Both posts carry the Particular Software sponsorship in the body, as the roster notes record. Both claims cut against the sponsor's product category, which is the direction that matters.
+Both posts disclose the Particular Software sponsorship in the body, as the roster notes record. Both claims cut against the sponsor's product category, which is the direction that matters.
 
 ## 3. Transactional boundaries
 
@@ -304,7 +304,7 @@ At-least-once delivery makes idempotent consumption mandatory, and the first pas
 
 > The durable solution isn't to eliminate duplicate delivery. It's to make the consumer tolerate it.
 
-It calls the inbox "the consume-side companion to the Transactional Outbox pattern": record each processed message ID in the same transaction as the work, so a redelivery finds the record and stops. Four points to carry into an opinion:
+It calls the inbox "the consume-side companion to the Transactional Outbox pattern": record each processed message ID in the same transaction as the work, so a redelivery finds the record and stops. Four points to take into an opinion:
 
 - **Prefer natural idempotency.** "Design for natural idempotency first." An operation that sets a value instead of incrementing one needs no bookkeeping.
 - **Enforce with a unique constraint, not check-then-insert.** Reading for an existing record and then inserting races between concurrent consumers. "This approach makes the database the single arbiter of the race."
@@ -313,7 +313,7 @@ It calls the inbox "the consume-side companion to the Transactional Outbox patte
 
 ([Microsoft Learn: Idempotent Consumer pattern](https://learn.microsoft.com/azure/architecture/patterns/idempotent-consumer), reviewed 2026-08-13)
 
-This page carries `ai-usage: ai-assisted` in its metadata, and the Event Sourcing page doesn't. That doesn't disqualify it, but note it on any citation.
+This page has `ai-usage: ai-assisted` in its metadata, and the Event Sourcing page doesn't. That doesn't disqualify it, but note it on any citation.
 
 ### A defensible opinion for this repository
 
@@ -413,7 +413,7 @@ An absence is weak evidence, and it doesn't mean he opposes the pattern. It coun
 **Negative results, which decide what stays unsourced.**
 
 - No source treats sagas as a design choice between choreography and orchestration.
-- Event granularity has only `oskar-dudycz`, in the internal and external events post, and he's marked **Corroborate.** and writing about tooling he maintains, so it can't carry an opinion until something corroborates it.
+- Event granularity has only `oskar-dudycz`, in the internal and external events post, and he's marked **Corroborate.** and writing about tooling he maintains, so it can't support an opinion until something corroborates it.
 - Event-carried state transfer now has two sources: `ardalis` reaches the mechanism from the data side, recommending a materialised view of another module's data "synchronized using events" instead of a cross-module join. Both are marked and neither names the pattern, so they corroborate the technique without the vocabulary.
 - `mark-seemann` has no post on domain events, integration events, the outbox, idempotency, or event sourcing. In 832 posts, the only event store entry is a 2014 library of his own, and the messaging posts are from 2011 to 2013.
 - `jeremy-miller` has no idempotent-consumer essay. His outbox writing is producer-side.
@@ -431,7 +431,7 @@ They still differ on scope. Seemann and Miller would remove the application laye
 
 **Commands across boundaries: avoid them, or insist on them.** `derek-comartin` says generally avoid crossing boundaries with commands. `oskar-dudycz` says an event with one known consumer that expects a reply should have been a command. Neither is wrong. They disagree about which failure is more common: Comartin guards against modules directing each other, and Dudycz against events used to look decoupled while the coupling stays.
 
-**Weigh them by situation.** When you choose a message type for a new interaction, use Comartin's rule, and publish an event. When you audit an existing interaction, use Dudycz's test: one consumer plus an expected response means you already have a command. Both are marked **Corroborate.**, and neither can carry this alone, so an opinion here needs a third source.
+**Weigh them by situation.** When you choose a message type for a new interaction, use Comartin's rule, and publish an event. When you audit an existing interaction, use Dudycz's test: one consumer plus an expected response means you already have a command. Both are marked **Corroborate.**, and neither can support this alone, so an opinion here needs a third source.
 
 **Event sourcing: cautious or enthusiastic.** `ms-learn` leads with cost. `milan-jovanovic`'s introduction leads with benefits: reconstructing state at any point, historical data already present when a feature needs it, and use cases in e-commerce, finance, and IoT. ([Jovanović: Introduction to Event Sourcing for .NET Developers](https://www.milanjovanovic.tech/blog/introduction-to-event-sourcing-for-net-developers), 2024-08-31) **Weigh towards `ms-learn`:** it's independent, its page is recent (2026-03-27), and it lists the exit costs. `oskar-dudycz` settles it: he sells the workshops, and still says a well-done CRUD beats a poorly done event store.
 
@@ -454,7 +454,7 @@ The last column is the page's `author` metadata, a GitHub handle, not the `ms.au
 
 The quoted field is provably a build stamp, twice over. Event Sourcing and Idempotent Consumer share `updated_at: 2026-08-15T05:02:00Z` and `git_commit_id: d73cd1632ffa489eff78a16bba4d101c510a1810`: one commit, two pages, one timestamp. And the stamp moves without the text: rechecked on 2026-09-25, Event Sourcing reads `updated_at: 2026-09-25T05:03:00Z`, while its `ms.date` still reads 2026-03-27. Six weeks of republishes, no review.
 
-**Consequences.** The microservices e-book material is 2018 and 2021 text, not 2023 and 2024. The first pass's argument that age doesn't disqualify it still holds, because the reasoning is durable and the DDD citations behind it are older still, but it now has to hold against 2018. Two consequences carry into any opinion:
+**Consequences.** The microservices e-book material is 2018 and 2021 text, not 2023 and 2024. The first pass's argument that age doesn't disqualify it still holds, because the reasoning is durable and the DDD citations behind it are older still, but it now has to hold against 2018. Two consequences apply to any opinion:
 
 - The e-book is written for containerised microservices, not modular monoliths, so every claim from it here crosses a boundary the source didn't write for.
 - It predates the modular monolith as a named pattern, which is partly why it says nothing about slices.
@@ -487,7 +487,7 @@ Nothing in this topic depends on a preview. All of it is GA guidance.
    - **Steve Smith (`ardalis`):** Admitted on 2026-09-10, swept here. He wasn't a candidate. He came through the roster's own vetting, and turned out to matter more to this topic than any admission since the first pass.
    - **Mark Seemann, Jeremy D Miller, and Derek Comartin:** Admitted on 2026-09-03, swept here.
    - **Oskar Dudycz:** Admitted on 2026-08-24, unswept by the first pass, swept here. A correction to that pass: his "Monolith-First - are you sure?" post is on `architecture-weekly.com`, a Substack, not the `event-driven.io` domain in his roster row. It's out of scope, and no claim here rests on it.
-   - **Jimmy Bogard:** Active to 2026-09-01, but his recent output is AutoMapper and MediatR release posts, plus promotion of his own commercial Vertical Slice Architecture webinar (2026-09-01 and 2026-07-23). He'd carry the release-notes depth concern that `jeremy-miller`'s marking exists for, and a direct commercial interest in the opinion this topic is trying to corroborate. He originated the vertical-slice framing and the deferred domain-events pattern `ms-learn` quotes, so his archive matters, but the case for admission is weaker than the first pass assumed.
+   - **Jimmy Bogard:** Active to 2026-09-01, but his recent output is AutoMapper and MediatR release posts, plus promotion of his own commercial Vertical Slice Architecture webinar (2026-09-01 and 2026-07-23). He'd raise the same release-notes depth concern that `jeremy-miller`'s marking exists for, and a direct commercial interest in the opinion this topic is trying to corroborate. He originated the vertical-slice framing and the deferred domain-events pattern `ms-learn` quotes, so his archive matters, but the case for admission is weaker than the first pass assumed.
    - **Kamil Grzybek:** Unchanged. Watch list, not admission. Nothing published since 2023-12-05.
    - **Udi Dahan:** Unchanged. Watch-listed on 2026-08-24, dormant since 2016-02-19, for discovery and cross-checking only.
 

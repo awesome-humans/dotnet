@@ -26,7 +26,7 @@ When you generate or review .NET code for another project:
 ## Maintaining this repository
 
 - **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: a house profile's preference from experience, such as the repository owner's, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. It sits in a house block beside the sourced text and cites `house:<profile>`, and [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) is the canonical definition of its format, its marking, how it relates to the sourced text, and contributor adoption. Work from that section, not a paraphrase.
-- **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never carries one. For the definition, see [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references).
+- **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never supports one alone. For the definition, see [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references).
 - **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "Coming next" note, but never make it the opinion.
 - **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content sweep (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
 - **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on why it lost.
@@ -65,7 +65,7 @@ Maintenance skills mix two kinds of work. Sweeping sources, fetching pages, and 
 
 An agent that uses the author's credentials posts under the author's account, and nothing tells a reader that a person didn't write it. Put attribution in the conversation, where readers need it, and keep it out of the history:
 
-- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they don't carry `Co-Authored-By` trailers or "Generated with" lines. Neither do commit messages. Agents write most changes here, so a trailer on every commit would tell a reader nothing. This rule overrides any default that an agent harness applies.
+- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they don't include `Co-Authored-By` trailers or "Generated with" lines. Neither do commit messages. Agents write most changes here, so a trailer on every commit would tell a reader nothing. This rule overrides any default that an agent harness applies.
 - **The rule covers every commit on the branch.** When GitHub squashes, it appends a `Co-authored-by` line to the merged commit for each co-author trailer, and for each branch commit author other than the merger. The pull request description doesn't change that. So commit under the author's git identity, never one the harness supplies, and leave the trailer out of branch commits too.
 - **Agent attribution in conversation.** End each comment an agent writes on an issue or pull request, including replies in review threads, with the signature line that [awesome-humans/website: Writing style](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#commit-messages-and-pull-requests) defines. Copy its format from there, not from a past comment: it names the harness, the model without a vendor name the harness already gives, and the skill, if any. A reader, or another agent, then knows a person didn't write it.
 
@@ -79,7 +79,7 @@ The agent reviewer (currently CodeRabbit) reviews every pull request here except
 
 ## Metadata
 
-Three kinds of resource carry this metadata, in the two syntaxes their file formats allow:
+Three kinds of resource record this metadata, in the two syntaxes their file formats allow:
 
 | Directory    | `targets` | `last-reviewed` | `sources` | Syntax             |
 | ------------ | --------- | --------------- | --------- | ------------------ |
@@ -87,7 +87,7 @@ Three kinds of resource carry this metadata, in the two syntaxes their file form
 | `templates/` | Yes       | Yes             | Yes       | First-line comment |
 | `research/`  | Yes       | Yes             | Yes       | YAML frontmatter   |
 
-**`opinions/` and `research/` carry YAML frontmatter:**
+**`opinions/` and `research/` use YAML frontmatter:**
 
 ```yaml
 ---
@@ -99,7 +99,7 @@ sources: [andrew-lock, dotnet-blog] # ids from AWESOME-HUMANS.md, sorted
 
 A `research/` topic has no status field. Promoting or discarding a topic deletes it, so a topic on disk is unresolved by definition, and a status could only ever read `open`. For details, see [research-topic](skills/research-topic/SKILL.md) and [resolve-research](skills/resolve-research/SKILL.md).
 
-**`templates/` carry a first-line comment header.** An XML, INI, or source file can't open with a `---` block and stay valid for the tools that read it. So the same fields go in a comment instead, separated by pipes after a fixed marker:
+**`templates/` use a first-line comment header.** An XML, INI, or source file can't open with a `---` block and stay valid for the tools that read it. So the same fields go in a comment instead, separated by pipes after a fixed marker:
 
 ```xml
 <!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn -->

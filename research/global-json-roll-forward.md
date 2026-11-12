@@ -122,7 +122,7 @@ Central Package Management alone doesn't create the coupling, because the SDK's 
 
 Pair a narrow pin with two .NET 10 fields:
 
-- `sdk.paths` lets the repository carry its own SDK and search it before the machine's, which reproduces builds better than any `rollForward` value.
+- `sdk.paths` lets the repository include its own SDK and search it before the machine's, which reproduces builds better than any `rollForward` value.
 - `errorMessage` replaces the resolver's generic failure with an instruction.
 
 ```json

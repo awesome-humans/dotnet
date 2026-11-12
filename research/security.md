@@ -6,7 +6,7 @@ sources: [andrew-lock, barry-dorrans, code-with-mukesh, ms-learn]
 
 # Security: the blocked remainder
 
-**Partially promoted on 2026-09-25.** Git history keeps the topic's two passes, from 2026-09-11 and 2026-09-12, at `research/security.md`. Everything they sourced is now opinion. What's left here is what no citable source can carry yet, and each item says what would unblock it.
+**Partially promoted on 2026-09-25.** Git history keeps the topic's two passes, from 2026-09-11 and 2026-09-12, at `research/security.md`. Everything they sourced is now opinion. What's left here is what no citable source can support yet, and each item says what would unblock it.
 
 ## What promoted
 
@@ -21,7 +21,7 @@ sources: [andrew-lock, barry-dorrans, code-with-mukesh, ms-learn]
 
 ## Still blocked on a source
 
-**API key authentication.** `code-with-mukesh` asks for "at least 128 bits of entropy, ideally 256 bits. Generated with RandomNumberGenerator.GetBytes()". It also asks for storage "as SHA-256 hashes, never plaintext", and comparison with `CryptographicOperations.FixedTimeEquals`. ([Mukesh: API Key Authentication in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/api-key-authentication-aspnet-core/), 2026-05-08) The advice is mechanical and looks right, but that ID is marked **Corroborate.**, so it can't carry the claim alone. `milan-jovanovic`'s 2023 post covers neither hashing nor comparison, and `damien-bowden` doesn't write about custom API key authentication (negative result, 2026-09-12). **Unblocked by:** a second citable source on hashing and comparing API keys.
+**API key authentication.** `code-with-mukesh` asks for "at least 128 bits of entropy, ideally 256 bits. Generated with RandomNumberGenerator.GetBytes()". It also asks for storage "as SHA-256 hashes, never plaintext", and comparison with `CryptographicOperations.FixedTimeEquals`. ([Mukesh: API Key Authentication in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/api-key-authentication-aspnet-core/), 2026-05-08) The advice is mechanical and looks right, but that ID is marked **Corroborate.**, so it can't support the claim alone. `milan-jovanovic`'s 2023 post covers neither hashing nor comparison, and `damien-bowden` doesn't write about custom API key authentication (negative result, 2026-09-12). **Unblocked by:** a second citable source on hashing and comparing API keys.
 
 **Which security analyzer rules to enable.** `AnalysisModeSecurity` sets the analysis mode for the Security category alone, and otherwise inherits `AnalysisMode`. ([Microsoft Learn: MSBuild reference for .NET SDK projects](https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props), reviewed 2026-03-27) The template's `latest-recommended` turns on some security rules. The documentation doesn't list which, and points at the SDK's `analysislevel_*_recommended.globalconfig` instead. No source in either pass recommends a setting. **Unblocked by:** a source that recommends a level or names the rules, so this repository doesn't invent one.
 
@@ -32,9 +32,9 @@ sources: [andrew-lock, barry-dorrans, code-with-mukesh, ms-learn]
 ## Waiting on a release, not a source
 
 - **.NET 11 GA, expected November 2026:** The CSRF note in aspnet-core-security.md becomes the opinion, and the CORS allowed-origins list becomes part of CSRF configuration. The CSP-compliant `Virtualize` component removes the .NET 8 to 10 conflict recorded under security headers. This is for `refresh-dotnet-versions`.
-- **`CheckSdkVulnerabilities`:** `ms-learn` documents the property, and warning NETSDK1239 for an end-of-life SDK. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support), reviewed 2026-05-15) The installed 10.0.400 SDK doesn't reference it, NETSDK1238, or NETSDK1240. Adopt it when an SDK this repository pins carries it.
+- **`CheckSdkVulnerabilities`:** `ms-learn` documents the property, and warning NETSDK1239 for an end-of-life SDK. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support), reviewed 2026-05-15) The installed 10.0.400 SDK doesn't reference it, NETSDK1238, or NETSDK1240. Adopt it when an SDK this repository pins includes it.
 - **.NET 8 and 9 end of support, 2026-11-10:** [opinions/security.md](../opinions/security.md) records the date. After it, `review-project` should report either target framework as a finding.
 
 ## A lead for `vet-source`
 
-On the Duende blog, the passkey and antiforgery deep dives carry Maarten Balliauw's byline, not Khalid's, so the wider `khalid` scope doesn't reach them. He has a long personal publishing record that nobody here has examined. This repository's passkeys opinion rests on a single source, so run `vet-source` on him, on the same terms that admitted Khalid's byline instead of the publication.
+On the Duende blog, the passkey and antiforgery deep dives have Maarten Balliauw's byline, not Khalid's, so the wider `khalid` scope doesn't reach them. He has a long personal publishing record that nobody here has examined. This repository's passkeys opinion rests on a single source, so run `vet-source` on him, on the same terms that admitted Khalid's byline instead of the publication.

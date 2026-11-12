@@ -1,6 +1,6 @@
 # Awesome humans
 
-These are the vetted sources behind every opinion in this repository. An opinion can use content only if it traces to a source listed here, or carries a reserved `house:<profile>` ID described below.
+These are the vetted sources behind every opinion in this repository. An opinion can use content only if it traces to a source listed here, or cites a reserved `house:<profile>` ID described below.
 
 To propose a source, [suggest it for vetting](https://github.com/awesome-humans/website/issues/new?template=suggest-source.yml&ecosystem=.NET). If you're a listed source and don't want your work cited, [ask to opt out](https://github.com/awesome-humans/website/issues/new?template=opt-out.yml). For how both work, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
 
@@ -82,7 +82,7 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 
 ## Named references
 
-The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never carries one, and never appears in `sources:`. A package's or tool's own repository already qualifies when an opinion names it, official or not, so it isn't listed here. That covers `dotnet/sdk` for the `dotnet` CLI, and `dotnet/dotnet-docker` for the official container images and their tags. This roster also names:
+The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never supports one alone, and never appears in `sources:`. A package's or tool's own repository already qualifies when an opinion names it, official or not, so it isn't listed here. That covers `dotnet/sdk` for the `dotnet` CLI, and `dotnet/dotnet-docker` for the official container images and their tags. This roster also names:
 
 - **[dotnet/csharplang](https://github.com/dotnet/csharplang):** The proposal or design notes for a C# feature an opinion names, for how the feature behaves, not whether to use it.
 - **[fsharp/fslang-design](https://github.com/fsharp/fslang-design):** The RFC for an F# language or FSharp.Core feature an opinion names, for how the feature behaves, not whether to use it.
@@ -126,7 +126,7 @@ Citable on his code-backed engineering posts and on the dotnet-skills he wrote h
   It was watch-listed as a separate source on 2026-09-25 and merged into this ID the same day: the track record follows the person, so the repository's 2025-11-12 start doesn't hold it back.
 - **Longevity:** Writing on aaronstannard.com since [2010-05-14](https://aaronstannard.com/blog/page19/), and on the Petabridge blog since 2015.
   Together they show posts in every year from 2010 to 2026, and both are live, with posts on 2026-08-21 and 2026-09-23.
-  The personal blog thins to a few posts a year from 2016 to 2019, with a longest gap of 347 days (2018-10-16 to 2019-09-28), and the Petabridge blog carries those years.
+  The personal blog thins to a few posts a year from 2016 to 2019, with a longest gap of 347 days (2018-10-16 to 2019-09-28), and the Petabridge blog fills those years.
 - **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression that unit tests couldn't catch.
   ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example.
   ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
@@ -134,8 +134,8 @@ Citable on his code-backed engineering posts and on the dotnet-skills he wrote h
   It reports failures as well as wins: ["Planning and Verifying a Greenfield Project"](https://aaronstannard.com/software-2.0-case-study-textforge/) records the agent writing tests that only "checked the 'has test coverage' box".
   dotnet-skills publishes [evaluations](https://github.com/Aaronontheweb/dotnet-skills-evals), but they're small: 15 Akka.NET tasks, judged by the model that wrote the code.
 - **Accuracy:** Sound, with in-post corrections on record.
-  [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono.
-  ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` that retracts a misreading of David Fowler.
+  [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) includes Miguel de Icaza's correction on WebAssembly and Mono.
+  ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) includes an `EDIT` that retracts a misreading of David Fowler.
   dotnet-skills is weaker, because nothing compiles its samples: its own `AGENTS.md` says "There is no build system, tests, or compiled output."
   On 2026-09-25, against SDK 10.0.400, the `testcontainers` samples failed with CS0246 against Testcontainers 4.15.0, which their own `Version="*"` references restore, and a `csharp-coding-standards` value object failed with CS0111.
   The same skill's records hold collections, which breaks value equality, and `with` bypasses a validating record.
@@ -236,10 +236,10 @@ A discovery channel, not an opinion source. Archive verified back to 2017-12.
 Independent depth on ASP.NET Core security, OpenID Connect, and BFF, shown in working code.
 
 - **Longevity:** Writing since [2013-01-31](https://damienbod.com/2013/01/31/welcome-to-my-blog/), technical from the first week, and still publishing on 2026-09-01.
-  Every sampled year between carries several pages of posts, at least monthly. 2014, 2017, and 2022 weren't counted, and the years either side leave no room for a gap.
-- **Depth:** [The BFF post](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/) carries the OpenID Connect setup, a YARP transform, and a token cache, and explains why the downstream API refuses the user's delegated token.
+  Every sampled year between has several pages of posts, at least monthly. 2014, 2017, and 2022 weren't counted, and the years either side leave no room for a gap.
+- **Depth:** [The BFF post](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/) covers the OpenID Connect setup, a YARP transform, and a token cache, and explains why the downstream API refuses the user's delegated token.
   [The passkey post](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/) diagnoses an ASP.NET Core defect, links the runtime issue, and gives a re-sign-in workaround against RFC 8176.
-- **Accuracy:** Maintained in the open: posts carry dated History sections that record what each framework version changed.
+- **Accuracy:** Maintained in the open: posts have dated History sections that record what each framework version changed.
   When Duende's co-founder commented that a 2023 post resembled Duende's own sample, he added the attribution and said so in the thread.
 - **Independence:** A consultant in Switzerland with no vendor attachment, who covers Duende, OpenIddict, Entra ID, and ASP.NET Core Identity in turn, so no independence limit.
 - **Conflict of interest:** He maintains `angular-auth-oidc-client` and writes tutorials that use it, and he sells application-security workshops through isolutions.
@@ -320,7 +320,7 @@ Cite the personal blog in full. Cite his Duende posts for platform mechanism, an
 - **Scope:** Widened on 2026-09-12 to his bylined posts on the [Duende blog](https://duendesoftware.com/blog), about two a month from 2025-03 to 2026-10-01.
   The publication is watch-listed separately, so this ID covers his byline and nobody else's.
   The documentation is evidence, not citable material, as with `shay-rojansky`: his 387 commits to the docs repository, the latest on 2026-09-03, author whole pages, but the published pages name no author to cite.
-- **Longevity:** [khalidabuhakmeh.com](https://khalidabuhakmeh.com/) went quiet from 2025-04-22 and resumed on 2026-10-05 with two posts. The Duende byline carried his writing through the gap.
+- **Longevity:** [khalidabuhakmeh.com](https://khalidabuhakmeh.com/) went quiet from 2025-04-22 and resumed on 2026-10-05 with two posts. His writing continued under the Duende byline through the gap.
   The two new posts are introductory: one explains `int.TryParse`, `int.Parse`, and `Convert.ToInt32`, and one maps Rails to ASP.NET Core.
   Neither has measurements, and no factual errors were found.
 - **Independence:** Now at Duende Software. His JetBrains authorship ended in 2024.
@@ -391,7 +391,7 @@ The "What's new" and "Breaking changes" pages for each release.
   Quote the page's review date from its `ms.date` metadata field, never `updated_at`. `updated_at` is a docset build timestamp shared by every page in a bulk republish, and it can run years ahead of the text.
   The difference matters because the pages age unevenly.
   The microservices e-book is 2018 and 2021 content, unreviewed since, and its 2023 and 2024 `updated_at` values are republishes.
-  The Azure Architecture Center pattern pages are revised continually, and carry recent `ms.date` values.
+  The Azure Architecture Center pattern pages are revised continually, and have recent `ms.date` values.
 
 ### `nicholas-blumhardt`: Citable
 
@@ -415,7 +415,7 @@ Event sourcing and event-driven design in worked, typed examples, from someone w
 - **Longevity:** Writing since 2011-09-21, on a Polish-language blog later moved into the current site, and steadily from 2020, at about 50 posts a year through 2023. Active on 2026-08-10.
 - **Depth:** Verified on worked examples, with traced scenarios and typed code.
 - **Conflict of interest:** He co-maintains Marten and Emmett, and sells event sourcing workshops.
-  The conflict is recorded, not limited, following `milan-jovanovic` and `nicholas-blumhardt`. The marking carries the usage rule.
+  The conflict is recorded, not limited, following `milan-jovanovic` and `nicholas-blumhardt`. The marking states the usage rule.
 - **Cite:** The .NET material. He also writes about Node, so check an example's language before you cite it.
 
 ### `scott-brady`: Watch list
@@ -460,7 +460,7 @@ The cadence is thin, so watch it for dormancy.
   The 2025 post is a Visual Studio settings recipe, thinner than the async catalogue.
 - **Accuracy:** Corrections are in the posts.
   The .NET 8 post says an earlier version wrongly claimed EF Core avoids `ConfigureAwait(false)`, and that EF Core added it in 5.0.0.
-  The 2012 deadlock post carries a 2014-12-01 update pointing to newer material.
+  The 2012 deadlock post has a 2014-12-01 update pointing to newer material.
   ["ASP.NET Core SynchronizationContext"](https://blog.stephencleary.com/2017/03/aspnetcore-synchronization-context.html) (2017) revisits the deadlock guidance for a host with no context.
 - **Independence:** An independent consultant and Microsoft MVP with no vendor employer, so no independence limit.
 - **Conflict of interest:** He sells the book and contract work, and maintains the free Nito.AsyncEx library, which some posts link. Flag it where an opinion names Nito.AsyncEx.

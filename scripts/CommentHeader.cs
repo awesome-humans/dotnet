@@ -3,7 +3,7 @@
 // statements, and the YamlDotNet reference it compiles beside is declared by the script
 // including it.
 //
-// Templates can't carry YAML frontmatter: they're XML, INI, JSON and source files that
+// Templates can't open with YAML frontmatter: they're XML, INI, JSON and source files that
 // have to stay valid for the tools that read them, and a `---` block would break every
 // one. The same metadata goes in a comment on the first line instead, and this parses it:
 //
@@ -18,11 +18,11 @@ internal static class CommentHeader
     /// <summary>The literal every template header opens with, inside its comment marker.</summary>
     internal const string Marker = "awesome-humans/dotnet template";
 
-    /// <summary>The directory whose files carry these headers, as the reports quote it.</summary>
+    /// <summary>The directory whose files have these headers, as the reports quote it.</summary>
     internal const string TemplatesDirectory = "templates";
 
     /// <summary>
-    /// Every file under <see cref="TemplatesDirectory"/> expected to carry a header, sorted,
+    /// Every file under <see cref="TemplatesDirectory"/> expected to have a header, sorted,
     /// as repository-relative paths with forward slashes so a finding reads the same whichever
     /// platform ran the check. Empty when the directory is absent.
     /// </summary>
@@ -39,7 +39,7 @@ internal static class CommentHeader
         // checkout does, because CI isn't the only place these checks run.
         string[] buildOutput = ["artifacts", "bin", "obj"];
 
-        // JSON carries no comment syntax, so templates/global.json and the .slnf filter can't hold
+        // JSON has no comment syntax, so templates/global.json and the .slnf filter can't hold
         // a header at all. Exactly those two are exempt, the same list AGENTS.md documents, so a
         // headerless JSON file added anywhere else under templates/ fails loudly rather than
         // silently escaping validation. What the two pin is audited against the latest releases
@@ -88,7 +88,7 @@ internal static class CommentHeader
         }
         else
         {
-            error = "first line carries no comment header";
+            error = "first line has no comment header";
             return null;
         }
 

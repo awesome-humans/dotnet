@@ -53,7 +53,7 @@ jobs:
           > "$snapshot"
 
           # Guard against a fetch that succeeds but returns something unexpected:
-          # replace the checked-in file only once the new one parses and carries channels.
+          # replace the checked-in file only once the new one parses and lists channels.
           # An empty or unparseable snapshot fails the run loudly instead of opening a pull
           # request.
           channels="$(jq '.channels | length' "$snapshot" 2>/dev/null || echo 0)"

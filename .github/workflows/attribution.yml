@@ -1,6 +1,6 @@
 name: Attribution
 
-# Fails a pull request whose title, description, or commits carry agent attribution,
+# Fails a pull request whose title, description, or commits include agent attribution,
 # using the organisation's shared check in awesome-humans/.github. pull_request_target
 # runs this file from the base branch, so a pull request can't change the check
 # that runs on it. The shared job never checks out or runs the pull request's code.

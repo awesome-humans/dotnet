@@ -10,7 +10,7 @@
 // it, and two edits that add the same package land on the same line. The ItemGroup is the
 // group: its Label says what the entries have in common, and the order restarts in each.
 //
-// Order that carries meaning isn't checked. F# compiles the Compile items in the order the
+// Order that has meaning isn't checked. F# compiles the Compile items in the order the
 // project lists them, and a PropertyGroup reads top to bottom. See awesome-humans/website:
 // Writing style, Order.
 //

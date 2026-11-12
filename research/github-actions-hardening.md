@@ -10,9 +10,9 @@ Set `persist-credentials: false` on every `actions/checkout` step unless a later
 Pass a reusable workflow only the secrets it uses, not `secrets: inherit`.
 Lint the workflows in CI, so a regression fails the pull request instead of waiting for a review to spot it.
 
-All three are sound practice, but the roster can't carry them yet.
+All three are sound practice, but no roster source supports them yet.
 No citable source covers credential persistence or secret inheritance, and the one that covers workflow checks recommends a different tool.
-The evidence below is the actions' own documentation, which corroborates a claim and never carries one ([awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references)).
+The evidence below is the actions' own documentation, which corroborates a claim and never supports one alone ([awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references)).
 To promote any of it, either a roster source has to say it, or the owner has to adopt it as a house opinion.
 
 ## What `opinions/ci.md` already says
@@ -117,7 +117,7 @@ actionlint 1.7.12 reports nothing. zizmor 1.31.1 reports:
 
 Four gaps to resolve:
 
-1. **[ci.md](../opinions/ci.md) has no rule on credential persistence or secret inheritance,** and its sample workflow omits `persist-credentials: false`. No roster source carries either rule. Adopting them as house opinions, through `weave-house-opinion`, is the route that exists today. awesome-humans/website already follows both.
+1. **[ci.md](../opinions/ci.md) has no rule on credential persistence or secret inheritance,** and its sample workflow omits `persist-credentials: false`. No roster source supports either rule. Adopting them as house opinions, through `weave-house-opinion`, is the route that exists today. awesome-humans/website already follows both.
 2. **ci.md doesn't recommend checking workflows automatically.** The citable source names Scorecard. actionlint and zizmor are the pull request gates, but no roster source names them. This is also a house opinion, or it waits for a source.
 3. **The workflow fixes in the table are a `ci:` change to this repository,** not an opinion change. They can go ahead now, whatever happens to items 1 and 2, as website's did.
 4. **Two later notes for ci.md:** the v7 `pull_request_target` block belongs beside the script-injection rule once a roster source covers it, and workflow lockfiles belong in a "Coming next" note until they reach GA.
@@ -126,4 +126,4 @@ Four gaps to resolve:
 
 **Source sweep note:** Searches of `meziantou`, `andrew-lock`, `dotnet-blog`, `damien-bowden`, `steve-gordon`, and the watch-list `barry-dorrans` found nothing on credential persistence, secret inheritance, or workflow linters.
 Andrew Lock's Actions posts cover trusted publishing and SBOM attestations, which ci.md already uses.
-The roster has no GitHub Actions security source, so no `vet-source` candidate came out of this sweep. The tools' own documentation and GitHub's announcements carried every claim.
+The roster has no GitHub Actions security source, so no `vet-source` candidate came out of this sweep. The tools' own documentation and GitHub's announcements supported every claim.

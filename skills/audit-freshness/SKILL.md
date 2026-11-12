@@ -56,7 +56,7 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 A reference is a named package's own material, or a repository named under [AWESOME-HUMANS.md: Named references](../../AWESOME-HUMANS.md#named-references), linked inline to corroborate a roster-sourced claim. The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) set the rules. Report each of these as a finding:
 
 - **A linked issue or pull request has changed state.** The opinion calls it open, or relies on it as a current limitation, and it has closed, merged, or shipped in a release. Send it to `harvest-sources` to update or drop the note.
-- **A reference carries a claim alone.** The sentence or bullet it supports has no roster citation, so the reference is doing a source's job.
+- **A reference is the only support for a claim.** The sentence or bullet it supports has no roster citation, so the reference is doing a source's job.
 - **A reference is in `sources:`.** References never go there.
 - **A reference points into an archived repository, or anchors a line on a branch.** Link where the content moved, and pin a line anchor to a commit.
 - **A reference is guidance, or publishes a roster source.** Advice, such as a skills repository, needs `vet-source`. A repository behind a roster source, such as `dotnet/docs` for `ms-learn`, is cited as its published page.
@@ -94,8 +94,8 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
 
 - **A repository with no opinions yet:** Report that there's nothing to check. Don't pass.
 - **House content,** which is `house:<profile>` in `sources:` and that profile's house blocks or regions, as HOUSE-OPINIONS.md describes: The reserved ID is never an unknown-source finding, and never suggest removing it. `scripts/validate-sources.cs` fails a build where the ID and its blocks don't appear together, or `**House:**` sits outside a block. Review a house block's age with its file, and never count it as stale sourced text.
-- **Files that can't carry a comment header:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
-  - `.slnx` is XML and carries a header, so it isn't exempt.
+- **JSON files, which have no comment syntax:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
+  - `.slnx` is XML and takes a comment header, so it isn't exempt.
   - `scripts/validate-metadata.cs` enforces this two-file list in CI, so any other headerless JSON under `templates/` fails there.
 - **A package pin held back on purpose,** for a known-bad release or a tracked major migration: Report the drift as informational once a comment beside the pin gives the reason. Deliberate staleness must look different from silent staleness.
 - **A resource that doesn't depend on a version,** such as naming conventions: It can declare `targets: [any]`. Version checks skip it, and review-age checks still apply.

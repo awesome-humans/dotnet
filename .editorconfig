@@ -1,8 +1,8 @@
 # This repository's own editor config, per the opinion in
-# opinions/project-structure.md ("every repository carries a root .editorconfig").
+# opinions/project-structure.md ("Give every repository a root .editorconfig").
 #
 # It is NOT the template: templates/.editorconfig is the canonical file shipped
-# to consumers, and it carries the C#/F# house style. This one governs the prose
+# to consumers, and it holds the C#/F# house style. This one governs the prose
 # and configuration that this repository actually contains. Keep the two separate:
 # editing this file changes how we work, editing the template changes our advice.
 #

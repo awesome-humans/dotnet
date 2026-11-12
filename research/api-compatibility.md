@@ -118,7 +118,7 @@ Checked on SDK 10.0.400:
 ## Versioning: SemVer on the package, major only on the assembly
 
 - **Package version:** SemVer 2.0.0, with a prerelease suffix for anything unstable.
-- **`AssemblyVersion`:** "CONSIDER only including a major version in the AssemblyVersion", so 1.0 and 1.0.1 both carry 1.0.0.0 and need fewer binding redirects. Keep its major in step with the package's, and never freeze it.
+- **`AssemblyVersion`:** "CONSIDER only including a major version in the AssemblyVersion", so 1.0 and 1.0.1 both stay at 1.0.0.0 and need fewer binding redirects. Keep its major in step with the package's, and never freeze it.
 - **`AssemblyInformationalVersion`:** Let Source Link generate it.
 - **Assembly name and strong-naming key:** Never change them, and never add or remove the key.
 

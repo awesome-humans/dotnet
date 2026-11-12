@@ -10,11 +10,11 @@
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
 
-// Verifies that every resource carries the metadata fields AGENTS.md requires
+// Verifies that every resource has the metadata fields AGENTS.md requires
 // (targets, last-reviewed, and sources), that the dates are ISO 8601, and that each
 // sources list is in ordinal order.
 //
-// Three resource kinds carry them two ways. opinions/ and research/ use YAML
+// Three resource kinds record them two ways. opinions/ and research/ use YAML
 // frontmatter; templates/ use a first-line comment header, because an XML or INI file
 // can't open with a `---` block and stay valid for the tools that read it. One
 // required set spans both syntaxes, so they can't drift apart.
@@ -42,7 +42,7 @@ if (!Opinions.DirectoryExists)
 string[] required = ["targets", "last-reviewed", "sources"];
 
 // last-used is retired everywhere: whether a resource is still referenced is read from
-// the repository by audit-freshness, not stored. A research topic also must not carry a
+// the repository by audit-freshness, not stored. A research topic also must not have a
 // status: a topic on disk is unresolved by definition, and deletion is the only
 // promotion signal (AGENTS.md). Both are rejected rather than ignored, so the retired
 // shapes can't come back.
@@ -80,7 +80,7 @@ foreach (string path in research)
 string[] templates = CommentHeader.Files();
 if (templates.Length == 0)
 {
-    errors.Add($"no header-carrying files found under {CommentHeader.TemplatesDirectory}/");
+    errors.Add($"no files with a comment header under {CommentHeader.TemplatesDirectory}/");
 }
 
 foreach (string path in templates)
@@ -148,11 +148,11 @@ if (errors.Count > 0)
 }
 
 Console.WriteLine(
-    $"All {resources.Count} resources carry valid metadata "
+    $"All {resources.Count} resources have valid metadata "
     + $"({opinions.Length} opinions, {research.Length} research, {templates.Length} templates).");
 return 0;
 
-// A key that is present but carries nothing (null, "", []) is as much a gap as
+// A key that is present but holds nothing (null, "", []) is as much a gap as
 // a missing key, so both fail the same way.
 static bool IsEmpty(object? value) => value switch
 {

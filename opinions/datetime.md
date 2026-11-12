@@ -20,7 +20,7 @@ Four rules cover most cases:
 
 | Need                                        | Type             | Why                                                                           |
 | ------------------------------------------- | ---------------- | ----------------------------------------------------------------------------- |
-| An unambiguous point in time                | `DateTimeOffset` | Carries the UTC offset, so it identifies one instant on any machine           |
+| An unambiguous point in time                | `DateTimeOffset` | Records the UTC offset, so it identifies one instant on any machine           |
 | A whole date, no time (birthday, invoice)   | `DateOnly`       | A time zone can't shift it by a day; serializes less data; maps to SQL `date` |
 | A time of day (opening hours, alarm)        | `TimeOnly`       | Wraps at 24 hours instead of overflowing like `TimeSpan` or `DateTime`        |
 | A duration or elapsed time                  | `TimeSpan`       | An interval, not a clock reading                                              |
@@ -133,7 +133,7 @@ For the test framework stack, see [testing.md](testing.md).
 
 - **Get the user's zone from the browser, not the server.** In interactive server Blazor, register a scoped `TimeProvider` per circuit, filled through JavaScript interop. For the pattern, see [ui-frameworks.md](ui-frameworks.md#blazor).
 - **Run hosts in UTC, and convert at the edges.** Give each scheduled job an explicit zone. Local time repeats an hour when DST ends and skips one when it starts, so a job set to server-local time in that hour runs twice or not at all. ([Microsoft Learn: How to resolve ambiguous times](https://learn.microsoft.com/dotnet/standard/datetime/resolve-ambiguous-times), [Microsoft Learn: TimeZoneInfo.IsInvalidTime](https://learn.microsoft.com/dotnet/api/system.timezoneinfo.isinvalidtime))
-- **Include tzdata in Linux container images, and ICU if you convert between IANA and Windows zone IDs.** On Linux, zone conversion needs only tzdata, and ICU serves the ID conversions and any culture other than the invariant one. Windows images carry their own zone data and can use NLS for cultures, but the ID conversions still need ICU. For image tags, invariant mode, failure modes, and display formatting, see [globalization.md](globalization.md#containers-chiseled-and-alpine-images-drop-this-data).
+- **Include tzdata in Linux container images, and ICU if you convert between IANA and Windows zone IDs.** On Linux, zone conversion needs only tzdata, and ICU serves the ID conversions and any culture other than the invariant one. Windows images include their own zone data and can use NLS for cultures, but the ID conversions still need ICU. For image tags, invariant mode, failure modes, and display formatting, see [globalization.md](globalization.md#containers-chiseled-and-alpine-images-drop-this-data).
 
 ## Smaller traps
 

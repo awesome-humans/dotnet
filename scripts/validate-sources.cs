@@ -64,7 +64,7 @@ if (!File.Exists(RosterPath))
 }
 
 // Which level-2 headings open which bucket. Anything outside them, such as the admission
-// criteria and the decision log, carries no source rows.
+// criteria and the decision log, has no source rows.
 (string Bucket, string[] Prefixes)[] sections =
 [
     ("citable", ["## Citable"]),
@@ -72,7 +72,7 @@ if (!File.Exists(RosterPath))
     (OptedOutBucket, ["## Opted out"]),
 ];
 
-// The roster tables carry only id, Kind, Source, Focus and Since. The evidence behind each row,
+// The roster tables hold only id, Kind, Source, Focus and Since. The evidence behind each row,
 // and with it the two markings, lives under '## Source notes', one '### `id`' section per
 // source. Splitting them is what keeps a diff readable: a table row is a short line, and a
 // reworded sentence in a note touches that sentence rather than a 4,000-character row.
@@ -338,7 +338,7 @@ foreach (string name in Opinions.Names())
     citing.Add((path, declaredIds));
 }
 
-// A template carries the same ids comma-separated inside its one-line comment header.
+// A template lists the same ids comma-separated inside its one-line comment header.
 foreach (string path in CommentHeader.Files())
 {
     if (CommentHeader.Read(path, out _) is not IDictionary header || header["sources"] is not string declared)
@@ -393,7 +393,7 @@ foreach ((string path, List<string> sourceIds) in citing)
         }
     }
 
-    // A Corroborate-marked source may carry the shape of a claim but never the claim alone,
+    // A Corroborate-marked source may support the shape of a claim but never the claim alone,
     // so something unmarked has to stand beside it. A house profile doesn't count: it is its
     // owner's position, not a second reading of the evidence.
     bool marked = false;
@@ -437,7 +437,7 @@ foreach ((string path, List<string> sourceIds) in citing)
 
     foreach (House.Span span in spans.Where(span => !span.Marked))
     {
-        errors.Add($"{path}:{span.Start + 1}: the house {kind} for {span.Profile} doesn't carry '{House.Marking}'");
+        errors.Add($"{path}:{span.Start + 1}: the house {kind} for {span.Profile} doesn't contain '{House.Marking}'");
     }
 
     string[] lines = text.ReplaceLineEndings("\n").Split('\n');
@@ -446,7 +446,7 @@ foreach ((string path, List<string> sourceIds) in citing)
         if (lines[index].Contains(House.Marking, StringComparison.Ordinal)
             && !spans.Any(span => span.Start < index && index < span.End))
         {
-            errors.Add($"{path}:{index + 1}: '{House.Marking}' outside a house {kind}, so the default copy would carry it");
+            errors.Add($"{path}:{index + 1}: '{House.Marking}' outside a house {kind}, so the default copy would include it");
         }
     }
 }

@@ -41,7 +41,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
      - Raising the minimum only narrows who can build. Pinning a patch, such as `10.0.412` instead of `10.0.400`, fails contributors one servicing release behind.
      - When a band ships something the repository uses, raise the minimum, and give the reason in the pull request. For example, the root `global.json` is at `10.0.400` because that's the first band that supports `#:include`.
      - The two files are independent. The root pin follows what `scripts/` needs, and the template pin follows what the example projects need. Use `latestFeature` wherever the opinion says so.
-     - `global.json` can't carry a comment header, so the pinned value **is** the record.
+     - `global.json` has no comment syntax, so the pinned value **is** the record.
      - Renovate never changes this field: `renovate.json` disables the `dotnet-sdk` dependency type, because a minimum under `latestFeature` doesn't need mechanical bumps. Only this skill changes it.
    - **4b. The package pins in `templates/Directory.Packages.props`.** Look up every `<PackageVersion>` on nuget.org, with the registration index (`https://api.nuget.org/v3/registration5-gz-semver2/<lowercased-id>/index.json`) or `dotnet package search <id>`.
      - Take the **latest stable** version. Never take a prerelease, or a version whose TFM support falls below `targets:`.

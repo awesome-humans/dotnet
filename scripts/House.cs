@@ -17,7 +17,7 @@
 //     <!-- house:simon-mckenna end -->
 //
 // The file's sources list names the profile as house:<profile>. Removing every block and
-// region gives the default copy, which carries no house opinions, and keeping one profile's
+// region gives the default copy, which has no house opinions, and keeping one profile's
 // gives that profile's copy.
 
 using System.Text.RegularExpressions;
@@ -43,7 +43,7 @@ internal static partial class House
     /// <summary>
     /// The house blocks in an opinion, or the house regions in a template, in file order:
     /// each one's profile, its first and last line (the opening and closing lines included),
-    /// and whether it carries the marking. A malformed opening or closing line goes to
+    /// and whether it has the marking. A malformed opening or closing line goes to
     /// <paramref name="errors"/>, prefixed with <paramref name="path"/>.
     /// </summary>
     internal static List<Span> Spans(string path, string text, List<string> errors)
@@ -131,7 +131,7 @@ internal static partial class House
     /// The text with every house block or region removed except the given profile's, or all
     /// of them for null. A kept template region loses its two marker lines, which only staging
     /// reads. The sources list in the frontmatter or header loses every other profile's id, so
-    /// a copy names only the house opinions it carries.
+    /// a copy names only the house opinions it contains.
     /// </summary>
     internal static string ForProfile(string path, string text, string? profile)
     {
