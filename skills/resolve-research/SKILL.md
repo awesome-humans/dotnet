@@ -14,7 +14,7 @@ metadata:
 
 ## Orchestration
 
-This is **editor-only work, so don't fan it out**. The research did the sweeping. What remains is deciding what an opinion says, which [AGENTS.md](../../AGENTS.md#orchestration-and-model-economy) reserves for the strongest available model. To recheck a claim, run `research-topic` again instead of a worker sweep.
+This is **editor-only work, so don't fan it out**. The sources were scanned when the topic was researched. What's left is deciding what an opinion says, which [AGENTS.md](../../AGENTS.md#orchestration-and-model-economy) reserves for the strongest available model. If a claim needs rechecking, run `research-topic` again instead of starting a scan here.
 
 ## Steps
 

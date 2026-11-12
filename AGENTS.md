@@ -28,7 +28,7 @@ When you generate or review .NET code for another project:
 - **Trace every substantive change to a source in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).** The one exception is a **house opinion**: a house profile's preference from experience, such as the repository owner's, recorded through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill. It sits in a house block beside the sourced text and cites `house:<profile>`, and [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) is the canonical definition of its format, its marking, how it relates to the sourced text, and contributor adoption. Work from that section, not a paraphrase.
 - **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count: a reference corroborates a claim from a roster source and never supports one alone. For the definition, see [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references).
 - **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "Coming next" note, but never make it the opinion.
-- **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content sweep (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
+- **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content scan (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
 - **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on why it lost.
 - **List every new file under `opinions/` in `README.md`, in two places:**
   - A bullet under [Scope](README.md#scope), in the form `- **[Title](opinions/<file>.md):** one line on what it covers`. Sort the bullets by title, ignoring case, and keep the unlinked **Libraries** bullet last.
@@ -55,9 +55,9 @@ When you generate or review .NET code for another project:
 
 ### Orchestration and model economy
 
-Maintenance skills mix two kinds of work. Sweeping sources, fetching pages, and checking versions is wide and shallow. Deciding what an opinion says is narrow and deep. Split them:
+Maintenance skills mix two kinds of work. Scanning sources, fetching pages, and checking versions is wide and shallow. Deciding what an opinion says is narrow and deep. Split them:
 
-- **Give the sweeps to lower-cost worker agents.** Web searches, feed checks, page fetches, and per-source summaries are cheap-model work. Run them in parallel where the host supports it. Workers return raw findings, such as links, dates, and extracted claims, never edits.
+- **Give the scans to lower-cost worker agents.** Web searches, feed checks, page fetches, and per-source summaries are cheap-model work. Run them in parallel where the host supports it. Workers return raw findings, such as links, dates, and extracted claims, never edits.
 - **Use the strongest available model as the editor.** Only the editor, the orchestrating model, combines worker findings, resolves conflicts between sources, and updates `opinions/` and `templates/`. Model quality matters most here, so never delegate the final edit to a cheap model.
 - **The split is a recommendation.** A single-model host can run everything itself, but it keeps gathering and deciding as separate steps.
 
@@ -156,7 +156,7 @@ The shared page's exception for pre-release features covers the "Coming next" no
 Work in a git worktree, with one branch per directory. The local clone is bare, and each branch is checked out beside it, so you move between pieces of work with `cd` instead of `git checkout`. An in-place branch switch changes the tree under anything that holds a path into it, such as a running `dotnet` build, a formatter, or another agent mid-edit. It also discards the gitignored state the old branch had built: `node_modules/`, `artifacts/`, `bin/`, and `obj/`.
 
 - **Starting:** Start every new piece of work as a **new worktree, not just a new branch**, whether it's a feature, a fix, a research topic, or a version bump. Use `git worktree add -b <branch> <dir> main` as one step. Never run `git checkout -b` in a worktree that already holds other work.
-- **Branch names:** Prefix a skill's branch with what the skill produces: `research/<topic-slug>`, `resolve/<topic-slug>`, `harvest/<YYYY-MM-DD>` (dated the day the sweep window ends), `vet/<source-id>` or a slug for a multi-source pass, `house/<slug>`, and `refresh/dotnet-<version>`.
+- **Branch names:** Prefix a skill's branch with what the skill produces: `research/<topic-slug>`, `resolve/<topic-slug>`, `harvest/<YYYY-MM-DD>` (dated the day the scan window ends), `vet/<source-id>` or a slug for a multi-source pass, `house/<slug>`, and `refresh/dotnet-<version>`.
   - Any other change uses its commit's [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) type (`docs/`, `fix/`, `feat/`, `ci/`, or `chore/`) and a kebab-case slug. `automation/` is reserved for workflows.
   - This convention outranks the host environment's own. Replace a generated name such as `agent/youthful-wozniak-gm4k7m` before the first push. If a host only pushes under its own prefix, put the convention after it: `agent/harvest/2026-09-14`.
   - Settle the name before you open the pull request. Renaming the head branch of an open pull request on GitHub closes it, and you can't reopen it under the new name.

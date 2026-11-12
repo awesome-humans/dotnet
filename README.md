@@ -136,7 +136,7 @@ In this repository, each house opinion is a marked block beside the sourced text
 
 Agent skills maintain the repository. They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md` file.
 
-The skills split work by cost. Lower-cost worker agents run the web searches and source sweeps in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
+The skills split work by cost. Lower-cost worker agents run the web searches and source scans in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
 Every skill except the three report-only ones works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the owner's review. Each `SKILL.md` is canonical over this diagram.
 
@@ -145,7 +145,7 @@ Every skill except the three report-only ones works on its own branch, and its c
 | Skill                                                                | Purpose                                                                                     |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                      |
-| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts, and add notable guidance to the opinions    |
+| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Scan the awesome-humans sources for new posts, and add notable guidance to the opinions     |
 | [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET, C#, and F# releases, and update all opinions and templates to target them  |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic from the opinions and vetted sources, and save it with citations      |
 | [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic by weaving it into the opinions and templates, or discard it |

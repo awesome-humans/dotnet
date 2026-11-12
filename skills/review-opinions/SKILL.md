@@ -33,7 +33,7 @@ A link that loads doesn't prove a claim. lychee passes a page that has moved to 
 - **A full run before each major `refresh-dotnet-versions`:** in the weeks before a .NET GA, so the refresh starts from claims that are known to hold, and the "Coming next" notes it promotes have been checked.
 - **A scoped run inside `harvest-sources`:** step 6 of that skill runs steps 2 to 4 here on the lines the harvest added or changed, before it opens the pull request. A misread citation is then fixed before anyone reviews it. The harvest makes the edits, and this skill only supplies the check.
 
-Don't run a full pass after every harvest. By then the new citations are already checked, and a full sweep mostly re-reads pages nobody changed.
+Don't run a full pass after every harvest. By then the new citations are already checked, and a full scan mostly re-reads pages nobody changed.
 
 ## Orchestration
 
