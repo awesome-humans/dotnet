@@ -97,6 +97,6 @@ Report each file with no inbound links as a pruning candidate. Nothing on the we
 - **JSON files, which have no comment syntax:** The repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`. Missing metadata isn't a finding for them. Audit the pinned value against the latest release instead.
   - `.slnx` is XML and takes a comment header, so it isn't exempt.
   - `scripts/validate-metadata.cs` enforces this two-file list in CI, so any other headerless JSON under `templates/` fails there.
-- **A package pin held back on purpose,** for a known-bad release or a tracked major migration: Report the drift as informational once a comment beside the pin gives the reason. Deliberate staleness must look different from silent staleness.
+- **A package pinned below the latest release on purpose,** for a known-bad release or a tracked major migration: Report the drift as informational once a comment beside the pin gives the reason. Deliberate staleness must look different from silent staleness.
 - **A resource that doesn't depend on a version,** such as naming conventions: It can declare `targets: [any]`. Version checks skip it, and review-age checks still apply.
 - **Clock skew or future dates** in the metadata: Report them as malformed.
