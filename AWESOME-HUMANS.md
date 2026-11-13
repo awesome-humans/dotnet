@@ -491,7 +491,7 @@ The lower longevity bar doesn't change this.
 Blocked on dormancy: no posts since 2016-02-19, and no continuing written channel. His talks and the Particular training courses are out of scope since the 2026-08-23 narrowing.
 
 - **Longevity:** The start year is estimated from a testimonial that mentions the blog in 2007.
-- **Independence:** Founder and CEO of Particular Software, which sells NServiceBus, so a concern would also apply.
+- **Independence:** Founder and CEO of Particular Software, which sells NServiceBus. That would limit his independence even if he cleared dormancy.
 - **Use:** The 2005 to 2016 archive stays usable for discovery and cross-checking. `ms-learn` already cites him second-hand on domain events.
 
 ## Decision log
