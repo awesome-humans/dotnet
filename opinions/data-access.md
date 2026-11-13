@@ -12,7 +12,7 @@ Use EF Core as the default ORM. Send a change to many rows as one statement, and
 
 ## Writes
 
-- **Use `ExecuteUpdateAsync` and `ExecuteDeleteAsync` for updates and deletes that don't need the entities loaded.** Loading the entities, changing them, and calling `SaveChanges` pulls every row into the change tracker, then sends a statement for each one. The set-based APIs issue one `UPDATE` or `DELETE`. Mukesh measures them hundreds of times faster on 10,000-row operations. ([Mukesh: Bulk operations in EF Core 10](https://codewithmukesh.com/blog/bulk-operations-efcore/), [Jovanović: What you need to know about EF Core bulk updates](https://milanjovanovic.tech/blog/what-you-need-to-know-about-ef-core-bulk-updates))
+- **Use `ExecuteUpdateAsync` and `ExecuteDeleteAsync` for updates and deletes that don't need the entities loaded.** Loading the entities, changing them, and calling `SaveChanges` pulls every row into the change tracker, then sends a statement for each one. The set-based APIs issue one `UPDATE` or `DELETE`. ([Mukesh: Bulk operations in EF Core 10](https://codewithmukesh.com/blog/bulk-operations-efcore/), [Jovanović: What you need to know about EF Core bulk updates](https://milanjovanovic.tech/blog/what-you-need-to-know-about-ef-core-bulk-updates))
 
   ```csharp
   // Set-based: one statement, no entities materialized
@@ -75,7 +75,7 @@ Use EF Core as the default ORM. Send a change to many rows as one statement, and
 
 ## Source redundancy
 
-The benchmark numbers under [Writes](#writes) come from `code-with-mukesh`, marked **Corroborate.**, in the first opinion and from `milan-jovanovic` in the last, and this repository hasn't reproduced them. Both support the general rule: use set-based writes for set-based work, and accept losing change tracker behaviour. Before you quote the ratios, check them against the EF Core documentation on Microsoft Learn.
+The benchmark numbers under [Writes](#writes) come from `milan-jovanovic`, and this repository hasn't reproduced them. `code-with-mukesh`, marked **Corroborate.**, also reports speed-ups, which this file leaves out because no unmarked source reports them. Both support the general rule: use set-based writes for set-based work, and accept losing change tracker behaviour. Before you quote a number, check it against the EF Core documentation on Microsoft Learn.
 
 `shay-rojansky` has a recorded independence limit: he maintains Npgsql and works on Microsoft's EF Core team. This file cites him only for how Npgsql maps timestamps, under [Dates and times](#dates-and-times), as his notes allow. When to use each type comes from `jon-skeet`, in [datetime.md](datetime.md).
 
