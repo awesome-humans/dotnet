@@ -10,14 +10,14 @@
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
 
-// Verifies that every resource carries the metadata fields AGENTS.md requires
+// Verifies that every resource has the metadata fields AGENTS.md requires
 // (targets, last-reviewed, and sources), that the dates are ISO 8601, and that each
 // sources list is in ordinal order.
 //
-// Three resource kinds carry them two ways. opinions/ and research/ use YAML
+// Three resource kinds record them two ways. opinions/ and research/ use YAML
 // frontmatter; templates/ use a first-line comment header, because an XML or INI file
-// cannot open with a `---` block and stay valid for the tools that read it. One
-// required set spans both syntaxes, so they cannot drift apart.
+// can't open with a `---` block and stay valid for the tools that read it. One
+// required set spans both syntaxes, so they can't drift apart.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root, through its
@@ -35,14 +35,14 @@ using YamlDotNet.Serialization;
 
 if (!Opinions.DirectoryExists)
 {
-    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here — run this script from the repository root.");
+    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here: run this script from the repository root.");
     return 2;
 }
 
 string[] required = ["targets", "last-reviewed", "sources"];
 
 // last-used is retired everywhere: whether a resource is still referenced is read from
-// the repository by audit-freshness, not stored. A research topic also must not carry a
+// the repository by audit-freshness, not stored. A research topic also must not have a
 // status: a topic on disk is unresolved by definition, and deletion is the only
 // promotion signal (AGENTS.md). Both are rejected rather than ignored, so the retired
 // shapes can't come back.
@@ -68,9 +68,8 @@ foreach (string name in opinions)
     resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, forbidden));
 }
 
-// research/ is staging, and legitimately empty once every topic has been resolved —
-// resolve-research deletes the file it finishes with. So an empty or absent directory
-// is not a finding.
+// research/ is staging, and empty once every topic is resolved, because resolve-research
+// deletes the file it finishes with. An empty or absent directory isn't a finding.
 string[] research = MarkdownIn("research");
 
 foreach (string path in research)
@@ -81,7 +80,7 @@ foreach (string path in research)
 string[] templates = CommentHeader.Files();
 if (templates.Length == 0)
 {
-    errors.Add($"no header-carrying files found under {CommentHeader.TemplatesDirectory}/");
+    errors.Add($"no files with a comment header under {CommentHeader.TemplatesDirectory}/");
 }
 
 foreach (string path in templates)
@@ -109,15 +108,15 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsFo
     {
         if (fields.Contains(field))
         {
-            errors.Add($"{path}: field '{field}' is not allowed here");
+            errors.Add($"{path}: field '{field}' isn't allowed here");
         }
     }
 
     foreach (string field in dateFields)
     {
-        // YamlDotNet may hand back an already-parsed date for an unquoted YAML scalar;
-        // a comment header always arrives as text. Only text needs the format check —
-        // a value YAML read as a date is one that was written as one.
+        // YamlDotNet might hand back an already-parsed date for an unquoted YAML scalar,
+        // but a comment header always arrives as text. Only text needs the format check:
+        // a value YAML read as a date was written as one.
         if (fields.Contains(field) && fields[field] is string text && !IsIsoDate(text))
         {
             errors.Add($"{path}: '{field}' is '{text}', not an ISO 8601 date (YYYY-MM-DD)");
@@ -132,7 +131,7 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsFo
         string[] sorted = [.. ids.Order(StringComparer.Ordinal)];
         if (!ids.SequenceEqual(sorted, StringComparer.Ordinal))
         {
-            errors.Add($"{path}: 'sources' is not sorted; expected [{string.Join(", ", sorted)}]");
+            errors.Add($"{path}: 'sources' isn't sorted; expected [{string.Join(", ", sorted)}]");
         }
     }
 }
@@ -149,11 +148,11 @@ if (errors.Count > 0)
 }
 
 Console.WriteLine(
-    $"All {resources.Count} resources carry valid metadata "
+    $"All {resources.Count} resources have valid metadata "
     + $"({opinions.Length} opinions, {research.Length} research, {templates.Length} templates).");
 return 0;
 
-// A key that is present but carries nothing (null, "", []) is as much a gap as
+// A key that is present but holds nothing (null, "", []) is as much a gap as
 // a missing key, so both fail the same way.
 static bool IsEmpty(object? value) => value switch
 {

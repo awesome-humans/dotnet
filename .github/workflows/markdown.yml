@@ -3,14 +3,14 @@ name: Markdown
 on:
   pull_request:
   # A pull request can only restore caches saved on its own ref or on main, so
-  # without a run on main after each merge, every PR restores the cache from the
-  # last weekly run and discards it as older than --max-cache-age.
+  # without a run on main after each merge, every pull request restores the cache
+  # from the last weekly run and discards it as older than --max-cache-age.
   push:
     branches: [main]
   workflow_dispatch:
   schedule:
     # Weekly, Mondays 06:00 UTC. The link check runs on a schedule, not only on
-    # PRs, because links break even when the repository doesn't change.
+    # pull requests, because links break even when the repository doesn't change.
     - cron: "0 6 * * 1"
 
 permissions:
@@ -18,8 +18,9 @@ permissions:
 
 jobs:
   format-and-lint:
-    # Formatting, structure, and spelling are deterministic and offline, so they gate PRs.
-    # On a push to main they would only repeat what the merged PR already passed.
+    # Formatting, structure, and spelling are deterministic and offline, so they gate pull
+    # requests. On a push to main they would only repeat what the merged pull request
+    # already passed.
     if: github.event_name != 'schedule' && github.event_name != 'push'
     runs-on: ubuntu-latest
     steps:
@@ -34,14 +35,14 @@ jobs:
 
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
 
-      # Pinned to a release at least two weeks old when chosen. The justfile is every entry
-      # point, so the steps below call its recipes, never npm.
+      # Pin just to a release that was at least two weeks old when picked. The steps below
+      # call its recipes, never npm, because the justfile holds every entry point.
       - uses: taiki-e/install-action@cfdb7ed4ccc7c7dce37759eae89dc5674b469b39 # v2.90.3
         with:
           tool: just@1.58.0
 
-      # npm ci, not npm install: it honours package-lock.json exactly and fails if the lock
-      # and manifest disagree, so CI can't float a version.
+      # just install runs npm ci, not npm install. It installs only what package-lock.json
+      # pins, and fails if package.json has drifted from it.
       - name: Install the prose tools
         run: just install
 
@@ -60,12 +61,11 @@ jobs:
 
   links:
     runs-on: ubuntu-latest
-    # Blocking everywhere, PRs included: the citations in opinions/ and the
-    # roster are the substance of this repository, so a dead link is a content
-    # defect that should not merge. The cost is that a third-party host being
-    # down fails an otherwise good PR — lychee.toml keeps that rare (retries,
-    # browser user agent, 403/429 accepted), and an unrelated outage is
-    # a re-run once the host recovers, not a reason to merge past the signal.
+    # A broken link fails every run, pull requests included. The citations in opinions/
+    # and the roster are what the repository provides, so a dead one is a content defect.
+    # A third-party host that's down can fail a good pull request too. lychee.toml makes
+    # that rare with retries, a browser user agent, and accepting 403 and 429. When it
+    # happens, re-run the job once the host recovers, instead of merging past it.
     # audit-freshness reads this workflow's result as its link-health signal.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -73,7 +73,7 @@ jobs:
           persist-credentials: false
 
       # Restore lychee's result cache, so a run doesn't request every host again.
-      # The action has no cache input of its own — this is the supported way.
+      # lychee-action has no cache input, so this step follows the setup in its README.
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .lycheecache

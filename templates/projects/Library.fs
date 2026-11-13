@@ -9,8 +9,8 @@ let describe payment =
     | Card(number, _) -> $"card ending {number.Substring(number.Length - 4)}"
     | DirectDebit iban -> $"direct debit from {iban}"
 
-/// seq { ... } written explicitly: a brace block without it is deprecated in F# 10 (FS3873).
-/// The warning is about the missing seq, not the comprehension, so this body is correct either way.
+/// seq { ... } written explicitly: F# 10 deprecates a brace block without it (FS3873).
+/// The warning is about the missing seq, not the comprehension, so the body needs no yield.
 let evenSquares upTo =
     seq {
         for i in 1..upTo do

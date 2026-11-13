@@ -1,5 +1,5 @@
 // awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-10-22 | sources: house:simon-mckenna, ms-learn
-// Belongs to Example.Library.Tests. Without a test, `dotnet test` exits with code 8, because MTP treats a session that discovers none as a failure.
+// Belongs to Example.Library.Tests. Without a test, `dotnet test` exits with code 8, because MTP fails a session that runs no tests.
 using Xunit;
 
 namespace Example.Library.Tests;

@@ -15,7 +15,7 @@ House opinions are a house profile's preferences, such as the owner's `simon-mck
 ## Steps
 
 1. **Take the entry** from the HOUSE-OPINIONS.md inbox, with its profile. If the owner asks directly, add the entry to the inbox first, so the record starts there. The profile must be in HOUSE-OPINIONS.md's Profiles table and registered for this ecosystem in [awesome-humans/website: `houses.toml`](https://github.com/awesome-humans/website/blob/main/houses.toml). If it isn't, stop and ask the owner: a new profile needs their approval.
-2. **Find where it belongs:** the matching `opinions/` file, and the matching `templates/` file if the opinion changes scaffolding, such as an `.editorconfig` rule or a build property. If it has no natural home, create an opinion file under the usual rules, including its `README.md` Scope bullet and Repository layout entry, which CI enforces.
+2. **Find where it belongs:** the matching `opinions/` file, and the matching `templates/` file if the opinion changes scaffolding, such as an `.editorconfig` rule or a build property. If no opinion file covers it, create one under the usual rules, including its `README.md` Scope bullet and Repository layout entry, which CI enforces.
 3. **Write it in, marked, as [awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works) defines:**
    - **In `opinions/`:** A block right after the sourced recommendation it changes, outside any list. It opens with `/// house | <profile>` and closes with `///`, each on its own line with a blank line inside. Inside, the opinion comes first, starting with **House:** in bold, and the rationale follows. Add `house:<profile>` to the file's `sources:`.
    - **In `templates/`:** Make the change between `house:<profile> begin` and `house:<profile> end` comment lines, in the file's comment syntax, and add `house:<profile>` to the `sources:` list in the comment header. Put a `**House:**` comment inside the region on the changed setting. The template must still build with the region removed.
@@ -33,6 +33,6 @@ House opinions are a house profile's preferences, such as the owner's `simon-mck
 
 ## Edge cases
 
-- **The owner changes their mind:** Write in the reversal the same way, and mark the old Woven row as superseded. The record is append-only.
+- **The owner reverses a house opinion:** Write in the reversal the same way, and mark the old Woven row as superseded. The record is append-only.
 - **A house opinion becomes obsolete,** for example because the framework now does it automatically: Mark it as superseded inside its block, name the release that made it obsolete, and cite the source.
 - **Two profiles change the same sourced text:** Give each its own block, one after the other, sorted by profile.

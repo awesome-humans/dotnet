@@ -1,9 +1,9 @@
-// Shared by the checks that read the one-line headers on templates/ files — pulled in
-// with `#:include CommentHeader.cs`. Not a file-based app itself: it declares no top-level
+// Shared by the checks that read the one-line headers on templates/ files, through
+// `#:include CommentHeader.cs`. Not a file-based app itself: it declares no top-level
 // statements, and the YamlDotNet reference it compiles beside is declared by the script
 // including it.
 //
-// Templates cannot carry YAML frontmatter: they are XML, INI, JSON and source files that
+// Templates can't open with YAML frontmatter: they're XML, INI, JSON and source files that
 // have to stay valid for the tools that read them, and a `---` block would break every
 // one. The same metadata goes in a comment on the first line instead, and this parses it:
 //
@@ -18,11 +18,11 @@ internal static class CommentHeader
     /// <summary>The literal every template header opens with, inside its comment marker.</summary>
     internal const string Marker = "awesome-humans/dotnet template";
 
-    /// <summary>The directory whose files carry these headers, as the reports quote it.</summary>
+    /// <summary>The directory whose files have these headers, as the reports quote it.</summary>
     internal const string TemplatesDirectory = "templates";
 
     /// <summary>
-    /// Every file under <see cref="TemplatesDirectory"/> expected to carry a header, sorted,
+    /// Every file under <see cref="TemplatesDirectory"/> expected to have a header, sorted,
     /// as repository-relative paths with forward slashes so a finding reads the same whichever
     /// platform ran the check. Empty when the directory is absent.
     /// </summary>
@@ -34,12 +34,12 @@ internal static class CommentHeader
         }
 
         // Smoke-testing the example projects (audit-freshness, refresh-dotnet-versions) leaves
-        // gitignored build output under templates/ — generated files, not resources. Skipping the
-        // same directories .gitignore does keeps a post-build working tree and a fresh checkout
-        // passing identically; CI is not the only place these checks run.
+        // gitignored build output under templates/: generated files, not resources. Skipping the
+        // directories .gitignore skips keeps a post-build working tree passing exactly as a fresh
+        // checkout does, because CI isn't the only place these checks run.
         string[] buildOutput = ["artifacts", "bin", "obj"];
 
-        // JSON carries no comment syntax, so templates/global.json and the .slnf filter cannot hold
+        // JSON has no comment syntax, so templates/global.json and the .slnf filter can't hold
         // a header at all. Exactly those two are exempt, the same list AGENTS.md documents, so a
         // headerless JSON file added anywhere else under templates/ fails loudly rather than
         // silently escaping validation. What the two pin is audited against the latest releases
@@ -60,7 +60,7 @@ internal static class CommentHeader
 
     /// <summary>
     /// Parses a template file's first-line comment header. Returns the fields, or null with
-    /// <paramref name="error"/> set to the reason — deliberately the same shape as
+    /// <paramref name="error"/> set to the reason, in the same shape as
     /// <see cref="Frontmatter.Read"/>, so one required-field check covers both syntaxes and
     /// the two report identical wording. The returned mapping is keyed ordinally.
     /// </summary>
@@ -88,7 +88,7 @@ internal static class CommentHeader
         }
         else
         {
-            error = "first line carries no comment header";
+            error = "first line has no comment header";
             return null;
         }
 
@@ -96,7 +96,7 @@ internal static class CommentHeader
 
         if (!body.StartsWith(Marker, StringComparison.Ordinal))
         {
-            error = $"header does not open with '{Marker}'";
+            error = $"header doesn't open with '{Marker}'";
             return null;
         }
 
@@ -112,7 +112,7 @@ internal static class CommentHeader
             int colon = segment.IndexOf(':');
             if (colon == -1)
             {
-                error = $"header segment '{segment}' is not 'key: value'";
+                error = $"header segment '{segment}' isn't 'key: value'";
                 return null;
             }
 

@@ -8,11 +8,11 @@
 #:property TreatWarningsAsErrors=true
 
 // Stages the .NET ecosystem's pages of the awesome-humans.net site, under /dotnet/. They're
-// generated from this repository's own files, so the site never carries a second copy to
+// generated from this repository's own files, so the site never keeps a second copy to
 // drift: README.md up to its layout section becomes the overview, opinions/, research/, and skills/ are
 // copied in full, the roster is split into a page per section, and every file under
 // templates/ gets a page showing it. llms.txt points agents at the raw files. Relative links are rewritten to the page they now point at, or to GitHub
-// for a file the site does not carry. The navigation is generated too: the opinions take their titles and order from
+// for a file the site doesn't publish. The navigation is generated too: the opinions take their titles and order from
 // README.md's Scope list, and the skills theirs from its Maintenance via skills table, which
 // validate-readme-index.cs already holds to the opinions and skills directories.
 //
@@ -53,7 +53,7 @@ const string EcosystemName = ".NET";
 const string SchemaBase = "https://raw.githubusercontent.com/awesome-humans/website/main/schemas";
 const string SiteUrl = "https://awesome-humans.net/";
 
-// The default profile, which carries no house opinions. Its copies go under raw/none/.
+// The default profile, which has no house opinions. Its copies go under raw/none/.
 const string NoProfile = "none";
 
 // Days after its last-reviewed date that an opinion counts as stale, from audit-freshness.
@@ -78,7 +78,7 @@ if (!Opinions.DirectoryExists)
 
 List<string> errors = [];
 
-// Other ecosystems may already have staged beside this one, so only this ecosystem's
+// Other ecosystems might already have staged beside this one, so only this ecosystem's
 // directory is cleared.
 string cleared = Path.Combine(docsDirectory, Ecosystem);
 if (Directory.Exists(cleared))
@@ -174,7 +174,7 @@ foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
     pages[Site.Normalise(file)] = $"{diagramsPage}/{Path.GetFileName(file)}";
 }
 
-// The roster, split so that no page carries all of it. The overview holds the admission
+// The roster, split so that no page holds all of it. The overview holds the admission
 // criteria and the shape of a source's notes, each roster table gets a page beside the notes
 // for the sources in it, each collapsed so the page reads as a list of sources, and the
 // decision log gets its own. A heading's anchor resolves to the page now holding it,
@@ -351,7 +351,7 @@ foreach (Match skill in skills)
     string path = Site.SkillPath(name);
     if (!File.Exists(path))
     {
-        errors.Add($"README.md: the skills table lists {name}, but {path} does not exist");
+        errors.Add($"README.md: the skills table lists {name}, but {path} doesn't exist");
         continue;
     }
 
@@ -432,7 +432,7 @@ string WithRepositoryNote(string path, string skill)
 // llms.txt, per llmstxt.org: a summary and links an agent can follow, to the raw Markdown
 // of each opinion and the raw template files rather than rendered pages. It describes this
 // ecosystem alone, at /dotnet/llms.txt, and the website repository's root llms.txt links to
-// it. It carries no house opinions, and llms-<profile>.txt carries one profile's. The raw
+// it. It has no house opinions, and llms-<profile>.txt has one profile's. The raw
 // string takes this file's line endings, which a Windows checkout can make CRLF, so the
 // result is normalised to LF like every file the script reads.
 const string LlmsSummary = "Opinionated best practices for building with .NET, distilled from the published writing of vetted people and publications with a multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.";
@@ -446,8 +446,8 @@ foreach (string? profile in profiles.Prepend(null))
     string templateLinks = string.Join("\n", templates.Select(template =>
         $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({RawLink(template, profile)})"));
     string house = profile is null
-        ? "These files carry no house opinions."
-        : $"These files carry the {profile} house profile's opinions. Each is a block that opens with `/// house | {profile}`, starts with `**House:**`, and closes with `///`, or a template region between `house:{profile} begin` and `house:{profile} end` comments. A house opinion is its owner's preference from experience, not sourced community practice. Where it conflicts with the sourced text beside it, follow the house opinion. For the default, which carries no house opinions, read [llms.txt]({SiteUrl}{Ecosystem}/llms.txt).";
+        ? "These files have no house opinions."
+        : $"These files include the {profile} house profile's opinions. Each is a block that opens with `/// house | {profile}`, starts with `**House:**`, and closes with `///`, or a template region between `house:{profile} begin` and `house:{profile} end` comments. A house opinion is its owner's preference from experience, not sourced community practice. Where it conflicts with the sourced text beside it, follow the house opinion. For the default, which has no house opinions, read [llms.txt]({SiteUrl}{Ecosystem}/llms.txt).";
 
     // The default lists each profile's file as a link of its own, because a fetch tool that
     // summarises a page paraphrases prose and drops the URLs in it.
@@ -589,7 +589,7 @@ static string NavTitle(string title)
 static string MetaItem(string label, string values) =>
     $"<span class=\"ah-meta__item\"><span class=\"ah-label\">{label}</span> {values}</span>";
 
-// A house profile's chip carries the profile, so the site shows it only with the profile's blocks.
+// A house profile's chip names the profile, so the site shows it only with the profile's blocks.
 static string HouseAttribute(string id) =>
     House.ProfileOf(id) is string profile ? $" data-house=\"{profile}\"" : "";
 
@@ -761,7 +761,7 @@ string Target(string source, string from, string target, bool anchorsToGitHub)
         return Site.GitHub(resolved, Directory.Exists(resolved)) + anchor;
     }
 
-    errors.Add($"{source}: link to {target} resolves to {resolved}, which does not exist");
+    errors.Add($"{source}: link to {target} resolves to {resolved}, which doesn't exist");
     return target;
 }
 
@@ -794,7 +794,7 @@ internal sealed record NavSection(string Title, NavItem[] Items) : NavItem(Title
 internal static partial class Site
 {
     // One source in the contract's sources.json, from its roster row and the heading of its
-    // notes, which carries the marking. A person's name is the start of their Source link
+    // notes, which holds the marking. A person's name is the start of their Source link
     // text, before ": ", " (", or "'s", as AWESOME-HUMANS.md: How the roster is organised
     // requires. A publication's is the whole link text. Since keeps only its leading year,
     // so "~2016 (docs.microsoft.com era)" exports as "~2016".

@@ -11,18 +11,18 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
-      "description": "Markdown tooling moves together — prettier, markdownlint, and cspell gate the same checks, so review them in one PR.",
+      "description": "Markdown tooling moves together: prettier, markdownlint, and cspell gate the same checks, so review them in one PR.",
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
       "groupName": "markdown tooling"
     },
     {
-      "description": "Action digest bumps are mechanical and the workflows re-run on the PR, so they need no staged rollout.",
+      "description": "Bump every action in one pull request. The bumps are mechanical, and CI runs the workflows on that pull request.",
       "matchManagers": ["github-actions"],
       "groupName": "github actions"
     },
     {
-      "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies — nothing builds against them. They are maintained by the refresh-dotnet-versions skill, which resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot bumping the version string alone would satisfy none of that while leaving the header wrong, and audit-freshness would stop being able to tell a reviewed pin from an unreviewed one. Scoped to templates/ rather than disabling nuget outright, because the #:package pins under scripts/ are a real dependency: YamlDotNet is what the checks compile against, and a bot bump there is exactly the mechanical change Renovate should make.",
+      "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies: nothing builds against them. The refresh-dotnet-versions skill maintains them. It resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot that bumps only the version string leaves the header wrong, and audit-freshness can then no longer tell a reviewed pin from an unreviewed one. Scoped to templates/, not nuget as a whole, because the #:package pins under scripts/ are real dependencies: the checks compile against YamlDotNet, and bumping it is the mechanical change Renovate exists for.",
       "matchManagers": ["nuget"],
       "matchFileNames": ["templates/**"],
       "enabled": false
