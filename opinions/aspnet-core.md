@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-25
+last-reviewed: 2026-11-13
 sources:
   [
     andrew-lock,
@@ -216,7 +216,7 @@ Concurrent callers for the same key share one factory call. A distributed backen
 
 ### HTTP caching defaults
 
-**Send `Cache-Control: no-cache, no-store, must-revalidate` from APIs by default, and opt individual endpoints into caching.** A cacheable default leads to stale data and cache poisoning. ([Meziantou: Disable HTTP caching by default](https://www.meziantou.net/disable-http-caching-by-default-in-asp-net-core-apis.htm))
+**Send `Cache-Control: no-cache, no-store, must-revalidate` from APIs by default, and opt individual endpoints into caching.** Unintended caching leads to stale data, security vulnerabilities, and bugs that are hard to reproduce. ([Meziantou: Disable HTTP caching by default](https://www.meziantou.net/disable-http-caching-by-default-in-asp-net-core-apis.htm))
 
 ### Localization
 

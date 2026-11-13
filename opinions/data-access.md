@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-25
+last-reviewed: 2026-11-13
 sources: [code-with-mukesh, milan-jovanovic, ms-learn, shay-rojansky]
 ---
 
@@ -12,7 +12,7 @@ Use EF Core as the default ORM. Send a change to many rows as one statement, and
 
 ## Writes
 
-- **Use `ExecuteUpdateAsync` and `ExecuteDeleteAsync` for updates and deletes that don't need the entities loaded.** Loading the entities, changing them, and calling `SaveChanges` pulls every row into the change tracker, then sends a statement for each one. The set-based APIs issue one `UPDATE` or `DELETE`. Mukesh and Jovanović measure them hundreds of times faster on 10,000-row operations. ([Mukesh: Bulk operations in EF Core 10](https://codewithmukesh.com/blog/bulk-operations-efcore/), [Jovanović: What you need to know about EF Core bulk updates](https://milanjovanovic.tech/blog/what-you-need-to-know-about-ef-core-bulk-updates))
+- **Use `ExecuteUpdateAsync` and `ExecuteDeleteAsync` for updates and deletes that don't need the entities loaded.** Loading the entities, changing them, and calling `SaveChanges` pulls every row into the change tracker, then sends a statement for each one. The set-based APIs issue one `UPDATE` or `DELETE`. Mukesh measures them hundreds of times faster on 10,000-row operations. ([Mukesh: Bulk operations in EF Core 10](https://codewithmukesh.com/blog/bulk-operations-efcore/), [Jovanović: What you need to know about EF Core bulk updates](https://milanjovanovic.tech/blog/what-you-need-to-know-about-ef-core-bulk-updates))
 
   ```csharp
   // Set-based: one statement, no entities materialized
@@ -38,7 +38,7 @@ Use EF Core as the default ORM. Send a change to many rows as one statement, and
 
 ## Indexes
 
-- **Choose indexes from the queries the application runs, and prove each one with `EXPLAIN ANALYZE`.** In a B-tree index, put equality columns first and the range or sort column last. Compare the plan before and after: it's the only evidence that the database uses the index. In Jovanović's demo with a million comments, a count drops from a 17 ms sequential scan to a 0.6 ms index-only scan, and a query on issues and users drops from 436 ms to about 0.5 ms. Reproduce numbers like these on your own data. ([Jovanović: SQL indexing explained: composite indexes and column order](https://www.milanjovanovic.tech/blog/how-to-design-the-right-sql-index))
+- **Choose indexes from the queries the application runs, and prove each one with `EXPLAIN ANALYZE`.** In a B-tree index, put equality columns first and the range or sort column last. Compare the plan before and after: it's the only evidence that the database uses the index. In Jovanović's demo with a million comments, a count drops from a 17 ms sequential scan to a 0.6 ms index-only scan, and a query for the newest open issues, each with its latest comment, drops from 436 ms to about 0.5 ms. Reproduce numbers like these on your own data. ([Jovanović: SQL indexing explained: composite indexes and column order](https://www.milanjovanovic.tech/blog/how-to-design-the-right-sql-index))
 
 ## Raw SQL
 
@@ -75,7 +75,7 @@ Use EF Core as the default ORM. Send a change to many rows as one statement, and
 
 ## Source redundancy
 
-The benchmark numbers in the first and last opinions under [Writes](#writes) come from `code-with-mukesh`, marked **Corroborate.**, and `milan-jovanovic`, and this repository hasn't reproduced them. Both support the general rule: use set-based writes for set-based work, and accept losing change tracker behaviour. Before you quote the ratios, check them against the EF Core documentation on Microsoft Learn.
+The benchmark numbers under [Writes](#writes) come from `code-with-mukesh`, marked **Corroborate.**, in the first opinion and from `milan-jovanovic` in the last, and this repository hasn't reproduced them. Both support the general rule: use set-based writes for set-based work, and accept losing change tracker behaviour. Before you quote the ratios, check them against the EF Core documentation on Microsoft Learn.
 
 `shay-rojansky` has a recorded independence limit: he maintains Npgsql and works on Microsoft's EF Core team. This file cites him only for how Npgsql maps timestamps, under [Dates and times](#dates-and-times), as his notes allow. When to use each type comes from `jon-skeet`, in [datetime.md](datetime.md).
 
