@@ -139,7 +139,7 @@ For a new "Coming next (preview, not yet the opinion)" section at the end of pro
 
 > **Review by 2027-05-31.** dotnetup is Microsoft's user-level SDK and runtime manager, in public preview since 2026-10-15. `dotnetup sdk install` reads the nearest `global.json` and tracks the channel it implies, which is `10.0` for `10.0.400` with `latestFeature`, and `dotnetup update` moves that channel to the newest SDK after each servicing release. A `dotnet-install` SDK never updates. Until dotnetup reaches GA, install the SDK on a development machine with an installer or a package manager, and keep `actions/setup-dotnet` in CI. dotnetup sends telemetry unless `DOTNET_CLI_TELEMETRY_OPTOUT` is `1`. Drop this note when dotnetup reaches GA and becomes the opinion.
 
-Every sentence in it has a citable source above. The migration points under question 2 stay out of the note until dotnetup is the opinion, because three of them are unsupported.
+Apart from the review date, every sentence in it has a citable source above. The migration points under question 2 stay out of the note until dotnetup is the opinion, because three of them are unsupported.
 
 ## What this reveals about the repository
 
