@@ -162,7 +162,7 @@ The standard reference for ASP.NET Core internals outside Microsoft, and author 
 
 Marked for mixed depth, and conflicted on the architecture and data-access topics he'd be cited for.
 
-- **Scope:** The ID also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/).
+- **Scope:** The ID also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://cleanarchitecture.ardalis.com/).
   The documentation counts as writing; the repositories' commits and releases don't.
 - **Longevity:** Writing since [2003-02-04](https://ardalis.com/first-post/), across four earlier blogs and the current domain.
   He's live: the latest post is from 2026-08-19, at about one a month as his effort moves to video and courses.
