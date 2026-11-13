@@ -10,7 +10,7 @@ sources: [dotnet-blog, ms-learn]
 Add one "Coming next" note to [project-structure.md](../opinions/project-structure.md), and change nothing else.
 Keep `actions/setup-dotnet` in CI, and keep `sdk.paths` with `dotnet-install` for preview SDKs.
 
-At GA, the hypothetical opinion is: install the SDK on a development machine with `dotnetup sdk install` from the repository root, so the machine tracks the channel that `global.json` implies, and run `dotnetup update` after each Patch Tuesday.
+At GA, the hypothetical opinion is: install the SDK on a development machine with `dotnetup sdk install` from the repository root, so the machine tracks the channel that dotnetup derives from `global.json`, and run `dotnetup update` after each Patch Tuesday.
 
 ## Maturity
 
@@ -103,16 +103,16 @@ One observation, **unsupported** because it's a single machine: on 2026-11-13, d
 
 ### 3. CI: `actions/setup-dotnet` stays the opinion
 
-The sources disagree. Husk answers "Can I use dotnetup in CI pipelines?" with "Absolutely". Microsoft Learn says to use a GA method on production machines. The preview status decides it, because [AGENTS.md](../AGENTS.md) doesn't let a preview become the opinion.
+The sources disagree. Husk answers "Can I use dotnetup in CI pipelines?" with "Absolutely". ([Husk: Introducing dotnetup: A toolchain manager for .NET](https://devblogs.microsoft.com/dotnet/introducing-dotnetup/), 2026-10-15) Microsoft Learn says to use a GA method on production machines. ([Microsoft Learn: When to use dotnetup](https://learn.microsoft.com/dotnet/core/tools/dotnetup/choose-dotnetup), reviewed 2026-09-30) The preview status decides it, because [AGENTS.md](../AGENTS.md) doesn't let a preview become the opinion.
 
 Two more reasons hold even at GA, until the workflow changes:
 
 - **The documented workflow runs an unpinned script.** Its install step is `curl -fsSL https://aka.ms/dotnetup/get-dotnetup.sh | bash`. ([Microsoft Learn: Use dotnetup in automation](https://learn.microsoft.com/dotnet/core/tools/dotnetup/usecases/automation), reviewed 2026-09-30) [ci.md](../opinions/ci.md) pins every action to a commit SHA, and a script fetched through a redirect has no pin. The comparison is this topic's own: **unsupported**.
-- **Later steps don't see the SDK.** "Other steps that run `dotnet` directly don't use the dotnetup-managed installation." Each step has to call `dotnetup dotnet`, or the job has to set `PATH` itself.
+- **Later steps don't see the SDK.** "Other steps that run `dotnet` directly don't use the dotnetup-managed installation." Each step has to call `dotnetup dotnet`, or the job has to set `PATH` itself. ([Microsoft Learn: Use dotnetup in automation](https://learn.microsoft.com/dotnet/core/tools/dotnetup/usecases/automation), reviewed 2026-09-30)
 
-The plan is for the action to adopt dotnetup, not for workflows to call it. Husk wants to "integrate dotnetup into CI/CD systems like GitHub Actions and Azure DevOps – ideally through replacing parts of the implementations of those tools today that rely on the dotnet-install scripts". If that ships, a workflow that uses `setup-dotnet` with `global-json-file` changes nothing.
+The plan is for the action to adopt dotnetup, not for workflows to call it. Husk wants to "integrate dotnetup into CI/CD systems like GitHub Actions and Azure DevOps – ideally through replacing parts of the implementations of those tools today that rely on the dotnet-install scripts". If that ships, a workflow that uses `setup-dotnet` with `global-json-file` changes nothing. ([Husk: Introducing dotnetup: A toolchain manager for .NET](https://devblogs.microsoft.com/dotnet/introducing-dotnetup/), 2026-10-15)
 
-`actions/setup-dotnet` already resolves the `latest*` policies from `global.json`. ([actions/setup-dotnet: README](https://github.com/actions/setup-dotnet#using-the-global-json-file-input), a reference, read 2026-11-13)
+`actions/setup-dotnet` already resolves the `latest*` policies from `global.json`. ([actions/setup-dotnet: README](https://github.com/actions/setup-dotnet#using-the-global-json-file-input), a reference, read 2026-11-13) No roster source says so, so the claim is **unsupported**.
 
 ### 4. Telemetry: one clause, not a rule
 
@@ -137,7 +137,7 @@ No source gives a date, so **Review by 2027-05-31** is this topic's choice, abou
 
 For a new "Coming next (preview, not yet the opinion)" section at the end of project-structure.md:
 
-> **Review by 2027-05-31.** dotnetup is Microsoft's user-level SDK and runtime manager, in public preview since 2026-10-15. `dotnetup sdk install` reads the nearest `global.json` and tracks the channel it implies, which is `10.0` for `10.0.400` with `latestFeature`, and `dotnetup update` moves that channel to the newest SDK after each servicing release. A `dotnet-install` SDK never updates. Until dotnetup reaches GA, install the SDK on a development machine with an installer or a package manager, and keep `actions/setup-dotnet` in CI. dotnetup sends telemetry unless `DOTNET_CLI_TELEMETRY_OPTOUT` is `1`. Drop this note when dotnetup reaches GA and becomes the opinion.
+> **Review by 2027-05-31.** dotnetup is Microsoft's user-level SDK and runtime manager, in public preview since 2026-10-15. `dotnetup sdk install` reads the nearest `global.json` and derives a channel from `sdk.version` and `rollForward`: `10.0` for `10.0.400` with `latestFeature`. `dotnetup update` moves that channel to the newest SDK after each servicing release. A `dotnet-install` SDK never updates. Until dotnetup reaches GA, install the SDK on a development machine with an installer or a package manager, and keep `actions/setup-dotnet` in CI. dotnetup sends telemetry unless `DOTNET_CLI_TELEMETRY_OPTOUT` is `1` or `true`. Drop this note when dotnetup reaches GA and becomes the opinion.
 
 Apart from the review date, every sentence in it has a citable source above. The migration points under question 2 stay out of the note until dotnetup is the opinion, because three of them are unsupported.
 
