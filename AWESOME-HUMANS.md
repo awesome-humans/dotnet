@@ -288,7 +288,7 @@ Cite only the pre-2024 Xamarin and MAUI catalogue, and expect nothing new from h
 
 - **Longevity:** Blogging since about 2012, first at motzcod.es, then montemagno.com.
   Re-vetted on 2026-08-23 on his writing alone, after the Merge Conflict podcast left scope. The blog still publishes, most recently on 2025-12-31, so he isn't dormant, but it now covers Copilot and tooling, and the last .NET post is from 2024-01-19.
-- **Independence:** A concern applies: Microsoft developer relations, adoption-focused, with little critical distance. Weigh independence per piece.
+- **Independence:** He works in Microsoft developer relations and writes to drive adoption, with little critical distance, so judge each piece on its own.
 
 ### `jeremy-miller`: Citable, **Corroborate.**
 
@@ -440,7 +440,7 @@ Lead maintainer of Npgsql and on Microsoft's EF Core team, with the deepest writ
 - **Longevity:** Nine years of writing, 2014 to 2023.
 - **Dormancy:** No long-form writing since 2023, on roji.org or the .NET Blog.
   He's held on the dormancy exception by the documentation he writes, re-verified on 2026-08-23: the EF Core 11 what's-new and breaking-change pages in `dotnet/EntityFramework.Docs`, latest commit 2026-05-12. They publish to Microsoft Learn, so they count as writing.
-- **Independence:** A concern applies: the citable material is first-party design rationale for products he maintains.
+- **Independence:** Limited, because the citable material is first-party design rationale for products he maintains.
 - **Cite:** For mechanism, meaning how Npgsql and EF Core behave and why. Corroborate adoption judgements elsewhere.
   The 2014 to 2023 blog catalogue is citable. Expect nothing new from blog harvests.
 
