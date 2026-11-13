@@ -17,6 +17,9 @@ sources:
 
 Target ASP.NET Core 10, and use minimal APIs for new HTTP APIs.
 
+- For authentication, authorization, CSRF, CORS, security headers, and the rest of security in the HTTP pipeline, see [aspnet-core-security.md](aspnet-core-security.md).
+- For secrets, deserialization, cryptography, and servicing cadence, see [security.md](security.md).
+
 ## Opinions
 
 ### Hosting and deployment
