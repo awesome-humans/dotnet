@@ -31,7 +31,7 @@ A worker returns one row for each claim it finds, in this shape, and never its o
 | `excerpt`  | At most two sentences, copied word for word from the page                                                        |
 | `date`     | The date the page gives for the text, published or last reviewed. If it gives none, the date read, marked `read` |
 
-Before you rest a claim on an excerpt, match it as a string against the page's raw text, fetched with a plain HTTP client such as `curl`. Read the whole page only when the excerpt doesn't settle what the page says.
+Before you rest a claim on an excerpt, match it as a string against the page's raw text, fetched with a plain HTTP client such as `curl` and stripped of markup. Read the whole page only when the excerpt doesn't settle what the page says.
 
 ## Steps
 
