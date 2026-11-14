@@ -149,7 +149,7 @@ public static class Describe
 }
 ```
 
-The last arm of `Lookup` matches `null`, which handles `default(ProductLookup)`. A union is a struct, so its default value contains neither a `Product` nor a `ProductNotFound`, and its `Value` is null. For a struct union, "the null pattern checks whether Value is null". Without that arm, the switch compiles without a warning, and a default value throws `SwitchExpressionException`. Match `null` there, not `_`, so CS8509 still reports a new case. ([Microsoft Learn: Union types](https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/union))
+The `null` arm is for `default(ProductLookup)`. A union is a struct, so its default value holds no case, and "the null pattern checks whether Value is null". Without that arm, the switch compiles without a warning, and a default value throws `SwitchExpressionException`. Write the `null` arm, not `_`, so CS8509 still reports a new case. ([Microsoft Learn: Union types](https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/union))
 
 ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/), [Lock: .NET (OK, C#) finally gets union types](https://andrewlock.net/exploring-the-dotnet-11-preview-2-dotnet-gets-union-types/), [Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
 
