@@ -39,7 +39,7 @@ This is **editor-only work, so don't fan it out**. The sources were scanned when
 
 ## Rules
 
-- **Only roster-sourced claims are promoted.** This gate lets research cite anyone while opinions cite only the roster.
+- **Only roster-sourced claims and reference facts are promoted.** This gate lets research cite anyone while opinions cite only the roster and its references.
 - **Promotion deletes the topic in the same pull request.** A promoted topic left on disk is a second, unapproved copy of the opinion, and the deletion is what marks it promoted. `audit-freshness` reports a topic that remains. Git history keeps the record.
 - **Promotion uses `docs:`, and discard uses `research:`.** A promotion edits opinions, like any other opinion change. A discard touches only the staging area. Neither uses the `research: <topic>` form that `research-topic` uses to save a topic.
 - **`last-reviewed` means verified against the sources.** If the research is within the freshness tolerance, its verification holds, and today's UTC date is accurate. If not, verify it again first, as [Edge cases](#edge-cases) describes. Dating stale research records a verification that never happened.
@@ -48,7 +48,7 @@ This is **editor-only work, so don't fan it out**. The sources were scanned when
 ## Edge cases
 
 - **The topic is stale:** It's past the `audit-freshness` tolerance, or a major .NET release shipped since. Verify its claims against their sources again, and check whether `refresh-dotnet-versions` should run first.
-- **Only part of it can be promoted:** Promote the roster-sourced part, and cut the file down to the blocked part, with a note on what was promoted and what the rest is waiting for. Don't let one unvetted paragraph block a sound recommendation, and don't delete the blocked part without saying so.
+- **Only part of it can be promoted:** Promote the roster-sourced part and any reference fact, and cut the file down to the blocked part, with a note on what was promoted and what the rest is waiting for. Don't let one unvetted paragraph block a sound recommendation, and don't delete the blocked part without saying so.
 - **Everything in it is unvetted:** It can't be promoted. Run `vet-source` on the strongest candidate source and return to it, or discard the topic.
 - **It covers a preview feature:** The freshness policy allows only a marked "Coming next" note. Promote that note if it's useful. Otherwise, leave the topic open until GA.
 - **Two topics overlap,** in one opinion file or one idea: Promote them in one pull request, or in an order that doesn't rewrite the same metadata twice.
