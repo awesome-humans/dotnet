@@ -1,7 +1,16 @@
 ---
 targets: [net11.0]
 last-reviewed: 2026-11-14
-sources: [andrew-lock, dotnet-blog, house:simon-mckenna, meziantou, ms-learn]
+sources:
+  [
+    aaron-stannard,
+    andrew-lock,
+    dotnet-blog,
+    house:simon-mckenna,
+    khalid,
+    meziantou,
+    ms-learn,
+  ]
 ---
 
 # CI & automation
@@ -36,7 +45,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
 /// house | simon-mckenna
 
-**House:** Give every suppression an inline comment that says why, whether it's `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry. Revert a suppression that has none. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` with no condition, so a suppression is the only way a compiler or analyzer warning gets past the build.
+**House:** Treat warnings as errors on every machine, not only in CI. A warning that fails CI but not your local build reaches a pull request before anyone sees it. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too. Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none. Two roster sources set the property the same way, with no CI condition, in the root `Directory.Build.props`. ([Abuhakmeh: Directory.Build.props: Share Settings Across .NET Projects](https://khalidabuhakmeh.com/posts/directory-build-props-share-settings-across-dotnet-projects/), [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md))
 
 ///
 

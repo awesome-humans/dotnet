@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net11.0, csharp-15, fsharp-11 | last-reviewed: 2026-11-14 | sources: dotnet-blog, khalid, meziantou, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net11.0, csharp-15, fsharp-11 | last-reviewed: 2026-11-14 | sources: aaron-stannard, dotnet-blog, house:simon-mckenna, khalid, meziantou, ms-learn -->
 <!-- Copy to the repository root. Every project inherits these settings. Override one in a project only with a recorded reason. -->
 <Project>
 
@@ -19,9 +19,10 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Quality gates">
-    <!-- Set with no condition, so a compiler or analyzer warning fails the build on every machine,
-         not only in CI (opinions/project-structure.md). MSBuild warnings need -warnaserror
-         (opinions/ci.md). This includes NuGet Audit. NU1901 to NU1904 fail restore on purpose, even on a branch nobody
+    <!-- house:simon-mckenna begin -->
+    <!-- **House:** Always on, not only in CI, so a warning fails the build as soon as it's introduced. Suppress with NoWarn or a pragma only with a comment that explains why. Abuhakmeh's Directory.Build.props post and Stannard's project-structure skill set it the same way, with no condition (opinions/ci.md). -->
+    <!-- house:simon-mckenna end -->
+    <!-- This includes NuGet Audit. NU1901 to NU1904 fail restore on purpose, even on a branch nobody
          changed, on the day an advisory lands against the dependency graph. To suppress one advisory,
          use NuGetAuditSuppress with its URL and a reason. Never list the codes in WarningsNotAsErrors
          (opinions/ci.md). -->
