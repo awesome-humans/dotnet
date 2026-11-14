@@ -82,7 +82,7 @@ A watch-list source is never cited. `scripts/validate-sources.cs` rejects a watc
 
 ## Named references
 
-The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference corroborates a claim from a roster source, never supports one alone, and never appears in `sources:`. A package's or tool's own repository already qualifies when an opinion names it, official or not, so it isn't listed here. That covers `dotnet/sdk` for the `dotnet` CLI, and `dotnet/dotnet-docker` for the official container images and their tags. This roster also names:
+The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define a reference and the rules for citing one, such as pinning a line anchor to a commit. A reference can support, without a roster source, a statement of fact about the behaviour of the package or feature it documents. A recommendation still rests on a roster source, and there a reference only corroborates it. A reference never appears in `sources:`. A package's or tool's own repository already qualifies when an opinion names it, official or not, so it isn't listed here. That covers `dotnet/sdk` for the `dotnet` CLI, and `dotnet/dotnet-docker` for the official container images and their tags. This roster also names:
 
 - **[dotnet/csharplang](https://github.com/dotnet/csharplang):** The proposal or design notes for a C# feature an opinion names, for how the feature behaves, not whether to use it.
 - **[fsharp/fslang-design](https://github.com/fsharp/fslang-design):** The RFC for an F# language or FSharp.Core feature an opinion names, for how the feature behaves, not whether to use it.
@@ -499,6 +499,7 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 <!-- prettier-ignore -->
 | Date | Decision | Detail |
 | --- | --- | --- |
+| 2026-11-14 | Let a reference support a fact alone (no roster change) | A named package's own material can support, without a roster source, a statement of fact about that package's behaviour: what it does, reports, and supports, and from which version. A recommendation still rests on a roster source. The owner's decision, in awesome-humans/website#188 |
 | 2026-10-23 | Watch-listed `ms-dotnet-skills` | The .NET team's skill pack, first published 2026-02-03, so short of two years. Re-evaluate from 2028-02, and check its MSTest steer then |
 | 2026-10-23 | Watch-listed `ms-aspire-skills` | Microsoft's Aspire skill pack, first published 2026-05-08, so short of two years. Re-evaluate from 2028-05 |
 | 2026-10-23 | Named four repositories as references (no roster change) | `dotnet/csharplang`, `fsharp/fslang-design`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |

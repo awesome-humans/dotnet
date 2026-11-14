@@ -53,10 +53,10 @@ Every topic on disk is unresolved, so all of them count. A topic still on disk a
 
 ### Cited references
 
-A reference is a named package's own material, or a repository named under [AWESOME-HUMANS.md: Named references](../../AWESOME-HUMANS.md#named-references), linked inline to corroborate a roster-sourced claim. The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) set the rules. Report each of these as a finding:
+A reference is a named package's own material, or a repository named under [AWESOME-HUMANS.md: Named references](../../AWESOME-HUMANS.md#named-references), linked inline. It supports a statement of fact about its own package's behaviour, or corroborates a roster-sourced claim. The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) set the rules. Report each of these as a finding:
 
 - **A linked issue or pull request has changed state.** The opinion calls it open, or relies on it as a current limitation, and it has closed, merged, or shipped in a release. Send it to `harvest-sources` to update or drop the note.
-- **A reference is the only support for a claim.** The sentence or bullet it supports has no roster citation, so the reference is doing a source's job.
+- **A reference is the only support for a recommendation.** The sentence or bullet has no roster citation, and says more than how the named package behaves, so the reference is doing a source's job. A statement of fact about the package's own behaviour needs no roster citation.
 - **A reference is in `sources:`.** References never go there.
 - **A reference points into an archived repository, or anchors a line on a branch.** Link where the content moved, and pin a line anchor to a commit.
 - **A reference is guidance, or publishes a roster source.** Advice, such as a skills repository, needs `vet-source`. A repository behind a roster source, such as `dotnet/docs` for `ms-learn`, is cited as its published page.
