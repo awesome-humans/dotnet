@@ -99,7 +99,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
 In production, four details decide whether it works:
 
 - **`SupportedCultures` and `SupportedUICultures` are independent.** `CurrentCulture` controls number, date, and currency formatting, and sorting. `CurrentUICulture` controls which `.resx` file `ResourceManager` resolves. English text with German number formatting is a valid configuration. ([Microsoft Learn: Globalization and localization in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/localization?view=aspnetcore-10.0))
-- **Providers run in order: query string, cookie, then `Accept-Language`. The first match wins.** Use the cookie in production, and the query string for debugging. `Accept-Language` reflects the user's OS, not their choice, so give users a way to set their culture. ([Lock: Adding Localisation to an ASP.NET Core application](https://andrewlock.net/adding-localisation-to-an-asp-net-core-application/))
+- **Providers run in order: query string, cookie, then `Accept-Language`. The first match wins.** On every request, "the first provider that can successfully determine the request culture is used". ([Microsoft Learn: Select the language/culture for each request in a localized ASP.NET Core app](https://learn.microsoft.com/aspnet/core/fundamentals/localization/select-language-culture)) Use the cookie in production, and the query string for debugging. Lock calls the cookie "the least intrusive" of the three, because it "does not require the user to set the Accept-Language header in their browser". Give users a way to set their culture, and store it in the cookie. ([Lock: Adding Localisation to an ASP.NET Core application](https://andrewlock.net/adding-localisation-to-an-asp-net-core-application/))
 - **Order the middleware.** Call `UseRequestLocalization` before anything that reads the culture. If you use `RouteDataRequestCultureProvider`, call it _after_ routing. ([Microsoft Learn: Globalization and localization in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/localization?view=aspnetcore-10.0))
 - **Fallback works per resource and ends at the default file:** `Welcome.fr-CA.resx`, then `Welcome.fr.resx`, then `Welcome.resx`. To show the key for a missing translation instead of the default language's text, don't ship a default `.resx` file.
 
@@ -109,12 +109,13 @@ In production, four details decide whether it works:
 
 **Pass keys to `IStringLocalizer` from a `static class ResourceKeys` of `const string` fields.** `IStringLocalizer` accepts the default-language text as the key, as in `_localizer["About Title"]`. That skips the up-front `.resx` work but scatters magic strings through the code. A constants class keeps each key in one place, and works in attributes such as `[Display(Name = ResourceKeys.AboutTitle)]`. ([Lock: Localising the DisplayAttribute and avoiding magic strings](https://andrewlock.net/localising-the-displayattribute-and-avoiding-magic-strings-in-asp-net-core/))
 
-Strongly typed resource classes lost on portability. .NET has no cross-platform generator for them: on net10.0, `<GenerateSource>true</GenerateSource>` on an `EmbeddedResource` builds cleanly and generates nothing.
+Strongly typed resource classes lost on portability, because the SDK ships no cross-platform generator for them.
 
-- The designer needs Visual Studio and a checked-in `.Designer.cs` file.
-- `Microsoft.CodeAnalysis.ResxSourceGenerator` works cross-platform, and dotnet/runtime uses it, but it's still prerelease only. Revisit this when a stable version ships.
+- The designer needs Visual Studio and a checked-in `.Designer.cs` file. ([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
+- `<GenerateSource>true</GenerateSource>` on an `EmbeddedResource` builds cleanly and generates nothing.
+- `Microsoft.CodeAnalysis.ResxSourceGenerator` has only prerelease versions. Revisit this when a stable version ships. ([NuGet: Microsoft.CodeAnalysis.ResxSourceGenerator](https://www.nuget.org/packages/Microsoft.CodeAnalysis.ResxSourceGenerator))
 
-([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
+<!-- Verified 2026-11-14 on SDK 11.0.100: a net11.0 class library with `GenerateSource="true"` on `Strings.resx` builds with no warnings, and the build generates no Strings class. -->
 
 ### Client-side: ship the globalization data the app can reach
 
@@ -127,11 +128,11 @@ Strongly typed resource classes lost on portability. .NET has no cross-platform 
 - **In a Blazor Web App, leave `UseCultureFromServer` on.** From .NET 11, client-side prerendering persists the server's `CurrentCulture` and `CurrentUICulture`, "and applies them on the client before satellite assemblies load". Set `WebAssemblyComponentsOptions.UseCultureFromServer` to `false` only when the client has to choose its culture independently of the server. ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-11.0#client-side-prerendering-in-a-blazor-web-app-preserves-the-servers-culture))
 
 - **.NET MAUI has no localization abstraction.** It uses `.resx` files per culture and `CultureInfo.DefaultThreadCurrentUICulture`, with nothing like `RequestLocalization`. To switch culture at run time, re-resolve bindings yourself. ([Microsoft Learn: .NET MAUI localization](https://learn.microsoft.com/dotnet/maui/fundamentals/localization?view=net-maui-10.0))
-- **Avalonia reads `.resx` in XAML with `{x:Static}` against a generated resources class.** Switching language without a restart needs a custom markup extension, and the community packages that provide one aren't vetted. The cited source is Avalonia's own documentation, so trust it for how this works, not for whether to use it. The caveat in [ui-frameworks.md](ui-frameworks.md) applies. ([Avalonia Docs: Localizing using ResX](https://docs.avaloniaui.net/docs/app-development/localizing))
+- **Avalonia reads `.resx` in XAML with `{x:Static}` against a generated resources class.** `{x:Static}` reads the string once. To switch language without a restart, "Reload the view or window", so the references are evaluated again. The cited source is Avalonia's own documentation, so trust it for how this works, not for whether to use it. The caveat in [ui-frameworks.md](ui-frameworks.md) applies. ([Avalonia Docs: Localizing using ResX](https://docs.avaloniaui.net/docs/app-development/localizing))
 
 ### Containers: chiseled and Alpine images drop this data
 
-**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `resolute-chiseled` or `alpine` images for size. Those size-optimised images (Alpine, Ubuntu chiseled, and Azure Linux distroless) "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `11.0-alpine-extra` or `11.0-resolute-chiseled-extra`, that adds back ICU, tzdata, and `stdc++`. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images), [dotnet/dotnet-docker: .NET Image Variants](https://github.com/dotnet/dotnet-docker/blob/main/documentation/image-variants.md))
+**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `resolute-chiseled` or `alpine` images for size. Those size-optimised images (Alpine, Ubuntu chiseled, and the Azure Linux images that the page lists as "Mariner distroless") "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `11.0-alpine-extra` or `11.0-resolute-chiseled-extra`, that adds back ICU, tzdata, and `stdc++`. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images), [dotnet/dotnet-docker: .NET Image Variants](https://github.com/dotnet/dotnet-docker/blob/main/documentation/image-variants.md))
 
 The two missing pieces fail differently:
 
@@ -147,6 +148,6 @@ The two missing pieces fail differently:
 
 ### Localization makes dates look right, not be right
 
-**Store instants as UTC, store the user's IANA time zone ID instead of a fixed offset, and convert at the edge.** For storage and type guidance, including when a future local event should _not_ become UTC, see [datetime.md](datetime.md). A local date and time can occur twice or not at all, and correct formatting can't fix a value that was ambiguous before it was formatted. Noda Time separates `Instant`, `LocalDateTime`, and `ZonedDateTime` for this reason. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
+**Store instants as UTC, store the user's IANA time zone ID instead of a fixed offset, and convert at the edge.** For storage and type guidance, including when a future local event should _not_ become UTC, see [datetime.md](datetime.md). "Sometimes, a local date/time occurs twice", and correct formatting can't fix a value that was ambiguous before it was formatted. Noda Time separates `LocalDateTime` from `ZonedDateTime` for this reason. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
 `TimeZoneInfo.TryConvertIanaIdToWindowsId` and `TryConvertWindowsIdToIanaId` work only outside invariant and NLS modes. So decide on this storage choice, invariant mode, and ICU together.

@@ -103,7 +103,7 @@ customer?.LastSeen = DateTimeOffset.UtcNow;
 
 ### Pattern matching
 
-**Check for null with `is null` and `is not null`, and use a switch expression when each branch produces a value.** An overloaded `==` or `!=` can't change the result of an `is` pattern. A switch expression with property, relational, and type patterns replaces an `if`/`else` chain with one table. The compiler reports CS8509 when an input isn't handled.
+**Check for null with `is null` and `is not null`, and use a switch expression when each branch produces a value.** An overloaded `==` or `!=` can't change the result of an `is` pattern. A switch expression with property, relational, and type patterns replaces an `if`/`else` chain with one table. The compiler reports CS8509 when "The switch expression does not handle all possible values of its input type". ([Microsoft Learn: Pattern matching errors and warnings](https://learn.microsoft.com/dotnet/csharp/language-reference/compiler-messages/pattern-matching-warnings))
 
 ```csharp
 public static decimal DiscountFor(Customer customer) => customer switch
@@ -203,7 +203,7 @@ To pass a capacity or a comparer, put a `with(...)` element first, as in `HashSe
   }
   ```
 
-- **A collection member breaks value equality.** The generated `Equals` compares members with `EqualityComparer<T>.Default`. `ImmutableList<T>` and the other immutable collections don't override `Equals`, so they compare by reference, and two records with identical contents aren't equal. Use a collection member only when you want reference equality, such as instances shared within one object graph. Otherwise, keep the collection outside the record, or document that equality means identity. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
+- **A collection member breaks value equality.** The generated `Equals` compares members with `EqualityComparer<T>.Default`. `ImmutableList<T>` doesn't override `Equals`, so it compares by reference, and two records with identical contents aren't equal. Use a collection member only when you want reference equality, such as instances shared within one object graph. Otherwise, keep the collection outside the record, or document that equality means identity. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
 
 ### Nullable reference types
 

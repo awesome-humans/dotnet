@@ -5,7 +5,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <IsPackable>false</IsPackable>
     <!-- Keeps solution-level publish output for deployment only. Without it, the test host and a
          second copy of every referenced library go into artifacts/publish (opinions/ci.md). -->
     <IsPublishable>false</IsPublishable>
@@ -22,6 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Adds the coverage option to the test executable, for the CI coverage step
+         (opinions/testing.md). -->
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="xunit.v3" />
     <ProjectReference Include="../../src/Example.Library/Example.Library.csproj" />
   </ItemGroup>

@@ -14,7 +14,7 @@ sources:
 
 # UI frameworks
 
-Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-platform desktop. Choose the framework per app.
+Use Blazor for web UI, .NET MAUI for mobile, and Avalonia for cross-platform desktop. Choose the framework per app.
 
 ## Blazor
 
@@ -38,13 +38,13 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 
 ### Component testing
 
-- **Unit-test components with bUnit, and keep Playwright for end-to-end tests.** Microsoft has no component testing framework of its own, and Microsoft Learn recommends bUnit, which renders components in-process without a browser.
-  - Assert with `MarkupMatches`, never string equality on markup. It compares HTML semantically, so whitespace and attribute order don't fail the test.
+- **Unit-test components with bUnit, and keep Playwright for end-to-end tests.** Microsoft Learn says "There's no official Microsoft testing framework for Blazor, but the community-driven project bUnit provides a convenient way to unit test Razor components". It renders components in-process without a browser, and it "isn't supported or maintained by Microsoft".
+  - Assert with `MarkupMatches`, never string equality on markup. It compares HTML semantically, so whitespace and attribute order don't fail the test. ([bUnit: Verifying markup from a component](https://bunit.dev/docs/verification/verify-markup.html))
   - Test behaviour that depends on real JavaScript interop or DOM changes end to end with Playwright. A faked `IJSRuntime` proves nothing about it.
 
   ([Microsoft Learn: Test components in ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/test))
 
-- **Use bUnit 2.x with xUnit v3,** the stack in [testing.md](testing.md). In 2.x, the test class inherits `BunitContext` and renders with `Render<T>()`. ([bUnit: Writing tests](https://bunit.dev/docs/getting-started/writing-tests.html))
+- **Use bUnit with xUnit v3,** the stack in [testing.md](testing.md), at the versions [templates/Directory.Packages.props](../templates/Directory.Packages.props) pins. The test class inherits `BunitContext` and renders with `Render<T>()`. ([bUnit: Writing tests](https://bunit.dev/docs/getting-started/writing-tests.html))
 
   <!-- Verified: compiles and passes on net11.0 / bunit 2.15.2 / xunit.v3 4.0.3 (2026-11-14) -->
 
@@ -70,7 +70,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 ## .NET MAUI
 
 - **Put store billing behind one interface, such as `IBillingService`, with conditional compilation per store. Validate every purchase on the server.** ([Versluis: Implementing Cross-Platform In-App Billing in .NET MAUI Applications](https://devblogs.microsoft.com/dotnet/cross-platform-billing-dotnet-maui/))
-- **On Android, set `<UseMaterial3>true</UseMaterial3>`** (MAUI 10.0.60 and later) for current theming. ([Versluis: Give Your .NET MAUI Android Apps a Material 3 Makeover](https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/))
+- **On Android, set `<UseMaterial3>true</UseMaterial3>` for current theming, on MAUI 10.0.60 or later.** The property shipped in 10.0.30, and most control support "landed in SR6 (10.0.60)", the version Versluis recommends "For the most complete experience". ([Versluis: Give Your .NET MAUI Android Apps a Material 3 Makeover](https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/))
 - **Keep trimming on, and exclude a problem assembly instead.** Root it in a `Linker.xml` file referenced by `<TrimmerRootDescriptor Include="Linker.xml" />`. Turn off `PublishTrimmed` only to confirm that trimming causes the problem. ([Versluis: Excluding Assemblies from Trimming in .NET MAUI](https://blog.verslu.is/maui/exclude-assemblies-from-trimming/))
 - **Target .NET 9 or later to meet Google Play's 16 KB page size requirement.** That makes the app itself compatible, but "All dependencies in your .NET MAUI project also need 16 KB support". The build reports XA0141 for a shared library that isn't built for 16 KB pages, so update or replace that package. A clean build doesn't prove the app works, so test it on a 16 KB emulator or device. ([Versluis: Preparing Your .NET MAUI Apps for Google Play's 16 KB Page Size Requirement](https://devblogs.microsoft.com/dotnet/maui-google-play-16-kb-page-size-support/), [Microsoft Learn: XA0141](https://learn.microsoft.com/dotnet/android/messages/xa0141))
 - **Test preview SDKs with `sdk.paths` in `global.json`** instead of changing the machine default, and ignore the `.dotnet/` folder it installs. For setup, see [project-structure.md](project-structure.md). ([Versluis: Test .NET MAUI Preview SDKs Locally with global.json sdk.paths](https://blog.verslu.is/maui/test-dotnet-maui-preview-sdk-locally/))
@@ -95,15 +95,23 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
   }
   ```
 
+- **Review by 2027-11-30.** **Before you build an existing iOS app with Xcode 27, adopt the UIKit scene lifecycle.** Without it, the app shows its splash screen and exits on iOS 27, with "UIScene life cycle is required for apps built with this SDK" in the device log. "Every iOS app built with Xcode 27, on any form factor, needs to adopt this pattern", and a package or workload update doesn't rewrite an existing project's platform files.
+  1. Update the .NET MAUI packages to 10.0.110 or later, which "includes the scene-side App Actions dispatch and relevant WebAuthenticator forwarding".
+  2. Add `Platforms/iOS/SceneDelegate.cs`, with a public class that derives from `MauiUISceneDelegate` and has `[Register("SceneDelegate")]`. Leave the existing `AppDelegate` as it is.
+  3. Add a `UIApplicationSceneManifest` to `Platforms/iOS/Info.plist`. Its configuration name is `__MAUI_DEFAULT_SCENE_CONFIGURATION__`, and its delegate class name matches the registration.
+  4. `AppDelegate.Window` stays `null` under scenes, so change any code that reads it after `FinishedLaunching`. Test sign-in callbacks and deep links from a cold start and with the app running.
+
+  Apps created from the 10.0.110 templates already have the scene configuration. Drop this note when projects that predate those templates are rare. ([Versluis: Get Your .NET MAUI App Ready for Xcode 27](https://devblogs.microsoft.com/dotnet/migrate-dotnet-maui-apps-uikit-scene-lifecycle/))
+
 ### Offline & sync
 
-- **Build mobile apps offline-first: the app reads and writes the local store, and syncs it with the server when the network allows.** Cache remote data locally with an explicit expiry. Use SQLite-net for data you query, and MonkeyCache's `Barrel.Current.Add(key, data, expireIn, eTag)` for simple payloads. The ETag overloads skip downloading unchanged responses. ([Montemagno: Data caching made simple with Monkey Cache](https://montemagno.com/data-caching-made-simple-with-monkey-cache/))
+- **Build mobile apps offline-first: the app reads and writes the local store, and syncs it with the server when the network allows.** Cache remote data locally with an explicit expiry. Use SQLite-net for data you query, and MonkeyCache's `Barrel.Current.Add(key, data, expireIn, eTag)` for simple payloads. The ETag overloads skip downloading unchanged responses. MonkeyCache's last stable release is 2.1.1, from 2024-03-14, so check that it still fits your target frameworks before you adopt it. ([NuGet: MonkeyCache](https://www.nuget.org/packages/MonkeyCache), [Montemagno: Data caching made simple with Monkey Cache](https://montemagno.com/data-caching-made-simple-with-monkey-cache/))
 - **Check `Connectivity.NetworkAccess == NetworkAccess.Internet` before remote calls, and handle `ConnectivityChanged`. Never ping to test reachability.** The `IsReachable` APIs were removed deliberately: make the real request and handle its failure. ([Montemagno: Upgrading to Xamarin.Essentials from Plugins](https://montemagno.com/upgrading-from-plugins-to-xamarin-essentials/))
 
 ## Avalonia & reactive UI
 
-- **Keep UI framework references out of view models.** `INotifyPropertyChanged`, Rx, and Dynamic Data are platform-neutral. A view model with no Avalonia or WPF reference binds on either framework, and you can unit-test it without a UI. ([Avalonia Docs: The MVVM pattern](https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/))
-- **Use Dynamic Data for collection state in XAML UIs instead of hand-written `ObservableCollection` code.** Key entities in a `SourceCache<T, TKey>`, and project filtered and sorted views into a bindable collection with `Connect()`. Filters and sorts then compose, instead of being rewritten per screen. ([Avalonia Docs: Sorting, filtering, and grouping collections](https://docs.avaloniaui.net/docs/data-binding/collection-views))
+- **Keep UI framework references out of view models.** Avalonia's guidance is to move application logic into plain objects "with no dependency on Avalonia or any UI framework", which you can unit-test without a UI. ([Avalonia Docs: The MVVM pattern](https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/))
+- **Use Dynamic Data for collection state in XAML UIs instead of hand-written `ObservableCollection` code.** Key entities in a `SourceCache<T, TKey>`, and project filtered and sorted views into a bindable collection with `Connect()`. Filters and sorts then compose, instead of being rewritten per screen. Avalonia's documentation recommends DynamicData "for complex scenarios". ([Avalonia Docs: Sorting, filtering, and grouping collections](https://docs.avaloniaui.net/docs/data-binding/collection-views), [DynamicData: README](https://github.com/reactivemarbles/DynamicData#readme))
 
   <!-- Verified: compiles and runs on net11.0 / DynamicData 9.4.33 (2026-11-14) -->
 
@@ -129,9 +137,9 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 
   When you migrate, plan for the removals: Direct2D1, Tizen, `Avalonia.Browser.Blazor`, `BinaryFormatter` usage, and netstandard2.0 in almost every project. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
 
-- **Keep compiled bindings on, the default in 12.** A broken compiled binding fails the build instead of binding to nothing. Use a reflection binding only for a single dynamic case. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
+- **Keep compiled bindings on, the default in 12.** "A compiled binding reports an unresolved path as a build error. A reflection binding reports it at runtime, as a binding error in the log." Use a reflection binding only for a single dynamic case. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12), [Avalonia Docs: Compiled bindings](https://docs.avaloniaui.net/docs/data-binding/compiled-bindings))
 - **Embed web content with the built-in WebView, not a bundled Chromium.** The WebView, formerly a commercial Accelerate component, is open source from 12. It uses each platform's native engine, so it adds nothing to app size. Avalonia retired the Accelerate brand in the same release. Before you work around a feature you remember as commercial-only, check its current licence. ([Avalonia: The Avalonia WebView Is Going Open-Source](https://avaloniaui.net/blog/the-avalonia-webview-is-going-open-source/), [Avalonia: Retiring Accelerate: One Brand, One Clear Path](https://avaloniaui.net/blog/retiring-accelerate))
-- **Use the built-in page navigation for mobile-style apps.** Avalonia 12 includes `ContentPage`, `DrawerPage`, `CarouselPage`, `TabView`, and `PipsPager`, with gestures and wrap selection. They replace a custom navigation stack over a `ContentControl`. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
+- **Use the built-in page navigation for mobile-style apps.** Avalonia 12 includes `ContentPage`, `DrawerPage`, `CarouselPage`, `TabView`, and `PipsPager`, with gestures and wrap selection, so you don't need a custom navigation stack. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
 - **Avalonia's XAML hot reload has been GA since 2026-09-02, and it's paid.** `AvaloniaUI.DiagnosticsSupport.HotReload` runs on Windows, macOS, Linux, iOS, and Android.
   - `dotnet watch` drives it through the same .NET Hot Reload mechanism as MAUI.
   - It patches changed elements in place, so view state survives the edit.
