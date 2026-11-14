@@ -10,7 +10,7 @@ awesome-humans.net shows no house opinions by default, so every page is sourced 
 | --------------- | ----------------------------- | ------ |
 | `simon-mckenna` | Simon McKenna, the maintainer | person |
 
-The site registers every profile in [awesome-humans/website: `houses.toml`](https://github.com/awesome-humans/website/blob/main/houses.toml), and its build fails on a house opinion whose profile isn't registered there for this ecosystem. A new profile needs the repository owner's approval, recorded there.
+The site registers every profile in [awesome-humans/website: `houses.toml`](https://github.com/awesome-humans/website/blob/main/houses.toml), and its build fails on a house opinion whose profile isn't registered there for this ecosystem. A new profile needs the maintainer's approval, recorded there.
 
 ## How this works
 
