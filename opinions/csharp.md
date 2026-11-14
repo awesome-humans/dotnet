@@ -154,7 +154,7 @@ The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`
       public bool Even { get; } = (Value & 1) == 0;
   }
 
-  var n3 = new Number(2) with { Value = 3 };  // Number { Value = 3, Even = True }
+  Number n3 = new Number(2) with { Value = 3 };  // Number { Value = 3, Even = True }
 
   // Right: derived on read, so it always follows Value
   public sealed record Number(int Value)

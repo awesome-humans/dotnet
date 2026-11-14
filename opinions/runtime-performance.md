@@ -47,10 +47,10 @@ Before, with one string allocation per field:
 ```csharp
 static int SumCsvAllocating(string line)
 {
-    var sum = 0;
-    foreach (var field in line.Split(','))
+    int sum = 0;
+    foreach (string field in line.Split(','))
     {
-        sum += int.Parse(field);
+        sum += int.Parse(field, CultureInfo.InvariantCulture);
     }
     return sum;
 }
@@ -61,10 +61,10 @@ After, with no allocations, because `Split` over a span returns `Range` values:
 ```csharp
 static int SumCsv(ReadOnlySpan<char> line)
 {
-    var sum = 0;
-    foreach (var range in line.Split(','))
+    int sum = 0;
+    foreach (Range range in line.Split(','))
     {
-        sum += int.Parse(line[range]);
+        sum += int.Parse(line[range], CultureInfo.InvariantCulture);
     }
     return sum;
 }
@@ -77,7 +77,7 @@ using System.Buffers;
 
 static async Task CopyAsync(Stream source, Stream destination, CancellationToken cancellationToken = default)
 {
-    var buffer = ArrayPool<byte>.Shared.Rent(81920);
+    byte[] buffer = ArrayPool<byte>.Shared.Rent(81920);
     try
     {
         int read;
