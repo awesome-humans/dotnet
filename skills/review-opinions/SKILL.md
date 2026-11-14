@@ -14,7 +14,7 @@ Check that what `opinions/` and `templates/` say is true, still supported by the
 
 Other checks cover the rest, so don't repeat them:
 
-| Concern                                                                       | Owner                                |
+| Concern                                                                       | Covered by                           |
 | ----------------------------------------------------------------------------- | ------------------------------------ |
 | A cited URL responds                                                          | The `Markdown` workflow's lychee job |
 | `last-reviewed` age, version drift, and pins against nuget.org                | `audit-freshness`                    |

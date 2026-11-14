@@ -56,7 +56,7 @@ No opinion mentions AI, but three already contain most of the guardrails:
 Stannard found the `.editorconfig` checks "were largely worthless and burned millions of tokens over 1-2 months on trivial issues like whether or not there was an extra line ending in each `.cs` file. I removed that check entirely."
 `csharp.md` recommends `EnforceCodeStyleInBuild`, and `ci.md` runs `dotnet format --verify-no-changes` as a separate step.
 One reconciliation keeps the rule: have the agent run `dotnet format`, which fixes whitespace and style mechanically, before it builds, so it never reasons about a formatting diagnostic.
-Whether that avoids the cost he measured is untested, and adopting it is the owner's decision. It's the one place this topic would change an existing opinion instead of adding to one.
+Whether that avoids the cost he measured is untested, and adopting it is the maintainer's decision. It's the one place this topic would change an existing opinion instead of adding to one.
 
 ## Skill packs: grounding that needs auditing
 
@@ -148,7 +148,7 @@ Where his blog covers the same ground, the lead is citable now:
 
 - **Citable through his blog:** Public API compatibility, which has no opinion file. `csharp-api-design` teaches extend-only design, the binary-breaking optional-parameter trap, and API approval tests, and ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) make the same arguments. His ["Stop Failing The `git clone && run` Test"](https://aaronstannard.com/git-clone-and-run/) (2025-10-17) supports the Testcontainers and Aspire first-run material, which no opinion covers.
 - **Needs another roster source:**
-  - The unsourced TODOs in [data-access.md](../opinions/data-access.md), which `efcore-patterns` and `database-performance` cover: tracking defaults, the migrations workflow, `ExecutionStrategy` with transactions inside it, split queries against cartesian explosion, and `IDbContextFactory` for long-lived owners. `aspnet-core.md` applies `AsNoTracking()` per query, and the skill makes no-tracking the global default, so the owner has to choose.
+  - The unsourced TODOs in [data-access.md](../opinions/data-access.md), which `efcore-patterns` and `database-performance` cover: tracking defaults, the migrations workflow, `ExecutionStrategy` with transactions inside it, split queries against cartesian explosion, and `IDbContextFactory` for long-lived owners. `aspnet-core.md` applies `AsNoTracking()` per query, and the skill makes no-tracking the global default, so the maintainer has to choose.
   - The Options pattern (`ValidateOnStart`, `IValidateOptions<T>`, and the `IOptions`, `IOptionsSnapshot`, and `IOptionsMonitor` lifetimes), and DI registration conventions, including the scoped-in-singleton trap. No opinion covers either.
   - Metrics: `logging.md` covers logs and traces, never `Meter`, instrument naming, or cardinality.
   - Trimming attributes and the IL2xxx and IL3xxx warnings, beyond `runtime-performance.md`'s one paragraph.
@@ -182,8 +182,8 @@ Starting points for a follow-up topic, not weighed:
 - **Ready for `resolve-research`.** Stannard's admission filled the gap that made this topic thin. Add it to existing files instead of a new one:
   - `testing.md`: agent-written tests aren't evidence, citing `aaron-stannard` with `mark-seemann`.
   - `ci.md`: agent isolation (`andrew-lock`), and auditing skill packs as dependencies.
-  - `csharp.md`: only if the owner settles the `.editorconfig` question below.
-- **Open question for the owner:** Keep `EnforceCodeStyleInBuild` and have agents run `dotnet format` first, or accept Stannard's measured cost and relax it for agent loops. This could be a **House:** call.
+  - `csharp.md`: only if the maintainer settles the `.editorconfig` question below.
+- **Open question for the maintainer:** Keep `EnforceCodeStyleInBuild` and have agents run `dotnet format` first, or accept Stannard's measured cost and relax it for agent loops. This could be a **House:** call.
 - **Harvest leads from the crossover map:** The API compatibility material is citable now through `aaron-stannard`'s blog and has no opinion file, so it might need its own topic. The `data-access.md` TODOs, Options and DI, and metrics each need a roster source first.
 - **dotnet-skills is merged into `aaron-stannard`**, limited to the skills he wrote and their principles. Revisit the sample limit if the repository starts compiling its samples.
 - **Possible `vet-source` candidate:** Daniel Marbach, who wrote much of the pack's strongest material (AOT and trimming, nullable reference types, and OpenTelemetry). Vetting him could reach that material without admitting the repository.

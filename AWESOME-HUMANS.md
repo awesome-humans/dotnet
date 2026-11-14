@@ -93,7 +93,7 @@ A guidance repository, such as `dotnet/skills`, is a source, not a reference, so
 
 ## Opted out
 
-A source moves here when its owner asks to stop being cited. Its row keeps the same five columns, and its section under [Source notes](#source-notes) goes. The ID stays reserved, so a later suggestion of the source is turned away, and `scripts/validate-sources.cs` rejects it in any `sources:` list. An opt-out from any awesome-humans ecosystem covers this one too, so `vet-source` reads every other ecosystem's Opted out section before admitting anyone. Opting back in is a suggestion like any other, and the source leaves this section only on admission. For the policy, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
+A source moves here when its author asks to stop being cited. Its row keeps the same five columns, and its section under [Source notes](#source-notes) goes. The ID stays reserved, so a later suggestion of the source is turned away, and `scripts/validate-sources.cs` rejects it in any `sources:` list. An opt-out from any awesome-humans ecosystem covers this one too, so `vet-source` reads every other ecosystem's Opted out section before admitting anyone. Opting back in is a suggestion like any other, and the source leaves this section only on admission. For the policy, see [Want in or out?](https://awesome-humans.net/want-in-or-out/)
 
 No source has opted out.
 
@@ -499,7 +499,7 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 <!-- prettier-ignore -->
 | Date | Decision | Detail |
 | --- | --- | --- |
-| 2026-11-14 | Let a reference support a reference fact alone (no roster change) | A reference fact is a statement about a reference's own subject that a reader can check against it, including what the subject requires of a project that uses it. It needs no roster source. A choice or a judgement still rests on one. The shared admission criteria define the terms. The owner's decision, in awesome-humans/website#188 |
+| 2026-11-14 | Let a reference support a reference fact alone (no roster change) | A reference fact is a statement about a reference's own subject that a reader can check against it, including what the subject requires of a project that uses it. It needs no roster source. A choice or a judgement still rests on one. The shared admission criteria define the terms. The maintainer's decision, in awesome-humans/website#188 |
 | 2026-10-23 | Watch-listed `ms-dotnet-skills` | The .NET team's skill pack, first published 2026-02-03, so short of two years. Re-evaluate from 2028-02, and check its MSTest steer then |
 | 2026-10-23 | Watch-listed `ms-aspire-skills` | Microsoft's Aspire skill pack, first published 2026-05-08, so short of two years. Re-evaluate from 2028-05 |
 | 2026-10-23 | Named four repositories as references (no roster change) | `dotnet/csharplang`, `fsharp/fslang-design`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |
@@ -557,7 +557,7 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 | 2026-08-14 | Promoted `jetbrains-dotnet` (Tier 2 to Tier 1) | Publishing since the early 2010s. The language explainers keep critical distance |
 | 2026-08-14 | Promoted `andrew-lock` and `steve-gordon` (Tier 2 to Tier 1) | Both publishing since about 2016 |
 | 2026-08-14 | **Experiment:** lowered the longevity bars | Tier 1 from about a decade to 6 years, and Tier 2 from 8 years to 3. The rows below follow from re-running `vet-source` and `harvest-sources` |
-| 2026-08-12 | Reserved the `house` ID | The owner's own opinions, exempt from admission and always visibly marked (#7) |
+| 2026-08-12 | Reserved the `house` ID | The maintainer's own opinions, exempt from admission and always visibly marked (#7) |
 | 2026-08-12 | Updated the `steve-gordon` note | Publishing again from 2026-01 |
 | 2026-08-12 | Corrected the `scott-wlaschin` harvest flag | Low cadence, not dormant: the sweep missed his 2025-12 posts |
 | 2026-08-12 | Annotated `khalid` (kept Tier 1) | Blog quiet since 2025-04. Kept on GitHub activity, a basis withdrawn on 2026-08-23 |
