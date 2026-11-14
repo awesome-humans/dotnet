@@ -111,7 +111,7 @@ Encryption at rest "doesn't prevent cyberattackers from creating new keys", so l
 
 **Name every CORS policy, and never combine a wildcard origin with credentials.** Microsoft Learn calls two combinations insecure: "Specifying AllowAnyOrigin and AllowCredentials", and "Bypassing the built-in checks by using SetIsOriginAllowed(\_ => true) together with AllowCredentials". ([Microsoft Learn: Enable Cross-Origin Requests (CORS) in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/cors))
 
-Apply a named policy to each endpoint or group with `[EnableCors("<policy>")]` or `.RequireCors("<policy>")`, instead of one permissive default. Otherwise, a policy you widen for one endpoint widens what the whole app accepts. In .NET 11, a policy that calls `.AllowCredentials()` also decides which cross-origin requests the CSRF middleware admits: the ones from its allowed origins. For details, see [Coming next](#coming-next-preview-not-yet-the-opinion).
+Apply a named policy to each endpoint or group with `[EnableCors("<policy>")]` or `.RequireCors("<policy>")`, instead of one permissive default. Otherwise, a policy you widen for one endpoint widens what the whole app accepts. In .NET 11, a policy that calls `.AllowCredentials()` also decides which cross-origin requests the CSRF middleware trusts: the ones from its allowed origins. For details, see [Coming next](#coming-next-preview-not-yet-the-opinion).
 
 ### Security headers and output encoding
 
@@ -178,7 +178,7 @@ app.MapGet("/redirect", (string url) =>
 
 - MVC and Razor Pages still validate tokens: "There's basically no simple way today to opt into _only_ using the new approach."
 - Only unsafe methods are checked. `GET`, `HEAD`, `OPTIONS`, `TRACE`, and `QUERY` pass.
-- A cross-origin request is denied unless the endpoint's CORS policy allows its origin and also calls `.AllowCredentials()`. A policy that allows any origin doesn't count, and neither does one without credentials: "A policy that lists specific origins with WithOrigins but omits .AllowCredentials() isn't honored for CSRF trust either."
+- A cross-origin request is denied unless the endpoint's CORS policy allows its origin and also calls `.AllowCredentials()`. A policy that calls `AllowAnyOrigin` doesn't count, and neither does one without credentials: "A policy that lists specific origins with WithOrigins but omits .AllowCredentials() isn't honored for CSRF trust either."
 - By default, only an endpoint that binds form data is protected: MVC or Razor Pages form binding, a minimal API that binds a form, or a Blazor SSR form. A plain `MapPost` that reads JSON isn't.
 - An endpoint can change that default. `[ValidateAntiForgeryToken]` on an MVC action opts it in without form binding. `.DisableAntiforgery()` on a minimal API, or `[IgnoreAntiforgeryToken]` on an MVC action or Razor Page, opts a form-binding endpoint out.
 - A request with no browser signals passes through.
