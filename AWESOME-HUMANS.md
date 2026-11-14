@@ -499,7 +499,7 @@ Blocked on dormancy: no posts since 2016-02-19, and no continuing written channe
 <!-- prettier-ignore -->
 | Date | Decision | Detail |
 | --- | --- | --- |
-| 2026-11-14 | Let a reference support a reference fact alone (no roster change) | A reference fact is a statement about a reference's own subject that a reader can check against it, including what the subject requires of a project that uses it. It needs no roster source. A choice or a judgement still rests on one. The shared admission criteria define the terms. The owner's decision, in awesome-humans/website#188 |
+| 2026-11-14 | Let a reference support a reference fact alone (no roster change) | A reference fact is a statement about a reference's own subject that a reader can check against it, including what the subject requires of a project that uses it. It needs no roster source. A choice or a judgement still rests on one. The shared admission criteria define the terms. The maintainer's decision, in awesome-humans/website#188 |
 | 2026-10-23 | Watch-listed `ms-dotnet-skills` | The .NET team's skill pack, first published 2026-02-03, so short of two years. Re-evaluate from 2028-02, and check its MSTest steer then |
 | 2026-10-23 | Watch-listed `ms-aspire-skills` | Microsoft's Aspire skill pack, first published 2026-05-08, so short of two years. Re-evaluate from 2028-05 |
 | 2026-10-23 | Named four repositories as references (no roster change) | `dotnet/csharplang`, `fsharp/fslang-design`, `dotnet/designs`, and `dotnet/core` can corroborate a roster-sourced claim inline. Package repositories already qualify, and guidance repositories such as `dotnet/skills` still need `vet-source` |
