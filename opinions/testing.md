@@ -75,13 +75,12 @@ public class BasketTests
   }
   ```
 
-  Don't use `<TestingPlatformDotnetTestSupport>` instead. It's the VSTest bridge, and it causes the error above under MTP v2. MSTest and NUnit also run on MTP. xUnit is the default because it constructs a new class instance for each test and has the largest ecosystem. TUnit is too new to have a track record. ([Microsoft Learn: Microsoft.Testing.Platform overview](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro), [Microsoft Learn: What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
+  Don't use `<TestingPlatformDotnetTestSupport>` instead. It belongs to "VSTest mode": it makes Microsoft.Testing.Platform.MSBuild redirect the `VSTest` target to run MTP applications, and it causes the error above under MTP v2. MSTest and NUnit also run on MTP. ([Microsoft Learn: Testing with dotnet test](https://learn.microsoft.com/dotnet/core/testing/unit-testing-with-dotnet-test), [Microsoft Learn: Microsoft.Testing.Platform overview](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro))
 
   ```xml
   <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <TargetFramework>net11.0</TargetFramework>
-      <Nullable>enable</Nullable>
+      <IsPublishable>false</IsPublishable>
       <OutputType>Exe</OutputType>
       <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
@@ -91,26 +90,27 @@ public class BasketTests
   </Project>
   ```
 
+  - The project sets no `TargetFramework`, `Nullable`, or `IsPackable`, because [templates/Directory.Build.props](../templates/Directory.Build.props) sets them for every project. `IsPublishable` keeps the test host out of a solution-level publish, as [ci.md](ci.md#pipeline-shape) describes.
   - The reference has no version, because Central Package Management pins it in [templates/Directory.Packages.props](../templates/Directory.Packages.props). For details, see [project-structure.md](project-structure.md).
   - There's no `Microsoft.NET.Test.Sdk` reference. That package is for VSTest, and `xunit.v3` needs nothing else under MTP.
   - Don't pin `Microsoft.Testing.Platform`. xunit.v3 4.0.0 brings MTP v2. Under Central Package Management, your pin overrides it through transitive pinning and throws `TypeLoadException` at run time.
 
 - **Moving a suite from VSTest to MTP breaks two things the build doesn't catch.** **Review by 2027-11-30.** This is migration guidance. Drop it when VSTest workflows are rare, or re-date it.
-  - **`--logger` isn't an MTP option.** VSTest's `--logger "console;verbosity=normal"` or `--logger trx` makes the test application exit with code 5 (invalid command-line arguments) before any test runs. Every CI line that passes it fails as soon as `global.json` opts in. Each MTP reporter registers its own option. Use `--output Detailed` for console verbosity, and `--report-xunit-trx`, which is built into xunit.v3, for TRX. `--report-trx`, from Microsoft's migration guide, needs the `Microsoft.Testing.Extensions.TrxReport` package and fails the same way without it. ([Microsoft Learn: Migration guide from VSTest to Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/testing/migrating-vstest-microsoft-testing-platform), [Microsoft Learn: Microsoft.Testing.Platform exit codes](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-exit-codes), [xUnit.net: Microsoft Testing Platform](https://xunit.net/docs/getting-started/v3/microsoft-testing-platform))
-  - **A multi-targeted test project runs its target frameworks concurrently.** Each target framework builds its own executable, and MTP runs test modules in parallel, up to `Environment.ProcessorCount`. VSTest ran them in sequence. A fixture with a fixed temporary directory, port, file, or database name now races the other framework's process, and one run's `Dispose` deletes a directory the other is writing to. Make that state unique per instance, for example with `Guid.NewGuid()` in the name. `--max-parallel-test-modules 1` hides the race and gives up MTP's speed. ([Microsoft Learn: dotnet test command with Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/tools/dotnet-test-mtp))
+  - **`--logger` isn't an MTP option.** VSTest's `--logger "console;verbosity=normal"` or `--logger trx` makes the test application exit with code 5 (invalid command-line arguments) before any test runs. Every CI line that passes it fails as soon as `global.json` opts in. Each MTP reporter registers its own option. For TRX, use `--report-xunit-trx`, which is built into xunit.v3. `--report-trx`, from Microsoft's migration guide, needs the `Microsoft.Testing.Extensions.TrxReport` package and fails the same way without it. ([Microsoft Learn: Migration guide from VSTest to Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/testing/migrating-vstest-microsoft-testing-platform), [Microsoft Learn: Microsoft.Testing.Platform exit codes](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-exit-codes), [xUnit.net: Microsoft Testing Platform](https://xunit.net/docs/getting-started/v3/microsoft-testing-platform))
+  - **A multi-targeted test project runs its target frameworks concurrently.** "MTP runs test modules in parallel by default", up to `Environment.ProcessorCount`, and a multi-targeted project builds one test executable for each target framework. A fixture with a fixed temporary directory, port, file, or database name now races the other framework's process, and one run's `Dispose` deletes a directory the other is writing to. Make that state unique per instance, for example with `Guid.NewGuid()` in the name. `--max-parallel-test-modules 1` hides the race and gives up MTP's speed. ([Microsoft Learn: Migration guide from VSTest to Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/testing/migrating-vstest-microsoft-testing-platform), [Microsoft Learn: dotnet test command with Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/tools/dotnet-test-mtp))
 
 - **Leaving VSTest saves more time than changing frameworks.** Meziantou benchmarked xUnit v3 4.0.0, NUnit 4.6.1, MSTest 4.4.0, and TUnit 1.65.68 on the .NET 10 SDK with up to 10,000 tests. VSTest was 4.9 times slower than the MTP executable for xUnit v3, 5.1 times for MSTest, and 1.5 times for NUnit. He puts that at three to four times the difference between frameworks. Per test, the frameworks range from 15 µs (MSTest) through 42 µs (TUnit) and 56 µs (xUnit v3) to 85 µs (NUnit). The numbers are a reason to keep the `global.json` opt-in, not to leave xUnit. ([Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
 
 - **If the app ships with Native AOT, add a native test run beside the managed suite.** Run the managed suite on every change for fast feedback. For the native run, publish one representative C# test project with `<PublishAot>true</PublishAot>`, and run the executable. Trimming and reflection-free serialization change behaviour that a managed run can't see.
-  - `System.Text.Json` usually fails first, with `InvalidOperationException`, because reflection-based serialization is off. Fix it with a `[JsonSerializable]` context in the app, not in the test.
+  - In the MSTest post's example, `System.Text.Json` is what fails, with `InvalidOperationException`, because reflection-based serialization is off. Fix it with a `[JsonSerializable]` context in the app, not in the test.
   - The native project references `xunit.v3.aot.mtp-v2` instead of `xunit.v3`. The AOT package replaces the reflection-based one, so it can't share a project with the managed suite.
-  - Keep F# test projects in the managed run. NUnit doesn't support Native AOT.
+  - Keep F# test projects in the managed run. xUnit.net's AOT mode supports only `Task` and `ValueTask` test methods, because "support for F# async methods requires reflection features unavailable in Native AOT".
 
   ([xUnit.net: Testing with Native AOT](https://xunit.net/docs/getting-started/v3/native-aot), [.NET Blog: Test what you ship: MSTest and Native AOT](https://devblogs.microsoft.com/dotnet/mstest-source-generation/), [Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
 
 ## Integration testing
 
-- **Integration-test ASP.NET Core apps with `WebApplicationFactory<TEntryPoint>` instead of unit-testing controllers or handlers.** `Microsoft.AspNetCore.Mvc.Testing` runs the real app in memory, with routing, model binding, filters, DI, and middleware. A few factory tests catch the routing, binding, and registration bugs that controller unit tests miss. Unit-test the domain logic the endpoints call, not the endpoints. ([Microsoft Learn: Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests), [Lock: Should you unit-test API/MVC controllers?](https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/))
+- **Integration-test ASP.NET Core apps with `WebApplicationFactory<TEntryPoint>` instead of unit-testing controllers or handlers.** `Microsoft.AspNetCore.Mvc.Testing` runs the real app on "a test web host and an in-memory test server". A few factory tests catch the routing, binding, and registration bugs that controller unit tests miss. Unit-test the domain logic the endpoints call, not the endpoints. ([Microsoft Learn: Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests), [Lock: Should you unit-test API/MVC controllers?](https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/))
 - **Replace services for a test with `ConfigureTestServices`, scoped by `WithWebHostBuilder`.** ([Microsoft Learn: Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests))
 
 ## Deterministic time
@@ -178,7 +178,7 @@ public class BasketTests
 
 ## Coverage
 
-- **Collect line coverage on every CI run, and use it to find untested code, not to measure quality.** Coverage shows which lines ran, not whether a test checked them. ([Microsoft Learn: Use code coverage for unit testing](https://learn.microsoft.com/dotnet/core/testing/unit-testing-code-coverage), [Meziantou: Is the code coverage a sufficient metric?](https://www.meziantou.net/is-the-code-coverage-a-sufficient-metric.htm))
+- **Collect line coverage on every CI run, and use it to find untested code, not to measure quality.** Coverage shows which lines ran, not whether a test checked them. Under MTP, reference `Microsoft.Testing.Extensions.CodeCoverage`, as [templates/projects/Example.Library.Tests.csproj](../templates/projects/Example.Library.Tests.csproj) does, and pass `--coverage --coverage-output-format cobertura` to `dotnet test`. The default format is the binary `coverage`, and the test project itself is excluded by default. ([Microsoft Learn: Code coverage](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-code-coverage), [Microsoft Learn: Use code coverage for unit testing](https://learn.microsoft.com/dotnet/core/testing/unit-testing-code-coverage), [Meziantou: Is the code coverage a sufficient metric?](https://www.meziantou.net/is-the-code-coverage-a-sufficient-metric.htm))
 
 ## Seeing tests fail
 

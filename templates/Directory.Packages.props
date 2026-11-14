@@ -37,6 +37,9 @@
          PackageReference with no version. -->
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="11.0.0" />
+    <!-- Line coverage under Microsoft.Testing.Platform: adds the coverage option to the test
+         executable (opinions/testing.md). -->
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.12.0" />
     <PackageVersion Include="xunit.v3" Version="4.0.3" />
     <!-- A Native AOT test lane references xunit.v3.aot.mtp-v2 in place of xunit.v3
          (opinions/testing.md). Keep the two on the same version. -->

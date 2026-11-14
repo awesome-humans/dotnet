@@ -7,6 +7,7 @@ sources:
     aspnet-blog,
     code-with-mukesh,
     dotnet-blog,
+    khalid,
     meziantou,
     milan-jovanovic,
     ms-learn,
@@ -24,9 +25,9 @@ Target ASP.NET Core 11, and use minimal APIs for new HTTP APIs.
 
 ### Hosting and deployment
 
-**Run Kestrel directly, in a container image that `dotnet publish /t:PublishContainer` builds without a Dockerfile.** Kestrel can face the internet on its own, without a reverse proxy. If you do run behind a proxy or ingress for port sharing, TLS termination, or load balancing, enable host filtering and forwarded headers. Without forwarded headers, the app sees the proxy's scheme and IP address instead of the client's.
+**Run Kestrel directly, in a container image that `dotnet publish /t:PublishContainer` builds without a Dockerfile.** Kestrel can face the internet on its own, without a reverse proxy. If you do run behind a proxy or ingress for port sharing, TLS termination, or load balancing, enable host filtering and forwarded headers. Without forwarded headers, the app sees the proxy's scheme and IP address instead of the client's. ([Microsoft Learn: When to use a reverse proxy with Kestrel](https://learn.microsoft.com/aspnet/core/fundamentals/servers/kestrel/when-to-use-a-reverse-proxy))
 
-Container publish builds an OCI image from MSBuild properties such as `ContainerRepository` and `ContainerRegistry`. The base image stays patched with the SDK, and you don't need a Docker daemon to produce a tarball for a scanner. Write a Dockerfile only when you need custom image layers, because a hand-written one drifts from the SDK's. ([Microsoft Learn: When to use a reverse proxy with Kestrel](https://learn.microsoft.com/aspnet/core/fundamentals/servers/kestrel/when-to-use-a-reverse-proxy), [Microsoft Learn: Containerize an app with dotnet publish](https://learn.microsoft.com/dotnet/core/containers/sdk-publish))
+Container publish builds an OCI image from MSBuild properties such as `ContainerRepository` and `ContainerRegistry`. It can "save the image as a tarball or push it directly to a container registry without using any container runtime at all", so a scanner can read the tarball without a Docker daemon. Write a Dockerfile only when you need custom image layers. ([Microsoft Learn: Containerize an app with dotnet publish](https://learn.microsoft.com/dotnet/core/containers/sdk-publish))
 
 An image keeps the runtime it was built with, so rebuild it after every Patch Tuesday, as [security.md: Servicing](security.md#servicing-take-the-monthly-patch) says.
 
@@ -71,7 +72,7 @@ Timeouts don't fire while a debugger is attached, so test them without one. ([do
 
 - Partition by a stable identity, such as the authenticated user or the API key tier. Never partition by a value the client controls, such as a spoofable IP header: "If you create partitions by using user input, your app becomes vulnerable to Denial of Service (DoS) attacks". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#testing-endpoints-with-rate-limiting))
 - To partition anonymous traffic, use `HttpContext.Connection.RemoteIpAddress`, never the raw `X-Forwarded-For` header. The forwarded headers middleware from [Hosting and deployment](#hosting-and-deployment) sets that property from the header, and accepts it only from a proxy in `KnownProxies` or a known network, because otherwise "IP spoofing attacks are possible". ([Microsoft Learn: Configure ASP.NET Core to work with proxy servers and load balancers](https://learn.microsoft.com/aspnet/core/host-and-deploy/proxy-load-balancer))
-- Bound the number of partitions, because "Each distinct key creates and caches its own limiter". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#chain-limiters-in-a-named-policy), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
+- Take the partition key from a set whose size you control, such as authenticated user names or API key tiers, never from a header or query value that a caller can vary without limit. "Each distinct key creates and caches its own limiter, so partitioning on unbounded user-controlled input can exhaust memory". ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#chain-limiters-in-a-named-policy), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
 - Use the concurrency limiter on expensive endpoints, such as uploads and report generation, to cap how many run at once. It "doesn't cap the number of requests in a time period", so it doesn't replace a time-based limiter on a public endpoint. ([Microsoft Learn: Rate limiting middleware in ASP.NET Core](https://learn.microsoft.com/aspnet/core/performance/rate-limit#rate-limiter-algorithms), [Mukesh: Rate Limiting in ASP.NET Core (.NET 10)](https://codewithmukesh.com/blog/rate-limiting-aspnet-core/))
 
 ```csharp
@@ -141,6 +142,8 @@ Validation applies to every endpoint. To exclude one, call `.DisableValidation()
 
 ([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/), [Microsoft Learn: What's new in .NET 11](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-11/overview))
 
+**To return validation errors in the caller's language, register `AddLocalization` beside `AddValidation`, and add `.resx` files.** From .NET 11, `Microsoft.Extensions.Validation` localizes its messages and display names for minimal APIs and Blazor, with no other package. "CurrentUICulture drives lookup, not CurrentCulture", and "AddLocalization does not set the culture", so `UseRequestLocalization` has to run, as [globalization.md](globalization.md) describes. ([Abuhakmeh: Localize Minimal API Validation Messages in .NET 11](https://khalidabuhakmeh.com/posts/minimal-api-validation-localization/))
+
 ### Error responses
 
 **Return every API error as problem details: call `AddProblemDetails()`, then `UseExceptionHandler()` and `UseStatusCodePages()` first in the pipeline.** The exception handler then writes problem details for an unhandled exception. The status code pages middleware writes them for any 400 to 599 response that has no body yet, including a routing 404. A client parses one error shape instead of guessing per endpoint.
@@ -199,7 +202,7 @@ RouteGroupBuilder v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 ### Typed clients
 
-**Generate typed clients with Kiota from your OpenAPI document at build time, instead of hand-writing `HttpClient` wrappers.** The client is rebuilt from the contract on every build, so it can't drift from it. ([Meziantou: Kiota client at build time](https://www.meziantou.net/generate-a-kiota-client-at-build-time-from-an-asp-net-core-openapi-file.htm))
+**Generate typed clients with Kiota from your OpenAPI document at build time, instead of hand-writing `HttpClient` wrappers.** Kiota regenerates the client during the build whenever the OpenAPI file changes, so the client can't drift from the contract. ([Meziantou: Kiota client at build time](https://www.meziantou.net/generate-a-kiota-client-at-build-time-from-an-asp-net-core-openapi-file.htm))
 
 ### Server push
 

@@ -22,6 +22,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Adds the coverage option to the test executable, for the CI coverage step
+         (opinions/testing.md). -->
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="xunit.v3" />
     <ProjectReference Include="../../src/Example.Library/Example.Library.csproj" />
   </ItemGroup>

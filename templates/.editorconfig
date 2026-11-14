@@ -67,7 +67,7 @@ dotnet_diagnostic.MA0167.severity = warning
 
 # MA0038 (make method static) and MA0041 (make property static) are deprecated in favour of
 # CA1822, which latest-recommended enables. Both report every member of a C# 14 extension block,
-# which can't be static (opinions/csharp.md).
+# which can't be static.
 dotnet_diagnostic.MA0038.severity = none
 dotnet_diagnostic.MA0041.severity = none
 
