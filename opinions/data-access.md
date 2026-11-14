@@ -46,7 +46,7 @@ Use EF Core as the default ORM. Send a change to many rows as one statement, and
 
   ```csharp
   // Interpolated: the value becomes a parameter, not part of the statement.
-  var orders = await db.Orders
+  List<Order> orders = await db.Orders
       .FromSql($"SELECT * FROM Orders WHERE Status = {status}")
       .ToListAsync(cancellationToken);
   ```

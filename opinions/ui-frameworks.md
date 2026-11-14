@@ -55,7 +55,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
       public void Counter_ClickingButton_IncrementsCount()
       {
           // Arrange
-          var cut = Render<Counter>();
+          IRenderedComponent<Counter> cut = Render<Counter>();
 
           // Act
           cut.Find("button").Click();
@@ -110,11 +110,11 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
   ```csharp
   var orders = new SourceCache<Order, int>(o => o.Id);
 
-  ReadOnlyObservableCollection<Order> openOrders;
-  using var subscription = orders.Connect()
+  // The view binds to openOrders. Only mutate the cache.
+  using IDisposable subscription = orders.Connect()
       .Filter(o => o.Status == OrderStatus.Open)
       .SortBy(o => o.Placed)
-      .Bind(out openOrders)   // the view binds to openOrders; only mutate the cache
+      .Bind(out ReadOnlyObservableCollection<Order> openOrders)
       .Subscribe();
 
   orders.AddOrUpdate(new Order(1, OrderStatus.Open, DateTimeOffset.UtcNow));

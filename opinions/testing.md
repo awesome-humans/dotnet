@@ -32,7 +32,7 @@ public class BasketTests
         basket.Add(2.50m);
 
         // Act
-        var total = basket.Total;
+        decimal total = basket.Total;
 
         // Assert
         Assert.Equal(12.50m, total);
@@ -42,7 +42,7 @@ public class BasketTests
     public void Total_EmptyBasket_IsZero()
     {
         // Act
-        var total = new Basket().Total;
+        decimal total = new Basket().Total;
 
         // Assert
         Assert.Equal(0m, total);
@@ -135,7 +135,7 @@ public class BasketTests
           var validator = new TokenValidator(new FakeTimeProvider(new DateTimeOffset(2026, 10, 25, 1, 3, 0, TimeSpan.Zero)));
 
           // Act
-          var expired = validator.IsExpired(token);
+          bool expired = validator.IsExpired(token);
 
           // Assert
           Assert.True(expired);
@@ -190,11 +190,11 @@ public class BasketTests
   public void FahrenheitToCelsius_RoundTrip_ReturnsOriginalReading()
   {
       // Arrange
-      var celsius = 37d;
+      double celsius = 37d;
 
       // Act
-      var fahrenheit = Temperature.CelsiusToFahrenheit(celsius);
-      var roundTripped = Temperature.FahrenheitToCelsius(fahrenheit);
+      double fahrenheit = Temperature.CelsiusToFahrenheit(celsius);
+      double roundTripped = Temperature.FahrenheitToCelsius(fahrenheit);
 
       // Assert
       Assert.Equal(98.6d, fahrenheit, 1e-9); // fails if both conversions return their input
