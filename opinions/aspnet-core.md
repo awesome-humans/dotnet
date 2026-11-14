@@ -167,14 +167,16 @@ The middleware writes problem details only when the request's `Accept` header al
 - To also write the document to disk during `dotnet build`, add `Microsoft.Extensions.ApiDescription.Server`. Do this when a build step consumes the file, such as the Kiota client in [Typed clients](#typed-clients). Set `<OpenApiDocumentsDirectory>` to choose where the file goes. The build runs the app's entry point against a mock server, so guard startup code that needs live infrastructure.
 - Set `<GenerateDocumentationFile>true</GenerateDocumentationFile>`, so the source generator copies your XML doc comments into the document.
 - Use named methods as handlers, because the generator reads doc comments only from methods, not from lambdas.
-- Set `<Description>` in the project file when you version the API. Each versioned document takes its description from the assembly, and `Asp.Versioning.OpenApi` reports AV0025 without one. The package's analyzers ship from 10.2, so an earlier version reports none of the three rules here.
-- Version APIs with `Asp.Versioning` 10 or later (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`):
+- Version APIs with `Asp.Versioning` 10.2 or later (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Its analyzers ship from 10.2, so an earlier version reports none of the three rules below:
   - Call the package's `AddOpenApi()` after `AddApiVersioning()`, and drop the `builder.Services.AddOpenApi()` call. The versioned call replaces the services that call registers, and the package reports AV0029 when both are there.
   - Name the version reader. Left to the default, the package looks in both the query string and the URL segment, and reports AV0015 when every route uses only one. On an API whose clients already send both forms, keep the default: naming one reader stops the other form from being accepted.
+  - Set `<Description>` in the project file. Each versioned document takes its description from the assembly, and the package reports AV0025 without one.
   - Call `WithDocumentPerVersion()` to get one document per version.
 
 ```csharp
 using Asp.Versioning;
+
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddApiVersioning(options => options.ApiVersionReader = new QueryStringApiVersionReader())
