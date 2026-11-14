@@ -36,7 +36,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
 /// house | simon-mckenna
 
-**House:** Treat warnings as errors on every machine, not only in CI. A warning that fails CI but not your local build reaches a pull request before anyone sees it. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too. Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none.
+**House:** Give every suppression an inline comment that says why, whether it's `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry. Revert a suppression that has none. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` with no condition, so a suppression is the only way a warning gets past the build.
 
 ///
 
