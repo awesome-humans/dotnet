@@ -43,7 +43,7 @@ File.WriteAllText(Path.Combine(OutputDirectory, "research-lifecycle.svg"), Resea
 Console.WriteLine($"Exported to {OutputDirectory}/");
 return 0;
 
-// One skill: what starts it, the branch it works on, what the owner does at the human gate
+// One skill: what starts it, the branch it works on, what the maintainer does at the human gate
 // and where its result lands, which is "roster", "research", "opinions" or "report". A
 // report-only skill has no branch and opens no pull request, so it passes neither gate.
 internal sealed record Row(
@@ -60,7 +60,7 @@ internal static class Pipeline
 
     private const string Description =
         "Swimlane diagram of how this repository maintains itself: vet-source, research-topic, resolve-research, harvest-sources, refresh-dotnet-versions, " +
-        "and weave-house-opinion each work on their own branch, pass the CI checks, get an agent review, pass the owner's review, and land in the roster, research, or the opinions and templates; " +
+        "and weave-house-opinion each work on their own branch, pass the CI checks, get an agent review, pass the maintainer's review, and land in the roster, research, or the opinions and templates; " +
         "audit-freshness, review-opinions, and review-project only report. Their findings, the release watch, and the harvest reminder start the next run.";
 
     private static readonly (string Key, string Name)[] Lanes =
@@ -190,7 +190,7 @@ internal static class Pipeline
             s.Add(Svg.Text(XLandsIn + 14, ty + (lines.Length * 22), subtitle, "ts"));
         }
 
-        // The loop: a report's findings, with the scheduled workflows and the owner, start
+        // The loop: a report's findings, with the scheduled workflows and the maintainer, start
         // the next run in whichever row it belongs to.
         double loopY = rowsBottom + 56;
         const double StartX = 460, StartWidth = 402;
@@ -358,7 +358,7 @@ internal static class Svg
     // website repository's awesome-humans.css does. The .NET accent stays out: the design
     // system shows an ecosystem's accent only in four places on the site, and a diagram
     // isn't one. Brand marks the CI gate and the outcome the agents work towards, and house
-    // what the owner decides. Each lane takes its lane-* token, chosen to stay apart from
+    // what the maintainer decides. Each lane takes its lane-* token, chosen to stay apart from
     // those and from stale. lane-reports sits near the .NET accent, which no diagram shows.
     private const string TokensLight = """
         --bg: #ffffff; --surface: #f6f7f8; --band: #eef0f2; --fg: #0d1117; --muted: #5b6572; --line: #e3e6ea;
