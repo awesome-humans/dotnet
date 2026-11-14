@@ -33,6 +33,10 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging hygiene">
+    <!-- Nothing packs by default. A project that ships as a NuGet package sets IsPackable to true
+         in its project file. Directory.Build.targets reads the value to tell a library from
+         application code (opinions/runtime-performance.md). -->
+    <IsPackable>false</IsPackable>
     <!-- Central Package Management (Directory.Packages.props) pins each package's version, not its content.
          packages.lock.json also records each package's hash, so restore fails if a feed serves different bytes for a
          pinned version. To get that check, set this to true and restore with locked mode in CI (opinions/ci.md). -->
