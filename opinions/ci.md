@@ -36,7 +36,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
 /// house | simon-mckenna
 
-**House:** Give every suppression an inline comment that says why, whether it's `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry. Revert a suppression that has none. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` with no condition, so a suppression is the only way a warning gets past the build.
+**House:** Give every suppression an inline comment that says why, whether it's `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry. Revert a suppression that has none. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` with no condition, so a suppression is the only way a compiler or analyzer warning gets past the build.
 
 ///
 

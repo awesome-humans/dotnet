@@ -19,8 +19,9 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Quality gates">
-    <!-- Set with no condition, so a warning fails the build on every machine, not only in CI
-         (opinions/project-structure.md). This includes NuGet Audit. NU1901 to NU1904 fail restore on purpose, even on a branch nobody
+    <!-- Set with no condition, so a compiler or analyzer warning fails the build on every machine,
+         not only in CI (opinions/project-structure.md). MSBuild warnings need -warnaserror
+         (opinions/ci.md). This includes NuGet Audit. NU1901 to NU1904 fail restore on purpose, even on a branch nobody
          changed, on the day an advisory lands against the dependency graph. To suppress one advisory,
          use NuGetAuditSuppress with its URL and a reason. Never list the codes in WarningsNotAsErrors
          (opinions/ci.md). -->
