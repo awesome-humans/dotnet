@@ -49,7 +49,7 @@ foreach ((string name, string? body) in required)
 {
     if (body is null)
     {
-        errors.Add($"README.md: '## {name}' section not found — the index checks below cannot run");
+        errors.Add($"README.md: '## {name}' section not found: the index checks below can't run");
     }
 }
 
@@ -76,13 +76,13 @@ if (scope is not null)
     {
         if (!linked.Contains(path))
         {
-            errors.Add($"README.md: Scope has no bullet linking to {path} — add one when adding an opinion");
+            errors.Add($"README.md: Scope has no bullet linking to {path}: add one when adding an opinion");
         }
     }
 
     foreach (string stale in linked.Except(paths).Order(StringComparer.Ordinal))
     {
-        errors.Add($"README.md: Scope links to {stale}, which no longer exists — drop or repoint the bullet");
+        errors.Add($"README.md: Scope links to {stale}, which no longer exists: drop or repoint the bullet");
     }
 
     // Scope is kept alphabetical so a new bullet lands in one predictable place. By title,
@@ -103,12 +103,12 @@ if (scope is not null)
         if (unlinked is not null)
         {
             errors.Add(
-                $"README.md: Scope bullet '{title}' follows the unlinked '{unlinked}' bullet "
-                    + "— unlinked bullets stay last");
+                $"README.md: Scope bullet '{title}' follows the unlinked '{unlinked}' bullet"
+                    + ": unlinked bullets stay last");
         }
         else if (previous is not null && StringComparer.OrdinalIgnoreCase.Compare(previous, title) > 0)
         {
-            errors.Add($"README.md: Scope is not sorted by title — '{title}' follows '{previous}'");
+            errors.Add($"README.md: Scope isn't sorted by title: '{title}' follows '{previous}'");
         }
 
         previous = title;
@@ -122,12 +122,12 @@ if (layout is not null)
     if (listed.Count == 0)
     {
         errors.Add(
-            $"README.md: Repository layout tree has no `{Opinions.DirectoryName}/` node — the tree check cannot run");
+            $"README.md: Repository layout tree has no `{Opinions.DirectoryName}/` node: the tree check can't run");
     }
 
     foreach (string missing in names.Except(listed).Order(StringComparer.Ordinal))
     {
-        errors.Add($"README.md: Repository layout tree does not list {Opinions.PathOf(missing)}");
+        errors.Add($"README.md: Repository layout tree doesn't list {Opinions.PathOf(missing)}");
     }
 
     foreach (string stale in listed.Except(names).Order(StringComparer.Ordinal))
@@ -142,8 +142,8 @@ if (layout is not null)
         if (StringComparer.Ordinal.Compare(listed[index - 1], listed[index]) > 0)
         {
             errors.Add(
-                $"README.md: Repository layout tree is not sorted under `{Opinions.DirectoryName}/` "
-                    + $"— {listed[index]} follows {listed[index - 1]}");
+                $"README.md: Repository layout tree isn't sorted under `{Opinions.DirectoryName}/`"
+                    + $": {listed[index]} follows {listed[index - 1]}");
         }
     }
 }
@@ -176,7 +176,7 @@ if (skillsTable is not null)
     foreach (string stale in rows.Except(skills).Order(StringComparer.Ordinal))
     {
         errors.Add(
-            $"README.md: 'Maintenance via skills' table has a row for `{stale}`, which is not a skill directory");
+            $"README.md: 'Maintenance via skills' table has a row for `{stale}`, which isn't a skill directory");
     }
 
     // Sorted by skill name, the order a directory listing of skills/ uses, so a new row lands in
@@ -186,8 +186,8 @@ if (skillsTable is not null)
         if (StringComparer.Ordinal.Compare(rows[index - 1], rows[index]) > 0)
         {
             errors.Add(
-                $"README.md: 'Maintenance via skills' table is not sorted by skill name "
-                    + $"— `{rows[index]}` follows `{rows[index - 1]}`");
+                $"README.md: 'Maintenance via skills' table isn't sorted by skill name"
+                    + $": `{rows[index]}` follows `{rows[index - 1]}`");
         }
     }
 }
@@ -212,8 +212,8 @@ static string? Section(string text, string heading)
 {
     // Every level-2 heading in one pass: the one whose text matches starts the
     // section, and the heading after it ends it. Matching headings generically
-    // keeps the pattern constant, so it can be source-generated — interpolating
-    // the wanted heading into the pattern could not (SYSLIB1045).
+    // keeps the pattern constant, so it can be source-generated. Interpolating
+    // the wanted heading into the pattern couldn't be (SYSLIB1045).
     MatchCollection headings = Patterns.SectionHeading().Matches(text);
 
     for (int index = 0; index < headings.Count; index++)

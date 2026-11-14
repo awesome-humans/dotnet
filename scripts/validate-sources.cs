@@ -27,8 +27,8 @@
 // every house opinion must sit inside one (awesome-humans/website: House opinions).
 //
 // It also holds the roster itself to its shape: each table sorted by id, and no id
-// used twice. Both are conventions a reader cannot spot in a 30-row table, and the
-// second is worse than untidy — the parse below is keyed by id, so a duplicate would
+// used twice. Both are conventions a reader can't spot in a 30-row table, and the
+// second is worse than untidy: the parse below is keyed by id, so a duplicate would
 // silently decide a source's bucket by whichever row came last.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
@@ -53,7 +53,7 @@ const string OptedOutBucket = "opted-out";
 
 if (!Opinions.DirectoryExists)
 {
-    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here — run this script from the repository root.");
+    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here: run this script from the repository root.");
     return 2;
 }
 
@@ -64,7 +64,7 @@ if (!File.Exists(RosterPath))
 }
 
 // Which level-2 headings open which bucket. Anything outside them, such as the admission
-// criteria and the decision log, carries no source rows.
+// criteria and the decision log, has no source rows.
 (string Bucket, string[] Prefixes)[] sections =
 [
     ("citable", ["## Citable"]),
@@ -72,7 +72,7 @@ if (!File.Exists(RosterPath))
     (OptedOutBucket, ["## Opted out"]),
 ];
 
-// The roster tables carry only id, Kind, Source, Focus and Since. The evidence behind each row,
+// The roster tables hold only id, Kind, Source, Focus and Since. The evidence behind each row,
 // and with it the two markings, lives under '## Source notes', one '### `id`' section per
 // source. Splitting them is what keeps a diff readable: a table row is a short line, and a
 // reworded sentence in a note touches that sentence rather than a 4,000-character row.
@@ -198,7 +198,7 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
     // roster holding whichever came last, deciding a source's bucket by row order.
     if (!roster.TryAdd(rowId, (bucket, string.Empty)))
     {
-        errors.Add($"{RosterPath}: source id '{rowId}' appears on more than one row — ids are unique");
+        errors.Add($"{RosterPath}: source id '{rowId}' appears on more than one row: ids are unique");
     }
 }
 
@@ -220,7 +220,7 @@ else
 
 if (roster.Count == 0)
 {
-    errors.Add($"{RosterPath}: no source rows parsed — roster tables may have changed shape");
+    errors.Add($"{RosterPath}: no source rows parsed: roster tables may have changed shape");
 }
 
 // Roster tables are kept alphabetical by id (vet-source, step 6) so a new row lands in
@@ -234,8 +234,8 @@ foreach ((string heading, List<string> tableIds) in tables)
         if (StringComparer.Ordinal.Compare(tableIds[index - 1], tableIds[index]) > 0)
         {
             errors.Add(
-                $"{RosterPath}: '{heading}' is not sorted by id "
-                    + $"— '{tableIds[index]}' follows '{tableIds[index - 1]}'");
+                $"{RosterPath}: '{heading}' isn't sorted by id"
+                    + $": '{tableIds[index]}' follows '{tableIds[index - 1]}'");
         }
     }
 }
@@ -261,7 +261,7 @@ foreach (string noteId in noteIds)
     {
         errors.Add(
             $"{RosterPath}: '{NotesHeading}' has a section for '{noteId}', "
-            + "which has opted out — delete the section");
+            + "which has opted out: delete the section");
     }
 }
 
@@ -272,8 +272,8 @@ for (int index = 1; index < noteIds.Count; index++)
     if (StringComparer.Ordinal.Compare(noteIds[index - 1], noteIds[index]) > 0)
     {
         errors.Add(
-            $"{RosterPath}: '{NotesHeading}' is not sorted by id "
-                + $"— '{noteIds[index]}' follows '{noteIds[index - 1]}'");
+            $"{RosterPath}: '{NotesHeading}' isn't sorted by id"
+                + $": '{noteIds[index]}' follows '{noteIds[index - 1]}'");
     }
 }
 
@@ -311,7 +311,7 @@ foreach (string name in Opinions.Names())
     string path = Opinions.PathOf(name);
 
     // A file with no frontmatter, or unreadable frontmatter, is reported in detail by
-    // validate-metadata.cs — this check stays quiet about it.
+    // validate-metadata.cs, so this check skips it.
     if (Frontmatter.Read(deserializer, path, out _) is not IDictionary frontmatter)
     {
         continue;
@@ -338,7 +338,7 @@ foreach (string name in Opinions.Names())
     citing.Add((path, declaredIds));
 }
 
-// A template carries the same ids comma-separated inside its one-line comment header.
+// A template lists the same ids comma-separated inside its one-line comment header.
 foreach (string path in CommentHeader.Files())
 {
     if (CommentHeader.Read(path, out _) is not IDictionary header || header["sources"] is not string declared)
@@ -363,38 +363,38 @@ foreach ((string path, List<string> sourceIds) in citing)
 
         if (sourceId == "house")
         {
-            errors.Add($"{path}: 'house' names no profile — write {House.Prefix}<profile>, such as {House.Prefix}simon-mckenna");
+            errors.Add($"{path}: 'house' names no profile: write {House.Prefix}<profile>, such as {House.Prefix}simon-mckenna");
             continue;
         }
 
         if (!roster.TryGetValue(sourceId, out (string Bucket, string Notes) row))
         {
-            errors.Add($"{path}: source '{sourceId}' is not on the roster in {RosterPath}");
+            errors.Add($"{path}: source '{sourceId}' isn't on the roster in {RosterPath}");
             continue;
         }
 
         if (row.Bucket == WatchBucket)
         {
             errors.Add(
-                $"{path}: source '{sourceId}' is on the watch list and may not feed opinions or templates "
-                    + "— corroborate with a citable source or admit it via vet-source");
+                $"{path}: source '{sourceId}' is on the watch list and may not feed opinions or templates"
+                    + ": corroborate with a citable source or admit it via vet-source");
         }
         else if (row.Bucket == OptedOutBucket)
         {
             errors.Add(
-                $"{path}: source '{sourceId}' has opted out and may not feed opinions or templates "
-                    + "— re-source the claim with research-topic, or cut it back to what other citable sources support");
+                $"{path}: source '{sourceId}' has opted out and may not feed opinions or templates"
+                    + ": re-source the claim with research-topic, or cut it back to what other citable sources support");
         }
         else if (discovery.Contains(sourceId))
         {
             errors.Add(
-                $"{path}: source '{sourceId}' is marked discovery-only and never appears in 'sources:' "
-                    + "— cite the primary source it led you to");
+                $"{path}: source '{sourceId}' is marked discovery-only and never appears in 'sources:'"
+                    + ": cite the primary source it led you to");
         }
     }
 
-    // A Corroborate-marked source may carry the shape of a claim but never the claim alone,
-    // so something unmarked has to stand beside it. A house profile does not count: it is its
+    // A Corroborate-marked source may support the shape of a claim but never the claim alone,
+    // so something unmarked has to stand beside it. A house profile doesn't count: it is its
     // owner's position, not a second reading of the evidence.
     bool marked = false;
     bool unmarked = false;
@@ -413,8 +413,8 @@ foreach ((string path, List<string> sourceIds) in citing)
     if (marked && !unmarked)
     {
         errors.Add(
-            $"{path}: every citable source here is marked '{CorroborateMarker}' "
-                + "— add a citable source that is not, or drop the claim");
+            $"{path}: every citable source here is marked '{CorroborateMarker}'"
+                + ": add a citable source that isn't, or drop the claim");
     }
 
     // A house profile in the sources and its blocks or regions always appear together, and
@@ -437,7 +437,7 @@ foreach ((string path, List<string> sourceIds) in citing)
 
     foreach (House.Span span in spans.Where(span => !span.Marked))
     {
-        errors.Add($"{path}:{span.Start + 1}: the house {kind} for {span.Profile} doesn't carry '{House.Marking}'");
+        errors.Add($"{path}:{span.Start + 1}: the house {kind} for {span.Profile} doesn't contain '{House.Marking}'");
     }
 
     string[] lines = text.ReplaceLineEndings("\n").Split('\n');
@@ -446,7 +446,7 @@ foreach ((string path, List<string> sourceIds) in citing)
         if (lines[index].Contains(House.Marking, StringComparison.Ordinal)
             && !spans.Any(span => span.Start < index && index < span.End))
         {
-            errors.Add($"{path}:{index + 1}: '{House.Marking}' outside a house {kind}, so the default copy would carry it");
+            errors.Add($"{path}:{index + 1}: '{House.Marking}' outside a house {kind}, so the default copy would include it");
         }
     }
 }

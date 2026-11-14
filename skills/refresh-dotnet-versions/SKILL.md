@@ -30,7 +30,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - .NET: <https://dotnet.microsoft.com/download/dotnet> and the release announcement on the [.NET Blog](https://devblogs.microsoft.com/dotnet/).
    - C#: <https://learn.microsoft.com/dotnet/csharp/whats-new/>.
    - F#: <https://learn.microsoft.com/dotnet/fsharp/whats-new/>.
-   - Use GA releases only. A preview or release candidate can appear in a "coming next" note, never as the target.
+   - Use GA releases only. A preview or release candidate can appear in a "Coming next" note, never as the target.
 2. **Compare with the current targets:** the `targets:` metadata in `opinions/`, the version pins in `templates/`, and the root `global.json`. The template pins are the `global.json` SDK version, `<TargetFramework>` in project files, and `<LangVersion>` if it's pinned.
    - If everything matches, the framework part has nothing to do. Say so, and **still run steps 4b and 4c**, because package and action pins drift on their own schedule. Check step 4a for a band the repository now needs.
    - Report "up to date" and stop only when those checks find nothing too.
@@ -41,7 +41,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
      - Raising the minimum only narrows who can build. Pinning a patch, such as `10.0.412` instead of `10.0.400`, fails contributors one servicing release behind.
      - When a band ships something the repository uses, raise the minimum, and give the reason in the pull request. For example, the root `global.json` is at `10.0.400` because that's the first band that supports `#:include`.
      - The two files are independent. The root pin follows what `scripts/` needs, and the template pin follows what the example projects need. Use `latestFeature` wherever the opinion says so.
-     - `global.json` can't carry a comment header, so the pinned value **is** the record.
+     - `global.json` has no comment syntax, so the pinned value **is** the record.
      - Renovate never changes this field: `renovate.json` disables the `dotnet-sdk` dependency type, because a minimum under `latestFeature` doesn't need mechanical bumps. Only this skill changes it.
    - **4b. The package pins in `templates/Directory.Packages.props`.** Look up every `<PackageVersion>` on nuget.org, with the registration index (`https://api.nuget.org/v3/registration5-gz-semver2/<lowercased-id>/index.json`) or `dotnet package search <id>`.
      - Take the **latest stable** version. Never take a prerelease, or a version whose TFM support falls below `targets:`.
@@ -55,7 +55,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
      - Before you take a new major version, read its release notes. An input, output, or default that the example relies on might have changed. Fix the example in the same edit, and say what changed in the pull request.
 
 5. **Update each opinion** under `opinions/`:
-   - Read the release's "What's new" pages from the first-party sources, `dotnet-blog` and `ms-learn`. Read feature deep dives from the rest of the citable roster, such as `andrew-lock`'s "Exploring .NET" series.
+   - Read the release's "What's new" pages from the first-party sources, `dotnet-blog` and `ms-learn`. Read detailed posts on each feature from the rest of the citable roster, such as `andrew-lock`'s "Exploring .NET" series. Read `stephen-toub`'s "Performance Improvements in .NET X" post for the release too, and check `opinions/runtime-performance.md` against it: delete any manual optimization that the runtime now does by itself.
    - Add a new language or runtime feature where it changes an opinion, for example a new syntax that replaces an old idiom.
    - When a feature needs a new opinion, create a stub with a `TODO` and a source link, and add its `README.md` Scope bullet and Repository layout entry, which CI enforces.
    - Update `targets:` and `last-reviewed:` on every file you change **or verify as unchanged**.

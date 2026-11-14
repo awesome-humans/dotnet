@@ -40,6 +40,7 @@ distroless
 Dockerfiles
 docset
 dorrans
+dotnetup
 dudycz
 Dudycz's
 Dutkiewicz
@@ -96,6 +97,7 @@ ordinally
 Petabridge
 Pluralsight
 prerendering
+Publickey
 quot
 RDBMS
 rect

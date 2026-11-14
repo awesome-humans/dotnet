@@ -1,7 +1,7 @@
 {
   "name": "awesome-humans-dotnet",
   "private": true,
-  "description": "Markdown and configuration formatting for this repository. Not a published package — the repository ships opinions, templates, and skills, not JavaScript.",
+  "description": "Markdown and configuration formatting for this repository. Not a published package: the repository ships opinions, templates, and skills, not JavaScript.",
   "scripts": {
     "format": "prettier --prose-wrap preserve --write \"**/*.{md,json,jsonc,yml,yaml}\"",
     "format:check": "prettier --prose-wrap preserve --check \"**/*.{md,json,jsonc,yml,yaml}\"",

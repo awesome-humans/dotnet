@@ -1,4 +1,4 @@
-// Shared by the checks that read opinion frontmatter — pulled in with
+// Shared by the checks that read opinion frontmatter, through
 // `#:include Frontmatter.cs`. Not a file-based app itself: it declares no top-level
 // statements. The YamlDotNet reference it compiles against is declared by the script
 // including it, so the two checks report identical wording from one implementation.
@@ -11,7 +11,7 @@ internal static class Frontmatter
 {
     /// <summary>
     /// Parses a Markdown file's YAML frontmatter. Returns the mapping, or null with
-    /// <paramref name="error"/> set to the reason — the phrase the frontmatter check
+    /// <paramref name="error"/> set to the reason: the phrase the frontmatter check
     /// prints after the file path, and the reason the source check skips the file.
     /// </summary>
     internal static IDictionary? Read(IDeserializer deserializer, string path, out string? error)
@@ -39,15 +39,15 @@ internal static class Frontmatter
         catch (YamlException exception)
         {
             // The parser's line numbers are relative to the frontmatter body, which
-            // starts on line 2 of the file — offset them to point at the real line.
-            error = $"frontmatter is not valid YAML: {exception.Message} "
+            // starts on line 2 of the file, so offset them to point at the real line.
+            error = $"frontmatter isn't valid YAML: {exception.Message} "
                 + $"(line {exception.Start.Line + 1}, column {exception.Start.Column})";
             return null;
         }
 
         if (parsed is not IDictionary mapping)
         {
-            error = "frontmatter is not a YAML mapping";
+            error = "frontmatter isn't a YAML mapping";
             return null;
         }
 

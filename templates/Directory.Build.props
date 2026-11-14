@@ -13,7 +13,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <!-- Promotes nullable warnings to errors, so the compiler enforces annotations (opinions/csharp.md) -->
+    <!-- Makes nullable warnings errors, so the compiler enforces the annotations (opinions/csharp.md). -->
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -33,12 +33,17 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging hygiene">
+    <!-- Nothing packs by default. A project that ships as a NuGet package sets IsPackable to true
+         in its project file. Directory.Build.targets reads the value to tell a library from
+         application code (opinions/runtime-performance.md). -->
+    <IsPackable>false</IsPackable>
     <!-- Central Package Management (Directory.Packages.props) pins each package's version, not its content.
          packages.lock.json also records each package's hash, so restore fails if a feed serves different bytes for a
          pinned version. To get that check, set this to true and restore with locked mode in CI (opinions/ci.md). -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- The doc file feeds IDE tooltips and OpenAPI XML comments. CS1591 is exempt, so undocumented internals don't fail the build. -->
+    <!-- The documentation file feeds IDE tooltips and OpenAPI descriptions. CS1591 is suppressed, so a
+         public member without a documentation comment doesn't fail the build. -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 

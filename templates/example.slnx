@@ -1,5 +1,5 @@
 <!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-14 | sources: house:simon-mckenna, ms-learn -->
-<!-- SLNX is the default solution format since the .NET 10 SDK (`dotnet new sln`). -->
+<!-- From the .NET 10 SDK, `dotnet new sln` creates an SLNX file by default. -->
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Example.Library/Example.Library.csproj" />
@@ -9,9 +9,10 @@
     <Project Path="tests/Example.Library.Tests/Example.Library.Tests.csproj" />
   </Folder>
   <!-- house:simon-mckenna begin -->
-  <!-- **House:** root build files show in the IDE under /build/, beside the projects they configure. -->
+  <!-- **House:** The IDE shows the root build files under /build/, beside the projects they configure. -->
   <Folder Name="/build/">
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
     <File Path="global.json" />
     <File Path=".editorconfig" />

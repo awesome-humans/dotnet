@@ -1,11 +1,10 @@
-# Watches the official .NET releases index for new GA releases (runtime, ASP.NET Core,
-# SDK — they ship together per channel) and opens a pull request when the known state
-# changes.
+# Watches the official .NET releases index for new GA releases, and opens a pull
+# request when the known state changes. The runtime, ASP.NET Core, and the SDK ship
+# together per channel.
 #
-# The PR is a TRIGGER, not the update: it refreshes only .github/state/dotnet-releases.json.
-# Folding the release into opinions/ and templates/ is done by running the
-# skills/refresh-dotnet-versions skill against the PR's branch (manually or, later, by a
-# follow-on automation).
+# The pull request is a TRIGGER, not the update: it refreshes only
+# .github/state/dotnet-releases.json. To fold the release into opinions/ and templates/,
+# run the refresh-dotnet-versions skill against the pull request's branch.
 #
 # Note: for the create-pull-request step to work, the repository setting
 # "Allow GitHub Actions to create and approve pull requests" must be enabled
@@ -33,9 +32,9 @@ jobs:
 
       # pipefail is set explicitly: the default shell for an unqualified `run` is
       # `bash -e`, which reports only the LAST command in a pipeline. Without it a failed
-      # fetch leaves jq reading empty stdin, which it turns into no output and exit 0 —
-      # a truncated snapshot that the diff below reads as "every channel removed", and a
-      # trigger PR that deletes the state file instead of updating it.
+      # fetch leaves jq reading empty stdin, which it turns into no output and exit 0.
+      # The diff below would read that truncated snapshot as "every channel removed",
+      # and open a trigger pull request that deletes the state file instead of updating it.
       - name: Snapshot GA release state
         run: |
           set -euo pipefail
@@ -54,12 +53,13 @@ jobs:
           > "$snapshot"
 
           # Guard against a fetch that succeeds but returns something unexpected:
-          # replace the checked-in file only once the new one parses and carries channels.
-          # An empty or unparseable snapshot fails the run loudly instead of opening a PR.
+          # replace the checked-in file only once the new one parses and lists channels.
+          # An empty or unparseable snapshot fails the run loudly instead of opening a pull
+          # request.
           channels="$(jq '.channels | length' "$snapshot" 2>/dev/null || echo 0)"
           case "$channels" in
             0 | '' | *[!0-9]*)
-              echo "Release index fetch produced no usable channel count (got '$channels') — leaving the snapshot untouched." >&2
+              echo "Release index fetch produced no usable channel count (got '$channels'). Leaving the snapshot untouched." >&2
               exit 1
               ;;
           esac
@@ -100,4 +100,4 @@ jobs:
             ${{ steps.diff.outputs.summary }}
             ```
 
-            **This PR is a trigger, not the update.** It only refreshes `.github/state/dotnet-releases.json`. To fold the release into the opinions and templates, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill against this branch, then merge both together.
+            **This pull request doesn't update the opinions or templates.** It only refreshes `.github/state/dotnet-releases.json`. To bring them up to date, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill on this branch, and merge its changes with the snapshot in this pull request.

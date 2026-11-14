@@ -1,6 +1,6 @@
 ---
 name: vet-source
-description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it, or move it to Opted out. Use when proposing a new source, when an issue labelled vet-source or opt-out arrives, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
+description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it, or move it to Opted out. Use when proposing a new source, when an issue labelled vet-source or opt-out arrives, when a watch-list source might be ready for promotion, or when an admitted source has gone quiet or declined in quality.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -20,11 +20,11 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 1. **Identify the candidate:** its URL, author, and focus area. If the roster already lists it, this is a re-evaluation for promotion or demotion, not an admission. A source in `## Opted out` that asks to return is the exception: it's a suggestion like any other, so vet it as an admission.
    - **From an issue:** When you're given an issue number, read it with `gh issue view <number> --json title,body,labels`. An issue labelled `vet-source` came from the Suggest a source form, which `awesome-humans/website`'s intake moved here. Its form fields give the name, the main URL, three sample posts, the year writing started, why the suggester thinks it qualifies, and their relationship to the source. Treat them as leads to check, never as evidence.
-   - **An opt-out:** An issue labelled `opt-out` names a source whose owner asked to stop being cited, and the owner verified the request. Skip to [Opt-outs](#opt-outs).
+   - **An opt-out:** An issue labelled `opt-out` names a source whose author asked to stop being cited, and the maintainer verified the request. Skip to [Opt-outs](#opt-outs).
 2. **Check every ecosystem's opt-outs first.** An opt-out from one ecosystem covers all of them, so read the `## Opted out` section of every other ecosystem's `AWESOME-HUMANS.md` before you gather any evidence.
    - List the ecosystem repositories with `gh repo list awesome-humans`, and read each roster with `gh api repos/awesome-humans/<repository>/contents/AWESOME-HUMANS.md -H 'Accept: application/vnd.github.raw'`. Today that's `awesome-humans/rust`.
-   - **A candidate listed there is declined without vetting.** Never re-run the criteria on it: its owner asked not to be cited. Add no roster row and no source notes. Skip to step 6.3, and log the decline with a link to the other roster's entry, in a pull request that holds only the log entry.
-   - **If this roster lists the source too,** don't log a decline. Follow [Opt-outs](#opt-outs) for it here, and link the other roster's entry where step 3 links the `awesome-humans/website` issue.
+   - **A candidate listed there is declined without vetting.** Never re-run the criteria on it: its author asked not to be cited. Add no roster row and no source notes. Skip to step 6.3, and log the decline with a link to the other roster's entry, in a pull request that holds only the log entry.
+   - **If this roster lists the source too,** don't log a decline. Follow [Opt-outs](#opt-outs) for it here, and link the other roster's entry where [Opt-outs](#opt-outs) step 3 links the `awesome-humans/website` issue.
 3. **Establish the track record** against each criterion:
    - **Longevity:** Find the earliest verifiable publication, from archives, post history, or the Wayback Machine. Admission needs two years of sustained output, and less means the watch list, whatever the quality. Record the exact start year in the roster's `Since` column.
    - **Depth:** Sample three to five representative posts. Do they offer original insight, such as internals, measurements, or worked reasoning, or do they paraphrase release notes?
@@ -35,8 +35,8 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    | Evidence                                             | Outcome                                                                 |
    | ---------------------------------------------------- | ----------------------------------------------------------------------- |
    | All four criteria met, over two years or more        | **Admit** to the **Citable** table                                      |
-   | A live independence concern                          | **Admit,** with a usage limit in the notes                              |
-   | Publishing stopped over a year ago                   | **Watch list,** unless the writing continues elsewhere                  |
+   | An independence concern that applies                 | **Admit,** with a usage limit in the notes                              |
+   | Publishing stopped over a year ago                   | **Watch list,** unless the writing clearly continues elsewhere          |
    | Strong on depth and accuracy, but short on longevity | **Watch list,** with the blocker recorded                               |
    | An aggregator, such as a link roundup or newsletter  | **Admit,** marked `**Discovery-only.**`. It never appears in `sources:` |
    | Thin on depth, but sound on the other three criteria | **Admit,** marked `**Corroborate.**`                                    |
@@ -45,7 +45,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    The table decides whether a source is citable. A marking or a usage limit says what a citation can rest on.
 
 5. **For a re-evaluation,** promote a watch-list source whose blocker has cleared. Demote or annotate an admitted source that has published nothing in over a year, or whose quality has dropped.
-   - A source that slips gets either a tighter usage limit in its notes, or the watch list.
+   - A source whose quality drops gets either a tighter usage limit in its notes, or the watch list.
    - A demoted source keeps its row, with a note. **Moving a source to the watch list revokes citation, back catalogue included,** and `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:`.
    - So a demotion is finished only when no opinion cites the source. In the same pull request, re-source each affected claim from a citable source, or drop it. To keep the back catalogue citable, annotate the row instead of demoting it.
 6. **Edit in a worktree** on the branch `vet/<source-id>`, or a slug for a multi-source pass, as [AGENTS.md](../../AGENTS.md) describes:
@@ -58,13 +58,13 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 
 ## Opt-outs
 
-An opt-out removes citations, and the roster keeps only enough to turn away a later suggestion. Finish it within 30 days of the owner's verification, in one pull request on the branch `vet/opt-out-<source-id>`:
+An opt-out removes citations, and the roster keeps only enough to turn away a later suggestion. Finish it within 30 days of the maintainer's verification, in one pull request on the branch `vet/opt-out-<source-id>`:
 
 1. **Move the row** to the `## Opted out` table, in ID order. If the section still reads "No source has opted out.", replace that line with a table that has the same columns as the others. If the row leaves the Citable table, update all three counts above it, as for a demotion.
 2. **Delete the source's section** under `## Source notes`. `scripts/validate-sources.cs` fails while it's there.
 3. **Log the decision:** the date, the source ID, and the link to the `awesome-humans/website` issue. Never quote the requester or name anyone beyond the source ID.
 4. **Re-source every citation.** `scripts/validate-sources.cs` lists each opinion and template that still cites the ID. Re-source each claim with `research-topic`, or cut it back to what other citable sources support. In the pull request, list each claim and what happened to it.
-5. **Open the pull request** with the [`source.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/source.md) template and a `Refs: awesome-humans/website#<number>` trailer, which doesn't close the issue. Comment the pull request on the `awesome-humans/website` issue, which the owner closes once every ecosystem's pull request has merged. When step 2 sent the source here and there's no issue, leave out the trailer and the comment, and link the other roster's entry in the description instead, with a reference-style link.
+5. **Open the pull request** with the [`source.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/source.md) template and a `Refs: awesome-humans/website#<number>` trailer, which doesn't close the issue. Comment the pull request on the `awesome-humans/website` issue, which the maintainer closes once every ecosystem's pull request has merged. When step 2 sent the source here and there's no issue, leave out the trailer and the comment, and link the other roster's entry in the description instead, with a reference-style link.
 
 Opting back in is a suggestion like any other. The source leaves `## Opted out` only on admission.
 

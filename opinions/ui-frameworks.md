@@ -14,7 +14,7 @@ sources:
 
 # UI frameworks
 
-Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-platform desktop. Choose per app, and mix render modes in a Blazor app only on purpose.
+Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-platform desktop. Choose the framework per app.
 
 ## Blazor
 
@@ -25,7 +25,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
   1. Read the zone ID through JavaScript interop with `Intl.DateTimeFormat().resolvedOptions().timeZone`, and validate it with `TimeZoneInfo.TryFindSystemTimeZoneById`.
   2. Register a scoped `TimeProvider` that overrides `LocalTimeZone` with that zone.
 
-  Components that inject the provider, instead of reading `DateTimeOffset.Now`, then render in the user's local time. For details, see [datetime.md](datetime.md). Under `InteractiveServer`, interop runs only in `OnAfterRenderAsync`, so the first render uses the wrong zone. Expect one corrective re-render, and handle `JSDisconnectedException`. ([Meziantou: Convert DateTime to the user's time zone with Blazor](https://www.meziantou.net/convert-datetime-to-user-s-time-zone-with-server-side-blazor-time-provider.htm))
+  A component that injects the provider, instead of reading `DateTimeOffset.Now`, then renders in the user's local time. For details, see [datetime.md](datetime.md). Under `InteractiveServer`, interop runs only in `OnAfterRenderAsync`, so the first render uses the server's zone. Expect one corrective re-render, and handle `JSDisconnectedException`. ([Meziantou: Convert DateTime to the user's time zone with Blazor](https://www.meziantou.net/convert-datetime-to-user-s-time-zone-with-server-side-blazor-time-provider.htm))
 
 - **Read WebAssembly `HttpClient` responses asynchronously.** In .NET 10, response streaming is on by default, which is a breaking change. `response.Content.ReadAsStreamAsync()` returns a `BrowserHttpReadStream` instead of a `MemoryStream`, and it rejects synchronous calls such as `Stream.Read(Span<byte>)`. Fix the call site and keep the default, because streaming keeps large responses off the heap. If a dependency you don't own makes the synchronous call, opt out:
   - Per request, with `requestMessage.SetBrowserResponseStreamingEnabled(false)`.
@@ -72,7 +72,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 - **Put store billing behind one interface, such as `IBillingService`, with conditional compilation per store. Validate every purchase on the server.** ([Versluis: Implementing Cross-Platform In-App Billing in .NET MAUI Applications](https://devblogs.microsoft.com/dotnet/cross-platform-billing-dotnet-maui/))
 - **On Android, set `<UseMaterial3>true</UseMaterial3>`** (MAUI 10.0.60 and later) for current theming. ([Versluis: Give Your .NET MAUI Android Apps a Material 3 Makeover](https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/))
 - **Keep trimming on, and exclude a problem assembly instead.** Root it in a `Linker.xml` file referenced by `<TrimmerRootDescriptor Include="Linker.xml" />`. Turn off `PublishTrimmed` only to confirm that trimming causes the problem. ([Versluis: Excluding Assemblies from Trimming in .NET MAUI](https://blog.verslu.is/maui/exclude-assemblies-from-trimming/))
-- **Target .NET 9 or later to meet Google Play's 16 KB page size requirement.** It concerns native library alignment, not trimming, and needs no other change. ([Versluis: Preparing Your .NET MAUI Apps for Google Play's 16 KB Page Size Requirement](https://devblogs.microsoft.com/dotnet/maui-google-play-16-kb-page-size-support/))
+- **Target .NET 9 or later to meet Google Play's 16 KB page size requirement.** That makes the app itself compatible, but "All dependencies in your .NET MAUI project also need 16 KB support". The build reports XA0141 for a shared library that isn't built for 16 KB pages, so update or replace that package. A clean build doesn't prove the app works, so test it on a 16 KB emulator or device. ([Versluis: Preparing Your .NET MAUI Apps for Google Play's 16 KB Page Size Requirement](https://devblogs.microsoft.com/dotnet/maui-google-play-16-kb-page-size-support/), [Microsoft Learn: XA0141](https://learn.microsoft.com/dotnet/android/messages/xa0141))
 - **Test preview SDKs with `sdk.paths` in `global.json`** instead of changing the machine default, and ignore the `.dotnet/` folder it installs. For setup, see [project-structure.md](project-structure.md). ([Versluis: Test .NET MAUI Preview SDKs Locally with global.json sdk.paths](https://blog.verslu.is/maui/test-dotnet-maui-preview-sdk-locally/))
 
 ### App lifecycle
@@ -97,7 +97,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 
 ### Offline & sync
 
-- **Build mobile apps offline-first: the local store is the source of truth, and the network syncs it.** Cache remote data locally with an explicit expiry. Use SQLite-net for data you query, and MonkeyCache's `Barrel.Current.Add(key, data, expireIn, eTag)` for simple payloads. The ETag overloads skip downloading unchanged responses. ([Montemagno: Data caching made simple with Monkey Cache](https://montemagno.com/data-caching-made-simple-with-monkey-cache/))
+- **Build mobile apps offline-first: the app reads and writes the local store, and syncs it with the server when the network allows.** Cache remote data locally with an explicit expiry. Use SQLite-net for data you query, and MonkeyCache's `Barrel.Current.Add(key, data, expireIn, eTag)` for simple payloads. The ETag overloads skip downloading unchanged responses. ([Montemagno: Data caching made simple with Monkey Cache](https://montemagno.com/data-caching-made-simple-with-monkey-cache/))
 - **Check `Connectivity.NetworkAccess == NetworkAccess.Internet` before remote calls, and handle `ConnectivityChanged`. Never ping to test reachability.** The `IsReachable` APIs were removed deliberately: make the real request and handle its failure. ([Montemagno: Upgrading to Xamarin.Essentials from Plugins](https://montemagno.com/upgrading-from-plugins-to-xamarin-essentials/))
 
 ## Avalonia & reactive UI
@@ -130,16 +130,16 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
   When you migrate, plan for the removals: Direct2D1, Tizen, `Avalonia.Browser.Blazor`, `BinaryFormatter` usage, and netstandard2.0 in almost every project. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
 
 - **Keep compiled bindings on, the default in 12.** A broken compiled binding fails the build instead of binding to nothing. Use a reflection binding only for a single dynamic case. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
-- **Embed web content with the built-in WebView, not a bundled Chromium.** The WebView, formerly a commercial Accelerate component, is open source from 12. It uses each platform's native engine, so it adds nothing to app size. Avalonia retired the Accelerate brand in the same release, so before you work around a "commercial-only" feature, check what it costs now. ([Avalonia: The Avalonia WebView Is Going Open-Source](https://avaloniaui.net/blog/the-avalonia-webview-is-going-open-source/), [Avalonia: Retiring Accelerate: One Brand, One Clear Path](https://avaloniaui.net/blog/retiring-accelerate))
-- **Use the built-in page navigation for mobile-style apps.** Avalonia 12 includes `ContentPage`, `DrawerPage`, `CarouselPage`, `TabView`, and `PipsPager`, with gestures and wrap selection. Replace a custom navigation stack over a `ContentControl`. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
-- **Avalonia's XAML hot reload is GA since 2026-09-02, and it's paid.** `AvaloniaUI.DiagnosticsSupport.HotReload` runs on Windows, macOS, Linux, iOS, and Android.
+- **Embed web content with the built-in WebView, not a bundled Chromium.** The WebView, formerly a commercial Accelerate component, is open source from 12. It uses each platform's native engine, so it adds nothing to app size. Avalonia retired the Accelerate brand in the same release. Before you work around a feature you remember as commercial-only, check its current licence. ([Avalonia: The Avalonia WebView Is Going Open-Source](https://avaloniaui.net/blog/the-avalonia-webview-is-going-open-source/), [Avalonia: Retiring Accelerate: One Brand, One Clear Path](https://avaloniaui.net/blog/retiring-accelerate))
+- **Use the built-in page navigation for mobile-style apps.** Avalonia 12 includes `ContentPage`, `DrawerPage`, `CarouselPage`, `TabView`, and `PipsPager`, with gestures and wrap selection. They replace a custom navigation stack over a `ContentControl`. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
+- **Avalonia's XAML hot reload has been GA since 2026-09-02, and it's paid.** `AvaloniaUI.DiagnosticsSupport.HotReload` runs on Windows, macOS, Linux, iOS, and Android.
   - `dotnet watch` drives it through the same .NET Hot Reload mechanism as MAUI.
   - It patches changed elements in place, so view state survives the edit.
   - It needs an `AvaloniaUILicenseKey` and a Plus, Pro, or Enterprise subscription.
 
   ([Avalonia: Hot Reload for Avalonia](https://avaloniaui.net/blog/hot-reload-ga))
 
-- **Don't build on Impeller yet.** Avalonia and Google's Flutter team are building an experimental GPU-first Impeller renderer for .NET. A maintainer paused the work on 2026-03-09 to ship v12, and no restart had been announced by 2026-09-24. Stay on the default Skia renderer. ([Avalonia: Avalonia Partnering with Google's Flutter Team to Bring Impeller Rendering to .NET](https://avaloniaui.net/blog/avalonia-partners-with-google-s-flutter-t-eam-to-bring-impeller-rendering-to-net); [Avalonia: Impeller rendering subsystem, discussion #20838](https://github.com/AvaloniaUI/Avalonia/discussions/20838))
+- **Don't build on Impeller yet.** Avalonia and Google's Flutter team are building an experimental GPU-first Impeller renderer for .NET. A maintainer paused the work on 2026-03-09 to ship v12, and the backend is on an internal branch. The latest word, on 2026-11-09, is "Work continues, but there's no public update at this time". Stay on the default Skia renderer. ([Avalonia: Avalonia Partnering with Google's Flutter Team to Bring Impeller Rendering to .NET](https://avaloniaui.net/blog/avalonia-partners-with-google-s-flutter-t-eam-to-bring-impeller-rendering-to-net); [Avalonia: Impeller rendering subsystem, discussion #20838](https://github.com/AvaloniaUI/Avalonia/discussions/20838))
 
 ## Source redundancy
 

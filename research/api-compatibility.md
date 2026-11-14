@@ -118,7 +118,7 @@ Checked on SDK 10.0.400:
 ## Versioning: SemVer on the package, major only on the assembly
 
 - **Package version:** SemVer 2.0.0, with a prerelease suffix for anything unstable.
-- **`AssemblyVersion`:** "CONSIDER only including a major version in the AssemblyVersion", so 1.0 and 1.0.1 both carry 1.0.0.0 and need fewer binding redirects. Keep its major in step with the package's, and never freeze it.
+- **`AssemblyVersion`:** "CONSIDER only including a major version in the AssemblyVersion", so 1.0 and 1.0.1 both stay at 1.0.0.0 and need fewer binding redirects. Keep its major in step with the package's, and never freeze it.
 - **`AssemblyInformationalVersion`:** Let Source Link generate it.
 - **Assembly name and strong-naming key:** Never change them, and never add or remove the key.
 
@@ -132,7 +132,7 @@ Checked on SDK 10.0.400:
 
 **Weighing it: strict for everything baseline validation can see, with Stannard's exception made explicit.**
 Tools make strictness cheap: a binary break fails the pack, and a suppression file forces the decision into review.
-Stannard's valid case, unstable APIs that shouldn't hold back the major version, is what `[Experimental]` is for. `ms-learn`: "If you want to ship a stable package that contains some preview quality APIs, you should mark those APIs using `[Experimental]`. Make sure to use your own diagnostic ID" ([Microsoft Learn: Preview APIs](https://learn.microsoft.com/dotnet/fundamentals/runtime-libraries/preview-apis)).
+`[Experimental]` covers Stannard's valid case: an API that isn't stable yet can change without a new major version. `ms-learn`: "If you want to ship a stable package that contains some preview quality APIs, you should mark those APIs using `[Experimental]`. Make sure to use your own diagnostic ID" ([Microsoft Learn: Preview APIs](https://learn.microsoft.com/dotnet/fundamentals/runtime-libraries/preview-apis)).
 Consumers opt in to each diagnostic ID, so they agreed to any break there in advance, and the exception is visible in the code.
 
 ## Deprecation: phase it across majors
