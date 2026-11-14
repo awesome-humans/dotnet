@@ -67,6 +67,7 @@ public class BasketTests
 - **Use xUnit v3 on Microsoft.Testing.Platform (MTP) for new test projects, and opt in to the MTP runner in `global.json`.** xunit.v3 includes a native MTP runner, so each test project builds to an executable that `dotnet run` runs directly, without VSTest's slower process model.
   - `dotnet test` uses MTP only with the runner opt-in below. Without it, the SDK uses VSTest, and xunit.v3 4.0.0 and later (MTP v2) fails on the .NET 10 SDK and later with `Testing with VSTest target is no longer supported`.
   - On xunit.v3 3.x, the same mistake runs **zero** tests and exits with code 0.
+  - On the .NET 11 SDK, the `DOTNET_TEST_RUNNER` environment variable "accepts VSTest or Microsoft.Testing.Platform, without regard to case, and overrides the global.json value". Keep the opt-in in `global.json`, where every machine reads it, and check for the variable when `dotnet test` picks VSTest despite the opt-in. ([Microsoft Learn: dotnet test](https://learn.microsoft.com/dotnet/core/tools/dotnet-test))
 
   ```json
   {
