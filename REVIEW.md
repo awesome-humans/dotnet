@@ -8,8 +8,8 @@ This repository is mostly prose. A finding matters when it would put a wrong or 
 
 Reserve Important for these. Everything else is Nit at most.
 
-- **An unsourced claim.** A new or changed recommendation in `opinions/` or `templates/` that no ID in the file's `sources` supports, or that relies on a link used as a reference to support it. Quote the claim and name the source IDs the file lists.
-- **A misquoted source.** The text says a roster source recommends something that the cited page doesn't say. Quote the sentence from the source, with its link, or don't report it.
+- **An unsourced claim.** A new or changed choice or judgement in `opinions/` or `templates/` that no ID in the file's `sources` supports, or that relies on a link used as a reference to support it. Don't report a reference fact that its reference states, such as the diagnostic a package reports and the setting that stops it. The [admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references) define all three terms. Quote the claim and name the source IDs the file lists.
+- **A misquoted source.** The text says a roster source recommends something that the cited page doesn't say, or states a reference fact that its reference doesn't state. Quote the sentence from the source, with its link, or don't report it.
 - **Guidance from an unvetted source,** folded in instead of proposed through `vet-source`.
 - **A rule changed inside a research pull request.** A pull request that adds or changes a topic in `research/` and also changes a rule in `AGENTS.md`, `AWESOME-HUMANS.md`, or a `SKILL.md` that research applies. The rule needs its own pull request, so every open topic can be checked against it.
 - **A house opinion out of place.** A `**House:**` rule outside a `/// house | <profile>` block or a `house:<profile>` region, sourced text edited or deleted to make room for a house opinion, or a block whose profile isn't in `sources`.
