@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-10-22
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [
     andrew-lock,
@@ -65,12 +65,12 @@ public class BasketTests
 ## Framework and platform
 
 - **Use xUnit v3 on Microsoft.Testing.Platform (MTP) for new test projects, and opt in to the MTP runner in `global.json`.** xunit.v3 includes a native MTP runner, so each test project builds to an executable that `dotnet run` runs directly, without VSTest's slower process model.
-  - `dotnet test` uses MTP only with the runner opt-in below. Without it, the SDK uses VSTest, and xunit.v3 4.0.0 (MTP v2) fails on .NET 10 with `Testing with VSTest target is no longer supported`.
+  - `dotnet test` uses MTP only with the runner opt-in below. Without it, the SDK uses VSTest, and xunit.v3 4.0.0 and later (MTP v2) fails on the .NET 10 SDK and later with `Testing with VSTest target is no longer supported`.
   - On xunit.v3 3.x, the same mistake runs **zero** tests and exits with code 0.
 
   ```json
   {
-    "sdk": { "version": "10.0.400", "rollForward": "latestFeature" },
+    "sdk": { "version": "11.0.100", "rollForward": "latestFeature" },
     "test": { "runner": "Microsoft.Testing.Platform" }
   }
   ```
@@ -80,7 +80,7 @@ public class BasketTests
   ```xml
   <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <TargetFramework>net10.0</TargetFramework>
+      <TargetFramework>net11.0</TargetFramework>
       <Nullable>enable</Nullable>
       <OutputType>Exe</OutputType>
       <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>

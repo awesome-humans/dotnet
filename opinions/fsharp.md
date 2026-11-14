@@ -1,12 +1,12 @@
 ---
-targets: [net10.0, fsharp-10]
-last-reviewed: 2026-09-14
+targets: [net11.0, fsharp-11]
+last-reviewed: 2026-11-14
 sources: [dotnet-blog, mark-seemann, ms-learn, scott-wlaschin]
 ---
 
 # F#
 
-Target F# 10, which ships with .NET 10.
+Target F# 11, which ships with .NET 11.
 
 ## Domain modelling
 
@@ -38,7 +38,7 @@ let describe payment =
     | DirectDebit iban -> $"direct debit from {iban}"
 ```
 
-## Language opinions (F# 10)
+## Language opinions (F# 11)
 
 - **Use `and!` in `task` expressions to await independent operations concurrently.** A sequence of `let!` bindings starts each operation only after the one before it completes. ([Microsoft Learn: What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
 
@@ -82,7 +82,7 @@ let describe payment =
   ```
 
 - **Scope a warning suppression with a `#nowarn` and `#warnon` pair around the lines concerned.** Never leave a bare `#nowarn` that runs to the end of the file. ([.NET Blog: Introducing F# 10](https://devblogs.microsoft.com/dotnet/introducing-fsharp-10/))
-- **Enable `ParallelCompilation` on multi-project F# solutions once it leaves preview.** It turns on graph-based type checking, parallel IL generation, and parallel optimization. In F# 10 it's still a preview feature, so turn it on now only if compile time is your bottleneck. ([Microsoft Learn: What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
+- **Remove `<ParallelCompilation>` from F# project files.** It was a preview opt-in in F# 10. In F# 11, "Parallel compilation is now enabled by default, with deterministic output and source-order rules preserved." ([Microsoft Learn: What's new in F# 11](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-11))
 
 ## Mixed C#/F# solutions
 

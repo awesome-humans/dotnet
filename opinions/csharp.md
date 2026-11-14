@@ -1,13 +1,13 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-18
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [andrew-lock, dotnet-blog, jetbrains-dotnet, jon-skeet, meziantou, ms-learn]
 ---
 
 # C#
 
-Target C# 14, which ships with .NET 10. Use a new feature where it replaces an older idiom, not everywhere it compiles.
+Target C# 15, which ships with .NET 11. Use a new feature where it replaces an older idiom, not everywhere it compiles.
 
 ## Opinions
 
@@ -119,6 +119,41 @@ Arms match from top to bottom, so put the most specific first. Keep a two-way `i
 
 ([Microsoft Learn: Pattern matching](https://learn.microsoft.com/dotnet/csharp/fundamentals/functional/pattern-matching))
 
+### Unions and closed hierarchies
+
+**Model a fixed set of alternatives as a `union` when the case types are unrelated or aren't yours, and as a `closed` class when you own the base type. Switch over either without a discard arm.** The compiler knows every case, so the switch expression is exhaustive without `_`. When you add a case, CS8509 reports each switch that doesn't handle it. A `_` arm that throws hides that: when a type is added, "all your existing code continues to compile", and the arm throws at run time. IDE0072 asks for that arm, so [templates/.editorconfig](../templates/.editorconfig) silences it.
+
+```csharp
+public sealed record Product(int Id, string Name);
+public sealed record ProductNotFound(string Sku);
+public readonly union ProductLookup(Product, ProductNotFound);
+
+public closed record class PaymentResult;
+public sealed record class Paid(string Reference) : PaymentResult;
+public sealed record class Declined(string Reason) : PaymentResult;
+
+public static class Describe
+{
+    public static string Lookup(ProductLookup lookup) => lookup switch
+    {
+        Product product => $"Found {product.Name}",
+        ProductNotFound missing => $"No product with SKU {missing.Sku}",
+    };
+
+    public static string Payment(PaymentResult result) => result switch
+    {
+        Paid paid => $"Paid, reference {paid.Reference}",
+        Declined declined => $"Declined: {declined.Reason}",
+    };
+}
+```
+
+([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/), [Lock: .NET (OK, C#) finally gets union types](https://andrewlock.net/exploring-the-dotnet-11-preview-2-dotnet-gets-union-types/), [Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
+
+- **Replace a `private protected` or `internal` constructor with `closed`.** The constructor stops another assembly deriving from the type, but the compiler still reports CS8509 on a switch without `_`. ([Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
+- **Seal each derived type, or mark it `closed` too.** "Derivation isn't transitive: a non-closed descendant of a closed class can still be derived from in other assemblies." A closed class is implicitly abstract, so don't add `abstract` or `sealed` to it. ([Microsoft Learn: What's new in C# 15](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-15))
+- **If two cases of a union have the same JSON shape, configure a classifier.** System.Text.Json serializes C# unions in .NET 11, and deserialization can't tell such cases apart without one. ASP.NET Core supports unions only in JSON bodies, "not to route, query, header, or form binding". ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/))
+
 ### Collection expressions
 
 **Create and combine collections with collection expressions (`[...]`), not a constructor with an initializer or a `Concat().ToArray()` chain.** One syntax covers arrays, `List<T>`, spans, and immutable collections. The compiler picks the cheapest construction for the target type, and the spread element `..` replaces allocating concatenation.
@@ -139,7 +174,9 @@ int[] merged = [.. first, .. second];
 
 The target type must be explicit: `List<int> ids = [...]`, not `var ids = [...]`.
 
-([Microsoft Learn: Collection expressions](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions))
+To pass a capacity or a comparer, put a `with(...)` element first, as in `HashSet<string> names = [with(StringComparer.OrdinalIgnoreCase), "Alice", "ALICE"];`. It calls the collection's constructor or factory method with those arguments, so a comparer is no longer a reason to go back to `new`.
+
+([Microsoft Learn: Collection expressions](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions), [Microsoft Learn: What's new in C# 15](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-15))
 
 ### Records
 
@@ -198,9 +235,10 @@ Fix each diagnostic, or suppress it with a written justification. Never lower se
 
 - **Take `Span<T>` and `ReadOnlySpan<T>` parameters in new APIs.** C# 14's implicit span conversions let callers pass arrays without an allocation. In .NET 10, span overloads win overload resolution in more cases, which is a breaking change. ([Microsoft Learn: What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use `nameof(List<>)` on unbound generics instead of hard-coded type names in diagnostics and exceptions.** ([Microsoft Learn: What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14))
+- **Leave nested loops with a labelled `break` or `continue`, not a Boolean flag or a `goto`.** Put the label on the loop, as in `outer: for (...)`, and write `break outer;` or `continue outer;`. IDE0410 reports the flag and `goto` patterns that a labelled jump replaces. ([Microsoft Learn: What's new in C# 15](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-15))
 - **Use `StringComparison.Ordinal` for every machine-facing comparison, and `CultureInfo.InvariantCulture` for every machine-facing format or parse.** Never use `StringComparison.InvariantCulture`: its collation isn't invariant. For details, see [globalization.md](globalization.md).
 - **Clone records with `with`, and never declare an instance `Clone()` method.** It conflicts with the compiler-generated clone. If you want a named method, wrap `with` in an extension method. ([Meziantou: Adding a Clone method to a C# record](https://www.meziantou.net/adding-a-clone-method-to-a-csharp-record.htm))
 
 ## Coming next (preview, not yet the opinion)
 
-.NET 11 previews add **union types** and **closed class hierarchies**, with compile-time exhaustiveness checks. Add them to the opinions when .NET 11 reaches GA. ([Lock: .NET (OK, C#) finally gets union types](https://andrewlock.net/exploring-the-dotnet-11-preview-2-dotnet-gets-union-types/), [Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
+C# 15 includes a preview of new memory safety rules. Under them, `unsafe` on a member means its callers must also be in an `unsafe` context, and declaring a pointer type no longer needs one. It takes `<LangVersion>preview</LangVersion>` and the `updated-memory-safety-rules` feature flag, so don't enable it in shipping code. For the plan, see [security.md](security.md#coming-next-preview-not-yet-the-opinion). ([Microsoft Learn: What's new in C# 15](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-15))

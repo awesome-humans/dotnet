@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-10-31
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [andrew-lock, damien-bowden, dotnet-blog, meziantou, ms-learn, steve-gordon]
 ---
@@ -35,7 +35,7 @@ builder.Configuration.AddAzureKeyVault(
 
 ([Bowden: Using ASP.NET Core with Azure Key Vault](https://damienbod.com/2024/12/02/using-asp-net-core-with-azure-key-vault/); for the explicit system-assigned id, [Microsoft Learn: Authenticate Azure-hosted .NET apps to Azure resources using a system-assigned managed identity](https://learn.microsoft.com/dotnet/azure/sdk/authentication/system-assigned-managed-identity); and for the obsolete constructor, [Azure.Identity: CHANGELOG, 1.18.0-beta.1](https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/identity/Azure.Identity/CHANGELOG.md#1180-beta1-2025-11-14))
 
-A secret can also leave the process through a log or a diagnostic dump, so review what the app writes. ([Meziantou: Prevent accidental disclosure of configuration secrets](https://www.meziantou.net/prevent-accidental-disclosure-of-configuration-secrets.htm)) In .NET 10, EF Core redacts inlined constants from the SQL it logs. ([.NET Team: Announcing .NET 10](https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/)) For the logging rules, see [logging.md](logging.md).
+A secret can also leave the process through a log or a diagnostic dump, so review what the app writes. ([Meziantou: Prevent accidental disclosure of configuration secrets](https://www.meziantou.net/prevent-accidental-disclosure-of-configuration-secrets.htm)) Since .NET 10, EF Core redacts inlined constants from the SQL it logs. ([.NET Team: Announcing .NET 10](https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/)) For the logging rules, see [logging.md](logging.md).
 
 ### Deserialization
 
@@ -54,6 +54,8 @@ The flaw is type information in the payload, not the binary encoding: "Any deser
 | Signatures                    | `ECDsa` or `RSA`                                                                                                |
 | Random values                 | `RandomNumberGenerator`                                                                                         |
 | Password-based key derivation | `Rfc2898DeriveBytes.Pbkdf2`                                                                                     |
+
+**When a protocol needs X25519 key exchange or AES Key Wrap, use the in-box APIs.** .NET 11 adds both, so neither is a reason to take a third-party cryptography package. `X25519DiffieHellman.GenerateKey()` picks the platform's implementation. `Aes.EncryptKeyWrap` and `Aes.DecryptKeyWrap` implement unpadded AES Key Wrap (RFC 3394), "which requires plaintext that's a multiple of 8 bytes". ([Microsoft Learn: What's new in .NET libraries for .NET 11](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-11/libraries))
 
 **Encrypt with `AesGcm`, an authenticated mode, by default.** Padded CBC leaks plaintext to an attacker who can tell a padding failure from a successful decryption: "to use padded CBC block ciphers safely, you must combine them with an HMAC (or another data integrity check) that you validate using a constant time comparison before trying to decrypt the data". The alternative is to "change the cipher mode to an authenticated encryption (AE) mode such as GCM or CCM". ([Microsoft Learn: Timing vulnerabilities with CBC-mode symmetric decryption using padding](https://learn.microsoft.com/dotnet/standard/security/vulnerabilities-cbc-mode))
 
@@ -90,18 +92,8 @@ Both classes shipped without `[Experimental]`, but four export and import member
 
 CVE-2025-55315 shows what a slow cadence costs. It's a request-smuggling flaw in ASP.NET Core, and Microsoft gave it "a CVSS score of 9.9, their highest ever". An attacker could "Login as a different user", "Make an internal request (SSRF)", or "Bypass CSRF checks". ([Lock: Understanding the worst .NET vulnerability ever: request smuggling and CVE-2025-55315](https://andrewlock.net/understanding-the-worst-dotnet-vulnerability-request-smuggling-and-cve-2025-55315/)) The fix shipped on a Patch Tuesday, and it reaches production only when your pipeline rebuilds and redeploys.
 
-**Target a supported framework.** .NET 8 and .NET 9 both reached end of support on 2026-11-10, so a project on either gets no more patches. ([Damkewala: .NET STS releases supported for 24 months](https://devblogs.microsoft.com/dotnet/dotnet-sts-releases-supported-for-24-months/)) `net10.0` is supported until November 2028.
+**Target a supported framework.** .NET 8 and .NET 9 both reached end of support on 2026-11-10, so a project on either gets no more patches. ([Damkewala: .NET STS releases supported for 24 months](https://devblogs.microsoft.com/dotnet/dotnet-sts-releases-supported-for-24-months/)) `net11.0`, an STS release, and `net10.0`, an LTS release, are both supported until November 2028. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support))
 
 ## Coming next (preview, not yet the opinion)
 
-.NET 11 adds:
-
-- `X25519DiffieHellman`
-- Unpadded AES key wrap on `Aes`
-- TLS handshake hardening
-- Certificate-validation alerts on Linux
-- Channel binding validation on Unix
-
-([Microsoft Learn: What's new in .NET 11](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-11/overview))
-
-C# 16 previews a redesign of `unsafe` as a compiler-enforced contract between callers and API authors, targeted for production use in .NET 12. ([Lander: Improving C# Memory Safety](https://devblogs.microsoft.com/dotnet/improving-csharp-memory-safety/))
+.NET 11 previews a redesign of `unsafe` as a compiler-enforced contract between callers and API authors. The plan is "to release the new model and syntax (nominally a C# 16 feature) as a preview in .NET 11 and as a production release in .NET 12". ([Lander: Improving C# Memory Safety](https://devblogs.microsoft.com/dotnet/improving-csharp-memory-safety/)) For how to turn the preview on, see [csharp.md](csharp.md#coming-next-preview-not-yet-the-opinion).

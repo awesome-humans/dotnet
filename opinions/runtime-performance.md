@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-10-09
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [
     andrew-lock,
@@ -17,14 +17,14 @@ sources:
 
 # Runtime & performance
 
-The .NET 10 JIT optimizes idiomatic code best. Optimize what you've measured, not what you've heard is slow.
+The .NET 11 JIT optimizes idiomatic code best. Optimize what you've measured, not what you've heard is slow.
 
 ## Opinions
 
-- **Write idiomatic C#.** In .NET 10, the JIT applies escape analysis, stack allocation of small objects, doubled inlining budgets, and bounds-check elimination to plain code. `unsafe` code and unusual patterns written to help the JIT usually block those optimizations. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))
+- **Write idiomatic C#.** Since .NET 10, the JIT applies escape analysis, stack allocation of small objects, doubled inlining budgets, and bounds-check elimination to plain code. `unsafe` code and unusual patterns written to help the JIT usually block those optimizations. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/)) The .NET 11 JIT goes further: its changes "remove more redundant bounds checks and branches, improve devirtualization, and fold more operations into constants", and they "improve generated code without requiring you to rewrite the corresponding application logic". ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/))
 - **Profile first, then benchmark the inner loop.** Find the bottleneck with a profiler, such as dotTrace or PerfView, then iterate on it with BenchmarkDotNet. The two report different allocation numbers because of GC padding and alignment. Use the benchmark to compare inner-loop changes, and the profiler to find where allocations come from. ([Gordon: The Grand Mystery of the Missing 18 Bytes](https://www.stevejgordon.co.uk/the-grand-mystery-of-the-missing-18-bytes), [JetBrains: Your AI Agent Keeps Missing The Real Bottleneck. JetBrains Rider Can Fix It Now.](https://blog.jetbrains.com/dotnet/2026/06/25/performance-profiling-agent-skill-in-rider/))
 - **Use `Span<T>` on parsing and formatting hot paths, and `ArrayPool<T>` for large temporary buffers.** For examples, see [`Span<T>` and `ArrayPool<T>`](#spant-and-arraypoolt). ([Gordon: Encrypting Properties with System.Text.Json and a TypeInfoResolver Modifier (Part 2)](https://www.stevejgordon.co.uk/encrypting-properties-with-system-text-json-and-a-typeinforesolver-modifier-part-2))
-- **At each GA release, read Toub's "Performance Improvements in .NET X" post.** It lists what the runtime now optimizes by itself, which tells you which manual optimizations to delete. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))
+- **At each GA release, read Toub's "Performance Improvements in .NET X" post.** It lists what the runtime now optimizes by itself, which tells you which manual optimizations to delete. ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
 
 ## Immutable collections
 
@@ -129,7 +129,7 @@ The value can't change while the process runs, so cache it in a singleton. Decla
 
 AOT needs the whole dependency graph to be trim-safe and AOT-safe: source-generated JSON, and no code generation at run time. Review the `IsAotCompatible` warnings before you commit to it. Run the test suite as an AOT build too, because reflection failures show up nowhere else. For details, see [testing.md](testing.md#framework-and-platform).
 
-For a CLI tool, a .NET 10 file-based app needs nothing extra: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps), [dotnet/sdk: `dotnet run file.cs`](https://github.com/dotnet/sdk/blob/main/documentation/general/dotnet-run-file.md#other-commands))
+For a CLI tool, a file-based app needs nothing extra: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps), [dotnet/sdk: `dotnet run file.cs`](https://github.com/dotnet/sdk/blob/main/documentation/general/dotnet-run-file.md#other-commands))
 
 **When a library pulls in more than you call, trim the dead branch with an ILLink substitution.** A property the library checks at run time keeps everything behind it. Stub the getter to a constant, and the trimmer removes the whole chain. Lock stubbed `SymbolServer.get_IsSymweb` in `Microsoft.Diagnostics.Runtime` to `false`. That cut a Native AOT binary from 3.956 MB to 2.949 MB on win-x64 (25.4%), and by 22.2% to 22.3% on the four Linux targets.
 
@@ -157,4 +157,6 @@ For `PublishAot`, pass the file to ILC directly. The `Microsoft.DotNet.ILCompile
 
 ## Coming next (preview, not yet the opinion)
 
-.NET 11 (RC1, GA expected November 2026) makes runtime async an opt-in without preview flags: `<Features>$(Features);runtime-async=on</Features>` on a `net11.0` project, with neither `LangVersion=preview` nor `EnablePreviewFeatures`. Most of the shared framework already ships compiled that way. Toub measures a synchronously completing two-layer chain at 21.221 ns and 144 B before, and 6.151 ns and 0 B after. Exception propagation through 30 frames drops from 51.3 µs and 84.2 KB to 10.7 µs and 5.7 KB. The [Async](#async) opinions stand until .NET 11 ships and the switch is rechecked against the GA docs. ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
+.NET 11 ships runtime async, and at GA it "remains a preview feature". It moves suspending and resuming an `async` method from compiler-generated state machines into the runtime. ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/))
+
+To try it on a `net11.0` project, set `<Features>$(Features);runtime-async=on</Features>`. It needs neither `LangVersion=preview` nor `EnablePreviewFeatures`, and most of the shared framework already ships compiled that way. Toub measures a synchronously completing two-layer chain at 21.221 ns and 144 B before, and 6.151 ns and 0 B after. Exception propagation through 30 frames drops from 51.3 µs and 84.2 KB to 10.7 µs and 5.7 KB. It doesn't yet support `async void`, async iterators, or custom task-like return types, and Toub hopes "it'll be on by default starting in .NET 12". The [Async](#async) opinions stand either way: "The programming model hasn't changed", and `ConfigureAwait` "still has its usual meaning". ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))

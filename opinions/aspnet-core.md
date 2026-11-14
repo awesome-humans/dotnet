@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-11-13
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [
     andrew-lock,
@@ -15,7 +15,7 @@ sources:
 
 # ASP.NET Core
 
-Target ASP.NET Core 10, and use minimal APIs for new HTTP APIs.
+Target ASP.NET Core 11, and use minimal APIs for new HTTP APIs.
 
 - For authentication, authorization, CSRF, CORS, security headers, and the rest of security in the HTTP pipeline, see [aspnet-core-security.md](aspnet-core-security.md).
 - For secrets, deserialization, cryptography, and servicing cadence, see [security.md](security.md).
@@ -122,7 +122,7 @@ Propagate only the trace context. Never put `Baggage` on a message: it inflates 
 
 ### Request validation
 
-**Validate requests with `AddValidation()` and data annotations.** An invalid request gets a 400 with problem details, and the handler doesn't run. The validation APIs live in `Microsoft.Extensions.Validation`, so you can reuse them outside HTTP.
+**Validate requests with `AddValidation()` and data annotations.** An invalid request gets a 400 with problem details, and the handler doesn't run. The validation APIs live in `Microsoft.Extensions.Validation`, so you can reuse them outside HTTP. From .NET 11, a rule that needs I/O can be asynchronous: derive from `AsyncValidationAttribute` or implement `IAsyncValidatableObject`, so "a validator can await a database lookup or a remote call instead of blocking a thread".
 
 ```csharp
 builder.Services.AddValidation();
@@ -139,7 +139,7 @@ record CreateOrder(
 
 Validation applies to every endpoint. To exclude one, call `.DisableValidation()` on it.
 
-([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+([Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/), [Microsoft Learn: What's new in .NET 11](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-11/overview))
 
 ### Error responses
 
@@ -162,8 +162,9 @@ The middleware writes problem details only when the request's `Accept` header al
 
 ### OpenAPI and API versioning
 
-**Generate the OpenAPI document with `Microsoft.AspNetCore.OpenApi`.** It produces OpenAPI 3.1 on .NET 10, and the Web API template already references and calls it. It generates the document at run time, and `MapOpenApi()` serves it at `/openapi/{documentName}.json`.
+**Generate the OpenAPI document with `Microsoft.AspNetCore.OpenApi`.** It produces OpenAPI 3.2 by default on .NET 11, up from 3.1 on .NET 10, and the Web API template already references and calls it. It generates the document at run time, and `MapOpenApi()` serves it at `/openapi/{documentName}.json`.
 
+- If a client generator or another tool can't read OpenAPI 3.2 yet, set `options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1` in `AddOpenApi`.
 - To also write the document to disk during `dotnet build`, add `Microsoft.Extensions.ApiDescription.Server`. Do this when a build step consumes the file, such as the Kiota client in [Typed clients](#typed-clients). Set `<OpenApiDocumentsDirectory>` to choose where the file goes. The build runs the app's entry point against a mock server, so guard startup code that needs live infrastructure.
 - Set `<GenerateDocumentationFile>true</GenerateDocumentationFile>`, so the source generator copies your XML doc comments into the document.
 - Use named methods as handlers, because the generator reads doc comments only from methods, not from lambdas.
@@ -172,6 +173,8 @@ The middleware writes problem details only when the request's `Accept` header al
   - Name the version reader. Left to the default, the package looks in both the query string and the URL segment, and reports AV0015 when every route uses only one. On an API whose clients already send both forms, keep the default: naming one reader stops the other form from being accepted.
   - Set `<Description>` in the project file. Each versioned document takes its description from the assembly, and the package reports AV0025 without one.
   - Call `WithDocumentPerVersion()` to get one document per version.
+
+**Review by 2027-02-28.** On .NET 11, pin `Microsoft.AspNetCore.OpenApi` to 10.0.15 in a project that references `Asp.Versioning.OpenApi`. Version 10.2.3 of the versioning package needs `Microsoft.OpenApi` below 3.0.0, and `Microsoft.AspNetCore.OpenApi` 11.0.0 needs 3.11.0 or later, so restore fails with NU1107 when both are referenced. With the pin, the sample below builds on `net11.0` and serves OpenAPI 3.1. Drop the pin when [dotnet/aspnet-api-versioning#1239](https://github.com/dotnet/aspnet-api-versioning/issues/1239) ships a release for .NET 11.
 
 ```csharp
 using Asp.Versioning;

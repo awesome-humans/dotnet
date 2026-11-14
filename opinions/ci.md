@@ -1,6 +1,6 @@
 ---
-targets: [net10.0]
-last-reviewed: 2026-10-09
+targets: [net11.0]
+last-reviewed: 2026-11-14
 sources: [andrew-lock, dotnet-blog, house:simon-mckenna, meziantou, ms-learn]
 ---
 
@@ -49,7 +49,7 @@ Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Re
 1. **Restore.** If the repository commits `packages.lock.json` (`RestorePackagesWithLockFile=true`), pass `--locked-mode`, so a stale lock file fails the build. Without a lock file, the flag fails every restore with `NU1004`. The templates pin packages with Central Package Management in [templates/Directory.Packages.props](../templates/Directory.Packages.props), and [templates/Directory.Build.props](../templates/Directory.Build.props) turns lock files off, so the example restores without it.
 2. **Build.** Build once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`. The property covers compiler and analyzer diagnostics. The switch also fails on MSBuild warnings, such as MSB3277 assembly version conflicts.
    - Enforce style the same way: run analyzers in the build, and add a `dotnet format --verify-no-changes` step. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
-3. **Test.** Run `dotnet test` on Microsoft.Testing.Platform (MTP). MTP needs the `test.runner` opt-in in `global.json`, as [testing.md](testing.md) describes. Without it, the SDK uses VSTest, which fails on .NET 10 before `--no-build` takes effect.
+3. **Test.** Run `dotnet test` on Microsoft.Testing.Platform (MTP). MTP needs the `test.runner` opt-in in `global.json`, as [testing.md](testing.md) describes. Without it, the SDK uses VSTest, which fails on the .NET 10 SDK and later before `--no-build` takes effect.
    - Upload TRX and coverage files as build artifacts, so you can diagnose a failure without a rerun.
    - Under xunit.v3, write TRX with `--report-xunit-trx` and `--results-directory`, as in the example. Upload the results even when the step fails, because the failed run is the one you need them for.
    - MTP rejects VSTest's `--logger trx`. For details, see [testing.md](testing.md). ([Microsoft Learn: What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
           global-json-file: global.json
       - run: dotnet restore

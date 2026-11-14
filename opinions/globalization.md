@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-21
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [
     andrew-lock,
@@ -120,16 +120,18 @@ Strongly typed resource classes lost on portability. .NET has no cross-platform 
 
 - **Blazor WebAssembly loads only the app's own culture data by default.** If users can switch culture at run time, set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>`.
   - Time zone data is trimmed separately, with `<InvariantTimezone>true</InvariantTimezone>`. Delete `<BlazorEnableTimeZoneSupport>`, which it replaces.
-  - In .NET 10, standalone WebAssembly apps also load data for `CultureInfo.DefaultThreadCurrentUICulture`. .NET 9 and earlier used only `DefaultThreadCurrentCulture`.
+  - Since .NET 10, standalone WebAssembly apps also load data for `CultureInfo.DefaultThreadCurrentUICulture`. .NET 9 and earlier used only `DefaultThreadCurrentCulture`.
 
-  ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0))
+  ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-11.0))
+
+- **In a Blazor Web App, leave `UseCultureFromServer` on.** From .NET 11, client-side prerendering persists the server's `CurrentCulture` and `CurrentUICulture`, "and applies them on the client before satellite assemblies load". Set `WebAssemblyComponentsOptions.UseCultureFromServer` to `false` only when the client has to choose its culture independently of the server. ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-11.0#client-side-prerendering-in-a-blazor-web-app-preserves-the-servers-culture))
 
 - **.NET MAUI has no localization abstraction.** It uses `.resx` files per culture and `CultureInfo.DefaultThreadCurrentUICulture`, with nothing like `RequestLocalization`. To switch culture at run time, re-resolve bindings yourself. ([Microsoft Learn: .NET MAUI localization](https://learn.microsoft.com/dotnet/maui/fundamentals/localization?view=net-maui-10.0))
 - **Avalonia reads `.resx` in XAML with `{x:Static}` against a generated resources class.** Switching language without a restart needs a custom markup extension, and the community packages that provide one aren't vetted. The cited source is Avalonia's own documentation, so trust it for how this works, not for whether to use it. The caveat in [ui-frameworks.md](ui-frameworks.md) applies. ([Avalonia Docs: Localizing using ResX](https://docs.avaloniaui.net/docs/app-development/localizing))
 
 ### Containers: chiseled and Alpine images drop this data
 
-**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `noble-chiseled` or `alpine` images for size. Those size-optimised images (Alpine, Ubuntu chiseled, and Azure Linux distroless) "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `10.0-alpine-extra` or `10.0-noble-chiseled-extra`, that adds back ICU, tzdata, and `stdc++`. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images), [dotnet/dotnet-docker: .NET Image Variants](https://github.com/dotnet/dotnet-docker/blob/main/documentation/image-variants.md))
+**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) recommends `resolute-chiseled` or `alpine` images for size. Those size-optimised images (Alpine, Ubuntu chiseled, and Azure Linux distroless) "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Each has an `-extra` variant, such as `11.0-alpine-extra` or `11.0-resolute-chiseled-extra`, that adds back ICU, tzdata, and `stdc++`. ([Microsoft Learn: .NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images), [dotnet/dotnet-docker: .NET Image Variants](https://github.com/dotnet/dotnet-docker/blob/main/documentation/image-variants.md))
 
 The two missing pieces fail differently:
 
@@ -139,7 +141,7 @@ The two missing pieces fail differently:
   - The setting is an environment variable, so `<InvariantGlobalization>false</InvariantGlobalization>` doesn't undo it. If you install `icu-libs` and `icu-data-full` yourself, clear the variable too.
   - The `-extra` images don't set the variable.
 
-  ([Microsoft Learn: Environment variables take precedence in app runtime configuration settings](https://learn.microsoft.com/dotnet/core/compatibility/deployment/9.0/envvar-precedence), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [dotnet/dotnet-docker: runtime-deps 10.0 Dockerfiles](https://github.com/dotnet/dotnet-docker/tree/main/src/runtime-deps/10.0))
+  ([Microsoft Learn: Environment variables take precedence in app runtime configuration settings](https://learn.microsoft.com/dotnet/core/compatibility/deployment/9.0/envvar-precedence), [Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [dotnet/dotnet-docker: runtime-deps 11.0 Dockerfiles](https://github.com/dotnet/dotnet-docker/tree/main/src/runtime-deps/11.0))
 
 - **Without tzdata, `TimeZoneInfo.FindSystemTimeZoneById` throws `TimeZoneNotFoundException`.** Invariant mode doesn't change that. `RUN apk add --no-cache tzdata` fixes it by itself. ([Gordon: TimeZoneNotFoundException in Alpine Based Docker Images](https://www.stevejgordon.co.uk/timezonenotfoundexception-in-alpine-based-docker-images))
 
@@ -148,7 +150,3 @@ The two missing pieces fail differently:
 **Store instants as UTC, store the user's IANA time zone ID instead of a fixed offset, and convert at the edge.** For storage and type guidance, including when a future local event should _not_ become UTC, see [datetime.md](datetime.md). A local date and time can occur twice or not at all, and correct formatting can't fix a value that was ambiguous before it was formatted. Noda Time separates `Instant`, `LocalDateTime`, and `ZonedDateTime` for this reason. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
 `TimeZoneInfo.TryConvertIanaIdToWindowsId` and `TryConvertWindowsIdToIanaId` work only outside invariant and NLS modes. So decide on this storage choice, invariant mode, and ICU together.
-
-## Coming next (preview, not yet the opinion)
-
-`WebAssemblyComponentsOptions.UseCultureFromServer` lets the WebAssembly client of a Blazor Web App choose its culture independently of the server during prerendering. The documentation lists it only under the `aspnetcore-11.0` moniker, so it's a .NET 11 preview feature, although some summaries call it .NET 10. ([Microsoft Learn: Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0))

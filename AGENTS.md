@@ -92,7 +92,7 @@ Three kinds of resource record this metadata, in the two syntaxes their file for
 
 ```yaml
 ---
-targets: [net10.0, csharp-14, fsharp-10]
+targets: [net11.0, csharp-15, fsharp-11]
 last-reviewed: 2026-08-12 # last time content was verified against sources
 sources: [andrew-lock, dotnet-blog] # ids from AWESOME-HUMANS.md, sorted
 ---
@@ -103,15 +103,15 @@ A `research/` topic has no status field. Promoting or discarding a topic deletes
 **`templates/` use a first-line comment header.** An XML, INI, or source file can't open with a `---` block and stay valid for the tools that read it. So the same fields go in a comment instead, separated by pipes after a fixed marker:
 
 ```xml
-<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net11.0 | last-reviewed: 2026-08-12 | sources: ms-learn -->
 ```
 
 ```ini
-# awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn
+# awesome-humans/dotnet template | targets: net11.0 | last-reviewed: 2026-08-12 | sources: ms-learn
 ```
 
 ```fsharp
-// awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | sources: scott-wlaschin
+// awesome-humans/dotnet template | targets: net11.0, fsharp-11 | last-reviewed: 2026-08-12 | sources: scott-wlaschin
 ```
 
 Rules:
