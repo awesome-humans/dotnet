@@ -84,14 +84,6 @@ Use Blazor for web UI, .NET MAUI for mobile, and Avalonia for cross-platform des
 
   Use `ConfigureLifecycleEvents` in `MauiProgram` only for a platform hook with no cross-platform event. ([Microsoft Learn: .NET MAUI app lifecycle](https://learn.microsoft.com/dotnet/maui/fundamentals/app-lifecycle))
 
-- **Review by 2027-11-30.** **Before you build an existing iOS app with Xcode 27, adopt the UIKit scene lifecycle.** Without it, the app shows its splash screen and exits on iOS 27, with "UIScene life cycle is required for apps built with this SDK" in the device log. "Every iOS app built with Xcode 27, on any form factor, needs to adopt this pattern", and a package or workload update doesn't rewrite an existing project's platform files.
-  1. Update the .NET MAUI packages to 10.0.110 or later, which "includes the scene-side App Actions dispatch and relevant WebAuthenticator forwarding".
-  2. Add `Platforms/iOS/SceneDelegate.cs`, with a public class that derives from `MauiUISceneDelegate` and has `[Register("SceneDelegate")]`. Leave the existing `AppDelegate` as it is.
-  3. Add a `UIApplicationSceneManifest` to `Platforms/iOS/Info.plist`. Its configuration name is `__MAUI_DEFAULT_SCENE_CONFIGURATION__`, and its delegate class name matches the registration.
-  4. `AppDelegate.Window` stays `null` under scenes, so change any code that reads it after `FinishedLaunching`. Test sign-in callbacks and deep links from a cold start and with the app running.
-
-  Apps created from the 10.0.110 templates already have the scene configuration. Drop this note when projects that predate those templates are rare. ([Versluis: Get Your .NET MAUI App Ready for Xcode 27](https://devblogs.microsoft.com/dotnet/migrate-dotnet-maui-apps-uikit-scene-lifecycle/))
-
   <!-- Illustrative only: MAUI workloads are not installed on the authoring machine, so this snippet is unverified -->
 
   ```csharp
@@ -102,6 +94,14 @@ Use Blazor for web UI, .NET MAUI for mobile, and Avalonia for cross-platform des
       protected override void OnResumed() => _sync.ResumeAndRefresh();
   }
   ```
+
+- **Review by 2027-11-30.** **Before you build an existing iOS app with Xcode 27, adopt the UIKit scene lifecycle.** Without it, the app shows its splash screen and exits on iOS 27, with "UIScene life cycle is required for apps built with this SDK" in the device log. "Every iOS app built with Xcode 27, on any form factor, needs to adopt this pattern", and a package or workload update doesn't rewrite an existing project's platform files.
+  1. Update the .NET MAUI packages to 10.0.110 or later, which "includes the scene-side App Actions dispatch and relevant WebAuthenticator forwarding".
+  2. Add `Platforms/iOS/SceneDelegate.cs`, with a public class that derives from `MauiUISceneDelegate` and has `[Register("SceneDelegate")]`. Leave the existing `AppDelegate` as it is.
+  3. Add a `UIApplicationSceneManifest` to `Platforms/iOS/Info.plist`. Its configuration name is `__MAUI_DEFAULT_SCENE_CONFIGURATION__`, and its delegate class name matches the registration.
+  4. `AppDelegate.Window` stays `null` under scenes, so change any code that reads it after `FinishedLaunching`. Test sign-in callbacks and deep links from a cold start and with the app running.
+
+  Apps created from the 10.0.110 templates already have the scene configuration. Drop this note when projects that predate those templates are rare. ([Versluis: Get Your .NET MAUI App Ready for Xcode 27](https://devblogs.microsoft.com/dotnet/migrate-dotnet-maui-apps-uikit-scene-lifecycle/))
 
 ### Offline & sync
 

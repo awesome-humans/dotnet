@@ -57,7 +57,7 @@ Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Re
 
 1. **Restore.** If the repository commits `packages.lock.json` (`RestorePackagesWithLockFile=true`), pass `--locked-mode`, so a stale lock file fails the build. Without a lock file, the flag fails every restore with `NU1004`. The templates pin packages with Central Package Management in [templates/Directory.Packages.props](../templates/Directory.Packages.props), and [templates/Directory.Build.props](../templates/Directory.Build.props) turns lock files off, so the example restores without it.
 2. **Build.** Build once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`. The property covers compiler and analyzer diagnostics. The switch also fails on MSBuild warnings, such as MSB3277 assembly version conflicts.
-   - Enforce style the same way: run analyzers in the build, and add a `dotnet format --verify-no-changes` step. Meziantou's post uses the flag's earlier name, `--check`. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
+   - Enforce style the same way: run analyzers in the build, and add a `dotnet format --verify-no-changes` step. Put it after the tests, as the example does, so a formatting difference doesn't skip them. Meziantou's post uses the flag's earlier name, `--check`. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
 3. **Test.** Run `dotnet test` on Microsoft.Testing.Platform (MTP). MTP needs the `test.runner` opt-in in `global.json`, as [testing.md](testing.md#framework-and-platform) describes. Don't set `DOTNET_TEST_RUNNER` in the pipeline: on the .NET 11 SDK it overrides `global.json`, so CI could run a different runner from a developer's machine. "If neither setting selects a runner, `dotnet test` uses VSTest", which fails an xunit.v3 4.0.0 project on the .NET 10 SDK and later. ([Microsoft Learn: dotnet test](https://learn.microsoft.com/dotnet/core/tools/dotnet-test))
    - Upload TRX and coverage files as build artifacts, so you can diagnose a failure without a rerun.
    - Under xunit.v3, write TRX with `--report-xunit-trx` and `--results-directory`, as in the example. `--coverage` writes the coverage file to the same directory, and needs the `Microsoft.Testing.Extensions.CodeCoverage` package, which [templates/projects/Example.Library.Tests.csproj](../templates/projects/Example.Library.Tests.csproj) references. Upload the results even when the step fails, because the failed run is the one you need them for.
@@ -84,13 +84,14 @@ jobs:
           global-json-file: global.json
       - run: dotnet restore
       - run: dotnet build --no-restore --configuration Release -warnaserror
-      - run: dotnet format --verify-no-changes --no-restore
       - run: dotnet test --no-build --configuration Release --report-xunit-trx --coverage --coverage-output-format cobertura --results-directory artifacts/test-results
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ !cancelled() }}
         with:
           name: test-results
           path: artifacts/test-results
+      # After the tests, so a formatting difference doesn't hide their results.
+      - run: dotnet format --verify-no-changes --no-restore
       - run: dotnet publish --no-build --configuration Release
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

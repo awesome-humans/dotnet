@@ -5,7 +5,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <IsPackable>false</IsPackable>
     <!-- Keeps solution-level publish output for deployment only. Without it, the test host and a
          second copy of every referenced library go into artifacts/publish (opinions/ci.md). -->
     <IsPublishable>false</IsPublishable>

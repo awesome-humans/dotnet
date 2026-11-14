@@ -86,14 +86,15 @@ public class BasketTests
       <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
       <PackageReference Include="xunit.v3" />
     </ItemGroup>
   </Project>
   ```
 
   - The project sets no `TargetFramework`, `Nullable`, or `IsPackable`, because [templates/Directory.Build.props](../templates/Directory.Build.props) sets them for every project. `IsPublishable` keeps the test host out of a solution-level publish, as [ci.md](ci.md#pipeline-shape) describes.
-  - The reference has no version, because Central Package Management pins it in [templates/Directory.Packages.props](../templates/Directory.Packages.props). For details, see [project-structure.md](project-structure.md).
-  - There's no `Microsoft.NET.Test.Sdk` reference. That package is for VSTest, and `xunit.v3` needs nothing else under MTP.
+  - The references have no version, because Central Package Management pins them in [templates/Directory.Packages.props](../templates/Directory.Packages.props). For details, see [project-structure.md](project-structure.md).
+  - There's no `Microsoft.NET.Test.Sdk` reference. That package is for VSTest, and `xunit.v3` needs nothing else to run tests under MTP. `Microsoft.Testing.Extensions.CodeCoverage` adds the `--coverage` option that [Coverage](#coverage) and the [ci.md](ci.md#pipeline-shape) workflow pass. Without it, MTP rejects `--coverage` the way it rejects `--logger`, as described below.
   - Don't pin `Microsoft.Testing.Platform`. xunit.v3 4.0.0 brings MTP v2. Under Central Package Management, your pin overrides it through transitive pinning and throws `TypeLoadException` at run time.
 
 - **Moving a suite from VSTest to MTP breaks two things the build doesn't catch.** **Review by 2027-11-30.** This is migration guidance. Drop it when VSTest workflows are rare, or re-date it.
