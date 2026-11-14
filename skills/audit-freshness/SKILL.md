@@ -36,7 +36,7 @@ Report what's stale. This skill never edits content. Version drift goes to `refr
 
 The SDK pin is a minimum, and `latestFeature` picks up newer bands without an edit (`refresh-dotnet-versions`, step 4a). Don't report how far the pin trails the latest band. Report these instead:
 
-- A patch-level pin where a band minimum belongs, such as `10.0.412` instead of `10.0.400`.
+- A patch-level pin where a band minimum belongs, such as `11.0.105` instead of `11.0.100`.
 - A `rollForward` that's missing or narrower than `latestFeature`.
 - A minimum whose major and minor version don't match `targets:`.
 

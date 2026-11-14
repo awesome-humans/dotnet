@@ -169,7 +169,7 @@ A scheduled GitHub Action, [`.github/workflows/dotnet-release-watch.yml`](.githu
 
 ## Repository scripts
 
-[`scripts/`](scripts) holds the pull request checks as .NET 10 file-based apps, with no project file and no build step. Each declares its dependencies with `#:package` and pulls in shared code with `#:include`.
+[`scripts/`](scripts) holds the pull request checks as .NET 11 file-based apps, with no project file and no build step. Each declares its dependencies with `#:package` and pulls in shared code with `#:include`.
 
 | Script                                                             | Checks                                                                                                                                                                                                                                                                                                                                    |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

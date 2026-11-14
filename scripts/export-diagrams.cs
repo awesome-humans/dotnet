@@ -16,7 +16,7 @@
 // paints its own background, because GitHub can show a README in a theme other than the
 // operating system's, and a transparent diagram would then put light text on a light page.
 //
-// A .NET 10 file-based app. Run it from the repository root, through its
+// A .NET 11 file-based app. Run it from the repository root, through its
 // recipe as CI does, or directly:
 //
 //     just export-diagrams

@@ -14,7 +14,7 @@
 // project lists them, and a PropertyGroup reads top to bottom. See awesome-humans/website:
 // Writing style, Order.
 //
-// A .NET 10 file-based app: no project, no build step. Run it from the repository root,
+// A .NET 11 file-based app: no project, no build step. Run it from the repository root,
 // through its recipe as CI does, or directly:
 //
 //     just validate-template-order

@@ -34,7 +34,7 @@
     }
   ],
   "nuget": {
-    "description": "The scripts/ checks are .NET 10 file-based apps that declare their packages with #:package. Renovate understands the directive but does not scan .cs by default, so YamlDotNet would sit unbumped without this. Patterns are added to the manager defaults, not substituted for them, and scoping to scripts/ keeps the example and generated .cs files under templates/ out of it.",
+    "description": "The scripts/ checks are .NET 11 file-based apps that declare their packages with #:package. Renovate understands the directive but does not scan .cs by default, so YamlDotNet would sit unbumped without this. Patterns are added to the manager defaults, not substituted for them, and scoping to scripts/ keeps the example and generated .cs files under templates/ out of it.",
     "managerFilePatterns": ["/^scripts/.*\\.cs$/"]
   },
   "vulnerabilityAlerts": {
