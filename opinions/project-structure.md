@@ -55,7 +55,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 - **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
-- **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 11 is an STS release, supported until November 2028. .NET 10, the LTS release before it, ends support in the same month. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support))
+- **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 11 is an STS release, supported until 2028-11-14. .NET 10, the LTS release before it, ends support on the same day. ([Microsoft: .NET Support Policy](https://dotnet.microsoft.com/platform/support/policy/dotnet-core))
 
 ## Repository layout
 
