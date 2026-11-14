@@ -1,4 +1,4 @@
-// awesome-humans/dotnet template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-23 | sources: ms-learn, scott-wlaschin
+// awesome-humans/dotnet template | targets: net11.0, fsharp-11 | last-reviewed: 2026-11-14 | sources: ms-learn, scott-wlaschin
 // Library surface example: exhaustive matching and explicit seq (opinions/fsharp.md).
 module Example.Library.FSharp.Payments
 

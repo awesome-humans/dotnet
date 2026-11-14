@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research union types", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim cites its source and gives that source's standing, labels preview features as the freshness policy requires, and closes with what the research reveals about the repository (a missing opinion, a stale aside, or a feature that reached GA). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
+description: Research a .NET topic conversationally using this repository's opinions and vetted sources, such as "research runtime async", "what's the story on hybrid caching", "should we adopt Native AOT". Produces a cited research topic where every claim cites its source and gives that source's standing, labels preview features as the freshness policy requires, and closes with what the research reveals about the repository (a missing opinion, a stale aside, or a feature that reached GA). Use whenever the user wants to understand, evaluate, or decide on a .NET subject rather than change the repository.
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
@@ -78,13 +78,13 @@ Before you use an excerpt to support a claim, match it as a string against the p
 
 Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the user doesn't want the topic saved, delete the branch and answer in the conversation.
 
-**Title the commit and pull request `research: <topic>`,** such as `research: union types`, not `docs: research <topic>`. The separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic researched. `resolve-research` sets the type of the resolution commits.
+**Title the commit and pull request `research: <topic>`,** such as `research: runtime async`, not `docs: research <topic>`. The separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic researched. `resolve-research` sets the type of the resolution commits.
 
 `resolve-research` eventually promotes or discards every saved topic, and both end with the file deleted, so a topic on disk is unresolved. `audit-freshness` reports a topic past its tolerance.
 
 ## Edge cases
 
-- **Preview-only topics,** such as union types: Research them fully. Lead with the maturity status, and mark guidance for "when it reaches GA" as hypothetical.
+- **Preview-only topics,** such as runtime async: Research them fully. Lead with the maturity status, and mark guidance for "when it reaches GA" as hypothetical.
 - **A topic outside .NET:** Say that the roster has no authority there, and stop. Don't present general knowledge as vetted research.
 - **Offline:** Answer from `opinions/` alone, and say you skipped the roster scan. The answer is sourced, but only as current as the opinions' `last-reviewed` dates.
 - **House and community positions conflict, for the profile the user named:** Present both, house first, with the house reasoning. The reader might not follow the profile's conventions.

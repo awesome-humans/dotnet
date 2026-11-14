@@ -10,7 +10,7 @@
 // also held to their order: Scope by title, the tree by file name, and the skills
 // table by skill name.
 //
-// A .NET 10 file-based app: no project, no build step, sharing its helpers with the
+// A .NET 11 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root, through its
 // recipe as CI does, or directly:
 //

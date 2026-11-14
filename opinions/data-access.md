@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-11-13
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources: [code-with-mukesh, milan-jovanovic, ms-learn, shay-rojansky]
 ---
 

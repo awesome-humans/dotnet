@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-10-31
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [andrew-lock, dotnet-blog, jon-skeet, meziantou, ms-learn, shay-rojansky]
 ---

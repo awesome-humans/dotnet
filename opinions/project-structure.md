@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14, fsharp-10]
-last-reviewed: 2026-08-21
+targets: [net11.0, csharp-15, fsharp-11]
+last-reviewed: 2026-11-14
 sources:
   [
     aaron-stannard,
@@ -20,7 +20,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 - **Use `.slnx` for new solutions.** The .NET 10 SDK's `dotnet new sln` creates one by default. Migrate a `.sln` file when you're already changing it, and use `.slnf` filters for large solutions. Start from [templates/example.slnx](../templates/example.slnx) and [templates/example.slnf](../templates/example.slnf). ([Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Pin the SDK in `global.json` with `rollForward` set to `latestFeature`,** as in [templates/global.json](../templates/global.json). ([Microsoft Learn: What's new in .NET 10](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
-- **Treat the pinned version as a minimum, and raise it only for a feature you need.** Under `latestFeature`, `10.0.400` means that version or any later band and patch on the machine, so new bands reach the build without a file change. Pinning a patch such as `10.0.412`, or bumping for every band, only fails contributors one servicing release behind. When a band ships something the repository uses, raise the minimum, and name the feature in the commit. ([Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json))
+- **Treat the pinned version as a minimum, and raise it only for a feature you need.** Under `latestFeature`, `11.0.100` means that version or any later band and patch on the machine, so new bands reach the build without a file change. Pinning a patch such as `11.0.105`, or bumping for every band, only fails contributors one servicing release behind. When a band ships something the repository uses, raise the minimum, and name the feature in the commit. ([Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json))
 - **To try a preview SDK, use `sdk.paths`, and ignore its install folder in the same commit.** `./dotnet-install.sh --install-dir .dotnet` (`-InstallDir` in PowerShell) installs the SDK inside the repository. `paths` makes the host prefer it, and `$host$` falls back to the machine install.
   - Paths resolve relative to `global.json`, so this works from any subdirectory.
   - `errorMessage` replaces the bare version error for a contributor who has neither SDK.
@@ -32,12 +32,14 @@ Use one solution format and Central Package Management, and pin versions at the 
   ```json
   {
     "sdk": {
-      "version": "11.0.100-preview.1.25000.1",
+      "version": "11.0.100-rc.2.26504.105",
       "paths": [".dotnet", "$host$"],
-      "errorMessage": "Run ./dotnet-install.sh --install-dir .dotnet --version 11.0.100-preview.1.25000.1"
+      "errorMessage": "Run ./dotnet-install.sh --install-dir .dotnet --version 11.0.100-rc.2.26504.105"
     }
   }
   ```
+
+  **Review by 2027-03-31.** The example pins .NET 11 RC 2, a real version of a release that has since shipped, because no .NET 12 preview exists yet. When .NET 12 Preview 1 ships, replace both version strings with its SDK version, and drop this note.
 
   `dotnet new gitignore` doesn't ignore `.dotnet/`, because it covers build output and a local SDK is a build _prerequisite_. `dotnet/runtime`, `dotnet/aspnetcore`, `dotnet/sdk`, and `dotnet/maui` each add the rule by hand. When you adopt `sdk.paths`, add `.dotnet/` to the repository-specific block of `.gitignore` described below.
 
@@ -53,7 +55,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 - **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
-- **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 10 is an LTS release, supported until November 2028. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support))
+- **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 11 is an STS release, supported until November 2028. .NET 10, the LTS release before it, ends support in the same month. ([Microsoft Learn: .NET releases, patches, and support](https://learn.microsoft.com/dotnet/core/releases-and-support))
 
 ## Repository layout
 
@@ -89,17 +91,17 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 ## Containers
 
-- **Build images with `dotnet publish /t:PublishContainer`, not a hand-written Dockerfile.** The SDK builds the image from the project, so there's no Dockerfile to drift. It pushes to the local Docker or Podman daemon by default. Set `ContainerRegistry` to push to a registry, or `ContainerArchiveOutputPath` to write a tarball. In .NET 10, console apps work without `<EnableSdkContainerSupport>`, like ASP.NET Core and Worker apps. ([Microsoft Learn: Containerize a .NET app with dotnet publish](https://learn.microsoft.com/dotnet/core/containers/sdk-publish), [Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
+- **Build images with `dotnet publish /t:PublishContainer`, not a hand-written Dockerfile.** The SDK builds the image from the project, so there's no Dockerfile to keep in step with it. It pushes to the local container runtime by default. From .NET 11, it uses `wslc` on Windows or `container` on macOS when one is installed, and falls back to Docker or Podman. Set `ContainerRegistry` to push to a registry, or `ContainerArchiveOutputPath` to write a tarball. Since .NET 10, console apps work without `<EnableSdkContainerSupport>`, like ASP.NET Core and Worker apps. ([Microsoft Learn: Containerize a .NET app with dotnet publish](https://learn.microsoft.com/dotnet/core/containers/sdk-publish), [Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: What's new in the SDK and tooling for .NET 11](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-11/sdk))
 
   ```xml
   <!-- All container config is MSBuild properties; illustrative values -->
   <PropertyGroup Label="Container image">
     <ContainerRepository>contoso/example-worker</ContainerRepository>
     <ContainerImageTags>1.4.0;latest</ContainerImageTags>
-    <ContainerFamily>noble-chiseled</ContainerFamily>
+    <ContainerFamily>resolute-chiseled</ContainerFamily>
   </PropertyGroup>
   ```
 
-- **Expect Ubuntu, not Debian, in .NET 10 base images.** Version-only tags, such as `mcr.microsoft.com/dotnet/aspnet:10.0`, resolve to Ubuntu 24.04 "Noble", and there are no Debian images for .NET 10. For a smaller image, set `ContainerFamily` to a chiseled variant, such as `noble-chiseled`, or to `alpine`. ([Microsoft Learn: Default .NET container tags now use Ubuntu](https://learn.microsoft.com/dotnet/core/compatibility/containers/10.0/default-images-use-ubuntu), [dotnet/dotnet-docker: .NET Container Tags -- Patterns and Policies](https://github.com/dotnet/dotnet-docker/blob/main/documentation/supported-tags.md))
-- **If the app isn't invariant, use the `-extra` tag.** The chiseled and Alpine images include neither ICU nor `tzdata`, and set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true`. An app that names a culture throws `CultureNotFoundException` at startup. An app that only reads `CurrentCulture` formats and compares as invariant without an error. `<InvariantGlobalization>false</InvariantGlobalization>` doesn't override the environment variable. `noble-chiseled-extra` and `alpine-extra` add back ICU and `tzdata`. For details, see [globalization.md](globalization.md).
+- **Expect Ubuntu, not Debian, in the base images.** Since .NET 10, version-only tags resolve to Ubuntu, and there are no Debian images. `mcr.microsoft.com/dotnet/aspnet:11.0` is Ubuntu 26.04 "Resolute", where `aspnet:10.0` is Ubuntu 24.04 "Noble". For a smaller image, set `ContainerFamily` to a chiseled variant, such as `resolute-chiseled`, or to `alpine`. ([Microsoft Learn: Default .NET container tags now use Ubuntu](https://learn.microsoft.com/dotnet/core/compatibility/containers/10.0/default-images-use-ubuntu), [dotnet/dotnet-docker: .NET Container Tags -- Patterns and Policies](https://github.com/dotnet/dotnet-docker/blob/main/documentation/supported-tags.md))
+- **If the app isn't invariant, use the `-extra` tag.** The chiseled and Alpine images include neither ICU nor `tzdata`, and set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true`. An app that names a culture throws `CultureNotFoundException` at startup. An app that only reads `CurrentCulture` formats and compares as invariant without an error. `<InvariantGlobalization>false</InvariantGlobalization>` doesn't override the environment variable. `resolute-chiseled-extra` and `alpine-extra` add back ICU and `tzdata`. For details, see [globalization.md](globalization.md).
 - **Keep the rootless default.** For .NET 8 and later on the Microsoft runtime images, container publish sets `ContainerUser` to the non-root `app` user on Linux. `ContainerPort` comes from `ASPNETCORE_URLS`, `ASPNETCORE_HTTP_PORTS`, or `ASPNETCORE_HTTPS_PORTS`. To fix a broken volume mount, fix the mount. Don't set `ContainerUser` to `root` or expose a privileged port. ([Microsoft Learn: Containerize a .NET app reference](https://learn.microsoft.com/dotnet/core/containers/publish-configuration))

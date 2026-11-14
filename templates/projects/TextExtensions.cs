@@ -1,4 +1,4 @@
-// awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-10-22 | sources: dotnet-blog, ms-learn
+// awesome-humans/dotnet template | targets: net11.0, csharp-15 | last-reviewed: 2026-11-14 | sources: dotnet-blog, ms-learn
 // Belongs to Example.Library. Library surface example: C# 14 extension members (opinions/csharp.md).
 namespace Example.Library;
 

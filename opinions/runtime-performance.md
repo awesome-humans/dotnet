@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-10-09
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [
     andrew-lock,
@@ -17,14 +17,20 @@ sources:
 
 # Runtime & performance
 
-The .NET 10 JIT optimizes idiomatic code best. Optimize what you've measured, not what you've heard is slow.
+The .NET 11 JIT optimizes idiomatic code best. Optimize what you've measured, not what you've heard is slow.
 
 ## Opinions
 
-- **Write idiomatic C#.** In .NET 10, the JIT applies escape analysis, stack allocation of small objects, doubled inlining budgets, and bounds-check elimination to plain code. `unsafe` code and unusual patterns written to help the JIT usually block those optimizations. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))
+- **Write idiomatic C#.** Since .NET 10, the JIT applies escape analysis, stack allocation of small objects, doubled inlining budgets, and bounds-check elimination to plain code. `unsafe` code and unusual patterns written to help the JIT usually block those optimizations. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/)) On .NET 11, go back over the workarounds you already have:
+  - **Rewrite pointer and `Unsafe` loops that exist only to avoid bounds checks.** "Unsafe code written to work around the JIT is a snapshot of what the JIT could do at the time that code was written", so "it's worth rewriting them with safe, bounds-checked C# and measuring again on .NET 11". Keep `unsafe` for interop.
+  - **Stop reordering reads to put the largest index first.** The JIT now merges the bounds checks of several constant-index reads in a block into one, so the manual version is "no longer necessary".
+  - **Stop rewriting `i != length` loop conditions as `i < length`.** Loop cloning now handles `!=` when the stride is exactly 1 or -1. Keep `<` for any other stride.
+
+  ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
+
 - **Profile first, then benchmark the inner loop.** Find the bottleneck with a profiler, such as dotTrace or PerfView, then iterate on it with BenchmarkDotNet. The two report different allocation numbers because of GC padding and alignment. Use the benchmark to compare inner-loop changes, and the profiler to find where allocations come from. ([Gordon: The Grand Mystery of the Missing 18 Bytes](https://www.stevejgordon.co.uk/the-grand-mystery-of-the-missing-18-bytes), [JetBrains: Your AI Agent Keeps Missing The Real Bottleneck. JetBrains Rider Can Fix It Now.](https://blog.jetbrains.com/dotnet/2026/06/25/performance-profiling-agent-skill-in-rider/))
 - **Use `Span<T>` on parsing and formatting hot paths, and `ArrayPool<T>` for large temporary buffers.** For examples, see [`Span<T>` and `ArrayPool<T>`](#spant-and-arraypoolt). ([Gordon: Encrypting Properties with System.Text.Json and a TypeInfoResolver Modifier (Part 2)](https://www.stevejgordon.co.uk/encrypting-properties-with-system-text-json-and-a-typeinforesolver-modifier-part-2))
-- **At each GA release, read Toub's "Performance Improvements in .NET X" post.** It lists what the runtime now optimizes by itself, which tells you which manual optimizations to delete. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))
+- **At each GA release, read Toub's "Performance Improvements in .NET X" post.** It lists what the runtime now optimizes by itself, which tells you which manual optimizations to delete. ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
 
 ## Immutable collections
 
@@ -38,6 +44,7 @@ Keep the `Immutable*` trees and builders only for incremental change, such as a 
 
 - **Return `Task`, not `void`, and await instead of blocking.** Use `async void` only for event handlers. `.Result` or `.Wait()` on async work risks deadlocks and thread-pool starvation, because the state machine expects to resume through a continuation, not on a blocked thread. ([Toub: How Async/Await Really Works in C#](https://devblogs.microsoft.com/dotnet/how-async-await-really-works/))
 - **Use `ConfigureAwait(false)` in library code, and leave it out of application code.** A library doesn't know its caller's context, so it shouldn't capture it. Skipping the capture avoids deadlocks with callers that block, and saves a context switch. ASP.NET Core has no `SynchronizationContext`, so `ConfigureAwait(false)` does nothing there. UI code usually _needs_ the context. Meziantou.Analyzer's MA0004 reports an await without `ConfigureAwait`, so the templates key the rule on `IsPackable`. [templates/Directory.Build.props](../templates/Directory.Build.props) sets it to `false`, and a project that ships as a package sets `<IsPackable>true</IsPackable>` in its project file. [templates/Directory.Build.targets](../templates/Directory.Build.targets) turns MA0004 off for every project that doesn't, which covers an application's own class libraries and its test projects. ([Toub: ConfigureAwait FAQ](https://devblogs.microsoft.com/dotnet/configureawait-faq/), [Meziantou: Enforcing asynchronous code good practices using a Roslyn analyzer](https://www.meziantou.net/enforcing-asynchronous-code-good-practices-using-a-roslyn-analyzer.htm), [Meziantou.Analyzer: MA0004](https://github.com/meziantou/Meziantou.Analyzer/blob/3.0.317/docs/Rules/MA0004.md))
+- **Time out a task with `WaitAsync`, not `Task.WhenAny` over `Task.Delay`.** When the task finishes first, the delay is still pending, with a `System.Threading.Timer` behind it. On a hot path with a long timeout, "we could accumulate thousands upon thousands of those timers". `task.WaitAsync(timeout, timeProvider)` "correctly handles all the relevant cleanup", and throws `TimeoutException` as the hand-written version does. The .NET 11 SDK reports the pattern as CA2027, which fails a build from the templates. For the `TimeProvider` argument, see [datetime.md](datetime.md#services-inject-timeprovider-stop-writing-your-own-clock). ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
 - **Return `Task<T>`. Use `ValueTask<T>` only on hot APIs that usually complete synchronously,** such as a buffered read, and only after profiling shows the `Task` allocations matter. Await a `ValueTask` exactly once, and never concurrently. ([Toub: Understanding the Whys, Whats, and Whens of ValueTask](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/))
 
 ## `Span<T>` and `ArrayPool<T>`
@@ -129,7 +136,7 @@ The value can't change while the process runs, so cache it in a singleton. Decla
 
 AOT needs the whole dependency graph to be trim-safe and AOT-safe: source-generated JSON, and no code generation at run time. Review the `IsAotCompatible` warnings before you commit to it. Run the test suite as an AOT build too, because reflection failures show up nowhere else. For details, see [testing.md](testing.md#framework-and-platform).
 
-For a CLI tool, a .NET 10 file-based app needs nothing extra: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps), [dotnet/sdk: `dotnet run file.cs`](https://github.com/dotnet/sdk/blob/main/documentation/general/dotnet-run-file.md#other-commands))
+For a CLI tool, a file-based app needs nothing extra: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps), [dotnet/sdk: `dotnet run file.cs`](https://github.com/dotnet/sdk/blob/main/documentation/general/dotnet-run-file.md#other-commands))
 
 **When a library pulls in more than you call, trim the dead branch with an ILLink substitution.** A property the library checks at run time keeps everything behind it. Stub the getter to a constant, and the trimmer removes the whole chain. Lock stubbed `SymbolServer.get_IsSymweb` in `Microsoft.Diagnostics.Runtime` to `false`. That cut a Native AOT binary from 3.956 MB to 2.949 MB on win-x64 (25.4%), and by 22.2% to 22.3% on the four Linux targets.
 
@@ -157,4 +164,6 @@ For `PublishAot`, pass the file to ILC directly. The `Microsoft.DotNet.ILCompile
 
 ## Coming next (preview, not yet the opinion)
 
-.NET 11 (RC1, GA expected November 2026) makes runtime async an opt-in without preview flags: `<Features>$(Features);runtime-async=on</Features>` on a `net11.0` project, with neither `LangVersion=preview` nor `EnablePreviewFeatures`. Most of the shared framework already ships compiled that way. Toub measures a synchronously completing two-layer chain at 21.221 ns and 144 B before, and 6.151 ns and 0 B after. Exception propagation through 30 frames drops from 51.3 µs and 84.2 KB to 10.7 µs and 5.7 KB. The [Async](#async) opinions stand until .NET 11 ships and the switch is rechecked against the GA docs. ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
+.NET 11 ships runtime async, and at GA it "remains a preview feature". It moves suspending and resuming an `async` method from compiler-generated state machines into the runtime. ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/))
+
+To try it on a `net11.0` project, set `<Features>$(Features);runtime-async=on</Features>`. It needs neither `LangVersion=preview` nor `EnablePreviewFeatures`, and most of the shared framework already ships compiled that way. Toub measures a synchronously completing two-layer chain at 21.221 ns and 144 B before, and 6.151 ns and 0 B after. Exception propagation through 30 frames drops from 51.3 µs and 84.2 KB to 10.7 µs and 5.7 KB. It doesn't yet support `async void`, async iterators, or custom task-like return types, and Toub hopes "it'll be on by default starting in .NET 12". The [Async](#async) opinions stand either way: "The programming model hasn't changed", and `ConfigureAwait` "still has its usual meaning". Don't flatten helper methods to save a `Task` in the meantime: "don't contort source code to remove a clean await just because today's implementation might allocate an intermediate Task". ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))

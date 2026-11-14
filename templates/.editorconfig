@@ -1,4 +1,4 @@
-# awesome-humans/dotnet template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-21 | sources: meziantou, ms-learn
+# awesome-humans/dotnet template | targets: net11.0, csharp-15 | last-reviewed: 2026-11-14 | sources: meziantou, ms-learn
 # Copy to the repository root. Remove a rule only after you've decided you disagree with it.
 
 root = true
@@ -48,6 +48,13 @@ dotnet_diagnostic.IDE0032.severity = warning
 # The bulk severity above raises IDE0058 (unused expression value) to a warning, which requires
 # `_ =` on every discarded result, including each Assert.Throws in a test project. Keep it silent.
 dotnet_diagnostic.IDE0058.severity = silent
+
+# The bulk severity also raises IDE0072 (populate switch), which asks for a discard arm on a
+# switch expression over a union or a closed hierarchy. The compiler already checks those for
+# exhaustiveness (CS8509), and the arm would hide a case added later (opinions/csharp.md).
+# The severity can't be scoped by type, so enum switches lose IDE0072 too: an enum switch
+# that ends in a throwing `_` arm gets no warning when a member is added.
+dotnet_diagnostic.IDE0072.severity = silent
 
 # The one globalization rule AnalysisLevel=latest-recommended leaves silent: string.Equals
 # without a StringComparison. CA1304/1305/1309/1310/1311 already warn (opinions/globalization.md).

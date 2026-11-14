@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-08-14 | sources: house:simon-mckenna, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net11.0 | last-reviewed: 2026-11-14 | sources: house:simon-mckenna, ms-learn -->
 <!-- From the .NET 10 SDK, `dotnet new sln` creates an SLNX file by default. -->
 <Solution>
   <Folder Name="/src/">

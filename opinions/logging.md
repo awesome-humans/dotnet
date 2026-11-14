@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-18
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources: [ms-learn, nicholas-blumhardt]
 ---
 

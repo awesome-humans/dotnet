@@ -29,7 +29,7 @@
 // every house block and region removed, and llms-<profile>.txt links copies with only that
 // profile's. Every link is to the site, so an agent needs only the host it already reached.
 //
-// A .NET 10 file-based app. Run it from the repository root, through its recipe or
+// A .NET 11 file-based app. Run it from the repository root, through its recipe or
 // directly. awesome-humans/website runs it directly, because it doesn't install just:
 //
 //     just build-site <dir>

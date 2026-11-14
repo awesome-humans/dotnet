@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-11-14 | sources: meziantou, ms-learn, stephen-toub -->
+<!-- awesome-humans/dotnet template | targets: net11.0 | last-reviewed: 2026-11-14 | sources: meziantou, ms-learn, stephen-toub -->
 <!-- Copy to the repository root, beside Directory.Build.props. MSBuild imports it after each project file, so it can read properties that a project sets, such as IsPackable. -->
 <Project>
 

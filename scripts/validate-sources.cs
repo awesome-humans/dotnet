@@ -31,7 +31,7 @@
 // second is worse than untidy: the parse below is keyed by id, so a duplicate would
 // silently decide a source's bucket by whichever row came last.
 //
-// A .NET 10 file-based app: no project, no build step, sharing its helpers with the
+// A .NET 11 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root, through its
 // recipe as CI does, or directly:
 //

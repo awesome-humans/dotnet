@@ -19,7 +19,7 @@
 // can't open with a `---` block and stay valid for the tools that read it. One
 // required set spans both syntaxes, so they can't drift apart.
 //
-// A .NET 10 file-based app: no project, no build step, sharing its helpers with the
+// A .NET 11 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root, through its
 // recipe as CI does, or directly:
 //

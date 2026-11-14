@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-09-25 | sources: dotnet-blog, house:simon-mckenna, meziantou, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net11.0, csharp-15, fsharp-11 | last-reviewed: 2026-11-14 | sources: dotnet-blog, house:simon-mckenna, meziantou, ms-learn -->
 <!-- Copy to the repository root. Every project inherits these settings. Override one in a project only with a recorded reason. -->
 <Project>
 
@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Targets and language">
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <!-- Makes nullable warnings errors, so the compiler enforces the annotations (opinions/csharp.md). -->

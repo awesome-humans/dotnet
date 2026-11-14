@@ -1,6 +1,6 @@
 ---
-targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-14
+targets: [net11.0, csharp-15]
+last-reviewed: 2026-11-14
 sources:
   [
     aspnet-blog,
@@ -46,7 +46,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 
 - **Use bUnit 2.x with xUnit v3,** the stack in [testing.md](testing.md). In 2.x, the test class inherits `BunitContext` and renders with `Render<T>()`. ([bUnit: Writing tests](https://bunit.dev/docs/getting-started/writing-tests.html))
 
-  <!-- Verified: compiles and passes on net10.0 / bunit 2.9.0 / xunit.v3 4.0.0 (2026-08-18) -->
+  <!-- Verified: compiles and passes on net11.0 / bunit 2.15.2 / xunit.v3 4.0.3 (2026-11-14) -->
 
   ```csharp
   public class CounterTests : BunitContext
@@ -105,7 +105,7 @@ Use Blazor for web UI, .NET MAUI for mobile and desktop, and Avalonia for cross-
 - **Keep UI framework references out of view models.** `INotifyPropertyChanged`, Rx, and Dynamic Data are platform-neutral. A view model with no Avalonia or WPF reference binds on either framework, and you can unit-test it without a UI. ([Avalonia Docs: The MVVM pattern](https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/))
 - **Use Dynamic Data for collection state in XAML UIs instead of hand-written `ObservableCollection` code.** Key entities in a `SourceCache<T, TKey>`, and project filtered and sorted views into a bindable collection with `Connect()`. Filters and sorts then compose, instead of being rewritten per screen. ([Avalonia Docs: Sorting, filtering, and grouping collections](https://docs.avaloniaui.net/docs/data-binding/collection-views))
 
-  <!-- Verified: compiles and runs on net10.0 / DynamicData 9.4.33 (2026-08-12) -->
+  <!-- Verified: compiles and runs on net11.0 / DynamicData 9.4.33 (2026-11-14) -->
 
   ```csharp
   var orders = new SourceCache<Order, int>(o => o.Id);

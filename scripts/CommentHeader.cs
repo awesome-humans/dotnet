@@ -7,9 +7,9 @@
 // have to stay valid for the tools that read them, and a `---` block would break every
 // one. The same metadata goes in a comment on the first line instead, and this parses it:
 //
-//     <!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: … | … -->
-//     # awesome-humans/dotnet template | targets: net10.0 | last-reviewed: … | …
-//     // awesome-humans/dotnet template | targets: net10.0 | last-reviewed: … | …
+//     <!-- awesome-humans/dotnet template | targets: net11.0 | last-reviewed: … | … -->
+//     # awesome-humans/dotnet template | targets: net11.0 | last-reviewed: … | …
+//     // awesome-humans/dotnet template | targets: net11.0 | last-reviewed: … | …
 
 using System.Collections;
 
@@ -107,7 +107,7 @@ internal static class CommentHeader
 
         foreach (string segment in segments)
         {
-            // Split on the first colon only: `targets: net10.0, csharp-14` is one field
+            // Split on the first colon only: `targets: net11.0, csharp-15` is one field
             // whose value happens to be a list.
             int colon = segment.IndexOf(':');
             if (colon == -1)
