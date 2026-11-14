@@ -52,7 +52,7 @@ builder.Services.AddRequestTimeouts(options =>
     options.AddPolicy("report-export", TimeSpan.FromSeconds(30));
 });
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 app.UseRequestTimeouts();
 
 // The token reaches EF Core, so the timeout stops the query.
@@ -85,7 +85,7 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 app.UseRateLimiter();
 
 app.MapGet("/api/orders", () => Results.Ok()).RequireRateLimiting("api");
@@ -98,7 +98,7 @@ The limiters keep their counts in memory, so each app instance enforces its own 
 **When work crosses a process or time boundary, capture the OpenTelemetry context and restore it in the consumer.** Automatic propagation covers only HTTP: ASP.NET Core reads the trace context from incoming requests, and `HttpClient` writes it on outgoing ones, "with no special coding by the app developer". ([Microsoft Learn: Distributed tracing concepts](https://learn.microsoft.com/dotnet/core/diagnostics/distributed-tracing-concepts#coordinate-across-process-boundaries)) Message queues, background jobs, outbox tables, and scheduled work lose the context unless you inject it into the message and extract it in the consumer:
 
 ```csharp
-var propagator = Propagators.DefaultTextMapPropagator;
+TextMapPropagator propagator = Propagators.DefaultTextMapPropagator;
 
 // Producer: write the trace context into the message headers.
 propagator.Inject(
@@ -107,12 +107,12 @@ propagator.Inject(
     (headers, key, value) => headers[key] = value);
 
 // Consumer: read it back, and parent the new activity on it.
-var parent = propagator.Extract(
+PropagationContext parent = propagator.Extract(
     default,
     message.Headers,
-    (headers, key) => headers.TryGetValue(key, out var value) ? [value] : []);
+    (headers, key) => headers.TryGetValue(key, out string? value) ? [value] : []);
 
-using var activity = source.StartActivity(
+using Activity? activity = source.StartActivity(
     "orders process", ActivityKind.Consumer, parent.ActivityContext);
 ```
 
@@ -127,12 +127,12 @@ Propagate only the trace context. Never put `Baggage` on a message: it inflates 
 ```csharp
 builder.Services.AddValidation();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.MapPost("/api/orders", (CreateOrder order) =>
     TypedResults.Created("/api/orders/1", order));
 
-record CreateOrder(
+internal sealed record CreateOrder(
     [property: Required] string Sku,
     [property: Range(1, 100)] int Quantity);
 ```
@@ -148,7 +148,7 @@ Validation applies to every endpoint. To exclude one, call `.DisableValidation()
 ```csharp
 builder.Services.AddProblemDetails();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
@@ -175,20 +175,21 @@ The middleware writes problem details only when the request's `Accept` header al
 
 ```csharp
 using Asp.Versioning;
+using Asp.Versioning.Builder;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddApiVersioning(options => options.ApiVersionReader = new QueryStringApiVersionReader())
     .AddApiExplorer(options => options.GroupNameFormat = "'v'VVV")
     .AddOpenApi(); // the Asp.Versioning.OpenApi overload
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.MapOpenApi().WithDocumentPerVersion(); // /openapi/v1.json, /openapi/v2.json, ...
 
-var orders = app.NewVersionedApi("Orders");
-var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
+IVersionedEndpointRouteBuilder orders = app.NewVersionedApi("Orders");
+RouteGroupBuilder v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 ```
 
 ([Microsoft Learn: Generate OpenAPI documents](https://learn.microsoft.com/aspnet/core/fundamentals/openapi/aspnetcore-openapi), [.NET Blog: Combining API versioning with OpenAPI in .NET 10 applications](https://devblogs.microsoft.com/dotnet/api-versioning-in-dotnet-10-applications/), [Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Asp.Versioning: AV0015](https://dotnet.github.io/aspnet-api-versioning/diagnostic/av0015.html), [Asp.Versioning: AV0025](https://dotnet.github.io/aspnet-api-versioning/diagnostic/av0025.html), [Asp.Versioning: AV0029](https://dotnet.github.io/aspnet-api-versioning/diagnostic/av0029.html), [Asp.Versioning: 10.2.0 release notes](https://github.com/dotnet/aspnet-api-versioning/releases/tag/v10.2.0))
@@ -208,7 +209,7 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 ```csharp
 builder.Services.AddHybridCache();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.MapGet("/api/orders/{id}", async (string id, HybridCache cache, CancellationToken ct) =>
     await cache.GetOrCreateAsync(

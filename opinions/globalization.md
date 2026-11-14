@@ -89,7 +89,7 @@ Turning it on costs you:
 ```csharp
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-var supportedCultures = new[] { "en-GB", "fr", "de" };
+string[] supportedCultures = ["en-GB", "fr", "de"];
 app.UseRequestLocalization(new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
