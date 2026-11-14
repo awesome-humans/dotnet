@@ -59,7 +59,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 ## Repository layout
 
-- **Put shipping code in `src/`, test projects in `tests/`, and build configuration at the root.** Give each project its own directory, named after the assembly. Mirror the disk layout in the solution with `/src/` and `/tests/` solution folders, as [templates/example.slnx](../templates/example.slnx) does. ([dotnet/samples: migrate-library-csproj](https://github.com/dotnet/samples/tree/main/framework/libraries/migrate-library-csproj))
+- **Put shipping code in `src/`, test projects in `tests/`, and build configuration at the root.** Give each project its own directory, named after the assembly. Mirror the disk layout in the solution with `/src/` and `/tests/` solution folders, as [templates/example.slnx](../templates/example.slnx) does. ([Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md), [dotnet/samples: migrate-library-csproj](https://github.com/dotnet/samples/tree/main/framework/libraries/migrate-library-csproj))
 
 /// house | simon-mckenna
 

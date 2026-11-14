@@ -43,7 +43,7 @@ Keep the `Immutable*` trees and builders only for incremental change, such as a 
 
 ## Async
 
-- **Return `Task`, not `void`, and await instead of blocking.** Use `async void` only for event handlers. `.Result` or `.Wait()` on async work deadlocks wherever a `SynchronizationContext` runs one thread at a time: the continuation waits for the context, and the context's thread is blocked on the task. ([Toub: How Async/Await Really Works in C#](https://devblogs.microsoft.com/dotnet/how-async-await-really-works/), [Cleary: Don't Block on Async Code](https://blog.stephencleary.com/2012/07/dont-block-on-async-code.html))
+- **Return `Task`, not `void`, and await instead of blocking.** Use `async void` only for event handlers. `.Result` or `.Wait()` on unfinished async work deadlocks wherever a `SynchronizationContext` runs one thread at a time: the continuation waits for the context, and the context's thread is blocked on the task. ([Toub: How Async/Await Really Works in C#](https://devblogs.microsoft.com/dotnet/how-async-await-really-works/), [Cleary: Don't Block on Async Code](https://blog.stephencleary.com/2012/07/dont-block-on-async-code.html))
 - **Use `ConfigureAwait(false)` in library code, and leave it out of application code.** A library doesn't know its caller's context, so it shouldn't capture it. Skipping the capture avoids deadlocks with callers that block, and saves a context switch. ASP.NET Core has no `SynchronizationContext` of its own, so `ConfigureAwait(false)` changes nothing there unless other code installs a context or a custom `TaskScheduler`. UI code usually _needs_ the context. Meziantou.Analyzer's MA0004 reports an await without `ConfigureAwait`, so the templates key the rule on `IsPackable`. [templates/Directory.Build.props](../templates/Directory.Build.props) sets it to `false`, and a project that ships as a package sets `<IsPackable>true</IsPackable>` in its project file. [templates/Directory.Build.targets](../templates/Directory.Build.targets) turns MA0004 off for every project that doesn't, which covers an application's own class libraries and its test projects. ([Toub: ConfigureAwait FAQ](https://devblogs.microsoft.com/dotnet/configureawait-faq/), [Meziantou: Enforcing asynchronous code good practices using a Roslyn analyzer](https://www.meziantou.net/enforcing-asynchronous-code-good-practices-using-a-roslyn-analyzer.htm), [Meziantou.Analyzer: MA0004](https://github.com/meziantou/Meziantou.Analyzer/blob/3.0.317/docs/Rules/MA0004.md))
 - **Time out a task with `WaitAsync`, not `Task.WhenAny` over `Task.Delay`.** When the task finishes first, the delay is still pending, with a `System.Threading.Timer` behind it. On a hot path with a long timeout, "we could accumulate thousands upon thousands of those timers". `task.WaitAsync(timeout, timeProvider)` "correctly handles all the relevant cleanup", and throws `TimeoutException` as the hand-written version does. The .NET 11 SDK reports the pattern as CA2027, which fails a build from the templates. For the `TimeProvider` argument, see [datetime.md](datetime.md#services-inject-timeprovider-stop-writing-your-own-clock). ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
 - **Open a `FileStream` with `FileOptions.Asynchronous` when you call `ReadAsync` or `WriteAsync` on it.** "If you call async APIs on a stream not configured for async, the runtime may fall back to a less efficient path." Read a single small file on a startup path synchronously: for small reads, the overhead of async "can dominate the total time". ([Meziantou: Sync vs Async File I/O in .NET](https://www.meziantou.net/sync-vs-async-file-i-o-in-dotnet-raw-throughput-scalability-and-buffer-size.htm))
@@ -87,6 +87,7 @@ using System.Buffers;
 static async Task<long> CountLinesAsync(Stream source, CancellationToken cancellationToken = default)
 {
     long lines = 0;
+    byte last = (byte)'\n';
     byte[] buffer = ArrayPool<byte>.Shared.Rent(81920);
     try
     {
@@ -94,6 +95,7 @@ static async Task<long> CountLinesAsync(Stream source, CancellationToken cancell
         while ((read = await source.ReadAsync(buffer, cancellationToken)) > 0)
         {
             lines += buffer.AsSpan(0, read).Count((byte)'\n');
+            last = buffer[read - 1];
         }
     }
     finally
@@ -101,7 +103,8 @@ static async Task<long> CountLinesAsync(Stream source, CancellationToken cancell
         ArrayPool<byte>.Shared.Return(buffer);
     }
 
-    return lines;
+    // A final line with no newline after it still counts.
+    return last == (byte)'\n' ? lines : lines + 1;
 }
 ```
 

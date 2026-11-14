@@ -95,11 +95,13 @@ Use Blazor for web UI, .NET MAUI for mobile, and Avalonia for cross-platform des
   }
   ```
 
-- **Review by 2027-11-30.** **Before you build an existing iOS app with Xcode 27, adopt the UIKit scene lifecycle.** Without it, the app shows its splash screen and exits on iOS 27, with "UIScene life cycle is required for apps built with this SDK" in the device log. "Every iOS app built with Xcode 27, on any form factor, needs to adopt this pattern", and a package or workload update doesn't rewrite an existing project's platform files.
+- **Review by 2027-11-30.** **Before you build an existing iOS app with Xcode 27, adopt the UIKit scene lifecycle.** Without it, the app shows its splash screen and exits on iOS 27, with "UIScene life cycle is required for apps built with this SDK" in the device log. "Every iOS app built with Xcode 27, on any form factor, needs to adopt this pattern", and a package or workload update doesn't rewrite an existing project's platform files. An app that already has a `MauiUISceneDelegate` and a matching scene manifest can skip steps 2 and 3.
   1. Update the .NET MAUI packages to 10.0.110 or later, which "includes the scene-side App Actions dispatch and relevant WebAuthenticator forwarding".
-  2. Add `Platforms/iOS/SceneDelegate.cs`, with a public class that derives from `MauiUISceneDelegate` and has `[Register("SceneDelegate")]`. Leave the existing `AppDelegate` as it is.
-  3. Add a `UIApplicationSceneManifest` to `Platforms/iOS/Info.plist`. Its configuration name is `__MAUI_DEFAULT_SCENE_CONFIGURATION__`, and its delegate class name matches the registration.
-  4. `AppDelegate.Window` stays `null` under scenes, so change any code that reads it after `FinishedLaunching`. Test sign-in callbacks and deep links from a cold start and with the app running.
+  2. Add `Platforms/iOS/SceneDelegate.cs`, with a public class that derives from `MauiUISceneDelegate` and has `[Register("SceneDelegate")]`. Keep the `AppDelegate` class. If the app already has a scene delegate, keep it and use its registered name, instead of adding a second one.
+  3. Add a `UIApplicationSceneManifest` to `Platforms/iOS/Info.plist`. Its configuration name is `__MAUI_DEFAULT_SCENE_CONFIGURATION__`, and its delegate class name matches the registration. Update an existing manifest instead of adding a second key, and do it in "every plist that can produce a shipping app", such as one chosen per build configuration.
+  4. Move `AppDelegate` callback logic to the scene events. "With scenes enabled, UIKit no longer calls the AppDelegate activation, backgrounding, URL, and user-activity callbacks", whether they're `ConfigureLifecycleEvents` registrations or overrides. `OpenUrl` becomes `SceneOpenUrl`, and `ContinueUserActivity` becomes `SceneContinueUserActivity`. A URL or user activity that launches the app arrives in `SceneWillConnect`.
+  5. `AppDelegate.Window` stays `null` under scenes, so change any code that reads it after `FinishedLaunching`. Test sign-in callbacks and deep links from a cold start and with the app running.
+  6. Set the iOS `SupportedOSPlatformVersion` to 15.0 or higher, the minimum the .NET for iOS 27 SDK supports. If you have to keep an older iOS version, stay on a 26.x SDK until you've decided what to support.
 
   Apps created from the 10.0.110 templates already have the scene configuration. Drop this note when projects that predate those templates are rare. ([Versluis: Get Your .NET MAUI App Ready for Xcode 27](https://devblogs.microsoft.com/dotnet/migrate-dotnet-maui-apps-uikit-scene-lifecycle/))
 
@@ -111,7 +113,7 @@ Use Blazor for web UI, .NET MAUI for mobile, and Avalonia for cross-platform des
 ## Avalonia & reactive UI
 
 - **Keep UI framework references out of view models.** Avalonia's guidance is to move application logic into plain objects "with no dependency on Avalonia or any UI framework", which you can unit-test without a UI. ([Avalonia Docs: The MVVM pattern](https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/))
-- **Use Dynamic Data for collection state in XAML UIs instead of hand-written `ObservableCollection` code.** Key entities in a `SourceCache<T, TKey>`, and project filtered and sorted views into a bindable collection with `Connect()`. Filters and sorts then compose, instead of being rewritten per screen. Avalonia's documentation recommends DynamicData "for complex scenarios". ([Avalonia Docs: Sorting, filtering, and grouping collections](https://docs.avaloniaui.net/docs/data-binding/collection-views), [DynamicData: README](https://github.com/reactivemarbles/DynamicData#readme))
+- **When a collection combines filtering, sorting, and grouping, use Dynamic Data instead of hand-written `ObservableCollection` code.** Key entities in a `SourceCache<T, TKey>`, and project filtered and sorted views into a bindable collection with `Connect()`. Filters and sorts then compose, instead of being rewritten per screen. Avalonia's documentation filters a simple collection in the view model, and recommends DynamicData "for complex scenarios". ([Avalonia Docs: Sorting, filtering, and grouping collections](https://docs.avaloniaui.net/docs/data-binding/collection-views), [DynamicData: README](https://github.com/reactivemarbles/DynamicData#readme))
 
   <!-- Verified: compiles and runs on net11.0 / DynamicData 9.4.33 (2026-11-14) -->
 

@@ -203,7 +203,7 @@ To pass a capacity or a comparer, put a `with(...)` element first, as in `HashSe
   }
   ```
 
-- **A collection member breaks value equality.** The generated `Equals` compares members with `EqualityComparer<T>.Default`. `ImmutableList<T>` doesn't override `Equals`, so it compares by reference, and two records with identical contents aren't equal. Use a collection member only when you want reference equality, such as instances shared within one object graph. Otherwise, keep the collection outside the record, or document that equality means identity. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
+- **A collection member breaks value equality.** The generated `Equals` compares members with `EqualityComparer<T>.Default`. `ImmutableList<T>` doesn't override `Equals`, so it compares by reference, and two records with identical contents aren't equal. Use a collection member only when you want reference equality, such as instances shared within one object graph. Otherwise, keep the collection outside the record, or document that the collection member compares by reference. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
 
 ### Nullable reference types
 

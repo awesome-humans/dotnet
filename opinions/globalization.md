@@ -109,13 +109,14 @@ In production, four details decide whether it works:
 
 **Pass keys to `IStringLocalizer` from a `static class ResourceKeys` of `const string` fields.** `IStringLocalizer` accepts the default-language text as the key, as in `_localizer["About Title"]`. That skips the up-front `.resx` work but scatters magic strings through the code. A constants class keeps each key in one place, and works in attributes such as `[Display(Name = ResourceKeys.AboutTitle)]`. ([Lock: Localising the DisplayAttribute and avoiding magic strings](https://andrewlock.net/localising-the-displayattribute-and-avoiding-magic-strings-in-asp-net-core/))
 
-Strongly typed resource classes lost on portability, because the SDK ships no cross-platform generator for them.
+A strongly typed resource class doesn't replace the constants class. Its members are static properties that return the localized text through a `ResourceManager`, not `const` keys, so they can't go to `IStringLocalizer` or into an attribute argument. Where code reads resources without `IStringLocalizer`, as Avalonia's `{x:Static}` does below, generate the class in the build:
 
+- MSBuild's own generator "runs on every platform and every IDE". Set `<Generator>MSBuild:Compile</Generator>` and the `StronglyTyped` metadata on the `EmbeddedResource`, with `StronglyTypedFileName` under `$(IntermediateOutputPath)`, so the class goes to `obj/` and stays out of source control. ([Avalonia Docs: Localizing using ResX](https://docs.avaloniaui.net/docs/app-development/localizing))
 - The designer needs Visual Studio and a checked-in `.Designer.cs` file. ([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
 - `<GenerateSource>true</GenerateSource>` on an `EmbeddedResource` builds cleanly and generates nothing.
 - `Microsoft.CodeAnalysis.ResxSourceGenerator` has only prerelease versions. Revisit this when a stable version ships. ([NuGet: Microsoft.CodeAnalysis.ResxSourceGenerator](https://www.nuget.org/packages/Microsoft.CodeAnalysis.ResxSourceGenerator))
 
-<!-- Verified 2026-11-14 on SDK 11.0.100: a net11.0 class library with `GenerateSource="true"` on `Strings.resx` builds with no warnings, and the build generates no Strings class. -->
+<!-- Verified 2026-11-14 on SDK 11.0.100: a net11.0 class library with `GenerateSource="true"` on `Strings.resx` builds with no warnings, and the build generates no Strings class. With `MSBuild:Compile` and the `StronglyTyped` metadata instead, the same build on Linux writes a public class of static string properties to `obj/`, and it compiles with `-warnaserror` under the templates. -->
 
 ### Client-side: ship the globalization data the app can reach
 
