@@ -8,6 +8,7 @@ sources:
     dotnet-blog,
     jetbrains-dotnet,
     jon-skeet,
+    meziantou,
     ms-learn,
     stephen-toub,
     steve-gordon,
@@ -36,7 +37,7 @@ Keep the `Immutable*` trees and builders only for incremental change, such as a 
 ## Async
 
 - **Return `Task`, not `void`, and await instead of blocking.** Use `async void` only for event handlers. `.Result` or `.Wait()` on async work risks deadlocks and thread-pool starvation, because the state machine expects to resume through a continuation, not on a blocked thread. ([Toub: How Async/Await Really Works in C#](https://devblogs.microsoft.com/dotnet/how-async-await-really-works/))
-- **Use `ConfigureAwait(false)` in library code, and leave it out of application code.** A library doesn't know its caller's context, so it shouldn't capture it. Skipping the capture avoids deadlocks with callers that block, and saves a context switch. ASP.NET Core has no `SynchronizationContext`, so `ConfigureAwait(false)` does nothing there. UI code usually _needs_ the context. ([Toub: ConfigureAwait FAQ](https://devblogs.microsoft.com/dotnet/configureawait-faq/))
+- **Use `ConfigureAwait(false)` in library code, and leave it out of application code.** A library doesn't know its caller's context, so it shouldn't capture it. Skipping the capture avoids deadlocks with callers that block, and saves a context switch. ASP.NET Core has no `SynchronizationContext`, so `ConfigureAwait(false)` does nothing there. UI code usually _needs_ the context. Meziantou.Analyzer's MA0004 reports an await without `ConfigureAwait`, so the templates key the rule on `IsPackable`. [templates/Directory.Build.props](../templates/Directory.Build.props) sets it to `false`, and a project that ships as a package sets `<IsPackable>true</IsPackable>` in its project file. [templates/Directory.Build.targets](../templates/Directory.Build.targets) turns MA0004 off for every project that doesn't, which covers an application's own class libraries and its test projects. ([Toub: ConfigureAwait FAQ](https://devblogs.microsoft.com/dotnet/configureawait-faq/), [Meziantou: Enforcing asynchronous code good practices using a Roslyn analyzer](https://www.meziantou.net/enforcing-asynchronous-code-good-practices-using-a-roslyn-analyzer.htm), [Meziantou.Analyzer: MA0004](https://github.com/meziantou/Meziantou.Analyzer/blob/3.0.317/docs/Rules/MA0004.md))
 - **Return `Task<T>`. Use `ValueTask<T>` only on hot APIs that usually complete synchronously,** such as a buffered read, and only after profiling shows the `Task` allocations matter. Await a `ValueTask` exactly once, and never concurrently. ([Toub: Understanding the Whys, Whats, and Whens of ValueTask](https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/))
 
 ## `Span<T>` and `ArrayPool<T>`
@@ -96,9 +97,9 @@ Never use a buffer after you return it. `Rent` can return a larger buffer than y
 
 ## GC modes
 
-**Keep the defaults.** ASP.NET Core uses server GC with DATAS, on by default since .NET 9, which adapts the heap count to load and shrinks the heap when the app is idle. Everything else uses workstation GC. Override the default in only two cases, and measure memory and latency before and after:
+**Keep the defaults.** ASP.NET Core uses server GC with DATAS, on by default since .NET 9, which adapts the heap count to load, and adjusts the heap size when the workload gets lighter or heavier. Everything else uses workstation GC. Override the default in only two cases, and measure memory and latency before and after:
 
-- **Many .NET services on one small node,** such as dense containers or sidecars: set `<ServerGarbageCollection>false</ServerGarbageCollection>`. Server GC keeps a heap per core in every process. DATAS reduces that, but doesn't remove it.
+- **Many .NET services on one small node,** such as dense containers or sidecars: set `<ServerGarbageCollection>false</ServerGarbageCollection>`. Without DATAS, server GC provides a heap and a collector thread for each logical CPU in every process. DATAS "starts with one heap", but each process can still grow to as many heaps "as matches the machine core count".
 - **A CPU-bound batch or worker app outside ASP.NET Core:** opt _in_ to server GC for throughput.
 
 ([Microsoft Learn: Workstation and server GC](https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc), [Microsoft Learn: Dynamic adaptation to application sizes (DATAS)](https://learn.microsoft.com/dotnet/standard/garbage-collection/datas), [Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))

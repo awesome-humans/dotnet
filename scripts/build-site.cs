@@ -861,7 +861,7 @@ internal static partial class Site
 
     public static string Language(string path) => Path.GetExtension(path) switch
     {
-        ".props" or ".csproj" or ".fsproj" or ".slnx" => "xml",
+        ".props" or ".targets" or ".csproj" or ".fsproj" or ".slnx" => "xml",
         ".json" or ".slnf" => "json",
         ".editorconfig" => "ini",
         ".cs" => "csharp",
