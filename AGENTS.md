@@ -19,7 +19,7 @@ Skills live at the specification's canonical path, `skills/<name>/SKILL.md`. Rea
 When you generate or review .NET code for another project:
 
 1. Read the relevant files under `opinions/`. Each one states the opinion first, then the rationale, then the sources.
-2. Start from the `templates/` files for `.editorconfig`, `Directory.Build.props`, `Directory.Packages.props`, `global.json`, `.slnx`, `.slnf`, and project files. Copy them verbatim and trim, instead of writing your own.
+2. Start from the `templates/` files for `.editorconfig`, `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, `global.json`, `.slnx`, `.slnf`, and project files. Copy them verbatim and trim, instead of writing your own.
 3. Target the versions in the `targets:` frontmatter of the opinion files. Never silently downgrade to an older TFM or language version.
 4. Follow a house opinion only for the house profile the user chose. It's a block that opens with `/// house | <profile>` in an opinion, or a region between `house:<profile> begin` and `house:<profile> end` comments in a template. Without a chosen profile, skip every block, and copy a template without its regions. For details, see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md).
 

@@ -25,7 +25,7 @@ By default, it checks sourced community practice only. If the user names a house
      - For a URL, the branch and commit SHA. Without the SHA, nobody can reproduce the review, and step 8 branches from it.
      - For a local git worktree, the SHA. If the tree has uncommitted changes, say that the findings describe the working tree, not the commit.
      - For a local path outside git, say so, and let the file paths stand as the record.
-2. **Inventory the target:** solution files (`.slnx`, `.sln`, or `.slnf`), project files, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `.editorconfig`, test projects, and the mix of C# and F#.
+2. **Inventory the target:** solution files (`.slnx`, `.sln`, or `.slnf`), project files, `global.json`, `Directory.Build.props`, `Directory.Build.targets`, `Directory.Packages.props`, `.editorconfig`, test projects, and the mix of C# and F#.
 3. **Compare structure and tooling** with `templates/`:
    - Required files that are missing, such as `.editorconfig` or Central Package Management.
    - Files that differ. Diff each against its template, and classify each difference as a _violation_ (it contradicts an opinion) or a _local choice_ (no opinion covers it).

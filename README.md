@@ -124,6 +124,7 @@ In this repository, each house opinion is a marked block beside the sourced text
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props
+│   ├── Directory.Build.targets
 │   ├── Directory.Packages.props
 │   ├── example.slnf
 │   ├── example.slnx

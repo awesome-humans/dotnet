@@ -1,0 +1,13 @@
+<!-- awesome-humans/dotnet template | targets: net10.0 | last-reviewed: 2026-11-14 | sources: meziantou, stephen-toub -->
+<!-- Copy to the repository root, beside Directory.Build.props. MSBuild imports it after each project file, so it can read properties that a project sets, such as OutputType. -->
+<Project>
+
+  <!-- ConfigureAwait(false) belongs in library code, not application code
+       (opinions/runtime-performance.md). MA0004 stays on for libraries. Its default mode exempts
+       only types such as controllers, Razor pages, and components, so without this it fails
+       awaits in an application's services, middleware, minimal API handlers, and Program.cs. -->
+  <PropertyGroup Label="MA0004 in applications" Condition="'$(OutputType)' == 'Exe' or '$(OutputType)' == 'WinExe'">
+    <NoWarn>$(NoWarn);MA0004</NoWarn>
+  </PropertyGroup>
+
+</Project>

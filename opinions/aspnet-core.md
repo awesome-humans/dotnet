@@ -30,7 +30,7 @@ Container publish builds an OCI image from MSBuild properties such as `Container
 
 An image keeps the runtime it was built with, so rebuild it after every Patch Tuesday, as [security.md: Servicing](security.md#servicing-take-the-monthly-patch) says.
 
-**Never set `ContainerUser` to `root`.** The Microsoft runtime images run as the rootless `app` user on Linux. As root, "if an attacker manages to compromise your container, they'll be able to do pretty much anything in the container". ([Microsoft Learn: Containerize a .NET app reference](https://learn.microsoft.com/dotnet/core/containers/publish-configuration), [Lock: Updates to Docker images in .NET 8](https://andrewlock.net/exploring-the-dotnet-8-preview-updates-to-docker-images-in-dotnet-8/))
+**Never set `ContainerUser` to `root`.** Container publish defaults it to the rootless `app` user on Linux, "If you're targeting .NET 8 or higher and using the Microsoft runtime images". A Dockerfile gets no such default: except on the chiseled images, "you will still run as root by default". As root, "if an attacker manages to compromise your container, they'll be able to do pretty much anything in the container". ([Microsoft Learn: Containerize a .NET app reference](https://learn.microsoft.com/dotnet/core/containers/publish-configuration), [Lock: Updates to Docker images in .NET 8](https://andrewlock.net/exploring-the-dotnet-8-preview-updates-to-docker-images-in-dotnet-8/))
 
 **Redirect to HTTPS and send HSTS wherever TLS terminates.** If the proxy redirects to HTTPS, "there's no need to use HTTPS redirection middleware", so drop `UseHttpsRedirection()`, and leave the HSTS header to the proxy too. Don't call `UseHsts()` in development, because "the HSTS settings are highly cacheable by browsers". ([Microsoft Learn: Enforce HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl))
 
@@ -167,12 +167,17 @@ The middleware writes problem details only when the request's `Accept` header al
 - To also write the document to disk during `dotnet build`, add `Microsoft.Extensions.ApiDescription.Server`. Do this when a build step consumes the file, such as the Kiota client in [Typed clients](#typed-clients). Set `<OpenApiDocumentsDirectory>` to choose where the file goes. The build runs the app's entry point against a mock server, so guard startup code that needs live infrastructure.
 - Set `<GenerateDocumentationFile>true</GenerateDocumentationFile>`, so the source generator copies your XML doc comments into the document.
 - Use named methods as handlers, because the generator reads doc comments only from methods, not from lambdas.
-- Version APIs with `Asp.Versioning` 10 or later (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`). Call `WithDocumentPerVersion()` to get one document per version:
+- Set `<Description>` in the project file when you version the API. Each versioned document takes its description from the assembly, and `Asp.Versioning.OpenApi` reports AV0025 without one.
+- Version APIs with `Asp.Versioning` 10 or later (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, and `Asp.Versioning.OpenApi`):
+  - Call the package's `AddOpenApi()` after `AddApiVersioning()`, and drop the `builder.Services.AddOpenApi()` call. The versioned call replaces the services that call registers, and the package reports AV0029 when both are there.
+  - Name the version reader. Left to the default, the package looks in both the query string and the URL segment, and reports AV0015 when every route uses only one.
+  - Call `WithDocumentPerVersion()` to get one document per version.
 
 ```csharp
-builder.Services.AddOpenApi();
+using Asp.Versioning;
+
 builder.Services
-    .AddApiVersioning()
+    .AddApiVersioning(options => options.ApiVersionReader = new QueryStringApiVersionReader())
     .AddApiExplorer(options => options.GroupNameFormat = "'v'VVV")
     .AddOpenApi(); // the Asp.Versioning.OpenApi overload
 
@@ -184,7 +189,7 @@ var orders = app.NewVersionedApi("Orders");
 var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 ```
 
-([Microsoft Learn: Generate OpenAPI documents](https://learn.microsoft.com/aspnet/core/fundamentals/openapi/aspnetcore-openapi), [.NET Blog: Combining API versioning with OpenAPI in .NET 10 applications](https://devblogs.microsoft.com/dotnet/api-versioning-in-dotnet-10-applications/), [Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+([Microsoft Learn: Generate OpenAPI documents](https://learn.microsoft.com/aspnet/core/fundamentals/openapi/aspnetcore-openapi), [.NET Blog: Combining API versioning with OpenAPI in .NET 10 applications](https://devblogs.microsoft.com/dotnet/api-versioning-in-dotnet-10-applications/), [Microsoft Learn: What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Asp.Versioning: AV0015](https://dotnet.github.io/aspnet-api-versioning/diagnostic/av0015.html), [Asp.Versioning: AV0025](https://dotnet.github.io/aspnet-api-versioning/diagnostic/av0025.html), [Asp.Versioning: AV0029](https://dotnet.github.io/aspnet-api-versioning/diagnostic/av0029.html))
 
 ### Typed clients
 
