@@ -29,7 +29,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 - **Research a topic.** Ask your coding agent to run [`research-topic`](skills/research-topic/SKILL.md), which answers from the opinions and the vetted sources, citing each claim:
 
   ```text
-  Use the research-topic skill at awesome-humans.net/dotnet/llms.txt to research whether to adopt event-driven messaging between modules
+  Use the research-topic skill at awesome-humans.net/dotnet/llms.txt to research whether to turn on runtime async
   ```
 
 - **Read the opinions and templates.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, rationale, and sources, and the [`templates/`](templates) encode them.
