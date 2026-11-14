@@ -197,7 +197,7 @@ Four helper files support the scripts:
 
 The helpers have no top-level statements, so they don't run alone. Each compiles into the scripts that `#:include` it.
 
-[`global.json`](global.json) sets the SDK minimum to the first feature band that supports `#:include`, and `rollForward: latestFeature` picks up newer bands. It's independent of [`templates/global.json`](templates/global.json), because each pin follows what its own consumers need.
+[`global.json`](global.json) sets the SDK minimum to the first feature band of the .NET release that the opinions target, and `rollForward: latestFeature` picks up newer bands. It moves with [`templates/global.json`](templates/global.json) on a major release. Between majors, the two are independent, because each pin follows what its own consumers need. The scripts need SDK `10.0.300` or later, the first band that supports `#:include`.
 
 One check runs in Python: the Agent Skills specification validator, which is published only to PyPI.
 
