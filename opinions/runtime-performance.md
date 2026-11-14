@@ -24,7 +24,7 @@ The .NET 11 JIT optimizes idiomatic code best. Optimize what you've measured, no
 - **Write idiomatic C#.** Since .NET 10, the JIT applies escape analysis, stack allocation of small objects, doubled inlining budgets, and bounds-check elimination to plain code. `unsafe` code and unusual patterns written to help the JIT usually block those optimizations. ([Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/)) On .NET 11, go back over the workarounds you already have:
   - **Rewrite pointer and `Unsafe` loops that exist only to avoid bounds checks.** "Unsafe code written to work around the JIT is a snapshot of what the JIT could do at the time that code was written", so "it's worth rewriting them with safe, bounds-checked C# and measuring again on .NET 11". Keep `unsafe` for interop.
   - **Stop reordering reads to put the largest index first.** The JIT now merges the bounds checks of several constant-index reads in a block into one, so the manual version is "no longer necessary".
-  - **Write `i < length` in a loop condition, not `i != length`.** Loop cloning now handles `!=` only when the stride is exactly 1 or -1.
+  - **Stop rewriting `i != length` loop conditions as `i < length`.** Loop cloning now handles `!=` when the stride is exactly 1 or -1. Keep `<` for any other stride.
 
   ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))
 

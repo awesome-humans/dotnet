@@ -52,6 +52,8 @@ dotnet_diagnostic.IDE0058.severity = silent
 # The bulk severity also raises IDE0072 (populate switch), which asks for a discard arm on a
 # switch expression over a union or a closed hierarchy. The compiler already checks those for
 # exhaustiveness (CS8509), and the arm would hide a case added later (opinions/csharp.md).
+# The severity can't be scoped by type, so enum switches lose IDE0072 too: an enum switch
+# that ends in a throwing `_` arm gets no warning when a member is added.
 dotnet_diagnostic.IDE0072.severity = silent
 
 # The one globalization rule AnalysisLevel=latest-recommended leaves silent: string.Equals

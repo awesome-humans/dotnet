@@ -36,11 +36,11 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - Report "up to date" and stop only when those checks find nothing too.
 3. **Start a worktree** on the branch `refresh/dotnet-<version>`, following the rules in [AGENTS.md](../../AGENTS.md).
 4. **Update the template files** under `templates/`: the TFMs in the example projects, and anything else pinned to a version. Then update the three kinds of pin that drift independently of a .NET release:
-   - **4a. The SDK minimum in both `global.json` files.** Leave `sdk.version` alone unless the repository needs something from a newer feature band.
+   - **4a. The SDK minimum in both `global.json` files.** On a major release, move both to that major's first band, such as `11.0.100`. Between majors, leave `sdk.version` alone unless the repository needs something from a newer feature band.
      - The value is a minimum. With `"rollForward": "latestFeature"`, it accepts that version or any later band and patch on the machine, so new bands arrive without an edit.
      - Raising the minimum only narrows who can build. Pinning a patch, such as `11.0.105` instead of `11.0.100`, fails contributors one servicing release behind.
      - When a band ships something the repository uses, raise the minimum, and give the reason in the pull request. For example, the root `global.json` stayed at `10.0.400` through .NET 10, because that's the first band that supports `#:include`.
-     - The two files are independent. The root pin follows what `scripts/` needs, and the template pin follows what the example projects need. Use `latestFeature` wherever the opinion says so.
+     - Between majors, the two files are independent. The root pin follows what `scripts/` needs, and the template pin follows what the example projects need. On a major release, the root moves with the template even when `scripts/` doesn't need it, so the repository's own checks run on the release its opinions target. Use `latestFeature` wherever the opinion says so.
      - `global.json` has no comment syntax, so the pinned value **is** the record.
      - Renovate never changes this field: `renovate.json` disables the `dotnet-sdk` dependency type, because a minimum under `latestFeature` doesn't need mechanical bumps. Only this skill changes it.
    - **4b. The package pins in `templates/Directory.Packages.props`.** Look up every `<PackageVersion>` on nuget.org, with the registration index (`https://api.nuget.org/v3/registration5-gz-semver2/<lowercased-id>/index.json`) or `dotnet package search <id>`.
