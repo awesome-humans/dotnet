@@ -54,7 +54,7 @@ Pass the same `--configuration` to every stage. `dotnet publish` defaults to `Re
 
 1. **Restore.** If the repository commits `packages.lock.json` (`RestorePackagesWithLockFile=true`), pass `--locked-mode`, so a stale lock file fails the build. Without a lock file, the flag fails every restore with `NU1004`. The templates pin packages with Central Package Management in [templates/Directory.Packages.props](../templates/Directory.Packages.props), and [templates/Directory.Build.props](../templates/Directory.Build.props) turns lock files off, so the example restores without it.
 2. **Build.** Build once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`. The property covers compiler and analyzer diagnostics. The switch also fails on MSBuild warnings, such as MSB3277 assembly version conflicts.
-   - Enforce style the same way: run analyzers in the build, and add a `dotnet format --verify-no-changes` step. Put it after the tests, as the example does, so a formatting difference doesn't skip them. Meziantou's post uses the flag's earlier name, `--check`. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
+   - Enforce style the same way: run analyzers in the build, and run `dotnet format --verify-no-changes` in a job of its own, beside the build job, as the example does. A formatting difference then reports in the time the check takes, not after the tests, and neither job's failure skips the other's steps. Meziantou's post runs the check as a separate `lint_csharp` job, and uses the flag's earlier name, `--check`. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
 3. **Test.** Run `dotnet test` on Microsoft.Testing.Platform (MTP). MTP needs the `test.runner` opt-in in `global.json`, as [testing.md](testing.md#framework-and-platform) describes. Don't set `DOTNET_TEST_RUNNER` in the pipeline: on the .NET 11 SDK it overrides `global.json`, so CI could run a different runner from a developer's machine. "If neither setting selects a runner, `dotnet test` uses VSTest", which fails an xunit.v3 4.0.0 project on the .NET 10 SDK and later. ([Microsoft Learn: dotnet test](https://learn.microsoft.com/dotnet/core/tools/dotnet-test))
    - Upload TRX and coverage files as build artifacts, so you can diagnose a failure without a rerun.
    - Under xunit.v3, write TRX with `--report-xunit-trx` and `--results-directory`, as in the example. `--coverage` writes the coverage file to the same directory, and needs the `Microsoft.Testing.Extensions.CodeCoverage` package, which [templates/projects/Example.Library.Tests.csproj](../templates/projects/Example.Library.Tests.csproj) references. Upload the results even when the step fails, because the failed run is the one you need them for.
@@ -87,16 +87,33 @@ jobs:
         with:
           name: test-results
           path: artifacts/test-results
-      # After the tests, so a formatting difference doesn't hide their results.
-      - run: dotnet format --verify-no-changes --no-restore
       - run: dotnet publish --no-build --configuration Release
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: app
           path: artifacts/publish
+
+  # A job of its own, so a formatting difference reports without waiting for
+  # the tests, and a failed test doesn't skip the check.
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
+        with:
+          global-json-file: global.json
+      - run: dotnet restore
+      - run: dotnet format --verify-no-changes --no-restore
 ```
 
 This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifact` pin is only an example. When you copy the workflow, resolve every SHA against the current release, and check the major version. A pinned SHA never reports that it's out of date, so pair SHA pinning with a dependency bot.
+
+**The `format` job costs a second runner, and at least one billed minute in a private repository.**
+
+- **It repeats the setup.** The job checks out the repository, installs the SDK, and restores again. It needs no build: after `dotnet restore`, `dotnet format` loads the solution itself, and "may restore, compile, and run analyzers". It can't reuse the build job's output, so the cost grows with the solution. ([Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format))
+- **GitHub bills each job separately.** It "rounds the minutes and partial minutes each job uses up to the nearest whole minute", so a check that finishes in seconds bills as one minute, $0.006 on a standard 2-core Linux runner. Standard runners are free in public repositories. ([GitHub Docs: Actions runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing), [GitHub Docs: GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions))
+- **A step in the build job lost, although it costs no extra minute.** Before the build, a formatting difference skips the tests. After the tests, it reports only when they finish, a failed test skips it, and the fix needs a second full run. One repeated run of a slow suite costs more than the minute.
+- **The `app` artifact no longer waits for the check.** The build job uploads it whether or not the `format` job passes, so a job that deploys it lists both in `needs`.
 
 ## Artifact signing
 
