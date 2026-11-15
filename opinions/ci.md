@@ -110,22 +110,22 @@ This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifac
 
 **The trade-off is one run that reports both failures, against a cheaper run that reports one.** A step runs only if every step before it succeeded: "A default status check of `success()` is applied" unless the step sets its own `if`. So a check in the build job hides a result, wherever it goes. ([GitHub Docs: Evaluate expressions in workflows and actions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions))
 
-| Where the check runs  | A formatting difference reports | The run hides                                  | Extra cost      |
-| --------------------- | ------------------------------- | ---------------------------------------------- | --------------- |
-| Step before the build | When the check finishes         | The test results, when the formatting is wrong | None            |
-| Step after the tests  | When the tests finish           | The formatting result, when a test fails       | None            |
-| The `format` job      | When the check finishes         | Nothing                                        | A second runner |
+| Where the check runs  | A formatting difference reports | The run hides                                  | A formatting difference wastes                              | Every run pays  |
+| --------------------- | ------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- | --------------- |
+| Step before the build | When the check finishes         | The test results, when the formatting is wrong | Nothing: the run stops at the check                         | Nothing more    |
+| Step after the tests  | When the tests finish           | The formatting result, when a test fails       | The build and test time, as a wait and as runner time       | Nothing more    |
+| The `format` job      | When the check finishes         | Nothing                                        | The build and test runner time, unless the run is cancelled | A second runner |
 
 The table follows from that rule, and isn't a measurement.
 
 - **A step before the build is the cheapest.** A formatting difference stops the run before the tests use any runner time. Its cost is an extra round when a push breaks both: the first run finds the formatting difference, and only the next one finds the failed test.
-- **A step after the tests is the slowest.** With a 20-minute suite and a one-minute check, a formatting difference reports at minute 20, not minute 1. The fix, and the run that checks it, start 19 minutes later.
+- **A step after the tests costs the most when the formatting is wrong.** The run builds and tests for its full time, and then fails on something the check could report at the start. With a 20-minute suite and a one-minute check, that's 20 runner minutes, and the difference reports at minute 20, not minute 1.
+- **The `format` job removes the wait, and keeps the runner time.** The check reports at the start, but the build job still runs its tests on the same push, unless something cancels it. To cancel it when the fix arrives, set `concurrency` on the workflow, with `cancel-in-progress: true`. ([GitHub Docs: Control the concurrency of workflows and jobs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency))
 
 **The `format` job costs a second runner, and at least one billed minute in a private repository.**
 
 - **It repeats the setup.** The job checks out the repository, installs the SDK, and restores again. It needs no build: after `dotnet restore`, `dotnet format` loads the solution itself, and "may restore, compile, and run analyzers". It can't reuse the build job's output, so the cost grows with the solution. ([Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format))
 - **GitHub bills each job separately.** It "rounds the minutes and partial minutes each job uses up to the nearest whole minute", so a check that finishes in seconds bills as one minute, $0.006 on a standard 2-core Linux runner. Standard runners are free in public repositories. ([GitHub Docs: Actions runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing), [GitHub Docs: GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions))
-- **The `format` job saves the wait, not the runner time.** The build job's first run still finishes its tests, unless something cancels it. To cancel it when the fix arrives, set `concurrency` on the workflow, with `cancel-in-progress: true`. ([GitHub Docs: Control the concurrency of workflows and jobs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency))
 - **The `app` artifact no longer waits for the check.** The build job uploads it whether or not the `format` job passes, so a job that deploys it lists both in `needs`. Require both `build` and `format` as status checks on the branch: a rule that requires only `build` now merges a formatting difference. ([GitHub Docs: About protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging))
 
 ## Artifact signing
