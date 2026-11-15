@@ -41,8 +41,8 @@ csharp_style_prefer_method_group_conversion = true:suggestion
 csharp_using_directive_placement = outside_namespace:warning
 
 # Prefer auto-implemented properties over trivial hand-written backing fields. Set the severity
-# here, not on dotnet_style_prefer_auto_properties below, which is the same rule: a
-# dotnet_diagnostic entry overrides the option's trailing severity, so the second has no effect.
+# here, and leave it off dotnet_style_prefer_auto_properties below, which is the same rule. The
+# build reports IDE0032 at the lower of the two, so `true:suggestion` there turns this warning off.
 dotnet_diagnostic.IDE0032.severity = warning
 
 # The bulk severity above raises IDE0058 (unused expression value) to a warning, which requires
