@@ -1,0 +1,52 @@
+name: Templates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Weekly, Mondays 06:30 UTC. Restore runs NuGet Audit, and the templates turn its
+    # warnings into errors, so an advisory against a pinned package fails this job on a
+    # day when nothing here changed. The schedule reports that within a week.
+    - cron: "30 6 * * 1"
+
+permissions:
+  contents: read
+
+# Set explicitly, as validate-skills.yml does and for the reasons it records.
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  build:
+    # Nothing else compiles the files under templates/: they sit flat, outside any
+    # solution. This job assembles them the way a consumer would, as the default copy and
+    # as each house profile's, and runs the pipeline opinions/ci.md prescribes on each.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # Pin just to a release that was at least two weeks old when picked. The step below
+      # calls its recipe, never dotnet or the script directly, because the justfile holds
+      # every entry point.
+      - uses: taiki-e/install-action@cfdb7ed4ccc7c7dce37759eae89dc5674b469b39 # v2.90.3
+        with:
+          tool: just@1.58.0
+
+      # Two SDK pins: the script runs on the repository's, and the assembled copies build
+      # on the templates' own. They match after a major release and can differ between
+      # majors (README.md: Repository scripts).
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
+        with:
+          global-json-file: templates/global.json
+
+      - name: Build, test, and format-check the templates
+        run: just build-templates

@@ -94,6 +94,10 @@ validate-readme-index:
 validate-template-order:
     dotnet run scripts/validate-template-order.cs
 
+# Build, test, and format-check the templates, as the default copy and each house profile's (needs nuget.org)
+build-templates out="artifacts/templates":
+    dotnet run scripts/build-templates.cs -- --out "{{ out }}"
+
 # Draw the SVG diagrams in assets/diagrams/
 export-diagrams:
     dotnet run scripts/export-diagrams.cs
