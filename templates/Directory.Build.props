@@ -56,7 +56,8 @@
 
   <PropertyGroup Label="Deterministic builds">
     <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <!-- GitHub Actions and GitLab CI set CI. Azure Pipelines sets TF_BUILD instead. -->
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' or '$(TF_BUILD)' == 'True'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
 </Project>

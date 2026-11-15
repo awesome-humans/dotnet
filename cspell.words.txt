@@ -27,6 +27,7 @@ Cascadia
 chiseled
 citability
 CLDR
+Cleary
 codebetter
 comartin
 Comartin's

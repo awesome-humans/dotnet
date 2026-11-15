@@ -6,7 +6,7 @@ module Example.Library.FSharp.Payments
 let describe payment =
     match payment with
     | Cash -> "cash"
-    | Card(number, _) -> $"card ending {number.Substring(number.Length - 4)}"
+    | Card(number, _) -> $"card ending {number.Substring(max 0 (number.Length - 4))}"
     | DirectDebit iban -> $"direct debit from {iban}"
 
 /// seq { ... } written explicitly: F# 10 deprecates a brace block without it (FS3873).

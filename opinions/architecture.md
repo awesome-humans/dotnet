@@ -28,7 +28,7 @@ Start with a modular monolith. Build each module from vertical slices, and add l
   - Translate an internal sequence into one business fact. Publish `OrderDispatched`, not the `TruckReserved` and `CarrierAssigned` steps behind it.
   - Name an event for its business meaning. `TruckOrderNotUsed` says the truck arrived, which billing and carrier settlement treat differently from a cancellation before dispatch.
 
-  ([Microsoft Learn: Domain events: design and implementation](https://learn.microsoft.com/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation), 2018 content last reviewed 2024-01-03; [Comartin: Domain Events Are NOT Your Public API](https://codeopinion.com/domain-events-are-not-your-public-api/), sponsored by NServiceBus)
+  ([Microsoft Learn: Domain events: design and implementation](https://learn.microsoft.com/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation), reviewed 2018-10-08; [Comartin: Domain Events Are NOT Your Public API](https://codeopinion.com/domain-events-are-not-your-public-api/), sponsored by NServiceBus)
 
 - **Name folders after features, not patterns.** Use a feature folder such as `Orders/Cancel/`, not `Controllers/`, `Services/`, and `Repositories/`. Inside a project, features are the top-level folders. For layout down to the project, see [project-structure.md](project-structure.md). ([Jovanović: Vertical slice architecture in .NET](https://milanjovanovic.tech/blog/vertical-slice-architecture-dotnet))
 
