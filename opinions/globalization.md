@@ -56,7 +56,7 @@ All five warn at the `latest-recommended` level that [templates/Directory.Build.
 dotnet_diagnostic.CA1307.severity = warning
 ```
 
-With `TreatWarningsAsErrors` on, a missing `StringComparison` fails the build. Meziantou.Analyzer, described in [csharp.md](csharp.md), covers the same cases. A `BannedApiAnalyzers` list for the two invariant comparisons lost, because CA1309 already catches them.
+With `TreatWarningsAsErrors` on, a missing `StringComparison` fails the build. Meziantou.Analyzer, described in [csharp.md](csharp.md), covers the same cases. A `BannedApiAnalyzers` list for the two invariant comparisons would duplicate CA1309, which already catches them.
 
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
 
