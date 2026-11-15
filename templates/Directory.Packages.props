@@ -44,10 +44,10 @@
     <PackageVersion Include="Meziantou.Analyzer" Version="3.0.340" />
   </ItemGroup>
 
-  <!-- No Microsoft.Testing.Platform entry: xunit.v3 brings its own compatible version.
-       Pinning MTP separately overrides it through transitive pinning, and fails at run time
-       with a TypeLoadException (opinions/testing.md). The risk is higher since xunit.v3
-       4.0.0, which dropped MTP v1 and defaults to v2. -->
+  <!-- No Microsoft.Testing.Platform entry: xunit.v3 brings its own compatible version, and
+       a pin here overrides it through transitive pinning. A pin below the version xunit.v3
+       needs fails restore with NU1109. A pin a major version above it restores and builds,
+       and then every test run throws a TypeLoadException (opinions/testing.md). -->
   <ItemGroup Label="Testing">
     <PackageVersion Include="bunit" Version="2.15.2" />
     <PackageVersion Include="Meziantou.Framework.SnapshotTesting" Version="3.1.21" />
