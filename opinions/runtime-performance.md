@@ -86,15 +86,16 @@ using System.Buffers;
 
 static async Task<long> CountLinesAsync(Stream source, CancellationToken cancellationToken = default)
 {
+    const byte Newline = (byte)'\n';
     long lines = 0;
-    byte last = (byte)'\n';
+    byte last = Newline;
     byte[] buffer = ArrayPool<byte>.Shared.Rent(81920);
     try
     {
         int read;
         while ((read = await source.ReadAsync(buffer, cancellationToken)) > 0)
         {
-            lines += buffer.AsSpan(0, read).Count((byte)'\n');
+            lines += buffer.AsSpan(0, read).Count(Newline);
             last = buffer[read - 1];
         }
     }
@@ -104,7 +105,7 @@ static async Task<long> CountLinesAsync(Stream source, CancellationToken cancell
     }
 
     // A final line with no newline after it still counts.
-    return last == (byte)'\n' ? lines : lines + 1;
+    return last == Newline ? lines : lines + 1;
 }
 ```
 
