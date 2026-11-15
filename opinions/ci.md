@@ -1,6 +1,6 @@
 ---
 targets: [net11.0]
-last-reviewed: 2026-11-14
+last-reviewed: 2026-11-15
 sources:
   [
     aaron-stannard,
@@ -8,6 +8,7 @@ sources:
     dotnet-blog,
     house:simon-mckenna,
     khalid,
+    mark-seemann,
     meziantou,
     ms-learn,
   ]
@@ -29,6 +30,8 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
   Mapping filters restore and nothing else: `dotnet package add` still reaches any configured source. ([Microsoft Learn: Package Source Mapping](https://learn.microsoft.com/nuget/consume-packages/package-source-mapping)) A repository that restores only from nuget.org gains little: with one source, a same-named package has no second feed to come from.
 
+- **Treat warnings as errors in every build, with no CI condition.** Set `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` in the root `Directory.Build.props`, as [templates/Directory.Build.props](../templates/Directory.Build.props) does, so a compiler, analyzer, or NuGet warning fails on the machine that introduces it. MSBuild's own warnings, such as MSB3277, need the `-warnaserror` switch, which [Pipeline shape](#pipeline-shape) adds in CI. Stannard enables it "because this prevents all sorts of rot from setting into the code base (i.e. NuGet package vulnerability warnings and deprecations have to be addressed immediately)". His project-structure skill and Abuhakmeh's typical `Directory.Build.props` both set it with no `Condition`. ([Stannard: Software 2.0: Planning and Verifying a Greenfield Project](https://aaronstannard.com/software-2.0-case-study-textforge/), [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md), [Abuhakmeh: Directory.Build.props: Share Settings Across .NET Projects](https://khalidabuhakmeh.com/posts/directory-build-props-share-settings-across-dotnet-projects/))
+- **Fix a warning instead of suppressing it, and give each suppression you keep a comment that says why.** That covers `#pragma warning disable`, `[SuppressMessage]`, and a `<NoWarn>` entry. Revert a suppression that has none. Stannard's Slopwatch skill lists `#pragma warning disable` and a project-level `<NoWarn>` among the shortcuts an agent takes to get a passing build, and says "Never accept these patterns". It allows an exception only with a reason: "Exceptions require justification", and "Document why in a code comment". Slopwatch is his own tool. `[SuppressMessage]` has a `Justification` property for the reason, and Seemann fills it in when he keeps CA2234 off one test helper. ([Stannard: dotnet-slopwatch](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/slopwatch/SKILL.md), [Seemann: Warnings-as-errors friction](https://blog.ploeh.dk/2023/03/06/warnings-as-errors-friction/), [Microsoft Learn: Suppress code analysis warnings](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/suppress-warnings))
 - **Treat vulnerability warnings as build errors everywhere.** NuGet Audit runs during restore, and "`NuGetAuditMode` defaults to `all` when a project targets `net10.0` or higher", so it checks the whole graph. ([Microsoft Learn: Auditing package dependencies for security vulnerabilities](https://learn.microsoft.com/nuget/concepts/auditing-packages)) `TreatWarningsAsErrors`, which [templates/Directory.Build.props](../templates/Directory.Build.props) sets, turns NU1901 to NU1904 into errors. Restore then fails on the day an advisory lands, even if nobody changed the graph. That's intended: triaging the advisory is the first step in servicing the branch.
   - To suppress one advisory, add `NuGetAuditSuppress` with its URL, and a comment that gives the reason. ([Microsoft Learn: Excluding advisories](https://learn.microsoft.com/nuget/concepts/auditing-packages#excluding-advisories))
   - Never use the documented shortcut, `<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>`. It turns the vulnerability errors back into warnings, which are the warnings that cost most to ignore. ([Microsoft Learn: NuGet Warnings NU1901, NU1902, NU1903, NU1904](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1901-nu1904))
@@ -42,12 +45,6 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
   - Under Central Package Management, set both on the `PackageReference`, never the `PackageVersion`. A `PackageVersion` holds a package ID and version. For tooling that every project uses, add a `GlobalPackageReference` to `Directory.Packages.props` instead, which gets `PrivateAssets="All"` implicitly. NuGet 7.9 fixed a bug in which `dotnet add package` wrote `PrivateAssets` to the `PackageVersion` item. ([Microsoft Learn: Central Package Management](https://learn.microsoft.com/nuget/consume-packages/central-package-management#global-package-references), [Microsoft Learn: NuGet 7.9 Release Notes](https://learn.microsoft.com/nuget/release-notes/nuget-7.9))
 
   A package that's mostly build logic needs more asset types than these, so rebuild and re-test after you tighten a reference. ([Meziantou: Limit what NuGet packages can do in your project](https://www.meziantou.net/limit-what-nuget-packages-can-do-in-your-project.htm))
-
-/// house | simon-mckenna
-
-**House:** Treat warnings as errors on every machine, not only in CI. A warning that fails CI but not your local build reaches a pull request before anyone sees it. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too. Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none. Two roster sources set the property the same way, with no CI condition, in the root `Directory.Build.props`. ([Abuhakmeh: Directory.Build.props: Share Settings Across .NET Projects](https://khalidabuhakmeh.com/posts/directory-build-props-share-settings-across-dotnet-projects/), [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md))
-
-///
 
 ## Pipeline shape
 

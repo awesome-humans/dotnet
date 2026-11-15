@@ -1,6 +1,6 @@
 ---
 targets: [net11.0, csharp-15, fsharp-11]
-last-reviewed: 2026-11-14
+last-reviewed: 2026-11-15
 sources:
   [
     aaron-stannard,
@@ -48,12 +48,6 @@ Use one solution format and Central Package Management, and pin versions at the 
     <!-- Verified: `dotnet new webapi` beside the templates fails its restore with NU1008 on SDK 11.0.100 (2026-11-15) -->
 - **Put shared build settings in `Directory.Build.props`:** the TFM, `LangVersion` set to latest, nullable enabled, analyzers on, and warnings as errors. Copy [templates/Directory.Build.props](../templates/Directory.Build.props). A setting that depends on a property the project file sets, such as `IsPackable`, goes in [templates/Directory.Build.targets](../templates/Directory.Build.targets), which MSBuild imports after the project file. Project files are then nearly empty, as in [templates/projects/](../templates/projects/). ([Microsoft Learn: Customize the build by folder](https://learn.microsoft.com/visualstudio/msbuild/customize-by-directory))
 - **Set `<IsPackable>true</IsPackable>` in the project file of every library that ships as a NuGet package.** MSBuild's default is `true`, but [templates/Directory.Build.props](../templates/Directory.Build.props) sets it to `false`, so `dotnet pack` skips every project that doesn't opt in. The same property keeps MA0004 on for the library, as [runtime-performance.md: Async](runtime-performance.md#async) describes. ([Microsoft Learn: NuGet pack and restore as MSBuild targets](https://learn.microsoft.com/nuget/reference/msbuild-targets))
-
-/// house | simon-mckenna
-
-**House:** Warnings as errors is always on, not only in CI. You can suppress a warning, but only with an inline comment that says why. [ci.md](ci.md) holds the canonical statement.
-
-///
 
 - **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))

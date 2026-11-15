@@ -6,7 +6,7 @@
 //
 //     /// house | simon-mckenna
 //
-//     **House:** Treat warnings as errors on every machine, not only in CI. …
+//     **House:** Leave the bot's dependency dashboard issue open. …
 //
 //     ///
 //

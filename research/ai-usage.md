@@ -36,7 +36,7 @@ Building AI features into .NET applications is a separate question, noted at the
 No opinion mentions AI, but three already contain most of the guardrails:
 
 - **[ci.md](../opinions/ci.md)** opens with "Treat supply-chain security as a requirement": SHA-pinned actions, a pinned SDK and packages, and limits on which package assets can run at build time.
-- **House:** Warnings are errors on every machine, and every suppression has an inline comment that says why ([ci.md](../opinions/ci.md)). It's local convention, not community consensus, and it's the rule aimed most directly at an agent that silences a warning to get a green build.
+- **[ci.md](../opinions/ci.md)** also makes warnings errors in every build, and asks for a comment that says why on every suppression. That's the rule aimed most directly at an agent that silences a warning to get a green build.
 - **[csharp.md](../opinions/csharp.md)** makes nullable warnings errors, and sets analyzers to `latest-recommended` with `EnforceCodeStyleInBuild`, so the compiler rejects more agent mistakes before review.
 - **[testing.md](../opinions/testing.md)** holds tests to the same review standard as production code, which agent-written tests tend to miss.
 
@@ -50,7 +50,7 @@ No opinion mentions AI, but three already contain most of the guardrails:
   **Limit:** `mark-seemann`'s notes say to cite his C# and .NET posts, and both of these are language-agnostic. Stannard's .NET report of the same failure is what makes the argument citable.
 - Jeremy Miller reports the productive side after two weeks of Claude Code on Marten and Wolverine: "great when you have very detailed compliance test frameworks that the AI tools can use to verify the completion of the work". ([Miller: 2 Weeks of Claude Code for Me](https://jeremydmiller.com/2026/02/14/2-weeks-of-claude-code-for-me/), 2026-02-14, `jeremy-miller`, **Corroborate.**)
   All three agree on substance: the guardrail is checks the agent didn't write. They differ in temperament: Miller and Stannard welcome the throughput, and Seemann doubts that the output deserves trust.
-- Stannard's [dotnet-slopwatch](https://github.com/Aaronontheweb/dotnet-slopwatch) flags the shortcuts an agent takes to reach green: skipped tests, `#pragma warning disable`, `<NoWarn>`, empty `catch` blocks, `Task.Delay` in tests, and inline versions that bypass Central Package Management. **Conflict:** It's his own tool, which his notes flag wherever it's named. It overlaps the **House:** suppression rule, with one difference: the house allows a suppression that gives its reason, and slopwatch flags every one against a baseline.
+- Stannard's [dotnet-slopwatch](https://github.com/Aaronontheweb/dotnet-slopwatch) flags the shortcuts an agent takes to reach green: skipped tests, `#pragma warning disable`, `<NoWarn>`, empty `catch` blocks, `Task.Delay` in tests, and inline versions that bypass Central Package Management. **Conflict:** It's his own tool, which his notes flag wherever it's named. [ci.md](../opinions/ci.md) cites the skill for its suppression rule, with one difference: the opinion allows a suppression that gives its reason, and slopwatch flags every one against a baseline.
 
 **A direct disagreement with `csharp.md`.**
 Stannard found the `.editorconfig` checks "were largely worthless and burned millions of tokens over 1-2 months on trivial issues like whether or not there was an extra line ending in each `.cs` file. I removed that check entirely."
@@ -140,7 +140,7 @@ Four worker claims failed that check and are left out:
 
 **Where the pack stays on principle, it agrees.** `aot-trimming` matches [runtime-performance.md: Native AOT](../opinions/runtime-performance.md) and the source-generated JSON advice in `testing.md`.
 `csharp-type-design-performance` matches its `ValueTask` and `FrozenDictionary` guidance, and `csharp-concurrency-patterns` its rules on blocking and `ConfigureAwait`.
-`efcore-patterns` matches `data-access.md` on `ExecuteUpdateAsync`, `r3-reactive-extensions` matches [datetime.md](../opinions/datetime.md) on `TimeProvider` and `FakeTimeProvider` exactly, and `slopwatch` matches the **House:** suppression rule.
+`efcore-patterns` matches `data-access.md` on `ExecuteUpdateAsync`, `r3-reactive-extensions` matches [datetime.md](../opinions/datetime.md) on `TimeProvider` and `FakeTimeProvider` exactly, and `slopwatch` matches the suppression rule in [ci.md](../opinions/ci.md).
 
 **Gaps the pack covers and the opinions don't.**
 These are harvest leads, not guidance. A skill Stannard wrote is citable as `aaron-stannard` for its principle, but several of these came from other authors, and none of the samples are compiled.
