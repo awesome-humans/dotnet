@@ -29,8 +29,10 @@
          package has no net11.0 tool (opinions/aspnet-core.md, Review by 2027-02-28). -->
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="11.0.0" />
-    <!-- Redaction of classified data in logs (opinions/logging.md). -->
+    <!-- Redaction of classified data in logs: the redactors, and below, the logging side that
+         EnableRedaction comes from (opinions/logging.md). -->
     <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Validation" Version="11.0.0" />
     <!-- Runtime packages for a Kiota client generated at build time (opinions/aspnet-core.md). -->
     <PackageVersion Include="Microsoft.Kiota.Bundle" Version="2.1.6" />

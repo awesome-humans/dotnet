@@ -76,7 +76,7 @@ public class BasketTests
   }
   ```
 
-  Don't use `<TestingPlatformDotnetTestSupport>` instead. It belongs to "VSTest mode": it makes Microsoft.Testing.Platform.MSBuild redirect the `VSTest` target to run MTP applications, and it causes the error above under MTP v2. MSTest and NUnit also run on MTP. ([Microsoft Learn: Testing with dotnet test](https://learn.microsoft.com/dotnet/core/testing/unit-testing-with-dotnet-test), [Microsoft Learn: Microsoft.Testing.Platform overview](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro))
+  Don't use `<TestingPlatformDotnetTestSupport>` instead. It belongs to "VSTest mode": it makes Microsoft.Testing.Platform.MSBuild redirect the `VSTest` target to run MTP applications, which MTP v2 no longer supports on the .NET 10 SDK and later. Setting it doesn't select MTP mode, so the error above stays. With the opt-in, remove the property, "as it's no longer required". MSTest and NUnit also run on MTP. ([Microsoft Learn: Testing with dotnet test](https://learn.microsoft.com/dotnet/core/testing/unit-testing-with-dotnet-test), [Microsoft Learn: Microsoft.Testing.Platform overview](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro))
 
   ```xml
   <Project Sdk="Microsoft.NET.Sdk">

@@ -86,7 +86,8 @@ using System.Buffers;
 
 static async Task<long> CountLinesAsync(Stream source, CancellationToken cancellationToken = default)
 {
-    // Counts 0x0A bytes, so the text has to be UTF-8 or another ASCII-compatible encoding.
+    // Counts 0x0A bytes, so the text has to be UTF-8 or another ASCII-compatible encoding,
+    // with lines that end in LF or CRLF. A bare CR isn't counted as a line ending.
     const byte Newline = (byte)'\n';
     long lines = 0;
     byte last = Newline;
