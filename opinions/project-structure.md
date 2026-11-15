@@ -49,12 +49,6 @@ Use one solution format and Central Package Management, and pin versions at the 
 - **Put shared build settings in `Directory.Build.props`:** the TFM, `LangVersion` set to latest, nullable enabled, analyzers on, and warnings as errors. Copy [templates/Directory.Build.props](../templates/Directory.Build.props). A setting that depends on a property the project file sets, such as `IsPackable`, goes in [templates/Directory.Build.targets](../templates/Directory.Build.targets), which MSBuild imports after the project file. Project files are then nearly empty, as in [templates/projects/](../templates/projects/). ([Microsoft Learn: Customize the build by folder](https://learn.microsoft.com/visualstudio/msbuild/customize-by-directory))
 - **Set `<IsPackable>true</IsPackable>` in the project file of every library that ships as a NuGet package.** MSBuild's default is `true`, but [templates/Directory.Build.props](../templates/Directory.Build.props) sets it to `false`, so `dotnet pack` skips every project that doesn't opt in. The same property keeps MA0004 on for the library, as [runtime-performance.md: Async](runtime-performance.md#async) describes. ([Microsoft Learn: NuGet pack and restore as MSBuild targets](https://learn.microsoft.com/nuget/reference/msbuild-targets))
 
-/// house | simon-mckenna
-
-**House:** Suppress a warning only with an inline comment that says why. [ci.md](ci.md) holds the canonical statement.
-
-///
-
 - **Run one-off tools with `dotnet tool exec` or `dnx` instead of installing them globally.** `dnx` ignores the SDK selection in `global.json`. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Microsoft Learn: Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use file-based apps (`dotnet run app.cs`) for scripts and samples instead of throwaway console projects.** They support publishing and Native AOT. ([Microsoft Learn: What's new in the .NET 10 SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
 - **Target the latest release, LTS or STS.** That's this repository's freshness policy. .NET 11 is an STS release, supported until 2028-11-14. .NET 10, the LTS release before it, ends support on the same day. ([Microsoft: .NET Support Policy](https://dotnet.microsoft.com/platform/support/policy/dotnet-core))

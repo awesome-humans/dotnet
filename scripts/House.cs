@@ -6,7 +6,7 @@
 //
 //     /// house | simon-mckenna
 //
-//     **House:** Every suppression … needs an inline comment that says why. …
+//     **House:** Leave the bot's dependency dashboard issue open. …
 //
 //     ///
 //
