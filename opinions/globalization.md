@@ -72,7 +72,7 @@ Turning it on costs you:
 
 ([Microsoft Learn: Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization), [Microsoft Learn: Globalization and ICU](https://learn.microsoft.com/dotnet/core/extensions/globalization-icu))
 
-### Pin ICU only when reproducible comparison beats current comparison
+### Pin ICU only when a sort order is part of your contract
 
 **Use the system ICU unless you have a stated reason not to.** .NET has used ICU on every platform since .NET 5, including Windows, which ships `icu.dll`. The alternatives, from most to least often right:
 
