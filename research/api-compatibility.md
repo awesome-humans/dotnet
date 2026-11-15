@@ -77,7 +77,7 @@ Three tools write the surface into the repository, and they differ in where the 
 **Recommendation: PublicApiAnalyzers, against Lock's preference.**
 His objections: "I find it tedious that the analyzer breaks the build _every_ time I add a public type", the Shipped/Unshipped split seems "completely unnecessary", and PublicApiGenerator's output "looks a lot like 'normal' C#."
 The first objection is the reason to choose the analyzer here.
-The **House:** rule already makes warnings errors on every machine, and a new public member is a commitment that deserves one deliberate line in a file.
+[ci.md](../opinions/ci.md) already makes warnings errors in every build, and a new public member is a commitment that deserves one deliberate line in a file.
 The Shipped/Unshipped split records which additions haven't been released, and so can still change.
 RS0036 and RS0037 also track nullable annotations in the surface.
 If you share Lock's taste but want the check outside the test run, use Meziantou's generator.

@@ -6,7 +6,7 @@
 //
 //     /// house | simon-mckenna
 //
-//     **House:** Treat warnings as errors on every machine, not only in CI. …
+//     **House:** Every suppression … needs an inline comment that says why. …
 //
 //     ///
 //

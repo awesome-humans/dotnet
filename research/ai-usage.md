@@ -36,7 +36,7 @@ Building AI features into .NET applications is a separate question, noted at the
 No opinion mentions AI, but three already contain most of the guardrails:
 
 - **[ci.md](../opinions/ci.md)** opens with "Treat supply-chain security as a requirement": SHA-pinned actions, a pinned SDK and packages, and limits on which package assets can run at build time.
-- **House:** Warnings are errors on every machine, and every suppression has an inline comment that says why ([ci.md](../opinions/ci.md)). It's local convention, not community consensus, and it's the rule aimed most directly at an agent that silences a warning to get a green build.
+- **House:** Every suppression of a warning has an inline comment that says why ([ci.md](../opinions/ci.md)). It's local convention, not community consensus, and it's the rule aimed most directly at an agent that silences a warning to get a green build. The sourced text beside it makes warnings errors in every build.
 - **[csharp.md](../opinions/csharp.md)** makes nullable warnings errors, and sets analyzers to `latest-recommended` with `EnforceCodeStyleInBuild`, so the compiler rejects more agent mistakes before review.
 - **[testing.md](../opinions/testing.md)** holds tests to the same review standard as production code, which agent-written tests tend to miss.
 

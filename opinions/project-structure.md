@@ -1,6 +1,6 @@
 ---
 targets: [net11.0, csharp-15, fsharp-11]
-last-reviewed: 2026-11-14
+last-reviewed: 2026-11-15
 sources:
   [
     aaron-stannard,
@@ -49,7 +49,7 @@ Use one solution format and Central Package Management, and pin versions at the 
 
 /// house | simon-mckenna
 
-**House:** Warnings as errors is always on, not only in CI. You can suppress a warning, but only with an inline comment that says why. [ci.md](ci.md) holds the canonical statement.
+**House:** Suppress a warning only with an inline comment that says why. [ci.md](ci.md) holds the canonical statement.
 
 ///
 

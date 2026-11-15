@@ -1,6 +1,6 @@
 ---
 targets: [net11.0]
-last-reviewed: 2026-11-14
+last-reviewed: 2026-11-15
 sources:
   [
     aaron-stannard,
@@ -29,6 +29,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
   Mapping filters restore and nothing else: `dotnet package add` still reaches any configured source. ([Microsoft Learn: Package Source Mapping](https://learn.microsoft.com/nuget/consume-packages/package-source-mapping)) A repository that restores only from nuget.org gains little: with one source, a same-named package has no second feed to come from.
 
+- **Treat warnings as errors in every build, with no CI condition.** Set `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` in the root `Directory.Build.props`, as [templates/Directory.Build.props](../templates/Directory.Build.props) does, so a warning fails on the machine that introduces it. Stannard enables it "because this prevents all sorts of rot from setting into the code base (i.e. NuGet package vulnerability warnings and deprecations have to be addressed immediately)". His project-structure skill and Abuhakmeh's typical `Directory.Build.props` both set it with no `Condition`. ([Stannard: Software 2.0: Planning and Verifying a Greenfield Project](https://aaronstannard.com/software-2.0-case-study-textforge/), [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md), [Abuhakmeh: Directory.Build.props: Share Settings Across .NET Projects](https://khalidabuhakmeh.com/posts/directory-build-props-share-settings-across-dotnet-projects/))
 - **Treat vulnerability warnings as build errors everywhere.** NuGet Audit runs during restore, and "`NuGetAuditMode` defaults to `all` when a project targets `net10.0` or higher", so it checks the whole graph. ([Microsoft Learn: Auditing package dependencies for security vulnerabilities](https://learn.microsoft.com/nuget/concepts/auditing-packages)) `TreatWarningsAsErrors`, which [templates/Directory.Build.props](../templates/Directory.Build.props) sets, turns NU1901 to NU1904 into errors. Restore then fails on the day an advisory lands, even if nobody changed the graph. That's intended: triaging the advisory is the first step in servicing the branch.
   - To suppress one advisory, add `NuGetAuditSuppress` with its URL, and a comment that gives the reason. ([Microsoft Learn: Excluding advisories](https://learn.microsoft.com/nuget/concepts/auditing-packages#excluding-advisories))
   - Never use the documented shortcut, `<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>`. It turns the vulnerability errors back into warnings, which are the warnings that cost most to ignore. ([Microsoft Learn: NuGet Warnings NU1901, NU1902, NU1903, NU1904](https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1901-nu1904))
@@ -45,7 +46,7 @@ Treat supply-chain security as a requirement. Agents now write and run much of t
 
 /// house | simon-mckenna
 
-**House:** Treat warnings as errors on every machine, not only in CI. A warning that fails CI but not your local build reaches a pull request before anyone sees it. [templates/Directory.Build.props](../templates/Directory.Build.props) sets `TreatWarningsAsErrors` unconditionally, so warnings fail the build locally too. Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none. Two roster sources set the property the same way, with no CI condition, in the root `Directory.Build.props`. ([Abuhakmeh: Directory.Build.props: Share Settings Across .NET Projects](https://khalidabuhakmeh.com/posts/directory-build-props-share-settings-across-dotnet-projects/), [Stannard: project-structure](https://github.com/Aaronontheweb/dotnet-skills/blob/master/skills/project-structure/SKILL.md))
+**House:** Every suppression, whether `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry, needs an inline comment that says why. Revert a suppression that has none.
 
 ///
 
