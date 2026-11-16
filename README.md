@@ -123,6 +123,7 @@ In this repository, each house opinion is a marked block beside the sourced text
 │   └── validate-template-order.cs
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
+│   ├── BannedSymbols.txt
 │   ├── Directory.Build.props
 │   ├── Directory.Build.targets
 │   ├── Directory.Packages.props
