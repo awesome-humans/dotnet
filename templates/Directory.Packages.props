@@ -21,12 +21,12 @@
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <!-- Held at 10.0.15, not latest stable, until Asp.Versioning.OpenApi ships for .NET 11.
          10.2.3 needs Microsoft.OpenApi below 3.0.0, and 11.0.0 of this package needs 3.11.0
-         or later, so restore fails with NU1107 (opinions/aspnet-core.md, Review by 2027-02-28). -->
+         or later, so restore fails with NU1107. See opinions/aspnet-core.md. Review by 2027-02-28. -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" />
     <!-- Writes the OpenAPI document during the build. It works only beside
          Microsoft.AspNetCore.OpenApi 11.0.0, so a project that uses it also sets
          VersionOverride="11.0.0" on that reference while the pin above is held. 10.0.15 of this
-         package has no net11.0 tool (opinions/aspnet-core.md, Review by 2027-02-28). -->
+         package has no net11.0 tool. See opinions/aspnet-core.md. Review by 2027-02-28. -->
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="11.0.0" />
     <!-- Redaction of classified data in logs: the redactors, and below, the logging side that
