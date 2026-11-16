@@ -52,9 +52,10 @@
          CancellationToken forwarding, and async pitfalls (opinions/csharp.md). The version is
          pinned in Directory.Packages.props. -->
     <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
-    <!-- Fails every use of StringComparison.InvariantCulture and InvariantCultureIgnoreCase.
-         CA1309 reports them only in Equals and Compare. BannedSymbols.txt, beside this file,
-         lists them (opinions/globalization.md). -->
+    <!-- Fails the build on every use of StringComparison.InvariantCulture and
+         InvariantCultureIgnoreCase, which BannedSymbols.txt, beside this file, lists. The
+         .NET SDK's own check for them (CA1309) looks only at Equals and Compare
+         (opinions/globalization.md). -->
     <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" PrivateAssets="all" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" />
   </ItemGroup>
