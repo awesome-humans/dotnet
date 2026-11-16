@@ -39,7 +39,7 @@ Use one solution format and Central Package Management, and pin versions at the 
   }
   ```
 
-  **Review by 2027-03-31.** The example pins .NET 11 RC 2, a real version of a release that has since shipped, because no .NET 12 preview exists yet. When .NET 12 Preview 1 ships, replace both version strings with its SDK version, and drop this note.
+  The example pins .NET 11 RC 2, a real version of a release that has since shipped, because no .NET 12 preview exists yet. When .NET 12 Preview 1 ships, replace both version strings with its SDK version, and drop this note. **Review by 2027-03-31.**
 
   `dotnet new gitignore` doesn't ignore `.dotnet/`, because it covers build output and a local SDK is a build _prerequisite_. `dotnet/runtime`, `dotnet/aspnetcore`, `dotnet/sdk`, and `dotnet/maui` each add the rule by hand. When you adopt `sdk.paths`, add `.dotnet/` to the repository-specific block of `.gitignore` described below.
 

@@ -35,7 +35,7 @@ Report at most five Nits per review, the ones a reader would notice first. Writi
 
 - An opinion and every template that encodes it change in the same pull request.
 - `last-reviewed` changes only where the content was checked against its sources in the same pull request.
-- A transition note opens with `**Review by YYYY-MM-DD.**`, and the date is in the future.
+- A transition note says what ends it and closes with `**Review by YYYY-MM-DD.**`, and the date is in the future.
 - An opinion gives one recommendation. A second option gets at most one line on the cost that rules it out.
 - A pull request that changes a skill or lifecycle also updates its diagram in `scripts/export-diagrams.cs`.
 
