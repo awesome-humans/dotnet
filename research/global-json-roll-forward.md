@@ -153,9 +153,9 @@ The `latestPatch` row is safe only when the band is still supported **and** has 
 ## A disagreement to record
 
 Current documentation says that when `version` is set and `rollForward` is omitted, the default is **`patch`**.
-Several secondary write-ups still say `latestPatch`, the historical default.
-The docs win. The practical lesson: set `rollForward` explicitly instead of relying on a default that has changed.
-([Microsoft Learn: global.json overview, Matching rules](https://learn.microsoft.com/dotnet/core/tools/global-json#matching-rules))
+Several secondary write-ups still say `latestPatch`, which the same page said until a correction in April 2025.
+Follow the docs: the correction changed the page, not the SDK, whose default was already `patch`. The practical lesson: set `rollForward` explicitly instead of relying on a default that its own documentation misstated.
+([Microsoft Learn: global.json overview, Matching rules](https://learn.microsoft.com/dotnet/core/tools/global-json#matching-rules), [dotnet/docs#44996: Correct default rollForward policy in global.json documentation](https://github.com/dotnet/docs/pull/44996))
 
 ## What this reveals about the repository
 

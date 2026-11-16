@@ -427,7 +427,7 @@ The second pass set `ms-learn` against `mark-seemann` and `jeremy-miller`. With 
 
 **Weigh towards `mark-seemann`, `jeremy-miller`, and the later `ardalis`, who now point the same way.** They're more recent, and one is unmarked and independent. On what the named architectures are, the critic and the advocate agree: Seemann's "Layers, Onions, Ports, Adapters: it is all the same" and Ardalis's "Clean Architecture, aka Ports-and-Adapters" say the same thing. The `ms-learn` page holds the old position: 2021 text from a 2018 e-book that describes an unmodularised monolith, where layers are the only boundary available.
 
-They still differ on scope. Seemann and Miller would remove the application layer at any scale. The later Ardalis keeps it, and chooses per application by complexity. None of them supports layering inside each slice, which is what `architecture.md` says, so its headline loses on all three readings.
+They still differ on scope. Seemann and Miller would remove the application layer at any scale. The later Ardalis keeps it, and chooses per application by complexity. None of them supports layering inside each slice, which is what `architecture.md` says, so none of the three readings supports its headline.
 
 **Commands across boundaries: avoid them, or insist on them.** `derek-comartin` says generally avoid crossing boundaries with commands. `oskar-dudycz` says an event with one known consumer that expects a reply should have been a command. Neither is wrong. They disagree about which failure is more common: Comartin guards against modules directing each other, and Dudycz against events used to look decoupled while the coupling stays.
 
