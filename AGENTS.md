@@ -29,7 +29,7 @@ When you generate or review .NET code for another project:
 - **Don't fold in guidance from unvetted sources.** Propose the source for admission with the `vet-source` skill instead. Linking a named package's own documentation as a **reference** doesn't count. A reference supports a **reference fact** without a roster source, and only corroborates a choice or a judgement. For all three definitions, see [awesome-humans/website: Admission criteria](https://github.com/awesome-humans/website/blob/main/pages/conventions/admission-criteria.md#reserved-ids-markings-and-references).
 - **Target the latest released .NET, C#, and F# versions.** You can mention a preview in a clearly marked "Coming next" note, but never make it the opinion.
 - **Use a skill instead of an ad hoc edit when one covers the work,** such as a version bump (`refresh-dotnet-versions`), a content scan (`harvest-sources`), or a staleness check (`audit-freshness`). [README.md: Maintenance via skills](README.md#maintenance-via-skills) lists them all.
-- **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on why it lost.
+- **Keep opinions opinionated.** Give one recommendation, not a menu. An alternative gets at most one line on the cost that rules it out.
 - **List every new file under `opinions/` in `README.md`, in two places:**
   - A bullet under [Scope](README.md#scope), in the form `- **[Title](opinions/<file>.md):** one line on what it covers`. Sort the bullets by title, ignoring case, and keep the unlinked **Libraries** bullet last.
   - An entry in the [Repository layout](README.md#repository-layout) tree, sorted by file name.

@@ -123,7 +123,7 @@ Merge updates only through the pipeline above. An update that skips locked resto
 
 - **It's the only list of pending updates.** Updates that `prConcurrentLimit` delays, or that a failing branch blocks, appear nowhere else. Its checkboxes trigger an off-schedule run without a configuration change.
 - **It's where you approve gated updates.** With `dependencyDashboardApproval` set, Renovate opens a pull request only after you tick the update's box on the dashboard.
-- **`dependencyDashboardAutoclose` lost.** It closes the issue whenever nothing is pending. A new issue every cycle costs more attention than one that stays open, and the closed issue hides a growing backlog.
+- **Leave `dependencyDashboardAutoclose` off.** It closes the issue whenever nothing is pending. A new issue every cycle costs more attention than one that stays open, and the closed issue hides a growing backlog.
 - If a stale-issue bot flags the dashboard, exempt it by label.
 
 Two rules keep the dashboard useful as a repository grows:
