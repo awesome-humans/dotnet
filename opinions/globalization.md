@@ -60,6 +60,14 @@ With `TreatWarningsAsErrors` on, a missing `StringComparison` fails the build. M
 
 **Ban the two invariant comparisons with `Microsoft.CodeAnalysis.BannedApiAnalyzers`, because CA1309 checks only `Equals` and `Compare`.** On SDK 11.0.100, neither CA1309 nor Meziantou.Analyzer 3.0.340 reports `StringComparison.InvariantCulture` in `StartsWith`, `EndsWith`, `IndexOf`, or `Contains`. [templates/BannedSymbols.txt](../templates/BannedSymbols.txt) bans both enum fields, so RS0030 reports every use, whatever the call. [templates/Directory.Build.props](../templates/Directory.Build.props) adds the package and passes the file to every project. Keep the file beside `Directory.Build.props`, at the repository root. ([Roslyn: BannedApiAnalyzers](https://github.com/dotnet/roslyn/blob/main/src/RoslynAnalyzers/Microsoft.CodeAnalysis.BannedApiAnalyzers/BannedApiAnalyzers.Help.md), [Microsoft Learn: CA1309](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309))
 
+```csharp
+// CA1309 reports this one
+if (string.Equals(header, "application/json", StringComparison.InvariantCultureIgnoreCase))
+
+// CA1309 and Meziantou.Analyzer stay silent, and only RS0030 reports it
+if (header.StartsWith("application/", StringComparison.InvariantCultureIgnoreCase))
+```
+
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
 
 **Make invariant mode its own decision, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU and use built-in invariant data. That saves size and startup time for a service with no localized output. It's a mistake when nobody chose it, and it usually arrives with an unrelated decision.
