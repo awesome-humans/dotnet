@@ -34,7 +34,9 @@ Don't trust the `amr` claim after a passkey sign-in. .NET 10 sets it to `pwd` in
 
 Drop this note when a shipped release fixes the issue.
 
-([Bowden: Set the amr claim when using passkeys authentication in ASP.NET Core](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/)) **Review by 2027-11-30.**
+([Bowden: Set the amr claim when using passkeys authentication in ASP.NET Core](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/))
+
+**Review by 2027-11-30.**
 
 ### Authorization by default
 
