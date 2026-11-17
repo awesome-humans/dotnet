@@ -59,7 +59,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 
 Opinions target the latest released .NET, C#, and F#, never an older LTS release. Preview features appear only in "Coming next" notes. The [skills](#maintenance-via-skills) move the repository to each new version.
 
-Every resource records when it was last reviewed against its sources. [AGENTS.md: Metadata](AGENTS.md#metadata) defines the fields, and CI enforces them.
+Every resource records when it was last reviewed against its sources. [agents/metadata.md](agents/metadata.md) defines the fields, and CI enforces them.
 
 ## Awesome humans
 
@@ -91,6 +91,7 @@ In this repository, each house opinion is a marked block beside the sourced text
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── HOUSE-OPINIONS.md         ← house profiles' opinions: intake and audit trail
+├── agents/                   ← on-demand agent instructions that AGENTS.md indexes
 ├── assets/diagrams/          ← generated SVG diagrams: rerun the script, never edit by hand
 ├── justfile                  ← every local and CI entry point: run `just` to list them
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed

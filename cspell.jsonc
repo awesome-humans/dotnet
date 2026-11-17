@@ -4,7 +4,7 @@
   // read this file too, so the editor and CI flag the same words.
   "version": "0.2",
 
-  // British spelling, per AGENTS.md: Spelling. en-US would flag every
+  // British spelling, per AGENTS.md: Writing style. en-US would flag every
   // "behaviour"; the flagWords below catch the American forms en-GB misses.
   "language": "en-GB",
   "dictionaries": [

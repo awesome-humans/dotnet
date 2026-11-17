@@ -1,4 +1,4 @@
-# Every local and CI entry point (AGENTS.md: Scripts). CI calls these recipes, never npm or
+# Every local and CI entry point (agents/checks.md: Scripts). CI calls these recipes, never npm or
 # dotnet directly, so a check runs the same way on every machine. Run `just` to list them.
 
 set shell := ["bash", "-euo", "pipefail", "-c"]

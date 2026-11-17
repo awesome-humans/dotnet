@@ -40,7 +40,7 @@ internal static class CommentHeader
         string[] buildOutput = ["artifacts", "bin", "obj"];
 
         // JSON has no comment syntax, so templates/global.json and the .slnf filter can't hold
-        // a header at all. Exactly those two are exempt, the same list AGENTS.md documents, so a
+        // a header at all. Exactly those two are exempt, the same list agents/metadata.md documents, so a
         // headerless JSON file added anywhere else under templates/ fails loudly rather than
         // silently escaping validation. What the two pin is audited against the latest releases
         // instead (skills/audit-freshness/SKILL.md).
