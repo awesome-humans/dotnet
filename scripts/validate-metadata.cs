@@ -10,7 +10,7 @@
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
 
-// Verifies that every resource has the metadata fields AGENTS.md requires
+// Verifies that every resource has the metadata fields agents/metadata.md requires
 // (targets, last-reviewed, and sources), that the dates are ISO 8601, and that each
 // sources list is in ordinal order.
 //
@@ -44,7 +44,7 @@ string[] required = ["targets", "last-reviewed", "sources"];
 // last-used is retired everywhere: whether a resource is still referenced is read from
 // the repository by audit-freshness, not stored. A research topic also must not have a
 // status: a topic on disk is unresolved by definition, and deletion is the only
-// promotion signal (AGENTS.md). Both are rejected rather than ignored, so the retired
+// promotion signal (agents/metadata.md). Both are rejected rather than ignored, so the retired
 // shapes can't come back.
 string[] forbidden = ["last-used"];
 string[] researchForbidden = ["last-used", "status"];
@@ -123,7 +123,7 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsFo
         }
     }
 
-    // AGENTS.md: a sources list is sorted by ID, `house` included. One order means two
+    // agents/metadata.md: a sources list is sorted by ID, `house` included. One order means two
     // edits that add the same source land on the same line, and a reader scanning for an
     // ID knows where to look.
     if (fields.Contains("sources") && SourceIds(fields["sources"]) is string[] ids)
@@ -172,7 +172,7 @@ static string[]? SourceIds(object? value) => value switch
     _ => null,
 };
 
-// AGENTS.md: dates are ISO 8601, always absolute, never relative. An exact parse is
+// agents/metadata.md: dates are ISO 8601, always absolute, never relative. An exact parse is
 // what rejects "yesterday" and "August 2026" as well as 20-08-2026.
 static bool IsIsoDate(string text) =>
     DateOnly.TryParseExact(text, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);

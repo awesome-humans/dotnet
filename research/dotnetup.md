@@ -146,7 +146,7 @@ Apart from the review date, every sentence in it has a citable source above. The
 1. **[project-structure.md](../opinions/project-structure.md) says how to pin the SDK, and never how to install it.** Microsoft Learn's GA answer for a development machine is an installer or a package manager, not `dotnet-install`. The note above states it, and the opinion could state it without dotnetup.
 2. **The preview-SDK bullet is current.** It matches Microsoft Learn's page, and its `[".dotnet", "$host$"]` order is the one dotnetup's preview can read. [ui-frameworks.md](../opinions/ui-frameworks.md) points at the same bullet and needs no change.
 3. **The bullet's example version is out of date for another reason.** It uses `11.0.100-preview.1.25000.1`, and .NET 11 reached GA on 2026-11-10. That belongs to `refresh-dotnet-versions`, not to this topic.
-4. **A comment header on `templates/global.json` would break dotnetup's preview.** [global-json-roll-forward.md](global-json-roll-forward.md) notes that `global.json` allows comments, against the reason [AGENTS.md](../AGENTS.md) gives for exempting the file. Keep the exemption until dotnetup parses comments.
+4. **A comment header on `templates/global.json` would break dotnetup's preview.** [global-json-roll-forward.md](global-json-roll-forward.md) notes that `global.json` allows comments, against the reason [agents/metadata.md](../agents/metadata.md) gives for exempting the file. Keep the exemption until dotnetup parses comments.
 
 **Recommended next step:** `resolve-research`, to partly promote this topic: the "Coming next" note now, and the rest when dotnetup reaches GA.
 

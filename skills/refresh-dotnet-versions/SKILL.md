@@ -22,7 +22,7 @@ The `.github/workflows/dotnet-release-watch.yml` workflow checks the official re
 
 ## Orchestration
 
-As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, delegate the web lookups to worker agents: the version checks in step 1, the nuget.org lookups in step 4b, the action release lookups in step 4c, and the "What's new" reading in step 5. Only the editor decides what changes, and edits `opinions/` and `templates/`.
+As [agents/orchestration.md](../../agents/orchestration.md) describes, delegate the web lookups to worker agents: the version checks in step 1, the nuget.org lookups in step 4b, the action release lookups in step 4c, and the "What's new" reading in step 5. Only the editor decides what changes, and edits `opinions/` and `templates/`.
 
 ## Steps
 
@@ -34,7 +34,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
 2. **Compare with the current targets:** the `targets:` metadata in `opinions/`, the version pins in `templates/`, and the root `global.json`. The template pins are the `global.json` SDK version, `<TargetFramework>` in project files, and `<LangVersion>` if it's pinned.
    - If everything matches, the framework part has nothing to do. Say so, and **still run steps 4b and 4c**, because package and action pins drift on their own schedule. Check step 4a for a band the repository now needs.
    - Report "up to date" and stop only when those checks find nothing too.
-3. **Start a worktree** on the branch `refresh/dotnet-<version>`, following the rules in [AGENTS.md](../../AGENTS.md).
+3. **Start a worktree** on the branch `refresh/dotnet-<version>`, following the rules in [agents/worktrees.md](../../agents/worktrees.md).
 4. **Update the template files** under `templates/`: the TFMs in the example projects, and anything else pinned to a version. Then update the three kinds of pin that drift independently of a .NET release:
    - **4a. The SDK minimum in both `global.json` files.** On a major release, move both to that major's first band, such as `11.0.100`. Between majors, leave `sdk.version` alone unless the repository needs something from a newer feature band.
      - The value is a minimum. With `"rollForward": "latestFeature"`, it accepts that version or any later band and patch on the machine, so new bands arrive without an edit.
@@ -65,7 +65,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - Treat "0 tests ran, exit code 0" as a failure. It's what a test project reports after losing its runner configuration.
    - Without an SDK, flag the samples as unverified in the pull request.
 7. **If the source roster changed, record it** in the `AWESOME-HUMANS.md` decision log. Otherwise, summarise the run in the pull request.
-8. **Open a pull request** to the default branch, filling in the [`version-refresh.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/version-refresh.md) template, as [AGENTS.md](../../AGENTS.md) describes. It lists:
+8. **Open a pull request** to the default branch, filling in the [`version-refresh.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/version-refresh.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. It lists:
    - The versions before and after: the framework, the SDK band, each package pin, and each action pin that changed.
    - The opinions that changed, and the ones verified as unchanged.
    - Whether the samples built and tested.

@@ -1,6 +1,6 @@
 {
   // Markdown linting for this repository. Run it with `just lint` or `just check`, which use
-  // the version pinned in package.json. Never use `npx markdownlint-cli2` (AGENTS.md).
+  // the version pinned in package.json. Never use `npx markdownlint-cli2` (agents/checks.md).
   // Formatting is prettier's job (--prose-wrap preserve); this file only turns
   // off the rules that conflict with that or misfire on our content.
   "config": {
