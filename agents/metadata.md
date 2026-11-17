@@ -1,12 +1,6 @@
 # Metadata
 
-Three kinds of resource record this metadata, in the two syntaxes their file formats allow:
-
-| Directory    | `targets` | `last-reviewed` | `sources` | Syntax             |
-| ------------ | --------- | --------------- | --------- | ------------------ |
-| `opinions/`  | Yes       | Yes             | Yes       | YAML frontmatter   |
-| `templates/` | Yes       | Yes             | Yes       | First-line comment |
-| `research/`  | Yes       | Yes             | Yes       | YAML frontmatter   |
+Resources under `opinions/`, `templates/`, and `research/` each record `targets`, `last-reviewed`, and `sources`, in the syntax their file format allows.
 
 **`opinions/` and `research/` use YAML frontmatter:**
 
