@@ -1,0 +1,9 @@
+// awesome-humans/dotnet template | targets: net11.0 | last-reviewed: 2026-11-18 | sources: meziantou, ms-learn
+// Copy to the repository root, beside Directory.Build.props, which passes it to every project.
+// The build fails wherever C# or Visual Basic code uses a symbol listed below, and the error
+// (RS0030) shows the text after the semicolon. Roslyn analyzers don't run in an F# build, so
+// an F# project gets no check. The .NET SDK's own check for these two comparisons (CA1309)
+// looks only at Equals and Compare, so without this list they pass unnoticed in StartsWith,
+// EndsWith, IndexOf, and Contains (opinions/globalization.md).
+F:System.StringComparison.InvariantCulture;Compare with Ordinal for text a machine reads, or CurrentCulture for text a person reads (opinions/globalization.md)
+F:System.StringComparison.InvariantCultureIgnoreCase;Compare with OrdinalIgnoreCase for text a machine reads, or CurrentCultureIgnoreCase for text a person reads (opinions/globalization.md)
