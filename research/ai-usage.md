@@ -54,7 +54,7 @@ No opinion mentions AI, but three already contain most of the guardrails:
 
 **A direct disagreement with `csharp.md`.**
 Stannard found the `.editorconfig` checks "were largely worthless and burned millions of tokens over 1-2 months on trivial issues like whether or not there was an extra line ending in each `.cs` file. I removed that check entirely."
-`csharp.md` recommends `EnforceCodeStyleInBuild`, and `ci.md` runs `dotnet format --verify-no-changes` as a separate step.
+`csharp.md` recommends `EnforceCodeStyleInBuild`, and `ci.md` runs `dotnet format --verify-no-changes` in a job of its own.
 One reconciliation keeps the rule: have the agent run `dotnet format`, which fixes whitespace and style mechanically, before it builds, so it never reasons about a formatting diagnostic.
 Whether that avoids the cost he measured is untested, and adopting it is the maintainer's decision. It's the one place this topic would change an existing opinion instead of adding to one.
 
