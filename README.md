@@ -71,7 +71,7 @@ This diagram shows how a source is admitted and what its standing allows. The ad
 
 Standing can change. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears.
 
-There's one citable tier. Two markings in a source's notes limit how it's cited:
+Two markings in a source's notes limit how it's cited:
 
 - **Corroborate:** A source marked `**Corroborate.**` is never the only citation for a claim.
 - **Discovery-only:** A source marked `**Discovery-only.**` is never cited. Cite the primary source it links to instead.
