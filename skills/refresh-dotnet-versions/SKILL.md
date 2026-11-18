@@ -35,7 +35,7 @@ As [agents/orchestration.md](../../agents/orchestration.md) describes, delegate 
 2. **Compare with the current targets:** the `targets:` metadata in `opinions/`, the version pins in `templates/`, and the root `global.json`. The template pins are the `global.json` SDK version, `<TargetFramework>` in project files, and `<LangVersion>` if it's pinned.
    - If everything matches, the framework part has nothing to do. Say so, and **still run steps 4b and 4c**, because package and action pins drift on their own schedule. Check step 4a for a band the repository now needs.
    - Report "up to date" and stop only when those checks find nothing too.
-   - If you stop here while a trigger pull request is open, say that it can merge as it is. It holds only the snapshot, and nothing else lands it on `main`.
+   - If you stop here while a trigger pull request is open, check that its snapshot names the release step 1 found, and say that it can merge as it is. It holds only the snapshot, and nothing else lands it on `main`. If the snapshot names a newer release, run steps 1 and 2 again for that release.
 3. **Start a worktree** from `main` on the branch `refresh/dotnet-<version>`, following the rules in [agents/worktrees.md](../../agents/worktrees.md).
    - To find an open trigger pull request, run `gh pr list --label dotnet-release --state open`. A leftover `automation/dotnet-release-watch` branch without one isn't a trigger.
    - If one is open, copy its snapshot into the worktree: run `git fetch origin automation/dotnet-release-watch`, then `git restore --source=FETCH_HEAD -- .github/state/dotnet-releases.json`. Commit it with the rest of the run.
