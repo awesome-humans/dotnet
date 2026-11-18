@@ -14,7 +14,7 @@ Collect what the vetted sources have published since the last scan, and update t
 
 ## Orchestration
 
-As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy) describes, fan the per-source scans in step 3, and the citation checks in step 6, out to worker agents. Only the editor triages their findings and edits `opinions/`, `templates/`, and `research/`.
+As [agents/orchestration.md](../../agents/orchestration.md) describes, fan the per-source scans in step 3, and the citation checks in step 6, out to worker agents. Only the editor triages their findings and edits `opinions/`, `templates/`, and `research/`.
 
 ## Steps
 
@@ -30,7 +30,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
      Otherwise, create a stub opinion with metadata, the source link, and a `TODO`. In the same commit, add it to `README.md` as a Scope bullet and a Repository layout entry, or CI fails the pull request.
 
    - **Noise:** Release news, marketing, or a one-off tip that doesn't generalise. Skip it.
-5. **Edit in a worktree** on the branch `harvest/<YYYY-MM-DD>`, dated the day the scan window ends, as [AGENTS.md](../../AGENTS.md) describes:
+5. **Edit in a worktree** on the branch `harvest/<YYYY-MM-DD>`, dated the day the scan window ends, as [agents/worktrees.md](../../agents/worktrees.md) describes:
    - Keep one recommendation per opinion. If a post contradicts the current opinion, choose the position with the stronger sources or evidence, and note the change in one line.
    - **Never remove, weaken, or unmark a house block or region** ([awesome-humans/website: House opinions](https://github.com/awesome-humans/website/blob/main/pages/conventions/house-opinions.md#how-this-works)). Update the sourced text beside it as usual. When a source now agrees with a house opinion, add the citation inside its block.
    - Add the post's source ID to the opinion's `sources:`, and update `last-reviewed:`.
@@ -43,7 +43,7 @@ As [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-an
    - **Missing source:** Drop the claim, and propose the source with `vet-source`. Never merge it unsourced.
    - **Not verified:** List the page and the reason in the pull request.
 7. **Record the scan** in the `AWESOME-HUMANS.md` decision log: the date, the window, and what changed, as briefly as the existing entries. Per-source findings go in the pull request, not the table.
-8. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.
+8. **Open a pull request** to the default branch, filling in the [`opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/opinion.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. Its **Skill run** section takes the findings per source, and the proposed opinion takes the changes per opinion. A person reviews it before it changes any opinion.
    - If an open `Harvest due: <Month> <Year>` issue asked for this scan, end the pull request description with a `Closes: #<number>` trailer.
    - The `Harvest reminder` workflow opens that issue on the 1st of each month, and skips the month while an issue with that title is open. An issue left open blocks the next reminder.
    - If another pull request replaces this one, copy the `Closes:` trailer to it, because GitHub doesn't move it.

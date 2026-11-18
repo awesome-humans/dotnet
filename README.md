@@ -59,7 +59,7 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 
 Opinions target the latest released .NET, C#, and F#, never an older LTS release. Preview features appear only in "Coming next" notes. The [skills](#maintenance-via-skills) move the repository to each new version.
 
-Every resource records when it was last reviewed against its sources. [AGENTS.md: Metadata](AGENTS.md#metadata) defines the fields, and CI enforces them.
+Every resource records when it was last reviewed against its sources. [agents/metadata.md](agents/metadata.md) defines the fields, and CI enforces them.
 
 ## Awesome humans
 
@@ -71,7 +71,7 @@ This diagram shows how a source is admitted and what its standing allows. The ad
 
 Standing can change. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears.
 
-There's one citable tier. Two markings in a source's notes limit how it's cited:
+Two markings in a source's notes limit how it's cited:
 
 - **Corroborate:** A source marked `**Corroborate.**` is never the only citation for a claim.
 - **Discovery-only:** A source marked `**Discovery-only.**` is never cited. Cite the primary source it links to instead.
@@ -91,6 +91,7 @@ In this repository, each house opinion is a marked block beside the sourced text
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── HOUSE-OPINIONS.md         ← house profiles' opinions: intake and audit trail
+├── agents/                   ← on-demand agent instructions that AGENTS.md indexes
 ├── assets/diagrams/          ← generated SVG diagrams: rerun the script, never edit by hand
 ├── justfile                  ← every local and CI entry point: run `just` to list them
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
@@ -123,6 +124,7 @@ In this repository, each house opinion is a marked block beside the sourced text
 │   └── validate-template-order.cs
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
+│   ├── BannedSymbols.txt
 │   ├── Directory.Build.props
 │   ├── Directory.Build.targets
 │   ├── Directory.Packages.props

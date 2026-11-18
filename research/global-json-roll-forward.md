@@ -153,9 +153,9 @@ The `latestPatch` row is safe only when the band is still supported **and** has 
 ## A disagreement to record
 
 Current documentation says that when `version` is set and `rollForward` is omitted, the default is **`patch`**.
-Several secondary write-ups still say `latestPatch`, the historical default.
-The docs win. The practical lesson: set `rollForward` explicitly instead of relying on a default that has changed.
-([Microsoft Learn: global.json overview, Matching rules](https://learn.microsoft.com/dotnet/core/tools/global-json#matching-rules))
+Several secondary write-ups still say `latestPatch`, which the same page said until a correction in April 2025.
+Follow the docs: the correction changed the page, not the SDK, whose default was already `patch`. The practical lesson: set `rollForward` explicitly instead of relying on a default that its own documentation misstated.
+([Microsoft Learn: global.json overview, Matching rules](https://learn.microsoft.com/dotnet/core/tools/global-json#matching-rules), [dotnet/docs#44996: Correct default rollForward policy in global.json documentation](https://github.com/dotnet/docs/pull/44996))
 
 ## What this reveals about the repository
 
@@ -168,7 +168,7 @@ Four gaps to resolve:
 1. **[project-structure.md](../opinions/project-structure.md) states the floor rule but not the exceptions.** It correctly treats the pin as a floor, and says nothing about band support windows, `SdkAnalysisLevel`, or lock files. A short block would cover them.
 2. **[ci.md](../opinions/ci.md) says "`global.json` sets the SDK".** Under `latestFeature`, it sets a floor, and `setup-dotnet` picks the rest on the day it runs. The line needs that precision.
 3. **[audit-freshness](../skills/audit-freshness/SKILL.md) and [review-project](../skills/review-project/SKILL.md) both report "a `rollForward` narrower than `latestFeature`".** If the opinion gains a legitimate narrow case, both need the exception, or they'll report a lock-file repository's correct `disable` as a defect.
-4. **Aside, outside this topic:** The docs say `global.json` supports JavaScript and C#-style comments. [AGENTS.md](../AGENTS.md) exempts `templates/global.json` from the metadata header "because JSON has no comment syntax", which isn't true of this file. Look at it separately.
+4. **Aside, outside this topic:** The docs say `global.json` supports JavaScript and C#-style comments. [agents/metadata.md](../agents/metadata.md) exempts `templates/global.json` from the metadata header "because JSON has no comment syntax", which isn't true of this file. Look at it separately.
 
 **Recommended next step:** `resolve-research`, to add items 1 to 3 to `opinions/project-structure.md` and `opinions/ci.md`.
 No new opinion file is needed.

@@ -93,7 +93,7 @@ let describe payment =
 
 ## Testing F#
 
-**Use xUnit v3 for F# tests, the same stack as the rest of the solution.** Put `[<Fact>]` on a `let`-bound function, with no class. The Microsoft Learn walkthrough shows that form on xUnit v2, and it's the same on v3. One stack shares fixtures, tooling, and CI configuration across C# and F#. For details, see [testing.md](testing.md). Expecto lost because it puts a second runner and a second assertion style in the solution, and its tests-as-values model isn't worth maintaining both. ([Microsoft Learn: Unit testing F# with dotnet test and xUnit](https://learn.microsoft.com/dotnet/core/testing/unit-testing-fsharp-with-dotnet-test))
+**Use xUnit v3 for F# tests, the same stack as the rest of the solution.** Put `[<Fact>]` on a `let`-bound function, with no class. The Microsoft Learn walkthrough shows that form on xUnit v2, and it's the same on v3. One stack shares fixtures, tooling, and CI configuration across C# and F#. For details, see [testing.md](testing.md). Expecto puts a second runner and a second assertion style in the solution, and its tests-as-values model isn't worth maintaining both. ([Microsoft Learn: Unit testing F# with dotnet test and xUnit](https://learn.microsoft.com/dotnet/core/testing/unit-testing-fsharp-with-dotnet-test))
 
 ```fsharp
 module EmailAddressTests

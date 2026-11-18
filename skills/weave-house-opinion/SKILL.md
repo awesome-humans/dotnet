@@ -22,7 +22,7 @@ House opinions are a house profile's preferences, such as the maintainer's `simo
    - **Never under a heading of its own.** A section that holds only a house block is empty for every other reader. Put the block in the nearest section with sourced text.
 4. **Leave the sourced text whole.** When the house opinion conflicts with it, the block says so and gives the reason. A reader with the profile follows the block, and every other reader the sourced text, so never cut or reword the sourced text to fit.
 5. **Move the inbox entry to the Woven table** in HOUSE-OPINIONS.md, with the date, the profile, and a link to where it went. Run `just validate-sources`, which checks that each `house:<profile>` ID and its blocks or regions appear together.
-6. **Update `last-reviewed`** on every file you change. Work on a `house/<slug>` branch, as [AGENTS.md](../../AGENTS.md) describes, and open a pull request to the default branch with a title that shows the house origin, such as `docs: weave house opinion on <title>`. Fill in the [`house-opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/house-opinion.md) template, as [AGENTS.md](../../AGENTS.md) describes.
+6. **Update `last-reviewed`** on every file you change. Work on a `house/<slug>` branch, as [agents/worktrees.md](../../agents/worktrees.md) describes, and open a pull request to the default branch with a title that shows the house origin, such as `docs: weave house opinion on <title>`. Fill in the [`house-opinion.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/house-opinion.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes.
 
 ## Rules
 

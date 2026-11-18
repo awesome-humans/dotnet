@@ -137,7 +137,7 @@ No source gives a date, so **Review by 2027-05-31** is this topic's choice, abou
 
 For a new "Coming next (preview, not yet the opinion)" section at the end of project-structure.md:
 
-> **Review by 2027-05-31.** dotnetup is Microsoft's user-level SDK and runtime manager, in public preview since 2026-10-15. `dotnetup sdk install` reads the nearest `global.json` and derives a channel from `sdk.version` and `rollForward`: `10.0` for `10.0.400` with `latestFeature`. `dotnetup update` moves that channel to the newest SDK after each servicing release. A `dotnet-install` SDK never updates. Until dotnetup reaches GA, install the SDK on a development machine with an installer or a package manager, and keep `actions/setup-dotnet` in CI. dotnetup sends telemetry unless `DOTNET_CLI_TELEMETRY_OPTOUT` is `1` or `true`. Drop this note when dotnetup reaches GA and becomes the opinion.
+> dotnetup is Microsoft's user-level SDK and runtime manager, in public preview since 2026-10-15. `dotnetup sdk install` reads the nearest `global.json` and derives a channel from `sdk.version` and `rollForward`: `10.0` for `10.0.400` with `latestFeature`. `dotnetup update` moves that channel to the newest SDK after each servicing release. A `dotnet-install` SDK never updates. Until dotnetup reaches GA, install the SDK on a development machine with an installer or a package manager, and keep `actions/setup-dotnet` in CI. dotnetup sends telemetry unless `DOTNET_CLI_TELEMETRY_OPTOUT` is `1` or `true`. Drop this note when dotnetup reaches GA and becomes the opinion. **Review by 2027-05-31.**
 
 Apart from the review date, every sentence in it has a citable source above. The migration points under question 2 stay out of the note until dotnetup is the opinion, because three of them are unsupported.
 
@@ -146,7 +146,7 @@ Apart from the review date, every sentence in it has a citable source above. The
 1. **[project-structure.md](../opinions/project-structure.md) says how to pin the SDK, and never how to install it.** Microsoft Learn's GA answer for a development machine is an installer or a package manager, not `dotnet-install`. The note above states it, and the opinion could state it without dotnetup.
 2. **The preview-SDK bullet is current.** It matches Microsoft Learn's page, and its `[".dotnet", "$host$"]` order is the one dotnetup's preview can read. [ui-frameworks.md](../opinions/ui-frameworks.md) points at the same bullet and needs no change.
 3. **The bullet's example version is out of date for another reason.** It uses `11.0.100-preview.1.25000.1`, and .NET 11 reached GA on 2026-11-10. That belongs to `refresh-dotnet-versions`, not to this topic.
-4. **A comment header on `templates/global.json` would break dotnetup's preview.** [global-json-roll-forward.md](global-json-roll-forward.md) notes that `global.json` allows comments, against the reason [AGENTS.md](../AGENTS.md) gives for exempting the file. Keep the exemption until dotnetup parses comments.
+4. **A comment header on `templates/global.json` would break dotnetup's preview.** [global-json-roll-forward.md](global-json-roll-forward.md) notes that `global.json` allows comments, against the reason [agents/metadata.md](../agents/metadata.md) gives for exempting the file. Keep the exemption until dotnetup parses comments.
 
 **Recommended next step:** `resolve-research`, to partly promote this topic: the "Coming next" note now, and the rest when dotnetup reaches GA.
 

@@ -3,7 +3,7 @@ name: Site preview
 # Builds the whole awesome-humans.net site with this pull request's head commit as the
 # /dotnet/ section and every other ecosystem at main, and deploys it as a preview at its
 # own URL. awesome-humans/website owns the build and the deploy; this repository only
-# stages its pages, as AGENTS.md: Site describes. A pull request from a fork builds but
+# stages its pages, as agents/site.md describes. A pull request from a fork builds but
 # doesn't deploy, because GitHub doesn't give a fork's pull request any secrets.
 on:
   pull_request:
@@ -18,14 +18,14 @@ concurrency:
 
 jobs:
   build:
-    uses: awesome-humans/website/.github/workflows/build.yml@a3ab027d19d16b4c0f34fac605ab50e39dbbf37f # main
+    uses: awesome-humans/website/.github/workflows/build.yml@62cc1160a20c0d970c229edf221bb5d9a77e0fd2 # main
     with:
       ecosystem: dotnet
       ref: ${{ github.event.pull_request.head.sha }}
 
   deploy:
     needs: build
-    uses: awesome-humans/website/.github/workflows/deploy.yml@a3ab027d19d16b4c0f34fac605ab50e39dbbf37f # main
+    uses: awesome-humans/website/.github/workflows/deploy.yml@62cc1160a20c0d970c229edf221bb5d9a77e0fd2 # main
     with:
       preview-alias: pr-dotnet-${{ github.event.pull_request.number }}
     # Pass only the secrets deploy.yml needs, not `secrets: inherit`.
