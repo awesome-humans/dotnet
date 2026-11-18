@@ -482,13 +482,18 @@ foreach (string? profile in profiles.Prepend(null))
 
         {skillLinks}
 
+        """;
+
+    // llmstxt.org puts the Optional section last, so an agent short of context can drop the end.
+    string optional = $"""
+
         ## Optional
 
         - [Awesome humans]({RawLink(RosterPath, profile)}): the vetted sources the opinions cite, and the admission criteria
         - [House opinions]({RawLink("HOUSE-OPINIONS.md", profile)}): the house profiles, and the record of every house opinion woven in
 
         """;
-    Write($"{Ecosystem}/{(profile is null ? "llms.txt" : $"llms-{profile}.txt")}", (llms + profileLinks).ReplaceLineEndings("\n"));
+    Write($"{Ecosystem}/{(profile is null ? "llms.txt" : $"llms-{profile}.txt")}", (llms + profileLinks + optional).ReplaceLineEndings("\n"));
 }
 
 // The navigation. This ecosystem's section goes to nav.json, with its paths relative to
