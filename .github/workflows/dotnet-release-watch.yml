@@ -4,7 +4,10 @@
 #
 # The pull request is a TRIGGER, not the update: it refreshes only
 # .github/state/dotnet-releases.json. To fold the release into opinions/ and templates/,
-# run the refresh-dotnet-versions skill against the pull request's branch.
+# run the refresh-dotnet-versions skill. It works in its own worktree from main, on the
+# branch refresh/dotnet-<version>, and copies the snapshot there. Never commit to this
+# workflow's branch: until main has the new snapshot, each run rebuilds it from main and
+# force-pushes it.
 #
 # Note: for the create-pull-request step to work, the repository setting
 # "Allow GitHub Actions to create and approve pull requests" must be enabled
@@ -100,4 +103,4 @@ jobs:
             ${{ steps.diff.outputs.summary }}
             ```
 
-            **This pull request doesn't update the opinions or templates.** It only refreshes `.github/state/dotnet-releases.json`. To bring them up to date, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill on this branch, and merge its changes with the snapshot in this pull request.
+            **This pull request doesn't update the opinions or templates.** It only refreshes `.github/state/dotnet-releases.json`. To bring them up to date, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill. It works on its own branch, `refresh/dotnet-<version>`, and copies this snapshot there, so close this pull request once that one merges. Don't commit to this branch: the next run of the workflow overwrites it.
