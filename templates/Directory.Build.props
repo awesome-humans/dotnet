@@ -1,4 +1,4 @@
-<!-- awesome-humans/dotnet template | targets: net11.0, csharp-15, fsharp-11 | last-reviewed: 2026-11-17 | sources: aaron-stannard, dotnet-blog, khalid, meziantou, ms-learn -->
+<!-- awesome-humans/dotnet template | targets: net11.0, csharp-15, fsharp-11 | last-reviewed: 2026-11-18 | sources: aaron-stannard, dotnet-blog, khalid, meziantou, ms-learn -->
 <!-- Copy to the repository root. Every project inherits these settings. Override one in a project only with a recorded reason. -->
 <Project>
 
@@ -52,9 +52,10 @@
          CancellationToken forwarding, and async pitfalls (opinions/csharp.md). The version is
          pinned in Directory.Packages.props. -->
     <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
-    <!-- Fails the build on every use of StringComparison.InvariantCulture and
-         InvariantCultureIgnoreCase, which BannedSymbols.txt, beside this file, lists. The
-         .NET SDK's own check for them (CA1309) looks only at Equals and Compare
+    <!-- Fails a C# or Visual Basic build on every use of StringComparison.InvariantCulture
+         and InvariantCultureIgnoreCase, which BannedSymbols.txt, beside this file, lists. The
+         .NET SDK's own check for them (CA1309) looks only at Equals and Compare. Roslyn
+         analyzers don't run in an F# build, so an F# project gets no check
          (opinions/globalization.md). -->
     <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" PrivateAssets="all" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" />

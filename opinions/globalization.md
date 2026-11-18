@@ -1,6 +1,6 @@
 ---
 targets: [net11.0, csharp-15]
-last-reviewed: 2026-11-17
+last-reviewed: 2026-11-18
 sources:
   [
     andrew-lock,
@@ -58,14 +58,14 @@ dotnet_diagnostic.CA1307.severity = warning
 
 With `TreatWarningsAsErrors` on, a missing `StringComparison` fails the build. Meziantou.Analyzer, described in [csharp.md](csharp.md), covers the same cases.
 
-**Ban the two invariant comparisons with `Microsoft.CodeAnalysis.BannedApiAnalyzers`, because CA1309 checks only `Equals` and `Compare`.** On SDK 11.0.100, neither CA1309 nor Meziantou.Analyzer 3.0.340 reports `StringComparison.InvariantCulture` in `StartsWith`, `EndsWith`, `IndexOf`, or `Contains`. [templates/BannedSymbols.txt](../templates/BannedSymbols.txt) bans both enum fields, so RS0030 reports every use, whatever the call. [templates/Directory.Build.props](../templates/Directory.Build.props) adds the package and passes the file to every project. Keep the file beside `Directory.Build.props`, at the repository root. ([Roslyn: BannedApiAnalyzers](https://github.com/dotnet/roslyn/blob/main/src/RoslynAnalyzers/Microsoft.CodeAnalysis.BannedApiAnalyzers/BannedApiAnalyzers.Help.md), [Microsoft Learn: CA1309](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309))
+**Ban the two invariant comparisons with `Microsoft.CodeAnalysis.BannedApiAnalyzers`, because CA1309 checks only `Equals` and `Compare`.** On SDK 11.0.100, neither CA1309 nor Meziantou.Analyzer 3.0.340 reports `StringComparison.InvariantCulture` in `StartsWith`, `EndsWith`, `IndexOf`, or `Contains`. [templates/BannedSymbols.txt](../templates/BannedSymbols.txt) bans both enum fields, so RS0030 reports every use in C# and Visual Basic, whatever the call. [templates/Directory.Build.props](../templates/Directory.Build.props) adds the package and passes the file to every project. Keep the file beside `Directory.Build.props`, at the repository root. Roslyn analyzers don't run in an F# build, so an F# project that uses either field still builds. ([Meziantou: StringComparison.InvariantCulture is not always invariant](https://www.meziantou.net/stringcomparison-invariantculture-is-not-always-invariant.htm), [Roslyn: BannedApiAnalyzers](https://github.com/dotnet/roslyn/blob/main/src/RoslynAnalyzers/Microsoft.CodeAnalysis.BannedApiAnalyzers/BannedApiAnalyzers.Help.md), [Microsoft Learn: CA1309](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309))
 
 ```csharp
 // CA1309 reports this one
-if (string.Equals(header, "application/json", StringComparison.InvariantCultureIgnoreCase))
+var isJson = string.Equals(header, "application/json", StringComparison.InvariantCultureIgnoreCase);
 
 // CA1309 and Meziantou.Analyzer stay silent, and only RS0030 reports it
-if (header.StartsWith("application/", StringComparison.InvariantCultureIgnoreCase))
+var isApplication = header.StartsWith("application/", StringComparison.InvariantCultureIgnoreCase);
 ```
 
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
