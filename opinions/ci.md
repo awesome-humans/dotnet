@@ -71,12 +71,6 @@ The example uses GitHub Actions, but the stages work on any CI platform:
 permissions:
   contents: read
 
-# A new push to the same branch or pull request cancels the run in progress,
-# so a fix doesn't wait or pay for the tests of the commit it replaces.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -114,19 +108,10 @@ jobs:
 
 This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifact` pin is only an example. When you copy the workflow, resolve every SHA against the current release, and check the major version. A pinned SHA never reports that it's out of date, so pair SHA pinning with a dependency bot.
 
-**The trade-off is one run that reports both failures, against a cheaper run that reports one.** A step runs only if every step before it succeeded: "A default status check of `success()` is applied" unless the step sets its own `if`. So a check in the build job hides a result, wherever it goes. ([GitHub Docs: Evaluate expressions in workflows and actions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions))
+**A step in the build job hides a result, wherever it goes.** A step runs only if every step before it succeeded: "A default status check of `success()` is applied" unless the step sets its own `if`. ([GitHub Docs: Evaluate expressions in workflows and actions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions))
 
-| Where the check runs  | A formatting difference reports | The run hides                                  | A formatting difference wastes                              | Every run pays  |
-| --------------------- | ------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- | --------------- |
-| Step before the build | When the check finishes         | The test results, when the formatting is wrong | Nothing: the run stops at the check                         | Nothing more    |
-| Step after the tests  | When the tests finish           | The formatting result, when a test fails       | The build and test time, as a wait and as runner time       | Nothing more    |
-| The `format` job      | When the check finishes         | Nothing                                        | The build and test runner time, unless the run is cancelled | A second runner |
-
-The table follows from that rule, and isn't a measurement.
-
-- **A step before the build is the cheapest.** A formatting difference stops the run before the tests use any runner time. Its cost is an extra round when a push breaks both: the first run finds the formatting difference, and only the next one finds the failed test.
-- **A step after the tests costs the most when the formatting is wrong.** The run builds and tests for its full time, and then fails on something the check could report at the start. With a 20-minute suite and a one-minute check, that's 20 runner minutes, and the difference reports at minute 20, not minute 1.
-- **The `format` job removes the wait, and keeps the runner time, unless the run is cancelled.** The check reports at the start, but the build job still runs its tests on the same push. The example's `concurrency` block cancels that run when the fix arrives: a new push to the same branch or pull request replaces the run in progress. It also cancels a run on the branch you release from, so if every commit there needs its `app` artifact, set `cancel-in-progress` to an expression that excludes that branch. ([GitHub Docs: Control the concurrency of workflows and jobs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency))
+- **A step before the build** hides the test results when the formatting is wrong, so a push that breaks both needs a run for each.
+- **A step after the tests** reports a formatting difference only when the tests finish, and not at all when a test fails.
 
 **The `format` job costs a second runner, and at least one billed minute in a private repository.**
 
