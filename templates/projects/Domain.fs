@@ -5,14 +5,17 @@ namespace Example.Library.FSharp
 /// Single-case union: a CustomerId can't be confused with any other int.
 type CustomerId = CustomerId of int
 
-/// Private constructor: every EmailAddress in the system has already passed create.
-type EmailAddress = private EmailAddress of string
+/// A module of their own for the type and its functions: `private` stops code outside this
+/// module, so every EmailAddress in the system has already passed create. Declared straight
+/// in the namespace, the case would be open to every module of the namespace.
+module Email =
+    type EmailAddress = private EmailAddress of string
 
-module EmailAddress =
-    let create (s: string) =
-        if s.Contains "@" then Some(EmailAddress s) else None
+    module EmailAddress =
+        let create (s: string) =
+            if s.Contains "@" then Some(EmailAddress s) else None
 
-    let value (EmailAddress s) = s
+        let value (EmailAddress s) = s
 
 /// One case per shape: the compiler rejects every invalid combination.
 type PaymentMethod =
