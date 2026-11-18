@@ -6,7 +6,8 @@
 # .github/state/dotnet-releases.json. To fold the release into opinions/ and templates/,
 # run the refresh-dotnet-versions skill. It works in its own worktree from main, on the
 # branch refresh/dotnet-<version>, and copies the snapshot there. Never commit to this
-# workflow's branch: create-pull-request rebuilds it from main and force-pushes it on each run.
+# workflow's branch: until main has the new snapshot, each run rebuilds it from main and
+# force-pushes it.
 #
 # Note: for the create-pull-request step to work, the repository setting
 # "Allow GitHub Actions to create and approve pull requests" must be enabled

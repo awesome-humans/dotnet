@@ -35,9 +35,12 @@ As [agents/orchestration.md](../../agents/orchestration.md) describes, delegate 
 2. **Compare with the current targets:** the `targets:` metadata in `opinions/`, the version pins in `templates/`, and the root `global.json`. The template pins are the `global.json` SDK version, `<TargetFramework>` in project files, and `<LangVersion>` if it's pinned.
    - If everything matches, the framework part has nothing to do. Say so, and **still run steps 4b and 4c**, because package and action pins drift on their own schedule. Check step 4a for a band the repository now needs.
    - Report "up to date" and stop only when those checks find nothing too.
+   - If you stop here while a trigger pull request is open, say that it can merge as it is. It holds only the snapshot, and nothing else lands it on `main`.
 3. **Start a worktree** from `main` on the branch `refresh/dotnet-<version>`, following the rules in [agents/worktrees.md](../../agents/worktrees.md).
-   - If a trigger pull request is open, copy its snapshot into the worktree: run `git fetch origin automation/dotnet-release-watch`, then `git restore --source=FETCH_HEAD -- .github/state/dotnet-releases.json`. Commit it with the rest of the run.
-   - Without a trigger pull request, leave the snapshot alone. The workflow updates it on its next run.
+   - To find an open trigger pull request, run `gh pr list --label dotnet-release --state open`. A leftover `automation/dotnet-release-watch` branch without one isn't a trigger.
+   - If one is open, copy its snapshot into the worktree: run `git fetch origin automation/dotnet-release-watch`, then `git restore --source=FETCH_HEAD -- .github/state/dotnet-releases.json`. Commit it with the rest of the run.
+   - If that snapshot is older than the release step 1 found, run the workflow first, with `gh workflow run dotnet-release-watch.yml`, and copy the snapshot once it finishes.
+   - Without a trigger pull request, leave the snapshot alone. Only the workflow writes it. The trigger pull request it opens later holds only the snapshot, and can merge as it is.
 4. **Update the template files** under `templates/`: the TFMs in the example projects, and anything else pinned to a version. Then update the three kinds of pin that drift independently of a .NET release:
    - **4a. The SDK minimum in both `global.json` files.** On a major release, move both to that major's first band, such as `11.0.100`. Between majors, leave `sdk.version` alone unless the repository needs something from a newer feature band.
      - The value is a minimum. With `"rollForward": "latestFeature"`, it accepts that version or any later band and patch on the machine, so new bands arrive without an edit.
@@ -76,7 +79,9 @@ As [agents/orchestration.md](../../agents/orchestration.md) describes, delegate 
 
    A person reviews it before it changes any opinion.
 
-   If the run copied a trigger pull request's snapshot, end the description with a `Refs: #<number>` trailer for it, and comment on the trigger pull request with the refresh pull request's number. After the refresh pull request merges, close the trigger pull request with `gh pr close <number> --delete-branch`. The workflow never closes it: once the snapshot on `main` matches the releases index, the workflow skips its pull request step.
+   If the run copied a trigger pull request's snapshot, end the description with a `Refs: #<number>` trailer for it, and comment on the trigger pull request with the refresh pull request's number. The comment says to close the trigger pull request once the refresh merges.
+
+   After the refresh pull request merges, close the trigger pull request with `gh pr close <number> --delete-branch`. The workflow never closes it: once the snapshot on `main` matches the releases index, the workflow skips its pull request step. If the trigger pull request's snapshot differs from the one on `main` by then, a newer release has arrived. Leave it open as the cue for the next run.
 
 ## Edge cases
 
