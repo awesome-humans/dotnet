@@ -113,7 +113,7 @@ jobs:
 
 This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifact` pin is only an example. When you copy the workflow, resolve every SHA against the current release, and check the major version. A pinned SHA never reports that it's out of date, so pair SHA pinning with a dependency bot.
 
-**In the build job, a failed step hides the results of the steps after it, wherever the check goes.** A step runs only if every step before it succeeded: "A default status check of `success()` is applied" unless the step sets its own `if`. ([GitHub Docs: Evaluate expressions in workflows and actions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions))
+**In the build job, a failed step hides the results of the steps after it, wherever the check goes.** A step runs only if every step before it succeeded: "A default status check of `success()` is applied" unless the step's `if` calls a status check function, such as `!cancelled()`. ([GitHub Docs: Evaluate expressions in workflows and actions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions))
 
 - **A step before the build** hides the test results when the formatting is wrong, so a push that breaks both needs a run for each.
 - **A step after the tests** reports a formatting difference only when the tests finish, and not at all when a test fails.
