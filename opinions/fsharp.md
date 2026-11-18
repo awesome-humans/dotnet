@@ -11,19 +11,24 @@ Target F# 11, which ships with .NET 11.
 ## Domain modelling
 
 - **Make illegal states unrepresentable: model them as discriminated unions, not as combinations of flags and nullable fields.** When a value takes one of several shapes, such as cash, card, or direct debit, give the union one case per shape. The compiler then rejects every invalid combination, so you need no defensive checks or tests for states that can't exist. ([Wlaschin: Designing with types: Making illegal states unrepresentable](https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/), and the whole [Wlaschin: Designing with types series](https://fsharpforfunandprofit.com/series/designing-with-types/))
-- **Wrap domain primitives in single-case unions with a private constructor and a validating `create` function.** `CustomerId of int` can't be confused with `OrderId of int`. Wlaschin's post keeps the constructor private only by convention, "Of course the type is not really private in this case", and says "If you need to enforce encapsulation, use signature files". The `private` case in the sample below gets the compiler to enforce it without one, but only as far as the enclosing module: `private` means "the entity can be accessed only from the enclosing type or module". So give the type and its `EmailAddress` module a module of their own. Code outside it can't construct an `EmailAddress`, so every instance it sees has passed `create`. ([Wlaschin: Designing with types: Single case union types](https://fsharpforfunandprofit.com/posts/designing-with-types-single-case-dus/), [Microsoft Learn: Access control](https://learn.microsoft.com/dotnet/fsharp/language-reference/access-control))
+- **Wrap domain primitives in single-case unions with a private constructor and a validating `create` function.** `CustomerId of int` can't be confused with `OrderId of int`. Wlaschin's post keeps the constructor private only by convention, "Of course the type is not really private in this case", and says "If you need to enforce encapsulation, use signature files". The `private` case in the sample below gets the compiler to enforce it without one, but only as far as the enclosing module: `private` means "the entity can be accessed only from the enclosing type or module". So give the type and its `EmailAddress` module a module of their own, as `Email` is below. Declared straight in a namespace, the case is open to every module of that namespace in the assembly. Code outside `Email` can't construct an `EmailAddress`, so every instance it sees has passed `create`. ([Wlaschin: Designing with types: Single case union types](https://fsharpforfunandprofit.com/posts/designing-with-types-single-case-dus/), [Microsoft Learn: Access control](https://learn.microsoft.com/dotnet/fsharp/language-reference/access-control))
+
+  <!-- Verified 2026-11-18 on SDK 11.0.100: with the type declared straight in `namespace N`, `EmailAddress "x"` compiles in `module N.Payments` in another file, and fails with FS1093 in a module of another namespace. With the type inside `module Email`, it fails with FS1093 in `module N.Payments` too. -->
+
 - **Return `Result` or `Option` from domain operations instead of throwing.** Model failure as data, and compose operations with `Result.bind` (railway-oriented programming). ([Wlaschin: Railway oriented programming](https://fsharpforfunandprofit.com/posts/recipe-part2/)) Throw for infrastructure faults, not for "customer not found": `Result` is "only for expected control-flow, not for unexpected situations". When "you can't continue, don't return a Result and keep going. Fail fast instead with an exception". ([Wlaschin: Against Railway-Oriented Programming](https://fsharpforfunandprofit.com/posts/against-railway-oriented-programming/))
 
 ```fsharp
 type CustomerId = CustomerId of int
 
-type EmailAddress = private EmailAddress of string
+// A module of their own: `private` reaches as far as the enclosing module.
+module Email =
+    type EmailAddress = private EmailAddress of string
 
-module EmailAddress =
-    let create (s: string) =
-        if s.Contains "@" then Some(EmailAddress s) else None
+    module EmailAddress =
+        let create (s: string) =
+            if s.Contains "@" then Some(EmailAddress s) else None
 
-    let value (EmailAddress s) = s
+        let value (EmailAddress s) = s
 
 type PaymentMethod =
     | Cash
@@ -98,6 +103,7 @@ let describe payment =
 ```fsharp
 module EmailAddressTests
 
+open Email
 open Xunit
 
 [<Fact>]
