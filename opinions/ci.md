@@ -104,6 +104,11 @@ jobs:
           global-json-file: global.json
       - run: dotnet restore
       - run: dotnet format --verify-no-changes --no-restore
+
+  # The build job uploads `app` whether or not the format check passes, so a
+  # job that deploys it waits for both.
+  # deploy:
+  #   needs: [build, format]
 ```
 
 This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifact` pin is only an example. When you copy the workflow, resolve every SHA against the current release, and check the major version. A pinned SHA never reports that it's out of date, so pair SHA pinning with a dependency bot.
@@ -113,11 +118,10 @@ This repository runs the `checkout` and `setup-dotnet` pins. The `upload-artifac
 - **A step before the build** hides the test results when the formatting is wrong, so a push that breaks both needs a run for each.
 - **A step after the tests** reports a formatting difference only when the tests finish, and not at all when a test fails.
 
-**The `format` job costs a second runner, and at least one billed minute in a private repository.**
+**The `format` job costs a second runner, and the `app` artifact no longer waits for the check.**
 
 - **It repeats the setup.** The job checks out the repository, installs the SDK, and restores again. It needs no build: after `dotnet restore`, `dotnet format` loads the solution itself, and "may restore, compile, and run analyzers". It can't reuse the build job's output, so the cost grows with the solution. ([Microsoft Learn: dotnet format](https://learn.microsoft.com/dotnet/core/tools/dotnet-format))
-- **GitHub bills each job separately.** It "rounds the minutes and partial minutes each job uses up to the nearest whole minute", so a check that finishes in seconds bills as one minute, $0.006 on a standard 2-core Linux runner. Standard runners are free in public repositories. ([GitHub Docs: Actions runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing), [GitHub Docs: GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions))
-- **The `app` artifact no longer waits for the check.** The build job uploads it whether or not the `format` job passes, so a job that deploys it lists both in `needs`. Require both `build` and `format` as status checks on the branch: a rule that requires only `build` now merges a formatting difference. ([GitHub Docs: About protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging))
+- **Gate the deploy and the merge on both jobs.** The build job uploads the `app` artifact whether or not the `format` job passes. A job that deploys it lists both in `needs`, as the commented `deploy` job in the example does, so a failed check skips the deploy. Require both `build` and `format` as status checks on the branch: a rule that requires only `build` merges a formatting difference. ([GitHub Docs: Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idneeds), [GitHub Docs: About protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging))
 
 ## Artifact signing
 
