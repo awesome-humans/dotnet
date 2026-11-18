@@ -18,14 +18,14 @@ concurrency:
 
 jobs:
   build:
-    uses: awesome-humans/website/.github/workflows/build.yml@62cc1160a20c0d970c229edf221bb5d9a77e0fd2 # main
+    uses: awesome-humans/website/.github/workflows/build.yml@743272e04847f00089b46769773db99303198f15 # main
     with:
       ecosystem: dotnet
       ref: ${{ github.event.pull_request.head.sha }}
 
   deploy:
     needs: build
-    uses: awesome-humans/website/.github/workflows/deploy.yml@62cc1160a20c0d970c229edf221bb5d9a77e0fd2 # main
+    uses: awesome-humans/website/.github/workflows/deploy.yml@743272e04847f00089b46769773db99303198f15 # main
     with:
       preview-alias: pr-dotnet-${{ github.event.pull_request.number }}
     # Pass only the secrets deploy.yml needs, not `secrets: inherit`.
