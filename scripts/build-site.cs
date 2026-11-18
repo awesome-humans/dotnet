@@ -53,6 +53,12 @@ const string EcosystemName = ".NET";
 const string SchemaBase = "https://raw.githubusercontent.com/awesome-humans/website/main/schemas";
 const string SiteUrl = "https://awesome-humans.net/";
 
+// Where a file links a shared convention, and the copy of it the site serves. The website
+// stages each convention to raw/none/conventions/, so an agent that can fetch only the site
+// reads it there.
+const string ConventionSource = "https://github.com/awesome-humans/website/blob/main/pages/conventions/";
+const string ConventionCopy = SiteUrl + "raw/none/conventions/";
+
 // The default profile, which has no house opinions. Its copies go under raw/none/.
 const string NoProfile = "none";
 
@@ -630,7 +636,8 @@ string PageUrl(string page)
 
 // A raw copy is served from dotnet/raw/<profile>/, where a relative link to another file in
 // the repository leads nowhere, so each one becomes absolute: the file RawLink gives, or the
-// GitHub tree for a directory with no page on the site. A link shown as an example, such as
+// GitHub tree for a directory with no page on the site. A link to a shared convention on
+// GitHub becomes its copy on the site. A link shown as an example, such as
 // one to opinions/<file>.md, names no file, and stays as written. Fenced code blocks are left
 // alone.
 string AbsoluteLinks(string source, string text, string? profile)
@@ -651,14 +658,19 @@ string AbsoluteLinks(string source, string text, string? profile)
         return Site.MarkdownLink().Replace(line, match =>
         {
             string target = match.Groups["target"].Value;
+            int hash = target.IndexOf('#');
+            string path = hash == -1 ? target : target[..hash];
+            string anchor = hash == -1 ? "" : target[hash..];
+            if (path.StartsWith(ConventionSource, StringComparison.Ordinal) && path.EndsWith(".md", StringComparison.Ordinal) && !path[ConventionSource.Length..].Contains('/'))
+            {
+                return $"]({ConventionCopy}{path[ConventionSource.Length..]}.txt{anchor})";
+            }
+
             if (target.Contains("://", StringComparison.Ordinal) || target.StartsWith("mailto:", StringComparison.Ordinal) || target.StartsWith('#'))
             {
                 return match.Value;
             }
 
-            int hash = target.IndexOf('#');
-            string path = hash == -1 ? target : target[..hash];
-            string anchor = hash == -1 ? "" : target[hash..];
             string resolved = Site.Normalise(Path.GetRelativePath(".", Path.Combine(Path.GetDirectoryName(source) ?? "", path))).TrimEnd('/');
             if (!File.Exists(resolved) && !Directory.Exists(resolved))
             {
