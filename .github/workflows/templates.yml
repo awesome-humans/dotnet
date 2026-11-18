@@ -36,7 +36,7 @@ jobs:
       # Pin just to a release that was at least two weeks old when picked. The step below
       # calls its recipe, never dotnet or the script directly, because the justfile holds
       # every entry point.
-      - uses: taiki-e/install-action@ab49d3c64680143e184118bed66a46419fc15519 # v2.90.5
+      - uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
         with:
           tool: just@1.58.0
 
