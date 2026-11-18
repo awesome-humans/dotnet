@@ -62,6 +62,13 @@ if (!File.Exists($"{TemplatesDirectory}/{Solution}"))
     return 2;
 }
 
+// A copy written under templates/ would be read back as a template on the next run.
+if (!Path.GetRelativePath(TemplatesDirectory, outDirectory).StartsWith("..", StringComparison.Ordinal))
+{
+    Console.Error.WriteLine($"--out {outDirectory} is inside {TemplatesDirectory}/: pass a directory outside it.");
+    return 2;
+}
+
 // Build output from smoke-testing by hand, which .gitignore also skips.
 string[] buildOutput = ["artifacts", "bin", "obj"];
 
@@ -123,6 +130,13 @@ foreach (string path in projectFiles.Where(path => !placed.ContainsKey(Normalise
     }
 }
 
+// A file directly under templates/ keeps its name at the root. It joins the plan here, so
+// the check below covers it too.
+foreach (string path in rootFiles)
+{
+    placed[Normalise(path)] = Path.GetFileName(path);
+}
+
 // A destination is relative to the assembled root and stays inside it, and no two files
 // share one: the later copy would replace the earlier, and the run would still pass.
 foreach (IGrouping<string, string> destination in placed.GroupBy(
@@ -177,11 +191,6 @@ foreach (string profile in profiles)
         Directory.Delete(root, recursive: true);
     }
 
-    foreach (string path in rootFiles)
-    {
-        Copy(path, Path.Combine(root, Path.GetFileName(path)), profile);
-    }
-
     foreach ((string source, string destination) in placed)
     {
         Copy(source, Path.Combine(root, destination), profile);
@@ -191,7 +200,9 @@ foreach (string profile in profiles)
 
     // The example in opinions/ci.md has two jobs. Its format job runs the check after a
     // restore and no build, so the check goes first here, which shows it needs none. Then
-    // the build job's stages, in its order, and a build through the filter. The solution
+    // the build job's stages, in its order, and a build through the filter. The jobs don't
+    // wait for each other there, so a failed format check doesn't stop the stages after it
+    // here: the run reports it at the end, beside any build or test failure. The solution
     // and the filter sit side by side here, so every stage names the file it means.
     string[][] stages =
     [
@@ -202,16 +213,26 @@ foreach (string profile in profiles)
         ["build", Filter, "--no-restore", "--configuration", "Release", "-warnaserror"],
     ];
 
+    List<string> failures = [];
     foreach (string[] stage in stages)
     {
         Console.WriteLine($"== {profile}: dotnet {string.Join(' ', stage)}");
         int exitCode = Run(root, stage);
-        if (exitCode != 0)
+        if (exitCode == 0)
         {
-            return Fail(
-                "Template build failed:",
-                [$"dotnet {string.Join(' ', stage)} exited with code {exitCode} for the {profile} copy, in {root}"]);
+            continue;
         }
+
+        failures.Add($"dotnet {string.Join(' ', stage)} exited with code {exitCode} for the {profile} copy, in {root}");
+        if (stage[0] != "format")
+        {
+            break;
+        }
+    }
+
+    if (failures.Count > 0)
+    {
+        return Fail("Template build failed:", failures);
     }
 }
 
