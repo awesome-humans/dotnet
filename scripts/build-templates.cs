@@ -9,8 +9,9 @@
 // so nothing compiles them, and a template that stops building stays unnoticed until
 // someone copies it. This assembles them into the layout example.slnx describes, once
 // for the default copy (every house region removed) and once for each house profile's, and
-// runs the pipeline opinions/ci.md prescribes on each: restore, build, test, and the format
-// check. It also builds through example.slnf, so the filter's paths are checked too.
+// runs the two jobs of the example in opinions/ci.md on each: the format check straight
+// after restore, then build and test. It also builds through example.slnf, so the filter's
+// paths are checked too.
 //
 // Where a file goes:
 //
@@ -20,7 +21,8 @@
 //   - A C# source file goes beside the project its second line names: "Belongs to <project>."
 //
 // A file under templates/projects/ that none of these place fails the run, so a new
-// example can't go unbuilt.
+// example can't go unbuilt. So do two files with one destination, and a destination outside
+// the assembled root.
 //
 // A .NET 11 file-based app. Run it from the repository root, through its recipe or directly:
 //
@@ -94,10 +96,13 @@ foreach (string projectPath in solution.Descendants("Project").Select(project =>
     projectDirectories[Path.GetFileNameWithoutExtension(fileName)] = directory;
     placed[source] = projectPath;
 
-    // F# compiles the files a project lists, in order, so the list says whose they are.
-    foreach (string include in XDocument.Load(source).Descendants("Compile").Select(item => (string?)item.Attribute("Include") ?? ""))
+    // F# compiles the files a project lists, in order, so the list says whose they are. An
+    // Update or Remove item names no new file, so only Include counts.
+    foreach (string include in XDocument.Load(source).Descendants("Compile").Select(item => (string?)item.Attribute("Include")).OfType<string>())
     {
-        placed[$"{ProjectsDirectory}/{include}"] = Path.Combine(directory, include);
+        // GetRelativePath folds "./Domain.fs" into the path the file listing gives.
+        string listed = Normalise(Path.GetRelativePath(".", Path.Combine(ProjectsDirectory, include)));
+        placed[listed] = Path.Combine(directory, include);
     }
 }
 
@@ -115,6 +120,21 @@ foreach (string path in projectFiles.Where(path => !placed.ContainsKey(Normalise
         errors.Add(
             $"{name}: no project claims it. List it in a project's Compile items, or name a project "
             + $"from {Solution} on its second line: \"Belongs to <project>.\"");
+    }
+}
+
+// A destination is relative to the assembled root and stays inside it, and no two files
+// share one: the later copy would replace the earlier, and the run would still pass.
+foreach (IGrouping<string, string> destination in placed.GroupBy(
+    pair => Normalise(Path.GetRelativePath(".", pair.Value)), pair => pair.Key, StringComparer.Ordinal))
+{
+    if (Path.IsPathRooted(destination.Key) || destination.Key.Split('/')[0] == "..")
+    {
+        errors.Add($"{destination.First()}: its destination, {destination.Key}, is outside the assembled copy");
+    }
+    else if (destination.Count() > 1)
+    {
+        errors.Add($"{destination.Key}: {string.Join(" and ", destination.Order(StringComparer.Ordinal))} both go there");
     }
 }
 
@@ -145,6 +165,15 @@ foreach (string profile in profiles)
     string root = Path.GetFullPath(Path.Combine(outDirectory, profile));
     if (Directory.Exists(root))
     {
+        // Every copy this script assembles has the solution at its root. A directory
+        // without one is someone else's, so don't delete it.
+        if (!File.Exists(Path.Combine(root, Solution)))
+        {
+            return Fail(
+                "Template assembly failed:",
+                [$"{root} exists and isn't a copy this script assembled. Delete it, or pass another --out."]);
+        }
+
         Directory.Delete(root, recursive: true);
     }
 
@@ -160,15 +189,16 @@ foreach (string profile in profiles)
 
     Console.WriteLine($"== {profile}: assembled in {Path.GetRelativePath(Directory.GetCurrentDirectory(), root)}");
 
-    // The stages of opinions/ci.md, in its order, then the format check it adds and a build
-    // through the filter. The solution and the filter sit side by side here, so every stage
-    // names the file it means.
+    // The example in opinions/ci.md has two jobs. Its format job runs the check after a
+    // restore and no build, so the check goes first here, which shows it needs none. Then
+    // the build job's stages, in its order, and a build through the filter. The solution
+    // and the filter sit side by side here, so every stage names the file it means.
     string[][] stages =
     [
         ["restore", Solution],
+        ["format", Solution, "--verify-no-changes", "--no-restore"],
         ["build", Solution, "--no-restore", "--configuration", "Release", "-warnaserror"],
         ["test", "--solution", Solution, "--no-build", "--configuration", "Release"],
-        ["format", Solution, "--verify-no-changes", "--no-restore"],
         ["build", Filter, "--no-restore", "--configuration", "Release", "-warnaserror"],
     ];
 
@@ -186,7 +216,7 @@ foreach (string profile in profiles)
 }
 
 Console.WriteLine(
-    $"The templates restore, build, test, and pass the format check as {profiles.Length} copies: {string.Join(", ", profiles)}.");
+    $"The templates restore, pass the format check, build, and test as {profiles.Length} copies: {string.Join(", ", profiles)}.");
 return 0;
 
 static int Fail(string heading, List<string> errors)
@@ -232,6 +262,6 @@ static int Run(string directory, string[] arguments)
 
 internal static partial class Program
 {
-    [GeneratedRegex(@"\bBelongs to (?<project>[A-Za-z0-9_.]+?)\.(?:\s|\z)")]
+    [GeneratedRegex(@"\bBelongs to (?<project>[A-Za-z0-9_.-]+?)\.(?:\s|\z)")]
     private static partial Regex Belongs();
 }
