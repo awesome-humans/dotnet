@@ -370,7 +370,7 @@ foreach (Match skill in skills)
     Write(
         pages[path],
         body[..titleEnd] + "\n\n"
-        + $"[View on GitHub]({Site.GitHub(path, isDirectory: false)}) · [Raw]({Site.Raw(path)})"
+        + $"[View on GitHub]({Site.GitHub(path, isDirectory: false)}) · [Raw]({RawLink(path, null)})"
         + body[titleEnd..]);
 }
 
@@ -609,14 +609,30 @@ static string RawPage(string path, string? profile)
 // The raw file an agent reads for a profile, or for the default with null. A file with house
 // opinions is this profile's copy, or the default copy when none of its house opinions are
 // this profile's. Any other file llms.txt links is the same for everyone, so it's the default
-// copy. A file the site doesn't copy is GitHub's raw copy.
+// copy. A file with a page on the site and no copy, such as README.md or a research topic, is
+// that page, so the agent stays on the site. Any other file is GitHub's raw copy.
 string RawLink(string path, string? profile) =>
-    !served.Contains(path) ? Site.Raw(path)
-        : $"{SiteUrl}{Ecosystem}/{RawPage(path, profile is not null && housed.GetValueOrDefault(path, []).Contains(profile) ? profile : null)}";
+    served.Contains(path) ? $"{SiteUrl}{Ecosystem}/{RawPage(path, profile is not null && housed.GetValueOrDefault(path, []).Contains(profile) ? profile : null)}"
+        : pages.TryGetValue(path, out string? page) ? PageUrl(page)
+        : Site.Raw(path);
+
+// A staged page's URL on the site, which serves page.md at page/ and index.md at its directory.
+string PageUrl(string page)
+{
+    if (!page.EndsWith(".md", StringComparison.Ordinal))
+    {
+        return $"{SiteUrl}{page}";
+    }
+
+    string stem = page[..^".md".Length];
+    return stem.EndsWith("/index", StringComparison.Ordinal) ? $"{SiteUrl}{stem[..^"index".Length]}" : $"{SiteUrl}{stem}/";
+}
 
 // A raw copy is served from dotnet/raw/<profile>/, where a relative link to another file in
-// the repository leads nowhere, so each one becomes absolute: the file's raw copy, as RawLink
-// gives it, or the GitHub tree for a directory. Fenced code blocks are left alone.
+// the repository leads nowhere, so each one becomes absolute: the file RawLink gives, or the
+// GitHub tree for a directory with no page on the site. A link shown as an example, such as
+// one to opinions/<file>.md, names no file, and stays as written. Fenced code blocks are left
+// alone.
 string AbsoluteLinks(string source, string text, string? profile)
 {
     bool fenced = false;
@@ -644,7 +660,12 @@ string AbsoluteLinks(string source, string text, string? profile)
             string path = hash == -1 ? target : target[..hash];
             string anchor = hash == -1 ? "" : target[hash..];
             string resolved = Site.Normalise(Path.GetRelativePath(".", Path.Combine(Path.GetDirectoryName(source) ?? "", path))).TrimEnd('/');
-            return $"]({(Directory.Exists(resolved) ? Site.GitHub(resolved, isDirectory: true) : RawLink(resolved, profile))}{anchor})";
+            if (!File.Exists(resolved) && !Directory.Exists(resolved))
+            {
+                return match.Value;
+            }
+
+            return $"]({(Directory.Exists(resolved) && !pages.ContainsKey(resolved) ? Site.GitHub(resolved, isDirectory: true) : RawLink(resolved, profile))}{anchor})";
         });
     });
     return string.Join("\n", lines);
