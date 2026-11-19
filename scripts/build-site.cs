@@ -441,6 +441,8 @@ string WithRepositoryNote(string path, string skill)
 // it. It has no house opinions, and llms-<profile>.txt has one profile's. The raw
 // string takes this file's line endings, which a Windows checkout can make CRLF, so the
 // result is normalised to LF like every file the script reads.
+// Fetch tools summarise a page unless asked not to, and a summary paraphrases the rules.
+const string LlmsReading = "When you read a linked file, read it in full, not a summary, because its exact wording is the rule. A file under `raw/none/` is the default copy, with no house opinions, and one under `raw/<profile>/` is that profile's copy.";
 const string LlmsSummary = "Opinionated best practices for building with .NET, distilled from the published writing of vetted people and publications with a multi-year track record. Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.";
 string skillLinks = string.Join("\n", skills.Select(skill =>
     $"- [{skill.Groups["name"].Value}]({RawLink(Site.SkillPath(skill.Groups["name"].Value), null)}): {skill.Groups["purpose"].Value}"));
@@ -467,6 +469,8 @@ foreach (string? profile in profiles.Prepend(null))
         # Awesome Humans of {EcosystemName}{(profile is null ? "" : $", with the {profile} house profile")}
 
         > {LlmsSummary}
+
+        {LlmsReading}
 
         {house}
 
