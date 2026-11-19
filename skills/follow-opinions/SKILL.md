@@ -24,7 +24,7 @@ By default, it follows sourced community practice only. If the user or the proje
    - Tests, and CI workflows.
    - The areas: ASP.NET Core, data access, dates and times, logging, globalization, a UI framework, or code that handles secrets or untrusted input.
 2. **Read the project's own decisions,** in its `AGENTS.md`, `README.md`, and contributing guide:
-   - **Record the house profile it names,** or that it names none. Without one, skip every house block in `opinions/`, and leave the house regions out of anything you copy from `templates/`. With one, keep that profile's blocks and regions, and skip the others.
+   - **Record the house profile the user or the project names,** or that neither names one. Without one, skip every house block in `opinions/`, and leave the house regions out of anything you copy from `templates/`. With one, keep that profile's blocks and regions, and skip the others.
    - **Record each decision that departs from an opinion,** such as another test framework. A recorded decision takes precedence: follow it, and don't change it back.
 3. **Read each opinion that covers the task, in full,** from `opinions/`:
    - The language opinion for each language you write: [csharp.md](../../opinions/csharp.md), [fsharp.md](../../opinions/fsharp.md).

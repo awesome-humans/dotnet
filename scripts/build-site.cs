@@ -347,7 +347,8 @@ List<string> skillIndex =
     "They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. ",
     "To run one, clone the repository and ask your agent to run the skill by name. ",
     $"If your agent only discovers skills in a directory of its own, see [AGENTS.md: Skills]({Site.GitHub("AGENTS.md", isDirectory: false)}#skills).\n\n",
-    "`review-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
+    "`follow-opinions` applies the opinions while your agent writes code in your own project, `review-project` checks that project, ",
+    "and `research-topic` answers a .NET question from the opinions and their sources. ",
     "The others maintain this repository.\n\n",
     "| Skill | Purpose |\n| --- | --- |\n",
 ];
