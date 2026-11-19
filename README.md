@@ -4,7 +4,7 @@ An agentic take on [awesome-dotnet](https://github.com/quozd/awesome-dotnet): op
 
 The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and publications with at least two years of accurate, independent writing on .NET.
 
-**Agents:** Start at [`llms.txt`](https://awesome-humans.net/dotnet/llms.txt). It links the opinions, templates, and skills as raw Markdown.
+**Agents:** Fetch [`llms.txt`](https://awesome-humans.net/dotnet/llms.txt) and every file it links as raw text. It links the opinions, templates, and skills.
 
 ## Usage
 
