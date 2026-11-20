@@ -17,7 +17,7 @@
   | `chore`    | Dependencies and housekeeping                            |
   | `research` | Staging or discarding a research topic (repository-only) |
 
-  A skill that sets its own title says so in its `SKILL.md`, as `research-topic` and `resolve-research` do.
+  A skill that sets its own title says so in its `SKILL.md`, as `stage-research` and `resolve-research` do.
 
 - **Fill in the pull request template a skill names.** The templates are the organisation's, in [awesome-humans/.github: `PULL_REQUEST_TEMPLATE/`](https://github.com/awesome-humans/.github/tree/main/PULL_REQUEST_TEMPLATE), and each skill's "Open a pull request" step names its own. Fill in every section, and pass the result to `gh pr create --body-file`. If a section doesn't apply, write "Doesn't apply" and the reason, instead of deleting it. The description becomes the commit message, so follow [Writing style: Commit messages and pull requests](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md#commit-messages-and-pull-requests). Delete the template's guidance comment, and leave out tables, checkboxes, and inline links. End with a `Closes: #<number>` or `Refs: #<number>` trailer for each related issue, written as `awesome-humans/<repository>#<number>` for an issue in another repository. A person opening a pull request in the browser gets the default template, which links the others.
 

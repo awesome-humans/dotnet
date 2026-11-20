@@ -388,13 +388,13 @@ Write(pages[SkillsDirectory], string.Concat(skillIndex));
 // index lists them. llms.txt leaves them out, so agents follow only the opinions.
 foreach ((string path, _) in research)
 {
-    WithMeta(path, freshness: false, lead: "**Unresolved research.** This topic is evidence that `research-topic` gathered, waiting on `resolve-research`. It isn't an opinion, and it can cite unvetted material. Follow the [opinions](../opinions/index.md) instead.\n\n");
+    WithMeta(path, freshness: false, lead: "**Unresolved research.** This topic is evidence that `stage-research` gathered, waiting on `resolve-research`. It isn't an opinion, and it can cite unvetted material. Follow the [opinions](../opinions/index.md) instead.\n\n");
 }
 
 Write(
     pages[ResearchDirectory],
     "# Research\n\n"
-    + "Topics under research: the evidence `research-topic` gathered, before `resolve-research` decides what becomes an opinion. "
+    + "Topics under research: the evidence `stage-research` gathered, before `resolve-research` decides what becomes an opinion. "
     + "Resolving a topic deletes it, so every topic here is still open. None of it is guidance yet.\n\n"
     + (research.Length == 0 ? "No topics are open.\n" : string.Concat(research.Select(topic => $"- [{topic.Title}]({Path.GetFileName(topic.Path)})\n"))));
 
