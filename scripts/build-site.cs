@@ -489,7 +489,7 @@ foreach (string? profile in profiles.Prepend(null))
 
         ## {EcosystemName} skills
 
-        Agent Skills procedures. Run follow-opinions to apply the opinions while writing .NET code, and review-project to check a .NET project against them. The others maintain the repository.
+        Agent Skills procedures. Run follow-opinions to apply the opinions while writing .NET code, review-project to check a .NET project against them, and research-topic to answer a .NET question from them. The others maintain the repository.
 
         {skillLinks}
 
