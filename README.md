@@ -140,17 +140,18 @@ In this repository, each house opinion is a marked block beside the sourced text
 
 ## Maintenance via skills
 
-Agent skills maintain the repository. They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md` file.
+Agent skills maintain the repository, and two of them, `follow-opinions` and `review-project`, run on someone else's project. They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md` file.
 
 The skills split work by cost. Lower-cost worker agents run the web searches and source scans in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
-Every skill except the three report-only ones works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. Each `SKILL.md` is canonical over this diagram.
+Every skill that changes this repository works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. The three report-only skills change nothing, and `follow-opinions` writes only to the project it runs in. Each `SKILL.md` is canonical over this diagram.
 
 ![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the maintainer's review, to the roster, research, or the opinions and templates; audit-freshness, review-opinions, and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 
 | Skill                                                                | Purpose                                                                                     |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                      |
+| [`follow-opinions`](skills/follow-opinions/SKILL.md)                 | Apply the opinions and templates while writing or changing code in a project                |
 | [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Scan the awesome-humans sources for new posts, and add notable guidance to the opinions     |
 | [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET, C#, and F# releases, and update all opinions and templates to target them  |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic from the opinions and vetted sources, and save it with citations      |

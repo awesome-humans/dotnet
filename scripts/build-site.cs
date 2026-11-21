@@ -343,11 +343,12 @@ Write(pages[TemplatesDirectory], string.Concat(index));
 List<string> skillIndex =
 [
     "# Skills\n\n",
-    "Agent skills that check a project against the opinions and keep the opinions current. ",
+    "Agent skills that apply the opinions in a project, check a project against them, and keep them current. ",
     "They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. ",
     "To run one, clone the repository and ask your agent to run the skill by name. ",
     $"If your agent only discovers skills in a directory of its own, see [AGENTS.md: Skills]({Site.GitHub("AGENTS.md", isDirectory: false)}#skills).\n\n",
-    "`review-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
+    "`follow-opinions` applies the opinions while your agent writes code in your own project, `review-project` checks that project, ",
+    "and `research-topic` answers a .NET question from the opinions and their sources. ",
     "The others maintain this repository.\n\n",
     "| Skill | Purpose |\n| --- | --- |\n",
 ];
@@ -488,7 +489,7 @@ foreach (string? profile in profiles.Prepend(null))
 
         ## {EcosystemName} skills
 
-        Agent Skills procedures. Run review-project to check a .NET project against the opinions. The others maintain the repository.
+        Agent Skills procedures. Run follow-opinions to apply the opinions while writing .NET code, and review-project to check a .NET project against them. The others maintain the repository.
 
         {skillLinks}
 
