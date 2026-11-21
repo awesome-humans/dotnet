@@ -49,6 +49,7 @@ By default, it follows sourced community practice only. If the user or the proje
 6. **Build and test what you wrote,** with the commands the project documents. Fix every warning your change adds: the templates treat warnings as errors.
 7. **Report, after the work:**
    - The opinions you read in full, and the templates you copied.
+   - The house profile you followed, and whether the user or the project named it.
    - Each place where a decision of the project's took precedence over an opinion.
    - Anything you noticed that deviates from an opinion and didn't change, in one line each. For a full comparison, suggest `review-project`.
    - Anything the task needed that no opinion covers, as a possible opinion gap. The user can raise it in an [issue](https://github.com/awesome-humans/dotnet/issues).
