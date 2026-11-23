@@ -14,7 +14,7 @@ metadata:
 
 ## Orchestration
 
-This is **editor-only work, so don't fan it out**. The sources were scanned when the topic was researched. What's left is deciding what an opinion says, which [agents/orchestration.md](../../agents/orchestration.md) reserves for the strongest available model. If a claim needs rechecking, run `research-topic`, which answers without writing, instead of starting a scan here. Run `stage-research` again only when the topic itself needs rewriting.
+This is **editor-only work, so don't fan it out**. The sources were scanned when the topic was researched. What's left is deciding what an opinion says, which [agents/orchestration.md](../../agents/orchestration.md) reserves for the strongest available model. If a claim needs rechecking, run `research-topic`, which answers without writing, instead of starting a scan here. Have it skip the topic you're resolving when it reads `research/`, because that file holds the claim in doubt. Run `stage-research` again only when the topic itself needs rewriting.
 
 ## Steps
 

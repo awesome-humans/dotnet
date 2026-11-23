@@ -144,7 +144,7 @@ Agent skills maintain the repository, and three of them, `follow-opinions`, `res
 
 The skills split work by cost. Lower-cost worker agents run the web searches and source scans in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
-Every skill that changes this repository works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. The three report-only skills in the diagram change nothing, `research-topic` only answers, and `follow-opinions` writes only to the project it runs in. Each `SKILL.md` is canonical over this diagram.
+Every skill that changes this repository works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. The three report-only skills change nothing. `follow-opinions` writes only to the project it runs in, and `research-topic` writes there only when asked. Each `SKILL.md` is canonical over this diagram.
 
 ![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the maintainer's review, to the roster, research, or the opinions and templates; audit-freshness, review-opinions, and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 

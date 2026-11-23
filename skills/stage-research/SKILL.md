@@ -33,10 +33,18 @@ Before you use an excerpt to support a claim, match it as a string against the p
 
 ## Steps
 
-1. **Settle the intent,** as step 1 of `research-topic` does.
-2. **Start a worktree** on the branch `research/<topic-slug>`, such as `research/union-types`, following [agents/worktrees.md](../../agents/worktrees.md). Create it before the first write. First check `research/` for a saved topic on the subject. If one exists, build on that file, and don't start a second topic. Use the repository's existing kebab-case name for the topic (`union-types`, not `union-type`), so the branch, topic, and opinions share one search term.
+1. **Settle the intent,** as step 1 of `research-topic` does. If the user says the question is a one-off, or doesn't want the topic saved, run `research-topic` instead, before you create anything.
+2. **Look for a saved topic, then start a worktree.** Use the repository's existing kebab-case name for the topic (`union-types`, not `union-type`), so the branch, topic, and opinions share one search term. Before you create anything, look for the topic in two places:
+   - **`research/` on the default branch:** A topic there is saved and unresolved.
+   - **Branches and open pull requests:** A topic staged in an open `research:` pull request isn't on the default branch yet. `git branch --all --list '*research/*'` lists the branches, and `gh pr list --search 'research: in:title'` lists the pull requests.
+
+   Then start the worktree, following [agents/worktrees.md](../../agents/worktrees.md), and create it before the first write:
+   - **No saved topic:** Start it on the new branch `research/<topic-slug>`, such as `research/union-types`.
+   - **A topic in `research/`:** Start it on the new branch too. Build on that file, refresh its dates, and don't start a second topic.
+   - **A topic on an existing `research/<topic-slug>` branch:** Don't create a second branch or a second slug. Add a worktree for the existing branch with `git worktree add <dir> research/<topic-slug>`, and build on the topic there.
+
 3. **Read the opinions and scan the roster,** as steps 2 and 3 of `research-topic` do. Research accepts any source. **Promotion is the strict gate,** as [Persistence and lifecycle](#persistence-and-lifecycle) describes.
-4. **Write the research topic,** as step 4 of `research-topic` writes its answer, with these differences:
+4. **Write the research topic,** as step 4 of `research-topic` writes its answer, with these differences. The last two replace its bullets on code samples and package versions, which only ask you to say what you checked:
    - The result is the topic file, not an answer in the conversation.
    - Mark a claim that rests only on your own reading as unsupported, so `resolve-research` doesn't promote it. Mark a choice or a judgement that rests only on a reference the same way.
    - List each promising source from outside the roster as a `vet-source` candidate in the closing section.
@@ -51,13 +59,12 @@ Before you use an excerpt to support a claim, match it as a string against the p
    | A note or opinion is stale: a feature reached GA, or guidance changed | `refresh-dotnet-versions` or `harvest-sources`                           |
    | A strong source from outside the roster supported the research        | `vet-source`                                                             |
    | The repository already answers the question fully                     | Say so. `resolve-research` can discard the topic                         |
-   | A saved research topic on this subject exists in `research/`          | Build on it, refresh its dates, and report its promote-or-discard status |
 
 ## Persistence and lifecycle
 
-**Save the topic** to `research/<topic-slug>.md`, with the metadata [agents/metadata.md](../../agents/metadata.md) defines, unless the user says the question was a one-off.
+**Save the topic** to `research/<topic-slug>.md`, with the metadata [agents/metadata.md](../../agents/metadata.md) defines, unless the user says the question was a one-off, as [Edge cases](#edge-cases) describes.
 
-Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the user doesn't want the topic saved, delete the branch and answer in the conversation.
+Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request.
 
 **Title the commit and pull request `research: <topic>`,** such as `research: runtime async`, not `docs: research <topic>`. The separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic researched. `resolve-research` sets the type of the resolution commits.
 
@@ -65,6 +72,7 @@ Commit the topic on the `research/<topic-slug>` branch, and open a pull request 
 
 ## Edge cases
 
-- **The edge cases of `research-topic` apply here too.**
-- **The user says the question was a one-off:** Answer in the conversation, as `research-topic` does, and save nothing.
-- **A saved topic on the subject exists in `research/`:** Build on it in the same file, and refresh its dates. Don't start a second topic.
+- **Three edge cases of `research-topic` apply here too:** a preview-only topic, a topic outside .NET, and a conflict between house and community positions.
+- **Offline:** Stop, and save nothing. A topic written from `opinions/` alone restates them, and gives `resolve-research` nothing to promote.
+- **The user asks to save the answer in their own project:** Run `research-topic` instead. This skill writes only the research topic.
+- **The user says mid-run that the question was a one-off, or doesn't want the topic saved:** Answer in the conversation, as `research-topic` does, and save nothing. If step 2 already created the worktree, remove it with `git worktree remove`, and then delete the branch. Git refuses to delete a branch that a worktree still holds.
