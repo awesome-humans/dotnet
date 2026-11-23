@@ -8,33 +8,29 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 
 ## Usage
 
-- **Point your agent at it.** Ask your coding agent to run [`follow-opinions`](skills/follow-opinions/SKILL.md), which applies the opinions while it writes code:
+- **Try it without installing.** Ask your coding agent to check a project against the opinions. It reports what it finds, and changes nothing unless you ask for fixes:
 
   ```text
-  Use the follow-opinions skill at awesome-humans.net/dotnet/llms.txt when writing .NET code
+  Fetch awesome-humans.net/dotnet/llms.txt and every file it links as raw text, then use its review-project skill on <repository>
   ```
 
-  The opinions cover conventions, project layout, language usage, and library choices.
+- **Install it in your project.** Install the skills, so your agent reads the opinions and templates from the project's own copy:
 
-- **Check an existing project.** Ask your coding agent to run [`review-project`](skills/review-project/SKILL.md):
-
-  ```text
-  Use the review-project skill at awesome-humans.net/dotnet/llms.txt on <repository>
+  ```sh
+  npx skills add https://awesome-humans.net/dotnet
   ```
 
-  To narrow the review, say what to include or leave out, and optionally name a house profile:
+The command installs three skills:
 
-  ```text
-  Use the review-project skill at awesome-humans.net/dotnet/llms.txt on <repository>, focus on logging and testing, skip CI, use the simon-mckenna house profile
-  ```
+| Installed as             | Skill                                                | What your agent does with it                                                    |
+| ------------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `follow-dotnet-opinions` | [`follow-opinions`](skills/follow-opinions/SKILL.md) | Applies the opinions and templates while it writes or changes .NET code         |
+| `research-dotnet-topic`  | [`research-topic`](skills/research-topic/SKILL.md)   | Answers a .NET question from the opinions and vetted sources, citing each claim |
+| `review-dotnet-project`  | [`review-project`](skills/review-project/SKILL.md)   | Checks a project against the opinions and templates, and reports deviations     |
 
-- **Research a topic.** Ask your coding agent to run [`research-topic`](skills/research-topic/SKILL.md), which answers from the opinions and the vetted sources, citing each claim:
+[Usage](https://awesome-humans.net/usage/) has prompts that follow the opinions, research a topic, and narrow a review, and shows how to install a house profile.
 
-  ```text
-  Use the research-topic skill at awesome-humans.net/dotnet/llms.txt to research whether to turn on runtime async
-  ```
-
-- **Read the opinions and templates.** Browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, rationale, and sources, and the [`templates/`](templates) encode them.
+To read the opinions and templates, browse them at [awesome-humans.net](https://awesome-humans.net/dotnet/) or on GitHub. Each opinion gives its recommendation, rationale, and sources, and the [`templates/`](templates) encode them.
 
 ## Scope
 
