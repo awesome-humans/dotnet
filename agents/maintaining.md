@@ -6,6 +6,8 @@
 
   The two orders differ: `architecture.md` is titled "Application architecture". When you rename or remove a file, update both places in the same commit. The same goes for a skill directory and its row in the [Maintenance via skills](../README.md#maintenance-via-skills) table, which is sorted by skill name. `scripts/validate-readme-index.cs` fails the pull request if an entry is missing, out of order, or points at a file that doesn't exist.
 
+- **Mark a skill that runs only in this repository as internal.** Add `internal: "true"` under `metadata` in its `SKILL.md`, so that `npx skills add awesome-humans/dotnet` doesn't offer it to another project. The three skills a project runs on its own code, `follow-opinions`, `research-topic`, and `review-project`, leave it out. [awesome-humans/website: `ecosystems.toml`](https://github.com/awesome-humans/website/blob/main/ecosystems.toml) lists those three, and the site publishes them.
+
 - **Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages and pull request titles.** A pull request squash-merges under its title, so the title becomes the commit subject in `git log`. Use the form `<type>[(scope)]: <description>`, in lowercase and the imperative. The scope is optional, as in `chore(deps)` or `docs(review-project)`.
 
   | Type       | Use for                                                  |

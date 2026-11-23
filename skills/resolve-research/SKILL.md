@@ -6,11 +6,14 @@ compatibility: Requires git; internet access only needed to re-verify a stale re
 metadata:
   repo: awesome-humans/dotnet
   change-flow: branch-pr
+  internal: "true"
 ---
 
 # Resolve a research topic
 
 `research/` is a staging area, and this skill is how a topic leaves it. A topic is evidence gathered at one point in time, and it leaves in one of two ways. Promotion weaves its recommendation into the opinions and templates, where it becomes the repository's position. Discard is just as valid: the topic answered its question, and that was its job. Either way, the file is deleted. The one exception is a partial promotion, which keeps the blocked part on disk with a note on what it's waiting for. For details, see [Edge cases](#edge-cases).
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Run the skill in a checkout, where each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root.
 
 ## Orchestration
 

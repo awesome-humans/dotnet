@@ -6,11 +6,14 @@ compatibility: Requires git and internet access
 metadata:
   repo: awesome-humans/dotnet
   change-flow: branch-pr
+  internal: "true"
 ---
 
 # Harvest sources
 
 Collect what the vetted sources have published since the last scan, and update the opinions from it.
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Run the skill in a checkout, where each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root.
 
 ## Orchestration
 

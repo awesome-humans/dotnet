@@ -6,11 +6,14 @@ compatibility: Requires git and internet access
 metadata:
   repo: awesome-humans/dotnet
   change-flow: branch-pr
+  internal: "true"
 ---
 
 # Refresh .NET versions
 
 Move every resource to the **latest released** (GA) versions of .NET, C#, and F#, and every package pin in `templates/Directory.Packages.props` and every action pin in an `opinions/` code block to its **latest stable** version.
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Run the skill in a checkout, where each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root.
 
 ## Trigger
 

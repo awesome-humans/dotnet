@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: Answer a question about a .NET topic from this repository's opinions, its vetted sources, and a named package's own documentation, such as "research runtime async", "what's the story on hybrid caching", or "should we adopt Native AOT". Every claim cites its source and gives that source's standing, preview features are labelled as the freshness policy requires, and the answer closes with what the opinions don't cover yet. Answers in the conversation, and writes nothing unless the user asks it to save the answer in their own project. Use whenever the user wants to understand, evaluate, or decide on a .NET subject, in their own project or with no project at all.
+description: Answer a question about a .NET topic from the opinions and vetted sources in awesome-humans/dotnet, and a named package's own documentation, such as "research runtime async", "what's the story on hybrid caching", or "should we adopt Native AOT". Every claim cites its source and gives that source's standing, preview features are labelled as the freshness policy requires, and the answer closes with what the opinions don't cover yet. Answers in the conversation, and writes nothing unless the user asks it to save the answer in their own project. Use whenever the user wants to understand, evaluate, or decide on a .NET subject, in their own project or with no project at all.
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:

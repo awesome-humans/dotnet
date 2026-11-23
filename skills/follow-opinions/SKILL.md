@@ -1,6 +1,6 @@
 ---
 name: follow-opinions
-description: Write or change .NET code in a project so that it follows this repository's opinions and templates. Reads the opinions that cover the change before writing, starts new project and build files from the templates, and says afterwards which opinions it applied and where the project's own decisions took precedence. Use when writing, scaffolding, or changing C# or F# code, project files, or CI in a project that follows or is adopting the Awesome Humans of .NET opinions, or when asked to "follow the opinions" or to write something "the awesome-humans way". It's for projects other than awesome-humans/dotnet, and work in that repository follows its AGENTS.md instead.
+description: Write or change .NET code in a project so that it follows the opinions and templates in awesome-humans/dotnet. Reads the opinions that cover the change before writing, starts new project and build files from the templates, and says afterwards which opinions it applied and where the project's own decisions took precedence. Use when writing, scaffolding, or changing C# or F# code, project files, or CI in a project that follows or is adopting the Awesome Humans of .NET opinions, or when asked to "follow the opinions" or to write something "the awesome-humans way". It's for projects other than awesome-humans/dotnet, and work in that repository follows its AGENTS.md instead.
 license: See repository LICENSE
 compatibility: Requires write access to the project; .NET SDK to build and test what it writes
 metadata:
@@ -15,6 +15,8 @@ Apply this repository's opinions and templates while you write or change code in
 This skill changes only what the task asks for. To find where a project's existing code deviates, run `review-project`.
 
 By default, it follows sourced community practice only. If the user or the project names a house profile, such as `simon-mckenna`, it follows that profile's house opinions too. For the profiles, see [HOUSE-OPINIONS.md](../../HOUSE-OPINIONS.md).
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Each path in it, such as `opinions/` or `AWESOME-HUMANS.md`, is relative to the repository's root. Without a checkout, read a file at `https://raw.githubusercontent.com/awesome-humans/dotnet/main/<path>`, and find the opinions in [llms.txt](https://awesome-humans.net/dotnet/llms.txt).
 
 ## Steps
 

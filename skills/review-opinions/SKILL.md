@@ -6,11 +6,14 @@ compatibility: Requires git and internet access; .NET SDK needed to compile code
 metadata:
   repo: awesome-humans/dotnet
   change-flow: report-only
+  internal: "true"
 ---
 
 # Review opinions
 
 Check that what `opinions/` and `templates/` say is true, still supported by the pages they cite, and consistent from file to file. This skill **only reports**. It never edits content.
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Run the skill in a checkout, where each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root.
 
 Other checks cover the rest, so don't repeat them:
 
