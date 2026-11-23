@@ -14,7 +14,7 @@ Compare a target .NET project with this repository's opinions and templates, and
 
 By default, it checks sourced community practice only. If the user names a house profile, such as `simon-mckenna`, it checks that profile's house opinions too. For the profiles, see [HOUSE-OPINIONS.md](../../HOUSE-OPINIONS.md).
 
-"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Each path in it, such as `opinions/` or `AWESOME-HUMANS.md`, is relative to the repository's root. Without a checkout, read a file at `https://raw.githubusercontent.com/awesome-humans/dotnet/main/<path>`, and find the opinions in [llms.txt](https://awesome-humans.net/dotnet/llms.txt).
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Each path in it, such as `opinions/` or `AWESOME-HUMANS.md`, is relative to the repository's root. Without a checkout, read an opinion, a template, a skill, the roster, or the house opinions record from its copy at `https://awesome-humans.net/dotnet/raw/none/<path>`, with `.txt` added to a Markdown file's name and the leading dot dropped from a file or directory name. [llms.txt](https://awesome-humans.net/dotnet/llms.txt) links the opinions, templates, and skills. Any other file is at `https://raw.githubusercontent.com/awesome-humans/dotnet/main/<path>`.
 
 ## Steps
 
