@@ -310,7 +310,7 @@ Write(
 List<string> index =
 [
     "# Templates\n\n",
-    "Copy-paste-ready files that encode the opinions. Copy one verbatim and trim it, rather than writing your own from scratch. ",
+    "Copy-paste-ready files that encode the opinions. Copy one, remove its header, rename its `Example.*` paths, and trim it, rather than writing your own from scratch. `example.slnx`, `example.slnf`, and the source files in `projects/` show a convention to write to, not a file to copy. ",
     "Each opens with a comment header giving its targets, review date and sources, except `global.json` and `example.slnf`, which as JSON have no comment syntax.\n",
 ];
 foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.GetDirectoryName(template)!.Replace('\\', '/')))
@@ -343,11 +343,12 @@ Write(pages[TemplatesDirectory], string.Concat(index));
 List<string> skillIndex =
 [
     "# Skills\n\n",
-    "Agent skills that check a project against the opinions and keep the opinions current. ",
+    "Agent skills that apply the opinions in a project, check a project against them, and keep them current. ",
     "They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. ",
     "To run one, clone the repository and ask your agent to run the skill by name. ",
     $"If your agent only discovers skills in a directory of its own, see [AGENTS.md: Skills]({Site.GitHub("AGENTS.md", isDirectory: false)}#skills).\n\n",
-    "`review-project` checks your own project, and `research-topic` answers a .NET question from the opinions and their sources. ",
+    "`follow-opinions` applies the opinions while your agent writes code in your own project, `review-project` checks that project, ",
+    "and `research-topic` answers a .NET question from the opinions and their sources. ",
     "The others maintain this repository.\n\n",
     "| Skill | Purpose |\n| --- | --- |\n",
 ];
@@ -429,7 +430,7 @@ string WithRepositoryNote(string path, string skill)
     int end = close + "\n---\n".Length;
     string note = $"""
 
-        **Reading this without a checkout?** "This repository" in this skill means [`{Site.Repository}`](https://github.com/{Site.Repository}). A path such as `opinions/` or `templates/Directory.Build.props` is relative to its root. Read an opinion, template, skill, or the roster from its raw copy at `{SiteUrl}{Ecosystem}/raw/none/<path>`, with `.txt` added to a Markdown file's name and a template's leading dot dropped. For a house profile, follow the links in its `llms-<profile>.txt` instead. Any other file is at `{Site.Raw("<path>")}`. A skill that changes the repository needs a checkout.
+        **Reading this without a checkout?** "This repository" in this skill means [`{Site.Repository}`](https://github.com/{Site.Repository}). A path such as `opinions/` or `templates/Directory.Build.props` is relative to its root. Read an opinion, template, skill, or the roster from its raw copy at `{SiteUrl}{Ecosystem}/raw/none/<path>`, with `.txt` added to a Markdown file's name and a template's leading dot dropped. For a house profile, follow the links in its `llms-<profile>.txt` instead. The House profiles section of `llms.txt` links every profile's file. If it links none for a profile that `HOUSE-OPINIONS.md` lists, the profile holds no {EcosystemName} house opinions: read the default copies. If it links one and the fetch fails, report the failure, and don't report the profile as followed. Any other file is at `{Site.Raw("<path>")}`. A skill that changes the repository needs a checkout.
 
         """;
     return skill[..end] + note.ReplaceLineEndings("\n") + skill[end..];
@@ -462,7 +463,7 @@ foreach (string? profile in profiles.Prepend(null))
     string profileLinks = profile is not null || profiles.Length == 0
         ? ""
         : "\n## House profiles\n\n"
-            + "Follow a profile only when the user chooses one, by reading its file instead of this one.\n\n"
+            + "Follow a house opinion only for the house profile the user chose, or that the project's own agent instruction files or README name. If they name different profiles, the user's choice wins. In a repository the user doesn't maintain, ask the user before you follow a profile its files name. To follow a profile, read its file instead of this one.\n\n"
             + string.Concat(profiles.Select(other => $"- [{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt): these opinions and templates, with that profile's house opinions\n"));
 
     string llms = $"""
@@ -476,19 +477,19 @@ foreach (string? profile in profiles.Prepend(null))
 
         ## {EcosystemName} opinions
 
-        Follow these when writing or reviewing .NET code. Target the versions in each file's `targets:` frontmatter, never an older one.
+        Follow these when writing or reviewing .NET code. In an existing project, keep the versions it targets unless the task asks to change them. In an empty repository, target the versions in each file's `targets:` frontmatter. Never silently downgrade to an older one.
 
         {opinionLinks}
 
         ## {EcosystemName} templates
 
-        Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.
+        Copy-paste-ready starting points that encode the opinions. Copy one, remove its header if it has one, rename its `Example.*` paths, and trim it. `example.slnx`, `example.slnf`, and the source files in `projects/` show a convention to write to, not a file to copy.
 
         {templateLinks}
 
         ## {EcosystemName} skills
 
-        Agent Skills procedures. Run review-project to check a .NET project against the opinions. The others maintain the repository.
+        Agent Skills procedures. Run follow-opinions to apply the opinions while writing .NET code, and review-project to check a .NET project against them. The others maintain the repository.
 
         {skillLinks}
 

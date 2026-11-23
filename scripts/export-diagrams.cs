@@ -61,7 +61,7 @@ internal static class Pipeline
     private const string Description =
         "Swimlane diagram of how this repository maintains itself: vet-source, research-topic, resolve-research, harvest-sources, refresh-dotnet-versions, " +
         "and weave-house-opinion each work on their own branch, pass the CI checks, get an agent review, pass the maintainer's review, and land in the roster, research, or the opinions and templates; " +
-        "audit-freshness, review-opinions, and review-project only report. Their findings, the release watch, and the harvest reminder start the next run.";
+        "audit-freshness, review-opinions, and review-project only report. Their findings, the release watch, and the harvest reminder start the next run. follow-opinions isn't shown, because it writes only to the project it runs in.";
 
     private static readonly (string Key, string Name)[] Lanes =
     [
