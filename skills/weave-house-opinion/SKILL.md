@@ -6,11 +6,14 @@ compatibility: Requires git
 metadata:
   repo: awesome-humans/dotnet
   change-flow: branch-pr
+  internal: "true"
 ---
 
 # Weave a house opinion
 
 House opinions are a house profile's preferences, such as the maintainer's `simon-mckenna`. They're always marked, and they sit beside the sourced text, never in it, so nobody mistakes them for community best practice. A reader or agent sees them only after choosing the profile.
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Run the skill in a checkout, where each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root.
 
 ## Steps
 

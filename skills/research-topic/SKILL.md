@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: Answer a question about a .NET topic from this repository's opinions, its vetted sources, and a named package's own documentation, such as "research runtime async", "what's the story on hybrid caching", or "should we adopt Native AOT". Every claim cites its source and gives that source's standing, preview features are labelled as the freshness policy requires, and the answer closes with what the opinions don't cover yet. Answers in the conversation, and writes nothing unless the user asks it to save the answer in their own project. Use whenever the user wants to understand, evaluate, or decide on a .NET subject, in their own project or with no project at all.
+description: Answer a question about a .NET topic from the opinions and vetted sources in awesome-humans/dotnet, and a named package's own documentation, such as "research runtime async", "what's the story on hybrid caching", or "should we adopt Native AOT". Every claim cites its source and gives that source's standing, preview features are labelled as the freshness policy requires, and the answer closes with what the opinions don't cover yet. Answers in the conversation, and writes nothing unless the user asks it to save the answer in their own project. Use whenever the user wants to understand, evaluate, or decide on a .NET subject, in their own project or with no project at all.
 license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
@@ -14,7 +14,7 @@ Answer "What should I know or do about X?" from this repository's opinions first
 
 To save the research in this repository, so that it can become an opinion, run `stage-research` from a checkout. It follows these steps, and adds the ones that saving needs.
 
-"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Each path in it, such as `opinions/` or `AWESOME-HUMANS.md`, is relative to the repository's root. Without a checkout, read a file at `https://raw.githubusercontent.com/awesome-humans/dotnet/main/<path>`, and find the opinions in [llms.txt](https://awesome-humans.net/dotnet/llms.txt).
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Each path in it, such as `opinions/` or `AWESOME-HUMANS.md`, is relative to the repository's root. Without a checkout, read an opinion, a template, a skill, the roster, or the house opinions record from its copy at `https://awesome-humans.net/dotnet/raw/none/<path>`, with `.txt` added to a Markdown file's name and the leading dot dropped from a file or directory name. [llms.txt](https://awesome-humans.net/dotnet/llms.txt) links the opinions, templates, and skills. Any other file is at `https://raw.githubusercontent.com/awesome-humans/dotnet/main/<path>`.
 
 ## Reading sources
 

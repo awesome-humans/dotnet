@@ -6,11 +6,14 @@ compatibility: Requires git and internet access
 metadata:
   repo: awesome-humans/dotnet
   change-flow: branch-pr
+  internal: "true"
 ---
 
 # Vet a source
 
 Apply the admission criteria in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) to a candidate source, or re-evaluate an existing one. Every opinion cites only the roster, so when in doubt, decline.
+
+"This repository" in this skill means [awesome-humans/dotnet](https://github.com/awesome-humans/dotnet). Run the skill in a checkout, where each path in it, such as `opinions/` or `templates/Directory.Build.props`, is relative to the repository's root.
 
 ## Orchestration
 
@@ -46,10 +49,10 @@ As [agents/orchestration.md](../../agents/orchestration.md) describes, delegate 
 
 5. **For a re-evaluation,** promote a watch-list source whose blocker has cleared. Demote or annotate an admitted source that has published nothing in over a year, or whose quality has dropped.
    - A source whose quality drops gets either a tighter usage limit in its notes, or the watch list.
-   - A demoted source keeps its row, with a note. **Moving a source to the watch list revokes citation, back catalogue included,** and `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:`.
+   - A demoted source keeps its row, with a note. **Moving a source to the watch list revokes citation, back catalogue included,** and `just validate-sources` rejects a watch-list ID in any `sources:`.
    - So a demotion is finished only when no opinion cites the source. In the same pull request, re-source each affected claim from a citable source, or drop it. To keep the back catalogue citable, annotate the row instead of demoting it.
 6. **Edit in a worktree** on the branch `vet/<source-id>`, or a slug for a multi-source pass, as [agents/worktrees.md](../../agents/worktrees.md) describes:
-   1. Update the roster table. Assign a stable kebab-case `id`, set its Kind to `person` or `publication` as [AWESOME-HUMANS.md: How the roster is organised](../../AWESOME-HUMANS.md#how-the-roster-is-organised) defines, and insert the row in ID order. If the same source is on another awesome-humans ecosystem's roster, use its `id` and Kind there. If the row enters or leaves the Citable table, update all three counts in the sentence above it: the total, the people, and the publications. `scripts/validate-sources.cs` checks each against the rows.
+   1. Update the roster table. Assign a stable kebab-case `id`, set its Kind to `person` or `publication` as [AWESOME-HUMANS.md: How the roster is organised](../../AWESOME-HUMANS.md#how-the-roster-is-organised) defines, and insert the row in ID order. If the same source is on another awesome-humans ecosystem's roster, use its `id` and Kind there. If the row enters or leaves the Citable table, update all three counts in the sentence above it: the total, the people, and the publications. `just validate-sources` checks each against the rows.
    2. Add the source's section under `## Source notes`, also in ID order, with the evidence and any marking, in the verdict-then-labelled-bullets shape the section's introduction describes.
    3. Add the decision to the decision log, in two sentences: the decision and the fact behind it. Put the evidence for each criterion in the pull request. For a suggestion the source made of itself, say so in the log entry.
 7. **Open a pull request,** filling in the [`source.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/source.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. It takes the decision, the evidence for each criterion, the decision log line, and, for a demotion, each claim re-sourced or dropped. A person approves it before the source can feed opinions.
@@ -61,9 +64,9 @@ As [agents/orchestration.md](../../agents/orchestration.md) describes, delegate 
 An opt-out removes citations, and the roster keeps only enough to turn away a later suggestion. Finish it within 30 days of the maintainer's verification, in one pull request on the branch `vet/opt-out-<source-id>`:
 
 1. **Move the row** to the `## Opted out` table, in ID order. If the section still reads "No source has opted out.", replace that line with a table that has the same columns as the others. If the row leaves the Citable table, update all three counts above it, as for a demotion.
-2. **Delete the source's section** under `## Source notes`. `scripts/validate-sources.cs` fails while it's there.
+2. **Delete the source's section** under `## Source notes`. `just validate-sources` fails while it's there.
 3. **Log the decision:** the date, the source ID, and the link to the `awesome-humans/website` issue. Never quote the requester or name anyone beyond the source ID.
-4. **Re-source every citation.** `scripts/validate-sources.cs` lists each opinion and template that still cites the ID. Re-source each claim with `research-topic`, or cut it back to what other citable sources support. In the pull request, list each claim and what happened to it.
+4. **Re-source every citation.** `just validate-sources` lists each opinion and template that still cites the ID. Re-source each claim with `research-topic`, or cut it back to what other citable sources support. In the pull request, list each claim and what happened to it.
 5. **Open the pull request** with the [`source.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/source.md) template and a `Refs: awesome-humans/website#<number>` trailer, which doesn't close the issue. Comment the pull request on the `awesome-humans/website` issue, which the maintainer closes once every ecosystem's pull request has merged. When step 2 sent the source here and there's no issue, leave out the trailer and the comment, and link the other roster's entry in the description instead, with a reference-style link.
 
 Opting back in is a suggestion like any other. The source leaves `## Opted out` only on admission.

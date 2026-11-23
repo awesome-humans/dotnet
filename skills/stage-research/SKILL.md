@@ -6,6 +6,7 @@ compatibility: Requires git and a checkout of this repository; internet access f
 metadata:
   repo: awesome-humans/dotnet
   change-flow: branch-pr
+  internal: "true"
 ---
 
 # Stage research
