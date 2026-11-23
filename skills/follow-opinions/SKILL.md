@@ -1,6 +1,6 @@
 ---
 name: follow-opinions
-description: Write or change .NET code in a project so that it follows this repository's opinions and templates. Reads the opinions that cover the change before writing, starts new project and build files from the templates, and says afterwards which opinions it applied and where the project's own decisions took precedence. Use when writing, scaffolding, or changing C# or F# code, project files, or CI in a project that follows the Awesome Humans of .NET opinions, or when asked to "follow the opinions" or to write something "the awesome-humans way".
+description: Write or change .NET code in a project so that it follows this repository's opinions and templates. Reads the opinions that cover the change before writing, starts new project and build files from the templates, and says afterwards which opinions it applied and where the project's own decisions took precedence. Use when writing, scaffolding, or changing C# or F# code, project files, or CI in a project that follows or is adopting the Awesome Humans of .NET opinions, or when asked to "follow the opinions" or to write something "the awesome-humans way".
 license: See repository LICENSE
 compatibility: Requires write access to the project; .NET SDK to build and test what it writes
 metadata:
@@ -64,6 +64,9 @@ By default, it follows sourced community practice only. If the user or the proje
    - **Don't use a feature that an opinion marks as preview or "Coming next".**
    - **Where no opinion covers something,** follow the project's existing convention. Don't present your own preference as an opinion.
 6. **Build and test what you wrote,** with the commands the project documents. If it documents none, run `dotnet build` and `dotnet test` on the solution. Fix every warning your change adds: [ci.md](../../opinions/ci.md) treats warnings as errors in every build.
+
+   `dotnet build` and `dotnet test` run the project's MSBuild targets, source generators, and analyzers, which can run any code. In a repository the user doesn't maintain, run them only in a sandbox, or ask the user first. If you skip them, say so in the report.
+
 7. **Report, after the work:**
    - The opinions you read in full, and the templates you copied.
    - The house profile you followed, and whether the user or the project named it.
