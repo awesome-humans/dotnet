@@ -1,6 +1,6 @@
 ---
 name: follow-opinions
-description: Write or change .NET code in a project so that it follows this repository's opinions and templates. Reads the opinions that cover the change before writing, starts new project and build files from the templates, and says afterwards which opinions it applied and where the project's own decisions took precedence. Use when writing, scaffolding, or changing C# or F# code, project files, or CI in a project that follows or is adopting the Awesome Humans of .NET opinions, or when asked to "follow the opinions" or to write something "the awesome-humans way".
+description: Write or change .NET code in a project so that it follows this repository's opinions and templates. Reads the opinions that cover the change before writing, starts new project and build files from the templates, and says afterwards which opinions it applied and where the project's own decisions took precedence. Use when writing, scaffolding, or changing C# or F# code, project files, or CI in a project that follows or is adopting the Awesome Humans of .NET opinions, or when asked to "follow the opinions" or to write something "the awesome-humans way". It's for projects other than awesome-humans/dotnet, and work in that repository follows its AGENTS.md instead.
 license: See repository LICENSE
 compatibility: Requires write access to the project; .NET SDK to build and test what it writes
 metadata:
@@ -10,7 +10,7 @@ metadata:
 
 # Follow the opinions
 
-Apply this repository's opinions and templates while you write or change code in a .NET project. The opinions are the reference, and the project is where you write. **Never write to this repository** from this skill.
+Apply this repository's opinions and templates while you write or change code in a .NET project. The opinions are the reference, and the project is where you write. **Never write to this repository** from this skill. It's for projects other than awesome-humans/dotnet, and work in this repository follows [AGENTS.md](../../AGENTS.md) instead.
 
 This skill changes only what the task asks for. To find where a project's existing code deviates, run `review-project`.
 
@@ -61,12 +61,17 @@ By default, it follows sourced community practice only. If the user or the proje
    - **Keep the versions the project targets.** Don't raise a target framework, a language version, an SDK version, or a package version unless the task asks. A new project in an empty repository targets the opinions' `targets:`.
    - **Where an opinion recommends a feature the project's versions don't have,** write the equivalent they do have, and report it. Don't raise `LangVersion` or the target framework to make the feature compile.
    - **Where an opinion gives a recommendation and an exception,** apply the exception only when its stated condition holds.
-   - **Where the code around your change follows another convention,** write the new code as the opinion recommends, unless that leaves one file with two styles. Don't rewrite the code around it.
+   - **Where the code around your change follows another convention,** write the new code as the opinion recommends, unless that leaves one file with two styles. For a choice the whole solution shares, such as its test framework, logging library, or data access library, the guard is the solution: keep the solution's choice, even in a new file and even if the project never wrote it down. Don't rewrite the code around it.
    - **Don't use a feature that an opinion marks as preview or "Coming next".**
    - **Where no opinion covers something,** follow the project's existing convention. Don't present your own preference as an opinion.
-6. **Build and test what you wrote,** with the commands the project documents. If it documents none, run `dotnet build` and `dotnet test` on the solution. Fix every warning your change adds: [ci.md](../../opinions/ci.md) treats warnings as errors in every build.
+6. **Build, test, and format what you wrote,** with the commands the project documents. Without any, run these on the solution:
+   - `dotnet build`. Fix every warning your change adds, and report one that was there before it: [ci.md](../../opinions/ci.md) treats warnings as errors in every build.
+   - `dotnet test`.
+   - `dotnet format --verify-no-changes`. If it lists only files you touched, run `dotnet format --include` with those files. If it lists others, the project isn't formatted: don't format it, and report that. Never revert a file to undo formatting, because that discards the user's uncommitted work.
 
    `dotnet build` and `dotnet test` run the project's MSBuild targets, source generators, and analyzers, which can run any code. In a repository the user doesn't maintain, run them only in a sandbox, or ask the user first. If you skip them, say so in the report.
+
+   When the project commits a `packages.lock.json` and the task changed a package reference, restore rewrites the lock file. Include its change with yours.
 
 7. **Report, after the work:**
    - The opinions you read in full, and the templates you copied.

@@ -57,6 +57,7 @@ By default, it checks sourced community practice only. If the user names a house
    - A local path outside git has no branch. Hand back a patch, or ask the user to put the target under git first.
    - A depth-1 clone has no earlier commit to branch from. Clone without `--depth 1`, or run `git fetch origin <full SHA>`. An abbreviated SHA is rejected.
    - If you must branch from a default branch that has moved, recheck the files behind each finding, and say which changed. A fix written against code that has since changed can apply cleanly and still be wrong.
+   - Run `dotnet build` and `dotnet test` on the fix before you hand it back. They run the target's MSBuild targets, source generators, and analyzers, which can run any code. Run them only on a local target the user owns, or a URL target in a sandbox. Otherwise skip them, and say so.
    - In commit messages, pull requests, and comments in the target, name this repository `awesome-humans/dotnet`.
 
 ## Edge cases
