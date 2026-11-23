@@ -430,7 +430,7 @@ string WithRepositoryNote(string path, string skill)
     int end = close + "\n---\n".Length;
     string note = $"""
 
-        **Reading this without a checkout?** "This repository" in this skill means [`{Site.Repository}`](https://github.com/{Site.Repository}). A path such as `opinions/` or `templates/Directory.Build.props` is relative to its root. Read an opinion, template, skill, or the roster from its raw copy at `{SiteUrl}{Ecosystem}/raw/none/<path>`, with `.txt` added to a Markdown file's name and a template's leading dot dropped. For a house profile, follow the links in its `llms-<profile>.txt` instead. Any other file is at `{Site.Raw("<path>")}`. A skill that changes the repository needs a checkout.
+        **Reading this without a checkout?** "This repository" in this skill means [`{Site.Repository}`](https://github.com/{Site.Repository}). A path such as `opinions/` or `templates/Directory.Build.props` is relative to its root. Read an opinion, template, skill, or the roster from its raw copy at `{SiteUrl}{Ecosystem}/raw/none/<path>`, with `.txt` added to a Markdown file's name and a template's leading dot dropped. For a house profile, follow the links in its `llms-<profile>.txt` instead. The House profiles section of `llms.txt` links every profile's file. If it links none for a profile that `HOUSE-OPINIONS.md` lists, the profile holds no {EcosystemName} house opinions: read the default copies. If it links one and the fetch fails, report the failure, and don't report the profile as followed. Any other file is at `{Site.Raw("<path>")}`. A skill that changes the repository needs a checkout.
 
         """;
     return skill[..end] + note.ReplaceLineEndings("\n") + skill[end..];
