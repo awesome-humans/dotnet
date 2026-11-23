@@ -8,10 +8,10 @@ The writers are listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md): people and pub
 
 ## Usage
 
-- **Point your agent at it.** Tell your coding agent to follow the opinions when it writes code:
+- **Point your agent at it.** Ask your coding agent to run [`follow-opinions`](skills/follow-opinions/SKILL.md), which applies the opinions while it writes code:
 
   ```text
-  Follow the conventions at awesome-humans.net/dotnet/llms.txt when writing .NET code
+  Use the follow-opinions skill at awesome-humans.net/dotnet/llms.txt when writing .NET code
   ```
 
   The opinions cover conventions, project layout, language usage, and library choices.
@@ -135,16 +135,16 @@ In this repository, each house opinion is a marked block beside the sourced text
 │   ├── example.slnx
 │   ├── global.json
 │   └── projects/             ← example .csproj / .fsproj files
-└── skills/                   ← maintenance skills (see below)
+└── skills/                   ← agent skills (see below)
 ```
 
 ## Maintenance via skills
 
-Agent skills maintain the repository, and two of them, `follow-opinions` and `review-project`, run on someone else's project. They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md` file.
+Agent skills apply the opinions in a project, check a project against them, and keep them current. `follow-opinions` applies the opinions while your agent writes code in your own project, `review-project` checks that project, and `research-topic` answers a .NET question from the opinions and their sources. The others maintain this repository. They follow the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md` file.
 
 The skills split work by cost. Lower-cost worker agents run the web searches and source scans in parallel. The strongest available model is the editor, and only the editor writes to the opinions and templates.
 
-Every skill that changes this repository works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. The three report-only skills change nothing, and `follow-opinions` writes only to the project it runs in. Each `SKILL.md` is canonical over this diagram.
+Every skill that changes this repository works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. The three report-only skills change nothing in this repository, and `follow-opinions` writes only to the project it runs in. Each `SKILL.md` is canonical over this diagram.
 
 ![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the maintainer's review, to the roster, research, or the opinions and templates; audit-freshness, review-opinions, and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 
