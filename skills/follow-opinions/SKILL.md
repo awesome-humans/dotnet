@@ -22,7 +22,7 @@ By default, it follows sourced community practice only. If the user or the proje
    - The languages: C#, F#, or both.
    - Project, solution, and build files, such as a `.csproj`, `Directory.Build.props`, or `global.json`.
    - Tests, and CI workflows.
-   - The areas: ASP.NET Core, data access, dates and times, logging, globalization, a UI framework, or code that handles secrets or untrusted input.
+   - The areas: match the task against [README.md: Scope](../../README.md#scope), which gives one line on what each opinion covers. An async helper matches Runtime & performance, for example, and a new layer matches Application architecture.
 2. **Read the project's own decisions,** in its agent instruction files, such as `AGENTS.md`, `CLAUDE.md`, or `.github/copilot-instructions.md`, and in its `README.md` and contributing guide. Read every one the project holds, because your harness might load only its own:
    - **Record the house profile, and who named it,** or that nobody names one. Follow a house opinion only for the house profile the user chose, or that the project's own agent instruction files or README name. If they name different profiles, the user's choice wins. Without one, skip every house block in `opinions/`, and leave the house regions out of anything you copy from `templates/`. With one, keep that profile's blocks and regions, and skip the others.
    - **Record each decision the project states,** such as its test framework. Step 3 finds the ones that depart from an opinion.
@@ -50,14 +50,15 @@ By default, it follows sourced community practice only. If the user or the proje
    To trim a copy:
    - **Remove the header.** It's the first line, which starts `awesome-humans/dotnet template`, and the lines that describe only the template: where to copy the file, and `Versions verified …`. `global.json` is JSON, and has no header.
    - **Keep a comment that warns about or explains a setting,** even in the opening comment, such as the warning against `TestingPlatformDotnetTestSupport` in `templates/projects/Example.Library.Tests.csproj`.
-   - **Set the target framework, SDK version, and package versions to the ones the project already uses,** unless the repository is empty. The templates pin the opinions' `targets:`, and step 5 keeps the project's versions.
+   - **Set the target framework, language version, SDK version, and package versions to the ones the project already uses,** unless the repository is empty. The templates pin the opinions' `targets:`, and step 5 keeps the project's versions.
    - **Rename every `Example.*` path and namespace** to the project's own.
    - **Remove each setting and section the project doesn't use.** In a repository that already has code, also remove what the task doesn't ask for, or ask the user first. A root file applies to every project, so `TreatWarningsAsErrors` fails code the task never touched.
 
    In a file that already exists, change only what the task needs. Don't replace it with the template.
 
 5. **Write the code as the opinions recommend:**
-   - **Keep the versions the project targets.** Don't raise a target framework, an SDK version, or a package version unless the task asks. A new project in an empty repository targets the opinions' `targets:`.
+   - **Keep the versions the project targets.** Don't raise a target framework, a language version, an SDK version, or a package version unless the task asks. A new project in an empty repository targets the opinions' `targets:`.
+   - **Where an opinion recommends a feature the project's versions don't have,** write the equivalent they do have, and report it. Don't raise `LangVersion` or the target framework to make the feature compile.
    - **Where an opinion gives a recommendation and an exception,** apply the exception only when its stated condition holds.
    - **Where the code around your change follows another convention,** write the new code as the opinion recommends, unless that leaves one file with two styles. Don't rewrite the code around it.
    - **Don't use a feature that an opinion marks as preview or "Coming next".**
