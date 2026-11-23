@@ -19,7 +19,7 @@
 // to the same gate as opinions/ because it is what people copy.
 //
 // research/ is deliberately outside the gate. A topic may cite unvetted material as long
-// as the text flags it as such (research-topic, audit-freshness); the roster gate lands at
+// as the text flags it as such (stage-research, audit-freshness); the roster gate lands at
 // promotion instead, where resolve-research drops or re-sources every unvetted claim.
 //
 // A house profile's id, house:<profile>, isn't on the roster. Instead, each one in a file's

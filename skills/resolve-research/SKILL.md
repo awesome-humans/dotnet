@@ -14,7 +14,7 @@ metadata:
 
 ## Orchestration
 
-This is **editor-only work, so don't fan it out**. The sources were scanned when the topic was researched. What's left is deciding what an opinion says, which [agents/orchestration.md](../../agents/orchestration.md) reserves for the strongest available model. If a claim needs rechecking, run `research-topic` again instead of starting a scan here.
+This is **editor-only work, so don't fan it out**. The sources were scanned when the topic was researched. What's left is deciding what an opinion says, which [agents/orchestration.md](../../agents/orchestration.md) reserves for the strongest available model. If a claim needs rechecking, run `research-topic`, which answers without writing, instead of starting a scan here. Have it skip the topic you're resolving when it reads `research/`, because that file holds the claim in doubt. Run `stage-research` again only when the topic itself needs rewriting.
 
 ## Steps
 
@@ -41,7 +41,7 @@ This is **editor-only work, so don't fan it out**. The sources were scanned when
 
 - **Only roster-sourced claims and reference facts are promoted.** This gate lets research cite anyone while opinions cite only the roster and its references.
 - **Promotion deletes the topic in the same pull request.** A promoted topic left on disk is a second, unapproved copy of the opinion, and the deletion is what marks it promoted. `audit-freshness` reports a topic that remains. Git history keeps the record.
-- **Promotion uses `docs:`, and discard uses `research:`.** A promotion edits opinions, like any other opinion change. A discard touches only the staging area. Neither uses the `research: <topic>` form that `research-topic` uses to save a topic.
+- **Promotion uses `docs:`, and discard uses `research:`.** A promotion edits opinions, like any other opinion change. A discard touches only the staging area. Neither uses the `research: <topic>` form that `stage-research` uses to save a topic.
 - **`last-reviewed` means verified against the sources.** If the research is within the freshness tolerance, its verification holds, and today's UTC date is accurate. If not, verify it again first, as [Edge cases](#edge-cases) describes. Dating stale research records a verification that never happened.
 - **Rewrite the topic; don't paste it.** A topic surveys and weighs. An opinion has to be applied mechanically.
 

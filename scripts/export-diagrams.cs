@@ -59,9 +59,9 @@ internal static class Pipeline
     private const string Title = "Maintenance pipeline";
 
     private const string Description =
-        "Swimlane diagram of how this repository maintains itself: vet-source, research-topic, resolve-research, harvest-sources, refresh-dotnet-versions, " +
+        "Swimlane diagram of how this repository maintains itself: vet-source, stage-research, resolve-research, harvest-sources, refresh-dotnet-versions, " +
         "and weave-house-opinion each work on their own branch, pass the CI checks, get an agent review, pass the maintainer's review, and land in the roster, research, or the opinions and templates; " +
-        "audit-freshness, review-opinions, and review-project only report. Their findings, the release watch, and the harvest reminder start the next run. follow-opinions isn't shown, because it writes only to the project it runs in.";
+        "audit-freshness, review-opinions, and review-project only report. Their findings, the release watch, and the harvest reminder start the next run. follow-opinions and research-topic aren't shown, because neither changes this repository.";
 
     private static readonly (string Key, string Name)[] Lanes =
     [
@@ -74,7 +74,7 @@ internal static class Pipeline
     private static readonly Row[] Rows =
     [
         new("sources", ["candidate source,", "or a change in standing"], "vet-source", "vet/<source-id>", "check evidence", "roster"),
-        new("research", ["a question", "about <topic>"], "research-topic", "research/<topic>", "review", "research"),
+        new("research", ["a question", "about <topic>"], "stage-research", "research/<topic>", "review", "research"),
         new("research", ["topic saved in", "research/"], "resolve-research", "resolve/<topic>", "approve weave", "opinions"),
         new("opinions", ["monthly harvest", "reminder issue"], "harvest-sources", "harvest/<date>", "review", "opinions"),
         new("opinions", ["release-watch PR,", "or a newer pin"], "refresh-dotnet-versions", "refresh/dotnet-<version>", "review", "opinions"),
@@ -298,7 +298,7 @@ internal static class Research
     private const string Title = "Research lifecycle";
 
     private const string Description =
-        "Flow diagram: research-topic opens a pull request that saves research/<topic>.md; resolve-research then promotes it into the opinions and templates, " +
+        "Flow diagram: stage-research opens a pull request that saves research/<topic>.md; resolve-research then promotes it into the opinions and templates, " +
         "discards it, or promotes part of it, deleting the topic in the same pull request. A blocked remainder stays staged and goes back through resolve-research " +
         "once vet-source clears the source it waits on.";
 
@@ -309,7 +309,7 @@ internal static class Research
         ("Partial promotion", "the rest woven, the blocked remainder stays staged"),
     ];
 
-    // research-topic sits above the topic it saves, so the diagram is narrow enough for its
+    // stage-research sits above the topic it saves, so the diagram is narrow enough for its
     // text to stay legible in a README.
     private const double CenterY = 182;
     private const double TopicX = 20, TopicY = 20, TopicWidth = 232;
@@ -322,7 +322,7 @@ internal static class Research
     {
         List<string> s =
         [
-            Svg.Node(TopicX, TopicY, TopicWidth, 64, "research-topic", "cited, on research/<topic>", titleCls: "tm"),
+            Svg.Node(TopicX, TopicY, TopicWidth, 64, "stage-research", "cited, on research/<topic>", titleCls: "tm"),
             Svg.Arrow(TopicX + (TopicWidth / 2), TopicY + 64, TopicX + (TopicWidth / 2), CenterY - 34),
             Svg.Text(TopicX + (TopicWidth / 2) + 12, CenterY - 60, "PR merges", "ts"),
             Svg.Node(TopicX, CenterY - 32, TopicWidth, 64, "research/<topic>.md", "on record, unresolved", cls: "store", titleCls: "tm"),
