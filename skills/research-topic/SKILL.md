@@ -31,7 +31,7 @@ Before you quote a page to support a claim, match the quote as a string against 
 
    Research a clear request without asking.
 
-2. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or have a "Coming next" note. Skip house blocks unless the user named a house profile. Present that profile's blocks as "its owner's convention, not community consensus". Also read a saved topic on the subject in `research/`. Without a checkout, the [research index](https://awesome-humans.net/dotnet/research/) lists the saved topics, and the site has no such page when none is saved. A saved topic is staged research that `resolve-research` hasn't promoted, so present it as that, not as an opinion.
+2. **Start with the repository.** Read the matching `opinions/` files, which might already answer the question or have a "Coming next" note. Skip house blocks unless the user named a house profile, or the project's own agent instruction files or README name one. Present that profile's blocks as "its owner's convention, not community consensus". Also read a saved topic on the subject in `research/`. Without a checkout, the [research index](https://awesome-humans.net/dotnet/research/) lists the saved topics, and the site has no such page when none is saved. A saved topic is staged research that `resolve-research` hasn't promoted, so present it as that, not as an opinion.
 3. **Scan the roster in this order,** from [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md):
    1. **Citable sources,** weighted by how well their Focus column matches. You can quote these.
    2. **Watch-list sources,** for discovery and cross-checking. Label them as watch-list.

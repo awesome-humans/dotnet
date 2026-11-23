@@ -41,7 +41,7 @@ Before you use an excerpt to support a claim, match it as a string against the p
    Then start the worktree, following [agents/worktrees.md](../../agents/worktrees.md), and create it before the first write:
    - **No saved topic:** Start it on the new branch `research/<topic-slug>`, such as `research/union-types`.
    - **A topic in `research/`:** Start it on the new branch too. Build on that file, refresh its dates, and don't start a second topic.
-   - **A topic on an existing `research/<topic-slug>` branch:** Don't create a second branch or a second slug. Add a worktree for the existing branch with `git worktree add <dir> research/<topic-slug>`, and build on the topic there.
+   - **A topic on an existing `research/<topic-slug>` branch:** Don't create a second branch or a second slug. Add a worktree for the existing branch with `git worktree add <dir> research/<topic-slug>`, and build on the topic there. If another worktree already holds the branch, Git refuses to add a second. Work in that one, once whoever is using it agrees.
 
 3. **Read the opinions and scan the roster,** as steps 2 and 3 of `research-topic` do. Research accepts any source. **Promotion is the strict gate,** as [Persistence and lifecycle](#persistence-and-lifecycle) describes.
 4. **Write the research topic,** as step 4 of `research-topic` writes its answer, with these differences. The last two replace its bullets on code samples and package versions, which only ask you to say what you checked:
@@ -64,7 +64,7 @@ Before you use an excerpt to support a claim, match it as a string against the p
 
 **Save the topic** to `research/<topic-slug>.md`, with the metadata [agents/metadata.md](../../agents/metadata.md) defines, unless the user says the question was a one-off, as [Edge cases](#edge-cases) describes.
 
-Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request.
+Commit the topic on the `research/<topic-slug>` branch, and open a pull request to the default branch, filling in the [`research.md`](https://github.com/awesome-humans/.github/blob/main/PULL_REQUEST_TEMPLATE/research.md) template, as [agents/maintaining.md](../../agents/maintaining.md) describes. Its **For `resolve-research`** section proposes the outcome, but doesn't decide it. Once it merges, `resolve-research` picks it up on its own branch and pull request. Never put the promote-or-discard decision in the open research pull request. If the branch already has an open pull request, push to it and update its description. Don't open a second.
 
 **Title the commit and pull request `research: <topic>`,** such as `research: runtime async`, not `docs: research <topic>`. The separate type keeps staged research apart from settled opinion changes in `git log`, and lists every topic researched. `resolve-research` sets the type of the resolution commits.
 
@@ -75,4 +75,4 @@ Commit the topic on the `research/<topic-slug>` branch, and open a pull request 
 - **Three edge cases of `research-topic` apply here too:** a preview-only topic, a topic outside .NET, and a conflict between house and community positions.
 - **Offline:** Stop, and save nothing. A topic written from `opinions/` alone restates them, and gives `resolve-research` nothing to promote.
 - **The user asks to save the answer in their own project:** Run `research-topic` instead. This skill writes only the research topic.
-- **The user says mid-run that the question was a one-off, or doesn't want the topic saved:** Answer in the conversation, as `research-topic` does, and save nothing. If step 2 already created the worktree, remove it with `git worktree remove`, and then delete the branch. Git refuses to delete a branch that a worktree still holds.
+- **The user says mid-run that the question was a one-off, or doesn't want the topic saved:** Answer in the conversation, as `research-topic` does, and save nothing. If step 2 created the worktree, delete the files this run wrote, and remove it with `git worktree remove`. Then delete the branch, but only a branch this run created. Leave one that existed before. Git refuses to delete a branch that a worktree still holds.
