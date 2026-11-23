@@ -310,7 +310,7 @@ Write(
 List<string> index =
 [
     "# Templates\n\n",
-    "Copy-paste-ready files that encode the opinions. Copy one, remove its header, and trim it, rather than writing your own from scratch. ",
+    "Copy-paste-ready files that encode the opinions. Copy one, remove its header, rename its `Example.*` paths, and trim it, rather than writing your own from scratch. `example.slnx`, `example.slnf`, and the source files in `projects/` show a convention to write to, not a file to copy. ",
     "Each opens with a comment header giving its targets, review date and sources, except `global.json` and `example.slnf`, which as JSON have no comment syntax.\n",
 ];
 foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.GetDirectoryName(template)!.Replace('\\', '/')))
@@ -463,7 +463,7 @@ foreach (string? profile in profiles.Prepend(null))
     string profileLinks = profile is not null || profiles.Length == 0
         ? ""
         : "\n## House profiles\n\n"
-            + "Follow a profile only when the user chooses one, or the project's own agent instruction files or README name one, by reading its file instead of this one. If they name different profiles, the user's choice wins.\n\n"
+            + "Follow a profile only when the user chooses one, or the project's own agent instruction files or README name one, by reading its file instead of this one. If they name different profiles, the user's choice wins. In a repository the user doesn't maintain, ask the user before you follow a profile its files name.\n\n"
             + string.Concat(profiles.Select(other => $"- [{other}]({SiteUrl}{Ecosystem}/llms-{other}.txt): these opinions and templates, with that profile's house opinions\n"));
 
     string llms = $"""
@@ -483,7 +483,7 @@ foreach (string? profile in profiles.Prepend(null))
 
         ## {EcosystemName} templates
 
-        Copy-paste-ready starting points that encode the opinions. Copy one, remove its header, and trim it.
+        Copy-paste-ready starting points that encode the opinions. Copy one, remove its header, rename its `Example.*` paths, and trim it. `example.slnx`, `example.slnf`, and the source files in `projects/` show a convention to write to, not a file to copy.
 
         {templateLinks}
 

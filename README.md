@@ -146,7 +146,7 @@ The skills split work by cost. Lower-cost worker agents run the web searches and
 
 Every skill that changes this repository works on its own branch, and its changes land through a pull request that passes CI, gets an agent review, and passes the maintainer's review. The three report-only skills change nothing in this repository, and `follow-opinions` writes only to the project it runs in. Each `SKILL.md` is canonical over this diagram.
 
-![Maintenance pipeline: each skill from what starts it, through CI checks, an agent review, and the maintainer's review, to the roster, research, or the opinions and templates; audit-freshness, review-opinions, and review-project only report](assets/diagrams/maintenance-pipeline.svg)
+![Maintenance pipeline: each skill except follow-opinions, from what starts it, through CI checks, an agent review, and the maintainer's review, to the roster, research, or the opinions and templates; audit-freshness, review-opinions, and review-project only report](assets/diagrams/maintenance-pipeline.svg)
 
 | Skill                                                                | Purpose                                                                                     |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
