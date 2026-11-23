@@ -14,7 +14,7 @@ sources:
 
 # Project structure & SDK
 
-Use one solution format and Central Package Management, and pin versions at the repository root. The files in `templates/` implement these opinions. Copy them verbatim and trim, instead of writing your own.
+Use one solution format and Central Package Management, and pin versions at the repository root. The files in `templates/` implement these opinions. Start a new file from its template, instead of writing your own: copy it, remove its header, rename its `Example.*` paths, and trim it. `example.slnx`, `example.slnf`, and the source files in `templates/projects/` show a convention to write to, not a file to copy.
 
 ## Solution & SDK
 

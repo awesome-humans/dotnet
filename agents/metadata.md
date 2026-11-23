@@ -12,7 +12,7 @@ sources: [andrew-lock, dotnet-blog] # ids from AWESOME-HUMANS.md, sorted
 ---
 ```
 
-A `research/` topic has no status field. Promoting or discarding a topic deletes it, so a topic on disk is unresolved by definition, and a status could only ever read `open`. For details, see [research-topic](../skills/research-topic/SKILL.md) and [resolve-research](../skills/resolve-research/SKILL.md).
+A `research/` topic has no status field. Promoting or discarding a topic deletes it, so a topic on disk is unresolved by definition, and a status could only ever read `open`. For details, see [stage-research](../skills/stage-research/SKILL.md) and [resolve-research](../skills/resolve-research/SKILL.md).
 
 **`templates/` use a first-line comment header.** An XML, INI, or source file can't open with a `---` block and stay valid for the tools that read it. So the same fields go in a comment instead, separated by pipes after a fixed marker:
 
@@ -36,7 +36,7 @@ Rules:
   - CI reads the `**Discovery-only.**` and `**Corroborate.**` markings from a source's section under `## Source notes`, not from its table row.
   - In `opinions/` and `templates/`, the source must also be citable. A watch-list source or a `**Discovery-only.**` source is rejected.
   - A file whose citable sources are all marked `**Corroborate.**` is rejected too, because an unmarked source has to stand beside them.
-  - `research/` is exempt: a topic can cite unvetted material if the text flags it. For details, see [research-topic](../skills/research-topic/SKILL.md).
+  - `research/` is exempt: a topic can cite unvetted material if the text flags it. For details, see [stage-research](../skills/stage-research/SKILL.md).
 - **Sort `sources` by ID in ordinal order, with `house:<profile>` sorted like any other ID.** Write `[andrew-lock, dotnet-blog, house:simon-mckenna, ms-learn]`. The rule applies in all three directories and to both syntaxes.
 - **Write dates in ISO 8601 (`YYYY-MM-DD`), in UTC.** Always use absolute dates, never relative ones. To get today's date, run `date -u +%F`. CI, GitHub, and the site build run in UTC, as [awesome-humans/website: Writing style](https://github.com/awesome-humans/website/blob/main/pages/conventions/writing-style.md) describes.
 - **Two template files are exempt from the header:** `templates/global.json` and `templates/example.slnf`, because JSON has no comment syntax. What they pin is audited against the latest releases instead. Smoke-testing the example projects by hand leaves build output under `templates/` (`artifacts/`, `bin/`, and `obj/`, all gitignored). That output isn't a resource, and the check skips it.
