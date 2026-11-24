@@ -354,10 +354,11 @@ internal static class Svg
 {
     // The design system's tokens: bg, surface, raised, line, ink, muted, brand, house,
     // and the three lane-* tokens.
-    // Copy a changed value from https://claude.ai/artifact/QfYm5d57sbJxs3W3jMyGiy, as the
-    // website repository's awesome-humans.css does. The .NET accent stays out: the design
-    // system shows an ecosystem's accent only in four places on the site, and a diagram
-    // isn't one. Brand marks the CI gate and the outcome the agents work towards, and house
+    // The website repository's DESIGN.md sets the rules for them:
+    // https://github.com/awesome-humans/website/blob/main/DESIGN.md. Copy a changed value from
+    // its pages/stylesheets/awesome-humans.css, which holds every one. The .NET accent
+    // stays out: the design system shows an ecosystem's accent only in four places on the
+    // site, and a diagram isn't one. Brand marks the CI gate and the outcome the agents work towards, and house
     // what the maintainer decides. Each lane takes its lane-* token, chosen to stay apart from
     // those and from stale. lane-reports sits near the .NET accent, which no diagram shows.
     private const string TokensLight = """
