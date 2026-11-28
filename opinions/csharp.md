@@ -121,7 +121,7 @@ Arms match from top to bottom, so put the most specific first. Keep a two-way `i
 
 ### Unions and closed hierarchies
 
-**Model a fixed set of alternatives as a `union` when the case types are unrelated or aren't yours, and as a `closed` class when you own the base type. Switch over either without a discard arm.** The compiler knows every case, so the switch expression is exhaustive without `_`. When you add a case, CS8509 reports each switch that doesn't handle it. A `_` arm that throws hides that: when a type is added, "all your existing code continues to compile", and the arm throws at run time. IDE0072 asks for that arm, so [templates/.editorconfig](../templates/.editorconfig) silences it.
+**Model a fixed set of alternatives as a `union` when the case types are unrelated or aren't yours, and as a `closed` class when you own the base type. Switch over either without a discard arm.** The compiler knows every case, so when you add one, CS8509 reports each switch that doesn't handle it. A throwing `_` arm suppresses that warning: after you add a type, "all your existing code continues to compile", and the arm throws at run time. IDE0072 suggests adding a `_` arm, so [templates/.editorconfig](../templates/.editorconfig) sets its severity to `silent`.
 
 ```csharp
 public sealed record Product(int Id, string Name);
@@ -149,11 +149,11 @@ public static class Describe
 }
 ```
 
-The `null` arm is for `default(ProductLookup)`. A union is a struct, so its default value holds no case, and "the null pattern checks whether Value is null". Without that arm, the switch compiles without a warning, and a default value throws `SwitchExpressionException`. Write the `null` arm, not `_`, so CS8509 still reports a new case. ([Microsoft Learn: Union types](https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/union))
+The `null` arm matches `default(ProductLookup)`. A union is a struct, so its default value holds no case, and "the null pattern checks whether Value is null". Without that arm, the switch compiles without a warning, and a default value throws `SwitchExpressionException`. Write the `null` arm, not `_`, so CS8509 still reports a new case. ([Microsoft Learn: Union types](https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/union))
 
 ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/), [Lock: .NET (OK, C#) finally gets union types](https://andrewlock.net/exploring-the-dotnet-11-preview-2-dotnet-gets-union-types/), [Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
 
-- **Replace a `private protected` or `internal` constructor with `closed` when the base type is already abstract.** The constructor stops another assembly deriving from the type, but the compiler still reports CS8509 on a switch without `_`. A closed class is implicitly abstract, so on a base type that code instantiates, `closed` breaks the build, and on a public type in a shipped library it's a breaking change. ([Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
+- **When the base type is already abstract, replace its `private protected` or `internal` constructor with `closed`.** The constructor stops another assembly deriving from the type, but the compiler still reports CS8509 on a switch without `_`. A closed class is implicitly abstract, so `closed` breaks the build on a base type that code instantiates. On a public type in a shipped library, it's a breaking change. ([Lock: Closed class hierarchies](https://andrewlock.net/exploring-the-dotnet-11-preview-4-closed-class-hierarchies/))
 - **Seal each derived type, or mark it `closed` too.** "Derivation isn't transitive: a non-closed descendant of a closed class can still be derived from in other assemblies." Don't add `abstract` or `sealed` to the closed class itself, because the compiler rejects both. ([Microsoft Learn: What's new in C# 15](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-15))
 - **If two cases of a union have the same JSON shape, configure a classifier.** System.Text.Json serializes C# unions in .NET 11, and deserialization can't tell such cases apart without one. ASP.NET Core supports unions only in JSON bodies, "not to route, query, header, or form binding". ([.NET Blog: Announcing .NET 11](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/))
 
